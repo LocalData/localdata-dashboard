@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <style type="text/css" media="screen">
+      @import url("css/bootstrap.min.css");
+      @import url("css/bootstrap-responsive.min.css");
+      @import url("css/app.css");
+    </style>
+</head>
+
+<body>
+    <strong><a href="index.html">My app</a></strong>
+    <div id="container" class="container-fluid">
+      
+        
+    </div>
+    
+    <!-- Core scripts -->
+    <script type="text/javascript" src="js/lib/jquery-1.7.1.js"></script>
+    <script type="text/javascript" src="js/lib/underscore.js"></script>
+    <script type="text/javascript" src="js/lib/backbone.js"></script>
+    <script type="text/javascript" src="js/lib/async.min.js"></script>
+    <script type="text/javascript" src="js/application.js"></script>
+    
+    <!-- Templates -->
+    <script type="text/javascript" src="js/templates/home.js"></script>
+    <script type="text/javascript" src="js/templates/survey.js"></script>
+    
+    <!-- Models & router -->
+    <script type="text/javascript" src="js/models/surveys.js"></script>
+    <script type="text/javascript" src="js/models/responses.js"></script>
+    <script type="text/javascript" src="js/routers/index.js"></script>
+    
+    <!-- Views -->
+    <script type="text/javascript" src="js/views/home.js"></script>
+    <script type="text/javascript" src="js/views/survey_view.js"></script>
+    <script type="text/javascript" src="js/views/response_view.js"></script>
+    <script type="text/javascript" src="js/views/export_view.js"></script>
+    <script type="text/javascript" src="js/views/root.js"></script>
+    
+    
+    <script type="text/javascript">
+        $(function() {
+            window.Everything = new NSB.views.Root();
+            Everything.start_routing();
+        })
+    </script>
+    
+    
+</body>
+</html>
