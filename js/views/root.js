@@ -7,10 +7,9 @@ NSB.views.Root = Backbone.View.extend({
    */
   
   el: $("body"),
-  
   views: {},
-  
   _router: null,
+  survey: null,
   
   initialize: function() {
     // Bind local methods
@@ -22,15 +21,15 @@ NSB.views.Root = Backbone.View.extend({
     return this;
   },
   
-  start_routing: function() {
+  startRouting: function() {
     /*
      * Start Backbone routing. Separated from initialize() so that the
      * global controller is available for any preset routes (direct links).
      */
     Backbone.history.start();
   },
-  
-  get_or_create_view: function(name, options) {
+    
+  getOrCreateView: function(name, options) {
     /*
      * Register each view as it is created and never create more than one.
      */
@@ -44,21 +43,30 @@ NSB.views.Root = Backbone.View.extend({
     return this.views[name];
   },
   
+  switchPage: function(page) {
+    /*
+     * Show the given page; hide the others
+     */
+    $('.page').hide();
+    if (page.show !== undefined) {
+      page.show();
+    } else {
+      page.$el.show();
+    }
+  },
+  
   goto_home: function() {
-    this.current_content_view = this.get_or_create_view("Index");
-    this.current_content_view.reset();
+    this.currentContentView = this.getOrCreateView("Home");
   },
   
   goto_survey: function(id) {
-    this.current_content_view = this.get_or_create_view("SurveyView");
-    this.current_content_view.reset(id);
-
+    this.currentContentView = this.getOrCreateView("SurveyView", {id: id});
     this._router.navigate("survey/" + id);
   },
   
   goto_export: function(id) {
-    this.current_content_view = this.get_or_create_view("ExportView");
-    this.current_content_view.reset(id);
+    this.currentContentView = this.getOrCreateView("ExportView");
+    this.currentContentView.reset(id);
 
     this._router.navigate("survey/" + id + "/export");
   }

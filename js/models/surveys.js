@@ -1,53 +1,35 @@
 NSB.models.Survey = Backbone.Model.extend({
+  urlRoot: NSB.API + "/surveys/",
   
   initialize: function(options) {
-    _.bindAll(this, 'render', 'parse');
+    _.bindAll(this, 'parse');
+    this.fetch();
   },
   
-  parse: function(response) {
-    console.log("parsing");
-    console.log(response);
-    this.survey_name = response['name'];
-    return response['survey'];
-  },
-  
-  render: function() {
-    console.log("Rendering survey");
-    var context = {  };
-    this.el.html(NSB.templates.survey_view(context));
-    return this;
-  },
-  
-  results: function() {
-    /*
-     * Render this object with embedded search results data for templating.
-     */
-    var results = this.toJSON(true);
-        
-    //console.log(results);
-    //_.extend(results, this.data.results());
-    return results;
-  },
+  parse: function(response) {    
+    if (_.has(response, "survey")) {
+      // Individual surveys are returned a little differently from 
+      // lists of surveys. Oh well. 
+      return response.survey;
+    };
+    
+    return response;
+  }
   
 });
 
 
 NSB.collections.Surveys = Backbone.Collection.extend({
   model: NSB.models.Survey,
-  url: NSB.API + "/surveys", // TODO -- why do we need this?
-      
-  parse: function(response) {
-    return response.surveys;
+  url: NSB.API + "/surveys", 
+  
+  initialize: function(options) {
+    _.bindAll(this, 'parse');
+    this.fetch();
   },
   
-  results: function() {
-    /*
-     * Grab the current data in a simplified data structure appropriate
-     * for templating.
-     */
-
-    return {
-        surveys: _.invoke(this.models, "results") 
-    }
-  }     
+  parse: function(response) {
+    return response.surveys;
+  }
+  
 });

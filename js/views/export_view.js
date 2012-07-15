@@ -4,13 +4,12 @@ NSB.views.ExportView = Backbone.View.extend({
   survey: null,
   
   initialize: function(options) {
-    _.bindAll(this, 'set_survey', 'reset', 'render');
+    _.bindAll(this, 'setSurvey', 'reset', 'render');
   },
   
-  set_survey: function(survey) {
+  setSurvey: function(survey) {
     this.survey = survey; 
   },
-  
   
   reset: function(id) {
     var init = { resource_uri: NSB.API + "/surveys/" + id + "/" };

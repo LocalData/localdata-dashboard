@@ -1,52 +1,54 @@
-NSB.models.Response = Backbone.Model.extend({
-
-  initialize: function(options) {
-    _.bindAll(this, 'render', 'parse');
-  },
+NSB.models.Response = Backbone.Model.extend({ 
   
-  parse: function(response) {
-    console.log("parsing");
-    console.log(response);
-    return response;
-  },
-  
-  render: function() {
-    console.log("Rendering response");
-    var context = {  };
-    this.el.html(NSB.templates.response(context));
-    return this;
-  },
-  
-  results: function() {
-    /*
-     * Render this object with embedded search results data for templating.
-     */
-    var results = this.toJSON(true);
-
-    return results;
-  },
 });
 
 
-NSB.collections.Responses = Backbone.Collection.extend({
+// NSB.collections.Responses = Backbone.Collection.extend({
+//   model: NSB.models.Response,
+//   
+//   initialize: function(options) {
+//     this.surveyId = options.surveyId;
+//     this.fetch();
+//   },
+//   
+//   url: function() {
+//     return NSB.API + '/surveys/' + this.surveyId + '/responses';
+//   },
+//         
+//   parse: function(response) {
+//     return response.responses;
+//   }
+//   
+// });
+
+
+NSB.collections.PaginatedResponses = Backbone.Paginator.clientPager.extend({
   model: NSB.models.Response,
   
-  get_results_for_survey: function(id) {
-    return this;
-  },
-      
-  parse: function(response) {
-    return response.responses;
+  initialize: function(options) {
+    this.surveyId = options.surveyId;
+    this.paginator_core.url = NSB.API + '/surveys/' + this.surveyId + '/responses';
   },
   
-  results: function() {
-    /*
-     * Grab the current data in a simplified data structure appropriate
-     * for templating.
-     */     
-   
-    return {
-      responses: _.invoke(this.models, "results") 
-    }
-  }     
+  paginator_core: {
+      type: 'GET',
+      dataType: 'json',
+      url: null
+  },
+  
+  paginator_ui: {
+      firstPage: 1,
+      currentPage: 1,
+      perPage: 3,
+      totalPages: 10
+  },
+  
+  server_api: {
+  },
+  
+  parse: function(response) {
+    this.totalPages = Math.floor(response.responses.length / this.perPage);
+    return response.responses;
+  }  
+  
 });

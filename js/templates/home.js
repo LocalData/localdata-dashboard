@@ -6,7 +6,3 @@ NSB.templates['home'] = _.template("\
   <% }); %>\
 </div>\
 ");
-
-//  <% _.each(surveys, function(d) { %>\
-//     <h2><%= d.id %></h2>\
-// <% }); %>\

@@ -11,21 +11,84 @@
 </head>
 
 <body>
-    <strong><a href="index.html">My app</a></strong>
+    <!-- Header -->
+    <div class="container">
+      <header id="header" class="jumbotron subhead">
+      <h1><span id="header-survey"></span> <small><a href="index.html">LocalData Survey Viewer</a></small></h1>
+        <script type="text/template" id="header-survey-template">
+          <%= name %>
+        </script>
+      </header>
+    </div>
+    
+    <!-- Subnav -->
+    <div class="subnav subnav-fixed">
+      <ul id="nav-tabs" class="nav nav-tabs"></ul>
+    </div>
+    
     <div id="container" class="container-fluid">
-      
-        
     </div>
     
     <!-- Core scripts -->
-    <script type="text/javascript" src="js/lib/jquery-1.7.1.js"></script>
-    <script type="text/javascript" src="js/lib/underscore.js"></script>
+    <script type="text/javascript" src="js/lib/jquery-1.7.1.js"></script>    
+    <script type="text/javascript" src="js/lib/underscore.js"></script>    
     <script type="text/javascript" src="js/lib/backbone.js"></script>
-    <script type="text/javascript" src="js/lib/async.min.js"></script>
+    <script type="text/javascript" src="js/lib/backbone.paginator.js"></script>
     <script type="text/javascript" src="js/application.js"></script>
     
-    <!-- Templates -->
-    <script type="text/javascript" src="js/templates/home.js"></script>
+    <!-- Templates ========================================================-->
+    <script type="text/template" id="home">
+      <div id='modal-list-surveys'>
+        <h1>Surveys</h1>
+        <% _.each(surveys, function(d) { %>
+            <h2><a href='#survey/<%= d.id %>'><%= d.name %></a> </h2>
+        <% }); %>
+      </div>
+    </script>
+    
+    <!-- Templates ========================================================-->
+    
+    <script type="text/template" id="survey-view">
+      <h2><%= survey.name %> </h2>
+      
+      <div id="subnav">
+      </div>
+      
+      <div id="responses">
+      </div>
+    </script>
+    
+    <script type="text/template" id="response-view">
+      <h3>Responses</h3>
+      
+      
+    </script>
+    
+    
+    <div id="foobar">
+    </div>
+    
+    <script type="text/template" id="temp">
+      <table>
+      <% _.each(responses, function(r) { %>
+        <tr>
+          <td><%= r.created %></td>
+          <td><%= r.parcel_id %></td>
+          <td><%= r.source.collector %></td>
+          <% _.each(r.responses, function(resp) { %>
+            <td><%= resp %></td>
+          <% }); %>
+        </tr>
+      <% }); %>
+      </table>
+      
+    </script>
+     
+    
+    
+<!--
+    <script type="text/javascript" src="js/templates/home.js"></script>-->
+    
     <script type="text/javascript" src="js/templates/survey.js"></script>
     
     <!-- Models & router -->
@@ -44,7 +107,7 @@
     <script type="text/javascript">
         $(function() {
             window.Everything = new NSB.views.Root();
-            Everything.start_routing();
+            Everything.startRouting();
         })
     </script>
     
