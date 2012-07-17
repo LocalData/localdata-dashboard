@@ -1,8 +1,10 @@
 NSB.routers.Index = Backbone.Router.extend({
   routes: {
     "": "home",
-    "survey/:id": "survey",
-    "survey/:id/export": "download",
+    "surveys/:id": "survey",
+    "surveys/:id/export": "download",
+    "surveys/:id/upload": "upload",
+    
     "*actions": "default_route"
   },
   
@@ -21,6 +23,10 @@ NSB.routers.Index = Backbone.Router.extend({
   
   download: function(id) {
     this.controller.goto_export(id);
+  },
+  
+  upload: function(id) {
+    this.controller.goto_upload(id);
   },
   
   default_route: function(actions) {

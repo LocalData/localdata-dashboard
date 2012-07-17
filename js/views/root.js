@@ -30,14 +30,13 @@ NSB.views.Root = Backbone.View.extend({
   },
     
   getOrCreateView: function(name, options) {
-    /*
-     * Register each view as it is created and never create more than one.
-     */
+    // Register each view as it is created and never create more than one.
     if (name in this.views) {
+      console.log("Going to " + name);
       return this.views[name];
     }
 
-    console.log(name);
+    console.log("Creating " + name);
     this.views[name] = new NSB.views[name](options);
 
     return this.views[name];
@@ -61,14 +60,21 @@ NSB.views.Root = Backbone.View.extend({
   
   goto_survey: function(id) {
     this.currentContentView = this.getOrCreateView("SurveyView", {id: id});
-    this._router.navigate("survey/" + id);
+    this.currentContentView.showResponses();
+    this._router.navigate("surveys/" + id);
+  },
+  
+  goto_upload: function(id) {
+    this.currentContentView = this.getOrCreateView("SurveyView", {id: id});
+    this.currentContentView.showUpload();
+    this._router.navigate("surveys/" + id + "/upload");
   },
   
   goto_export: function(id) {
     this.currentContentView = this.getOrCreateView("ExportView");
     this.currentContentView.reset(id);
 
-    this._router.navigate("survey/" + id + "/export");
+    this._router.navigate("surveys/" + id + "/export");
   }
   
 });

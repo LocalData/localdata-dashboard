@@ -37,38 +37,33 @@
     <script type="text/javascript" src="js/application.js"></script>
     
     <!-- Templates ========================================================-->
+    <!-- Home .............................................................-->
     <script type="text/template" id="home">
       <div id='modal-list-surveys'>
         <h1>Surveys</h1>
         <% _.each(surveys, function(d) { %>
-            <h2><a href='#survey/<%= d.id %>'><%= d.name %></a> </h2>
+            <h2><a href='#surveys/<%= d.id %>'><%= d.name %></a> </h2>
         <% }); %>
       </div>
     </script>
     
-    <!-- Templates ========================================================-->
-    
+    <!-- Survey view ......................................................-->
     <script type="text/template" id="survey-view">
       <h2><%= survey.name %> </h2>
       
-      <div id="subnav">
+      <div id="subnav" class="nav nav-tabs">
       </div>
       
-      <div id="responses">
+      <div id="body" class="">
       </div>
     </script>
     
+    <!-- Response view ....................................................-->
     <script type="text/template" id="response-view">
       <h3>Responses</h3>
       
+      <div id="result-pagination"></div>
       
-    </script>
-    
-    
-    <div id="foobar">
-    </div>
-    
-    <script type="text/template" id="temp">
       <table>
       <% _.each(responses, function(r) { %>
         <tr>
@@ -81,7 +76,37 @@
         </tr>
       <% }); %>
       </table>
+    </script>
+    
+    <!-- Upload view ......................................................-->
+    <script type="text/template" id="upload-view">
+      <h3>Upload some stuff!!!</h3>
       
+    </script>
+    
+    
+    <!-- Subnav view ......................................................-->
+    <script type="text/template" id="subnav-view">
+    <% _.each(items, function(item) {  %>
+      <li class="<%= item.active %>"><a href="#<%= item.fragment %>"><%= item.title %></a></li>
+    <% }); %>
+    </script>
+    
+    <!-- Pagination view ..................................................-->
+    <script type="text/template" id="pagination-view">
+      <div class="pagination">
+        <ul>
+          <li><a href="#">Prev</a></li>
+          <% 
+            console.log(pageCount);
+          %>
+          
+          <% _.each(_.range(1, pageCount + 1), function(page) { %>
+          <li><a href="#"><%= page %></a></li>
+          <% }); %>
+          <li><a href="#">Next</a></li>
+        </ul>
+      </div>
     </script>
      
     
@@ -98,9 +123,12 @@
     
     <!-- Views -->
     <script type="text/javascript" src="js/views/home.js"></script>
+    <script type="text/javascript" src="js/views/nav_view.js"></script>
     <script type="text/javascript" src="js/views/survey_view.js"></script>
     <script type="text/javascript" src="js/views/response_view.js"></script>
-    <script type="text/javascript" src="js/views/export_view.js"></script>
+    <script type="text/javascript" src="js/views/pagination_view.js"></script>
+    <script type="text/javascript" src="js/views/upload_view.js"></script>
+    
     <script type="text/javascript" src="js/views/root.js"></script>
     
     
