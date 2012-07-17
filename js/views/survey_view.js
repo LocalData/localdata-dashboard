@@ -41,8 +41,14 @@ NSB.views.SurveyView = Backbone.View.extend({
   showUpload: function() {
     console.log("Using upload view");
     this.bodyView = new NSB.views.UploadView({surveyId: this.surveyId});
-    this.bodyView.render();
     this.subnavView.setActiveTab(2);
+    this.bodyView.render();
+  },
+  
+  showScans: function() {
+    console.log("Using scans view");
+    this.bodyView = new NSB.views.ScansListView({surveyId: this.surveyId});
+    this.subnavView.setActiveTab(1);
   }
   
 });

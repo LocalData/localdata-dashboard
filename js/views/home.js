@@ -8,17 +8,12 @@ NSB.views.Home = Backbone.View.extend({
     this.surveys.bind('all', this.render);
   },
   
-  render: function() {
-    
-    console.log(this.surveys);
-  
+  render: function() {  
+    console.log("Rendering home");
     var context = { 
       surveys: this.surveys.toJSON()
     };
     
-    console.log(this.surveys);
-    console.log("Listing surveys:");
-    console.log(context);
     this.$el.html(_.template($('#home').html(), context));  
   }
   

@@ -2,7 +2,6 @@ NSB.models.Response = Backbone.Model.extend({
   
 });
 
-
 NSB.collections.Responses = Backbone.Collection.extend({
   model: NSB.models.Response,
   

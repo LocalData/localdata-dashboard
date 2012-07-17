@@ -34,6 +34,7 @@
     <script type="text/javascript" src="js/lib/underscore.js"></script>    
     <script type="text/javascript" src="js/lib/backbone.js"></script>
     <script type="text/javascript" src="js/lib/backbone.paginator.js"></script>
+    <script type="text/javascript" src="js/lib/fileuploader.js"></script>
     <script type="text/javascript" src="js/application.js"></script>
     
     <!-- Templates ========================================================-->
@@ -61,9 +62,7 @@
     <!-- Response view ....................................................-->
     <script type="text/template" id="response-view">
       <h3>Responses</h3>
-      
-      <div id="result-pagination"></div>
-      
+          
       <table>
       <% _.each(responses, function(r) { %>
         <tr>
@@ -76,14 +75,33 @@
         </tr>
       <% }); %>
       </table>
+      
+      <div id="result-pagination"></div>
     </script>
     
     <!-- Upload view ......................................................-->
     <script type="text/template" id="upload-view">
-      <h3>Upload some stuff!!!</h3>
+      <h3>Upload scanned paper forms</h3>
       
+      <p>When you've scanned in the paper forms, you can upload them here.</p>
+      <p>Either click the button and select the files, or drag and drop them right onto the page!</p>
+      <div id="file-uploader"></div>
+      <div class="drop-area"></div>
     </script>
     
+    <!-- Scan view ........................................................-->
+    <script type="text/template" id="scan-view">
+      <h3>Scanned forms</h3>
+      <ul>
+        <% _.each(scans, function(scan) {  %>
+          <li>
+            <%= scan.filename %>
+            <span class="label"><%= scan.status %></span>
+            <%= scan.created %>
+          </li>
+        <% }); %>
+      </ul>
+    </script>
     
     <!-- Subnav view ......................................................-->
     <script type="text/template" id="subnav-view">
@@ -96,29 +114,19 @@
     <script type="text/template" id="pagination-view">
       <div class="pagination">
         <ul>
-          <li><a href="#">Prev</a></li>
-          <% 
-            console.log(pageCount);
-          %>
-          
+          <li><a href="#">Prev</a></li>          
           <% _.each(_.range(1, pageCount + 1), function(page) { %>
-          <li><a href="#"><%= page %></a></li>
+            <li class="pagination-item"><a href=""><%= page %></a></li>
           <% }); %>
           <li><a href="#">Next</a></li>
         </ul>
       </div>
     </script>
-     
-    
-    
-<!--
-    <script type="text/javascript" src="js/templates/home.js"></script>-->
-    
-    <script type="text/javascript" src="js/templates/survey.js"></script>
-    
+         
     <!-- Models & router -->
     <script type="text/javascript" src="js/models/surveys.js"></script>
     <script type="text/javascript" src="js/models/responses.js"></script>
+    <script type="text/javascript" src="js/models/scans.js"></script>
     <script type="text/javascript" src="js/routers/index.js"></script>
     
     <!-- Views -->
@@ -128,10 +136,10 @@
     <script type="text/javascript" src="js/views/response_view.js"></script>
     <script type="text/javascript" src="js/views/pagination_view.js"></script>
     <script type="text/javascript" src="js/views/upload_view.js"></script>
-    
+    <script type="text/javascript" src="js/views/scan_view.js"></script>
+
+    <!-- Root controls all: start here -->
     <script type="text/javascript" src="js/views/root.js"></script>
-    
-    
     <script type="text/javascript">
         $(function() {
             window.Everything = new NSB.views.Root();

@@ -38,7 +38,6 @@ NSB.views.SubnavView = Backbone.View.extend({
 
     _.each(this.items, function(item){
       if (item === this.current) {
-        console.log("Active: " + this.current.title);
         item.active = "active";
       };
     }, this);

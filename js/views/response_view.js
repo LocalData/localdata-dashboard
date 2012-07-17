@@ -12,11 +12,12 @@ NSB.views.ResponseListView = Backbone.View.extend({
     this.responses = new NSB.collections.Responses({surveyId: this.surveyId}); 
     this.responses.on('all', this.render, this);
     this.responses.on('reset', this.setup, this);
+    
   },
   
   setup: function() {
     this.page = 0;
-    this.pageListCount = 3;
+    this.pageListCount = 10;
     this.pageStart = 0;
     this.pageEnd = this.pageStart + this.pageListCount;
 
@@ -24,12 +25,15 @@ NSB.views.ResponseListView = Backbone.View.extend({
   },
   
   goTo: function(page) {
+    console.log("Going to page " + page);
     // Update the start and end page so we're only displaying certain results
     // Make sure it's a number
-    page = parseInt(page); 
+    var page = parseInt(page); 
     this.page = page;
-    this.pageStart = (page - 1) * pageListCount;
-    this.pageEnd = page * pageListCount;
+    this.pageStart = (this.page - 1) * this.pageListCount;
+    this.pageEnd = this.page * this.pageListCount;
+    
+    this.render();
   },
   
   ready: function() {
@@ -46,9 +50,10 @@ NSB.views.ResponseListView = Backbone.View.extend({
     $(this.elId).html(_.template($('#response-view').html(), context));
     
     this.paginationView = new NSB.views.PaginationView({ 
-      elId: "#result-pagination",
       pageCount: this.pageCount
     });
+    this.paginationView.bind('changePage', this.goTo);
+    
   }
   
 });
