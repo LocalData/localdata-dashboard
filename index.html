@@ -4,29 +4,23 @@
     <meta charset="utf-8">
     <title></title>
     <style type="text/css" media="screen">
-      @import url("css/bootstrap.min.css");
-      @import url("css/bootstrap-responsive.min.css");
+      /*@import url("css/bootstrap.min.css");
+      @import url("css/bootstrap-responsive.min.css");*/
+      @import url("css/reset.css");
+      
       @import url("css/app.css");
     </style>
 </head>
 
 <body>
     <!-- Header -->
-    <div class="container">
-      <header id="header" class="jumbotron subhead">
-      <h1><span id="header-survey"></span> <small><a href="index.html">LocalData Survey Viewer</a></small></h1>
-        <script type="text/template" id="header-survey-template">
-          <%= name %>
-        </script>
-      </header>
-    </div>
-    
-    <!-- Subnav -->
-    <div class="subnav subnav-fixed">
-      <ul id="nav-tabs" class="nav nav-tabs"></ul>
-    </div>
-    
-    <div id="container" class="container-fluid">
+    <header id="site-header">
+      <div class="container">
+        <h1><small><a href="index.html">localdata</a></small></h1>
+      </div>
+    </header>
+
+    <div id="container">
     </div>
     
     <!-- Core scripts -->
@@ -50,31 +44,40 @@
     
     <!-- Survey view ......................................................-->
     <script type="text/template" id="survey-view">
-      <h2><%= survey.name %> </h2>
+      <header id="survey-header">
+        <div class="container">
+          <h2><%= survey.name %> </h2>
+        </div>
+      </header>
       
-      <div id="subnav" class="nav nav-tabs">
-      </div>
+      <div id="content" class="container">
+        <div id="subnav" class="nav nav-tabs">
+        </div>
       
-      <div id="body" class="">
-      </div>
+        <div id="body">
+        </div>   
+      </div>   
     </script>
     
     <!-- Response view ....................................................-->
     <script type="text/template" id="response-view">
       <h3>Responses</h3>
-          
-      <table>
+        
+      <div class="response-list">  
+      <div class="response">
       <% _.each(responses, function(r) { %>
-        <tr>
-          <td><%= r.created %></td>
-          <td><%= r.parcel_id %></td>
-          <td><%= r.source.collector %></td>
-          <% _.each(r.responses, function(resp) { %>
+          <h3></h3>
+          <%= r.created %>
+          <p class="collector-name"><%= r.source.collector %></p>
+          <!--
+          <% _.each(r.responses, function(key, resp) { %>
             <td><%= resp %></td>
           <% }); %>
+          -->
         </tr>
       <% }); %>
-      </table>
+      </div>
+      </div>
       
       <div id="result-pagination"></div>
     </script>

@@ -1,8 +1,95 @@
-body {
-  background:#eee;
-  padding:20px;
+html, body {
+  padding:0;
+  margin:0;
 }
 
-.container-fluid {
+body {
+  background:#d9e1ed;
+  padding:0;
+  color:#333;
+  font-family:"Source Sans Pro";
+}
+/* Type ....................................................................*/
+a {
+  text-decoration:none;
+  color:#3f5b88;
+  border-bottom:1px solid #3f5b88;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: normal;
+}
+
+h3 {
+  font-size:24px;
+}
+
+/* Structure ...............................................................*/
+
+.container {
+  width:960px;
+  margin:0px auto;
+}
+
+#body {
+  background:#fff;
+  border:5px solid #c7d3e5;
+  border-top:0;
+  padding:30px;
+}
+
+/* Header ..................................................................*/
+header {
+  color:#fefefe;
+  padding:10px 0;
+}
+
+header a {
+  color:#fefefe;
+  border:0;
+}
+
+#site-header {
+  font-family:Pacifico;
+  font-size:18px;
+  background:#476799;
+  border-bottom:0px solid #a18464;
+}
+
+#survey-header {
+  background:#3f5b88;
+  border-top:1px solid #476799;
+  color:#fefefe;
+  font-size:35px;
+  padding:20px 0 60px 0;
+}
+
+#survey-header h2 {
+  font-weight:bold;
+}
+
+/* Nav .....................................................................*/
+#subnav {
+  margin-top:-36px;
+  overflow:auto;
+  background:#c7d3e5;
+  border:5px solid #c7d3e5;
+  border-bottom:0;
+  
+}
+
+.nav-tabs li {
+  list-style:none;
+  display:inline;
+}
+
+.nav-tabs li  {
+  display:block;
+  float:left;
+  padding:13px 20px;
+  font-size:18px;
+}
+
+.nav-tabs li.active {
   background:#fff;
 }

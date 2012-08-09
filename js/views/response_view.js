@@ -24,11 +24,11 @@ NSB.views.ResponseListView = Backbone.View.extend({
     this.pageCount = Math.floor(this.responses.length / this.pageListCount);   
   },
   
-  goTo: function(page) {
+  goTo: function(pageStr) {
     console.log("Going to page " + page);
     // Update the start and end page so we're only displaying certain results
     // Make sure it's a number
-    var page = parseInt(page); 
+    var page = parseInt(pageStr, 10); 
     this.page = page;
     this.pageStart = (this.page - 1) * this.pageListCount;
     this.pageEnd = this.page * this.pageListCount;
