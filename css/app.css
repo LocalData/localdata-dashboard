@@ -81,13 +81,15 @@ header a {
 .nav-tabs li {
   list-style:none;
   display:inline;
+  color: #3f5b88;
 }
 
-.nav-tabs li  {
+.nav-tabs li {
   display:block;
   float:left;
-  padding:13px 20px;
+  padding:13px 20px 13px 40px;
   font-size:18px;
+  border:0;
 }
 
 .nav-tabs li.active {

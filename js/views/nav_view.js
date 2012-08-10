@@ -9,19 +9,23 @@ NSB.views.SubnavView = Backbone.View.extend({
     // Set up the navigation elements. 
     // Each has an ID, a route, and text that displays in the tab
     this.items = [
-      this.makeNavItem('nav-responses', 'surveys/' + this.surveyId, 'Overview'),
-      this.makeNavItem('nav-scans', 'surveys/' + this.surveyId + '/scans', 'Scans'),
-      this.makeNavItem('nav-upload', 'surveys/' + this.surveyId + '/upload', 'Upload'),
-      this.makeNavItem('nav-collectors', 'surveys/' + this.surveyId + '/collectors', 'Collectors')
+      this.makeNavItem('nav-responses', 'surveys/' + this.surveyId, 'Overview', 'icon-home'),
+      this.makeNavItem('nav-map', 'surveys/' + this.surveyId + '/map', 'Map', 'icon-map-marker'),
+      this.makeNavItem('nav-export', 'surveys/' + this.surveyId + '/export', 'Export', 'icon-download'),
+      
+     //  this.makeNavItem('nav-scans', 'surveys/' + this.surveyId + '/scans', 'Scans'),
+     //  this.makeNavItem('nav-upload', 'surveys/' + this.surveyId + '/upload', 'Upload'),
+     // this.makeNavItem('nav-collectors', 'surveys/' + this.surveyId + '/collectors', 'Collectors')
     ];
     this.current = this.items[0];
   },
   
-  makeNavItem: function(id, fragment, title) {
+  makeNavItem: function(id, fragment, title, icon) {
     var item = {
       id: id,
       fragment: fragment,
       title: title,
+      icon: icon,
       active: ''
     };
     return item;

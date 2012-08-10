@@ -6,7 +6,7 @@ NSB.views.ResponseListView = Backbone.View.extend({
   paginationView: null,
 
   initialize: function(options) {
-    _.bindAll(this, 'render', 'goTo');
+    _.bindAll(this, 'render', 'goTo', 'humanizeDates');
     this.surveyId = options.surveyId;
     
     this.responses = new NSB.collections.Responses({surveyId: this.surveyId}); 
@@ -40,9 +40,18 @@ NSB.views.ResponseListView = Backbone.View.extend({
     
   },
   
+  humanizeDates: function(responses, field) {
+    _.each(responses, function(response){
+      // 2012-06-26T20:00:52.283Z
+      response.createdHumanized = moment(response.created, "YYYY-MM-DDThh:mm:ss.SSSZ").fromNow();
+    });
+  },
+  
   render: function() {  
     console.log("Rendering response view");
     var thisPage = this.responses.toJSON().slice(this.pageStart, this.pageEnd);
+    this.humanizeDates(thisPage);  
+      
     var context = { 
       responses: thisPage
     };    

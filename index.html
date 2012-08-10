@@ -7,7 +7,7 @@
       /*@import url("css/bootstrap.min.css");
       @import url("css/bootstrap-responsive.min.css");*/
       @import url("css/reset.css");
-      
+      @import url("css/font-awesome.css");
       @import url("css/app.css");
     </style>
 </head>
@@ -29,6 +29,7 @@
     <script type="text/javascript" src="js/lib/backbone.js"></script>
     <script type="text/javascript" src="js/lib/backbone.paginator.js"></script>
     <script type="text/javascript" src="js/lib/fileuploader.js"></script>
+    <script type="text/javascript" src="js/lib/moment.min.js"></script>
     <script type="text/javascript" src="js/application.js"></script>
     
     <!-- Templates ========================================================-->
@@ -66,9 +67,9 @@
       <div class="response-list">  
       <div class="response">
       <% _.each(responses, function(r) { %>
-          <h3></h3>
-          <%= r.created %>
-          <p class="collector-name"><%= r.source.collector %></p>
+          <h3><%= r.source.collector %></h3>
+          
+          <%= r.createdHumanized %>
           <!--
           <% _.each(r.responses, function(key, resp) { %>
             <td><%= resp %></td>
@@ -109,7 +110,7 @@
     <!-- Subnav view ......................................................-->
     <script type="text/template" id="subnav-view">
     <% _.each(items, function(item) {  %>
-      <li class="<%= item.active %>"><a href="#<%= item.fragment %>"><%= item.title %></a></li>
+      <li class="<%= item.active %> <%= item.icon %>"><a href="#<%= item.fragment %>"><%= item.title %></a></li>
     <% }); %>
     </script>
     
