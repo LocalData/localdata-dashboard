@@ -3,10 +3,15 @@
 <head>
     <meta charset="utf-8">
     <title></title>
+    
+    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,900|Pacifico' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,300|Pacifico' rel='stylesheet' type='text/css'>
+    
     <style type="text/css" media="screen">
       /*@import url("css/bootstrap.min.css");
       @import url("css/bootstrap-responsive.min.css");*/
       @import url("css/reset.css");
+      @import url("http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.css");
       @import url("css/font-awesome.css");
       @import url("css/app.css");
     </style>
@@ -30,16 +35,33 @@
     <script type="text/javascript" src="js/lib/backbone.paginator.js"></script>
     <script type="text/javascript" src="js/lib/fileuploader.js"></script>
     <script type="text/javascript" src="js/lib/moment.min.js"></script>
+    <script type="text/javascript" src="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.js"></script>
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
+  	
+    <script type="text/javascript" src="js/lib/leaflet/leaflet.google.js"></script>
+
     <script type="text/javascript" src="js/application.js"></script>
     
     <!-- Templates ========================================================-->
     <!-- Home .............................................................-->
     <script type="text/template" id="home">
-      <div id='modal-list-surveys'>
-        <h1>Surveys</h1>
-        <% _.each(surveys, function(d) { %>
-            <h2><a href='#surveys/<%= d.id %>'><%= d.name %></a> </h2>
-        <% }); %>
+    
+      <header id="survey-header">
+        <div class="container">
+          <h2>Surveys</h2>
+        </div>
+      </header>
+    
+      <div id="content" class="container">
+        <div id="body">
+        <div class="survey-list floatcontainer">
+          <% _.each(surveys, function(d) { %>
+            <div class="survey">
+              <h2><a href='#surveys/<%= d.id %>'><%= d.name %></a> </h2>
+            </div>
+          <% }); %>
+        </div>
+        </div>   
       </div>
     </script>
     
@@ -60,30 +82,37 @@
       </div>   
     </script>
     
-    <!-- Response view ....................................................-->
+    <!-- Response .........................................................-->
     <script type="text/template" id="response-view">
-      <h3>Responses</h3>
-        
       <div class="response-list">  
-      <div class="response">
+      <h2>Responses</h2>
+      
       <% _.each(responses, function(r) { %>
-          <h3><%= r.source.collector %></h3>
+        <div class="response">
+          <h3 class="icon-plus-sign"><%= r.source.collector %></h3>
+          <span class="created"><%= r.createdHumanized %></span>
           
-          <%= r.createdHumanized %>
           <!--
           <% _.each(r.responses, function(key, resp) { %>
             <td><%= resp %></td>
           <% }); %>
           -->
         </tr>
+        </div>
+        
       <% }); %>
-      </div>
       </div>
       
       <div id="result-pagination"></div>
     </script>
     
-    <!-- Upload view ......................................................-->
+    
+    <!-- Map ..............................................................-->
+    <script type="text/template" id="map-view">
+      <div id="map">Map here</div>
+    </script>
+    
+    <!-- Upload ...........................................................-->
     <script type="text/template" id="upload-view">
       <h3>Upload scanned paper forms</h3>
       
@@ -93,7 +122,7 @@
       <div class="drop-area"></div>
     </script>
     
-    <!-- Scan view ........................................................-->
+    <!-- Scan .............................................................-->
     <script type="text/template" id="scan-view">
       <h3>Scanned forms</h3>
       <ul>
@@ -107,14 +136,14 @@
       </ul>
     </script>
     
-    <!-- Subnav view ......................................................-->
+    <!-- Subnav ...........................................................-->
     <script type="text/template" id="subnav-view">
     <% _.each(items, function(item) {  %>
       <li class="<%= item.active %> <%= item.icon %>"><a href="#<%= item.fragment %>"><%= item.title %></a></li>
     <% }); %>
     </script>
     
-    <!-- Pagination view ..................................................-->
+    <!-- Pagination .......................................................-->
     <script type="text/template" id="pagination-view">
       <div class="pagination">
         <ul>
@@ -141,6 +170,7 @@
     <script type="text/javascript" src="js/views/pagination_view.js"></script>
     <script type="text/javascript" src="js/views/upload_view.js"></script>
     <script type="text/javascript" src="js/views/scan_view.js"></script>
+    <script type="text/javascript" src="js/views/map_view.js"></script>
 
     <!-- Root controls all: start here -->
     <script type="text/javascript" src="js/views/root.js"></script>

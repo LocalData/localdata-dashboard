@@ -70,6 +70,12 @@ NSB.views.Root = Backbone.View.extend({
     this._router.navigate("surveys/" + id + "/upload");
   },
   
+  goto_map: function(id) {
+    this.currentContentView = this.getOrCreateView("SurveyView", {id: id});
+    this.currentContentView.showMap();
+    this._router.navigate("surveys/" + id + "/map");
+  },
+  
   goto_scans: function(id) {
     this.currentContentView = this.getOrCreateView("SurveyView", {id: id});
     this.currentContentView.showScans();

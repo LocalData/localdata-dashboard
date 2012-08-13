@@ -1,10 +1,12 @@
 NSB.routers.Index = Backbone.Router.extend({
   routes: {
     "": "home",
-    "surveys/:id": "survey",
-    "surveys/:id/scans": "scans",
     
+    "surveys/:id": "survey",
+    "surveys/:id/map": "map",
     "surveys/:id/export": "download",
+    
+    "surveys/:id/scans": "scans",
     "surveys/:id/upload": "upload",
     
     "*actions": "default_route"
@@ -21,6 +23,10 @@ NSB.routers.Index = Backbone.Router.extend({
   
   survey: function(id) {
     this.controller.goto_survey(id);
+  },
+  
+  map: function(id) {
+    this.controller.goto_map(id);
   },
   
   download: function(id) {

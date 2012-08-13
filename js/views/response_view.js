@@ -7,9 +7,8 @@ NSB.views.ResponseListView = Backbone.View.extend({
 
   initialize: function(options) {
     _.bindAll(this, 'render', 'goTo', 'humanizeDates');
-    this.surveyId = options.surveyId;
+    this.responses = options.responses;
     
-    this.responses = new NSB.collections.Responses({surveyId: this.surveyId}); 
     this.responses.on('all', this.render, this);
     this.responses.on('reset', this.setup, this);
     

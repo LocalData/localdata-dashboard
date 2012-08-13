@@ -17,6 +17,7 @@ NSB.collections.Responses = Backbone.Collection.extend({
         
   parse: function(response) {
     console.log("Parsing response collection");
+    console.log(response);
     return response.responses;
   }
   
