@@ -12,7 +12,7 @@ NSB.collections.Responses = Backbone.Collection.extend({
   },
   
   url: function() {
-    return NSB.API + '/surveys/' + this.surveyId + '/responses';
+    return NSB.settings.api.baseurl + '/surveys/' + this.surveyId + '/responses';
   },
         
   parse: function(response) {

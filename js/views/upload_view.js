@@ -14,7 +14,7 @@ NSB.views.UploadView = Backbone.View.extend({
     console.log("Setting up file uploader");
     var uploader = new qq.FileUploader({
       element: document.getElementById('file-uploader'),
-      action: NSB.API + '/surveys/' + this.surveyId + '/scans',
+      action: NSB.settings.api.baseurl + '/surveys/' + this.surveyId + '/scans',
       debug: true,
       extraDropzones: [qq.getByClass(document, 'drop-area')[0]]
     });

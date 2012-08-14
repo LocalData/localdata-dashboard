@@ -1,7 +1,8 @@
 NSB.models.Survey = Backbone.Model.extend({
-  urlRoot: NSB.API + "/surveys/",
+  urlRoot: NSB.settings.api.baseurl + "/surveys/",
   
   initialize: function(options) {
+    console.log(NSB.API);
     _.bindAll(this, 'parse');
     this.fetch();
   },
@@ -21,7 +22,7 @@ NSB.models.Survey = Backbone.Model.extend({
 
 NSB.collections.Surveys = Backbone.Collection.extend({
   model: NSB.models.Survey,
-  url: NSB.API + "/surveys", 
+  url: NSB.settings.api.baseurl + "/surveys", 
   
   initialize: function(options) {
     _.bindAll(this, 'parse');

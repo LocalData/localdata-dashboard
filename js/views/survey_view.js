@@ -33,19 +33,21 @@ NSB.views.SurveyView = Backbone.View.extend({
     
     // Render the sub components
     this.subnavView.render();
-    this.bodyView.ready(); 
+    this.bodyView.render(); 
   },
   
   showResponses: function() {
     console.log("Using response view");
     this.bodyView = new NSB.views.ResponseListView({responses: this.responses});
     this.subnavView.setActiveTab(0);
+    //this.bodyView.render();
   },
   
   showMap: function() {
     console.log("Using map view");
     this.bodyView = new NSB.views.MapView({responses: this.responses});
     this.subnavView.setActiveTab(1);
+    this.bodyView.render();
   },
     
   showUpload: function() {

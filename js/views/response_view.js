@@ -42,7 +42,10 @@ NSB.views.ResponseListView = Backbone.View.extend({
   humanizeDates: function(responses, field) {
     _.each(responses, function(response){
       // 2012-06-26T20:00:52.283Z
-      response.createdHumanized = moment(response.created, "YYYY-MM-DDThh:mm:ss.SSSZ").fromNow();
+      if(_.has(response, "created")) {
+        response.createdHumanized = moment(response.created, "YYYY-MM-DDThh:mm:ss.SSSZ").fromNow();
+        
+      }
     });
   },
   
@@ -54,7 +57,7 @@ NSB.views.ResponseListView = Backbone.View.extend({
     var context = { 
       responses: thisPage
     };    
-    
+
     $(this.elId).html(_.template($('#response-view').html(), context));
     
     this.paginationView = new NSB.views.PaginationView({ 
