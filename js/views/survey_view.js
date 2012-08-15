@@ -1,11 +1,12 @@
 NSB.views.SurveyView = Backbone.View.extend({
   el: $("#container"),
   
+  toshow: ['', 0],
   survey: null,
   bodyView: null,
   
   initialize: function(options) {
-    _.bindAll(this, 'render', 'showResponses', 'showUpload', 'showMap');
+    _.bindAll(this, 'render', 'show', 'showResponses', 'showUpload', 'showMap');
     
     // Set up the page and show the given survey
     this.surveyId = options.id;
@@ -18,8 +19,11 @@ NSB.views.SurveyView = Backbone.View.extend({
     // Do things once the survey has loaded
     this.survey.bind('change', this.render, this);
         
-    // Create subnav view 
+    // Create sub views
+    this.mapView = new NSB.views.MapView({responses: this.responses});
+    this.responseListView = new NSB.views.ResponseListView({responses: this.responses});
     this.subnavView = new NSB.views.SubnavView({surveyId: this.surveyId});  
+    
   },
     
   render: function() {
@@ -33,34 +37,44 @@ NSB.views.SurveyView = Backbone.View.extend({
     
     // Render the sub components
     this.subnavView.render();
-    this.bodyView.render(); 
+    this.mapView.render(); 
+    this.responseListView.render();
+    $('#map-view-container').hide();
+    $('#response-view-container').hide();
+    
+    // This is a really bad way to show the right stuff
+    this.show(this.toshow[0], this.toshow[1]);
+  },
+  
+  show: function(id, tab) {
+    // This is a really bad way to show the right stuff
+    this.toshow = [id, tab];
+    console.log("Showing " + id);
+    $("#content > div").hide();
+    $(id).show();
+    this.subnavView.setActiveTab(tab);
   },
   
   showResponses: function() {
-    console.log("Using response view");
-    this.bodyView = new NSB.views.ResponseListView({responses: this.responses});
-    this.subnavView.setActiveTab(0);
-    //this.bodyView.render();
+    this.show('#response-view-container', 0);
   },
   
   showMap: function() {
-    console.log("Using map view");
-    this.bodyView = new NSB.views.MapView({responses: this.responses});
-    this.subnavView.setActiveTab(1);
-    this.bodyView.render();
+    this.show('#map-view-container', 1);
   },
     
+  // Not yet implemented
   showUpload: function() {
     console.log("Using upload view");
-    this.bodyView = new NSB.views.UploadView({surveyId: this.surveyId});
-    this.subnavView.setActiveTab(2);
-    this.bodyView.render();
+   // this.bodyView = new NSB.views.UploadView({surveyId: this.surveyId});
+   // this.subnavView.setActiveTab(2);
+   // this.bodyView.render();
   },
   
   showScans: function() {
     console.log("Using scans view");
-    this.bodyView = new NSB.views.ScansListView({surveyId: this.surveyId});
-    this.subnavView.setActiveTab(1);
+   // this.bodyView = new NSB.views.ScansListView({surveyId: this.surveyId});
+   // this.subnavView.setActiveTab(1);
   }
   
 });

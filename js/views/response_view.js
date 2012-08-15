@@ -1,6 +1,6 @@
 NSB.views.ResponseListView = Backbone.View.extend({
   
-  elId: "#body",
+  elId: "#response-view-container",
   responses: null,
   surveyId: null,
   paginationView: null,
@@ -8,6 +8,11 @@ NSB.views.ResponseListView = Backbone.View.extend({
   initialize: function(options) {
     _.bindAll(this, 'render', 'goTo', 'humanizeDates');
     this.responses = options.responses;
+    console.log(this.responses);
+    
+    if (_.has(options, 'elId')) {
+      this.elId = options.elId;
+    };
     
     this.responses.on('all', this.render, this);
     this.responses.on('reset', this.setup, this);
@@ -16,7 +21,7 @@ NSB.views.ResponseListView = Backbone.View.extend({
   
   setup: function() {
     this.page = 0;
-    this.pageListCount = 10;
+    this.pageListCount = 100;
     this.pageStart = 0;
     this.pageEnd = this.pageStart + this.pageListCount;
 

@@ -115,8 +115,8 @@ NSB.API = new function() {
     lngDiff = ne.lng - sw.lng;
     latDiff = ne.lat - sw.lat;
     
-    lngMod = lngDiff;
-    latMod = latDiff;
+    lngMod = lngDiff / 2;
+    latMod = latDiff / 2;
     
     var newSW = new L.LatLng(sw.lat - latMod, sw.lng - lngMod);
     var newNE = new L.LatLng(ne.lat + latMod, ne.lng + lngMod);

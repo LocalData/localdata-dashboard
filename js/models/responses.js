@@ -6,9 +6,13 @@ NSB.collections.Responses = Backbone.Collection.extend({
   model: NSB.models.Response,
   
   initialize: function(options) {
-    console.log("Getting responses");
-    this.surveyId = options.surveyId;
-    this.fetch();
+    // Ugly -- we'll need to find a nicer way to init this thing.s
+    // Maybe: function(models, options)
+    if(options != null) {
+      console.log("Getting responses");
+      this.surveyId = options.surveyId;
+      this.fetch();
+    }
   },
   
   url: function() {

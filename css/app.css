@@ -35,7 +35,7 @@ h3 {
   overflow:auto;
 }
 
-#body {
+#content {
   background:#fff;
   border:5px solid #c7d3e5;
   border-top:0;
@@ -145,6 +145,14 @@ header a {
 }
 
 .response-list .response h3 {
+}
+
+.answers {
+  margin-top:10px;
+}
+
+.key {
+  color:#999;
 }
 
 #map {

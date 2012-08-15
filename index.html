@@ -10,9 +10,9 @@
     <style type="text/css" media="screen">
       /*@import url("css/bootstrap.min.css");
       @import url("css/bootstrap-responsive.min.css");*/
-      @import url("css/reset.css");
+      @import url("css/lib/reset.css");
+      @import url("css/lib/font-awesome.css");
       @import url("http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.css");
-      @import url("css/font-awesome.css");
       @import url("css/app.css");
     </style>
 </head>
@@ -35,7 +35,7 @@
     <script type="text/javascript" src="js/lib/backbone.paginator.js"></script>
     <script type="text/javascript" src="js/lib/fileuploader.js"></script>
     <script type="text/javascript" src="js/lib/moment.min.js"></script>
-    <script type="text/javascript" src="http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.js"></script>
+    <script type="text/javascript" src="js/lib/leaflet/leaflet-src.js"></script>
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
   	
     <script type="text/javascript" src="js/lib/leaflet/leaflet.google.js"></script>
@@ -75,12 +75,17 @@
         </div>
       </header>
       
-      <div id="content" class="container">
+      <div id="body" class="container">
         <div id="subnav" class="nav nav-tabs">
         </div>
+        
+        <div id="content">
+          <div id="response-view-container">
+          </div>   
       
-        <div id="body">
-        </div>   
+          <div id="map-view-container">
+          </div>   
+        </div>
       </div>   
     </script>
     
@@ -92,14 +97,19 @@
       <% _.each(responses, function(r) { %>
         <div class="response">
           <h3 class="icon-plus-sign"><%= r.source.collector %></h3>
-          <span class="created"><%= r.createdHumanized %></span>
+          <div class="address"><%= r.geo_info.humanReadableName %></div>
           
-          <!--
-          <% _.each(r.responses, function(key, resp) { %>
-            <td><%= resp %></td>
+          <div class="created"><%= r.createdHumanized %></div>
+
+          <div class="answers">
+          <% _.each(r.responses, function(resp, key) { %>
+            <div class="answer">
+              <span class="key"><%= key %>:</span> 
+              <span class="value"><%= resp %></span>
+            </div>
           <% }); %>
-          -->
-        </tr>
+          </div>
+          
         </div>
         
       <% }); %>
@@ -112,6 +122,7 @@
     <!-- Map ..............................................................-->
     <script type="text/template" id="map-view">
       <div id="map">Map here</div>
+      <div id="parceldeets"></div>
     </script>
     
     <!-- Upload ...........................................................-->
