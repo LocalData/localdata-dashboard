@@ -2,7 +2,22 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title></title>
+    <title>LocalData</title>
+    
+    <script type="text/javascript">
+      var _kmq = _kmq || [];
+      var _kmk = _kmk || '1f57015c5e8f46bdc07701e1aa74c6cbdf565383';
+      function _kms(u){
+        setTimeout(function(){
+          var d = document, f = d.getElementsByTagName('script')[0],
+          s = d.createElement('script');
+          s.type = 'text/javascript'; s.async = true; s.src = u;
+          f.parentNode.insertBefore(s, f);
+        }, 1);
+      }
+      _kms('//i.kissmetrics.com/i.js');
+      _kms('//doug1izaerwt3.cloudfront.net/' + _kmk + '.1.js');
+    </script>
     
     <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,900|Pacifico' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,300|Pacifico' rel='stylesheet' type='text/css'>
@@ -92,24 +107,34 @@
     <!-- Response .........................................................-->
     <script type="text/template" id="response-view">
       <div class="response-list">  
-      <h2>Responses</h2>
+      <h2><%= _.size(responses) %> Responses</h2>
       
       <% _.each(responses, function(r) { %>
         <div class="response">
-          <h3 class="icon-plus-sign"><%= r.source.collector %></h3>
-          <div class="address"><%= r.geo_info.humanReadableName %></div>
+          <div class="created"><%- r.createdHumanized %></div>
+          <div class="address icon-map-marker">
+            <% if(r.geo_info != undefined) { %>
+              <%- r.geo_info.humanReadableName %>
+            <% }else { %>
+              <%- r.parcel_id %>
+            <% }; %>
+          </div>
+          <div class="collector icon-user">
+            <% if(r.geo_info != undefined) { %>
+              <%- r.source.collector %>
+            <% } else{ %>
+              <%- r.responses.collector %>
+            <% } %>
+          </div>
           
-          <div class="created"><%= r.createdHumanized %></div>
-
           <div class="answers">
           <% _.each(r.responses, function(resp, key) { %>
             <div class="answer">
-              <span class="key"><%= key %>:</span> 
-              <span class="value"><%= resp %></span>
+              <span class="key"><%- key %>:</span> 
+              <span class="value"><%- resp %>&nbsp;</span>
             </div>
           <% }); %>
           </div>
-          
         </div>
         
       <% }); %>

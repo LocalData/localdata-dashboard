@@ -30,6 +30,8 @@ NSB.views.Root = Backbone.View.extend({
   },
     
   getOrCreateView: function(name, options) {
+    _kmq.push(['record', name]);
+    
     // Register each view as it is created and never create more than one.
     if (name in this.views) {
       console.log("Going to " + name);
@@ -61,18 +63,21 @@ NSB.views.Root = Backbone.View.extend({
   goto_survey: function(id) {
     this.currentContentView = this.getOrCreateView("SurveyView", {id: id});
     this.currentContentView.showResponses();
+    _kmq.push(['record', "SurveyView"]);
     this._router.navigate("surveys/" + id);
   },
   
   goto_upload: function(id) {
     this.currentContentView = this.getOrCreateView("SurveyView", {id: id});
     this.currentContentView.showUpload();
+    _kmq.push(['record', "UploadView"]);
     this._router.navigate("surveys/" + id + "/upload");
   },
   
   goto_map: function(id) {
     this.currentContentView = this.getOrCreateView("SurveyView", {id: id});
     this.currentContentView.showMap();
+    _kmq.push(['record', "MapView"]);
     this._router.navigate("surveys/" + id + "/map");
   },
   
@@ -85,7 +90,7 @@ NSB.views.Root = Backbone.View.extend({
   goto_export: function(id) {
     this.currentContentView = this.getOrCreateView("ExportView");
     this.currentContentView.reset(id);
-
+    _kmq.push(['record', "ExportView"]);
     this._router.navigate("surveys/" + id + "/export");
   }
   

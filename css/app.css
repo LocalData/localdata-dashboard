@@ -134,17 +134,40 @@ header a {
 
 .response-list > h2 {
   text-transform:uppercase;
+  font-size:24px;
   font-weight:800;
   color:#96c4b2;
+  border-bottom:1px dotted #86bba6;
+  text-align:center;
+  margin-bottom:10px;
+  padding-bottom:10px;
+  
 }
 
 .response-list .response {
+  position:relative;
   border-left: 5px solid #b7d6ca;
-  padding:10px;
-  margin-bottom:10px;
+  padding:2px 0px 30px 10px;
+  margin-left:50%;
+  max-width:300px;
 }
 
-.response-list .response h3 {
+.response-list .response .created  {
+  width:300px;
+  position:absolute;
+  text-align:right;
+  left:-310px;
+}
+
+.response-list .response h3:before {
+  padding-right:10px;
+  color:#96c4b2;
+}
+
+.response-list .address:before,
+.response-list .collector:before {
+  color:#bbb;
+  padding-right:2px;
 }
 
 .answers {
@@ -153,10 +176,19 @@ header a {
 
 .key {
   color:#999;
+  wwidth:300px;
+  wposition:absolute;
+  wtext-align:right;
+  wleft:-310px;
+}
+
+.key, .value {
+  margin-bottom:4px;
 }
 
 #map {
   height:300px;
+  margin-bottom:20px;
 }
 
 
