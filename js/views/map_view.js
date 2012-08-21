@@ -7,15 +7,31 @@ NSB.views.MapView = Backbone.View.extend({
   paginationView: null,
   selectedLayer: null,
   selectedObject: {},
+  markers: {},  
   
   initialize: function(options) {
-    _.bindAll(this, 'render', 'selectObject', 'renderObject', 'renderObjects', 'getParcelsInBounds');
-    
+    _.bindAll(this, 'render', 'selectObject', 'renderObject', 
+      'renderObjects', 'getParcelsInBounds', 'getResponsesInBounds', 'addDoneMarker',
+      'addResultsToMap');
     
     this.responses = options.responses;
     
     this.parcelIdsOnTheMap = {};
     this.parcelsLayerGroup = new L.LayerGroup();
+    this.doneMarkersLayerGroup = new L.LayerGroup();
+    
+    this.CheckIcon = L.Icon.extend({
+      options: {
+        className: 'CheckIcon',
+        iconUrl: 'img/icons/check-16.png',
+        shadowUrl: 'img/icons/check-16.png',
+      	iconSize: new L.Point(16, 16),
+      	shadowSize: new L.Point(16, 16),
+      	iconAnchor: new L.Point(8, 8),
+      	popupAnchor: new L.Point(8, 8)
+      }
+    });
+    
     
     this.defaultStyle = {
       'opacity': 1,
@@ -39,15 +55,20 @@ NSB.views.MapView = Backbone.View.extend({
     
     // Set up the map with Google Maps
     this.map = new L.map('map');
+    this.markers = {};
     
     var googleLayer = new L.Google("HYBRID");
     this.map.addLayer(googleLayer);  
     this.map.addLayer(this.parcelsLayerGroup);
-    this.map.setView([42.35238776165833,-83.06136177185056], 19);
+    this.map.addLayer(this.doneMarkersLayerGroup);
+    
+    this.map.setView([42.374891,-83.069504], 17);
     
     this.getParcelsInBounds();  
+    this.getResponsesInBounds();  
     
     this.map.on('moveend', this.getParcelsInBounds);
+    this.map.on('moveend', this.getResponsesInBounds);
   },
   
   renderObject: function(obj) {
@@ -82,7 +103,7 @@ NSB.views.MapView = Backbone.View.extend({
   getParcelsInBounds: function() {
     // Don't add any parcels if the zoom is really far out. 
     zoom = this.map.getZoom();
-    if(zoom < 17) {
+    if(zoom < 16) {
       return;
     }
     
@@ -95,15 +116,45 @@ NSB.views.MapView = Backbone.View.extend({
     // Get parcel data in the bounds
     NSB.API.getObjectsInBounds(this.map.getBounds(), this.renderObjects); 
   },
+    
+  // Adds a checkbox marker to the given point
+  addDoneMarker: function(latlng, id) {
+    // Only add markers if they aren't already on the map.
+
+    if (true){ //this.markers[id] == undefined
+      var doneIcon = new this.CheckIcon();
+      var doneMarker = new L.Marker(latlng, {icon: doneIcon});
+      this.doneMarkersLayerGroup.addLayer(doneMarker);
+      this.markers[id] = doneMarker;
+    };
+  },
+  
+  addResultsToMap: function(results){    
+    _.each(results, function(elt) {
+      p = new L.LatLng(elt.geo_info.centroid[0], elt.geo_info.centroid[1]);
+      id = elt.parcel_id;
+      this.addDoneMarker(p, id);
+    }, this);
+  },
+  
+  // Get all the responses in a map 
+  getResponsesInBounds: function(){  
+    console.log("Getting responses in the map");
+    
+    // Don't add any markers if the zoom is really far out. 
+    zoom = this.map.getZoom();
+    if(zoom < 17) {
+      return;
+    }
+
+    // Get the objects in the bounds
+    // And add them to the map   
+    NSB.API.getResponsesInBounds(this.map.getBounds(), this.addResultsToMap);
+  },
   
   selectObject: function(event) {
-    console.log("Layer clicked!");
-    console.log(event);
-    console.log(event.layer);
-  
-    // Deselect the previous layer, if any
-    console.log(this);
-    console.log(this.selectedLayer);
+    _kmq.push(['record', "Map object selected"]);
+    
     if (this.selectedLayer != null) {
       this.selectedLayer.setStyle(this.defaultStyle);
     };

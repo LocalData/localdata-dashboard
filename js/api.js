@@ -1,21 +1,41 @@
 NSB.API = new function() {  
+  
+  this.setSurveyIdFromSlug = function(slug, callback) {    
+    var url = NSB.settings.api.baseurl +  "/slugs/" + slug;
+    console.log("I'm using this URL to get the survey ID")
+    console.log(url);
+    
+    // Save ourselves an ajax request
+    if (NSB.settings.slug === slug && NSB.settings.surveyId != null) {
+      callback();
+    }
+    
+    // TODO: Display a nice error if the survey wans't found.
+    $.getJSON(url, function(data) {
+      console.log(data.survey);
+      NSB.settings.slug = slug;
+      NSB.settings.surveyId = data.survey;
+      callback();
+    });
+  };
+  
   /*
    * Generates the URL to retrieve results for a given parcel
    */
   this.getSurveyURL = function() {
-    return NSB.settings.api.baseurl + "/surveys/" + NSB.settings.surveyid;
+    return NSB.settings.api.baseurl + "/surveys/" + NSB.settings.surveyId;
   };
   
   this.getParcelDataURL = function(parcel_id) {
-    return NSB.settings.api.baseurl + '/surveys/' + NSB.settings.surveyid + '/parcels/' + parcel_id + '/responses';
+    return NSB.settings.api.baseurl + '/surveys/' + NSB.settings.surveyId + '/parcels/' + parcel_id + '/responses';
   };
   
   this.getGeoPointInfoURL = function(lat, lng) {
-    return NSB.settings.api.geo + '/parcels/parcel?lat=' + lat + '&lng=' + lng;
+    return NSB.settings.api.geo + '/parcels?lat=' + lat + '&lng=' + lng;
   };
   
   this.getGeoBoundsObjectsURL = function(southwest, northeast) {
-    return NSB.settings.api.geo + '/parcels/bounds?lowerleft=' + southwest.lat + "," + southwest.lng + "&topright=" + northeast.lat + "," + northeast.lng;
+    return NSB.settings.api.geo + '/parcels?bbox=' + southwest.lng + "," + southwest.lat + "," + northeast.lng + "," + northeast.lat;
   };
   
   // Given a Leaflet latlng object, return a JSON object that describes the 
@@ -70,7 +90,7 @@ NSB.API = new function() {
   // Take a map bounds object
   // Find the objects in the bounds
   // Feed those objects to the callback
-  this.getResponsesInBounds = function(bounds, callback) {
+  this.getResponsesInBounds = function(bounds, callback) {    
     var southwest = bounds.getSouthWest();
     var northeast = bounds.getNorthEast();
     
@@ -80,6 +100,9 @@ NSB.API = new function() {
 
     // Give the callback the responses.
     $.getJSON(url, function(data){
+      console.log("We got the results!");
+      console.log(url);
+      console.log(data);
       if(data.responses) {
         callback(data.responses);
       };
@@ -101,6 +124,8 @@ NSB.API = new function() {
     // Give the callback the responses.
     $.getJSON(url, function(data){
       if(data) {
+        console.log("Got parcel data");
+        console.log(data);
         callback(data);
       };
     });

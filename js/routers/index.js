@@ -2,18 +2,19 @@ NSB.routers.Index = Backbone.Router.extend({
   routes: {
     "": "home",
     
-    "surveys/:id": "survey",
-    "surveys/:id/map": "map",
-    "surveys/:id/export": "download",
+    "surveys/:slug": "survey",
+    "surveys/:slug/map": "map",
+    "surveys/:slug/export": "export",
+    "surveys/:slug/settings": "settings",
     
-    "surveys/:id/scans": "scans",
-    "surveys/:id/upload": "upload",
+    "surveys/:slug/scans": "scans",
+    "surveys/:slug/upload": "upload",
     
     "*actions": "default_route"
   },
   
   initialize: function(options) {
-      this.controller = options.controller;
+    this.controller = options.controller;
   },
   
   home: function() {
@@ -21,24 +22,29 @@ NSB.routers.Index = Backbone.Router.extend({
     this.controller.goto_home();
   },
   
-  survey: function(id) {
-    this.controller.goto_survey(id);
+  survey: function(slug) {
+    NSB.API.setSurveyIdFromSlug(slug, this.controller.goto_survey);
+    //this.controller.goto_survey(NSB.API.setSurveyIdFromSlug(slug));
   },
   
-  map: function(id) {
-    this.controller.goto_map(id);
+  map: function(slug) {
+    NSB.API.setSurveyIdFromSlug(slug, this.controller.goto_map)
   },
   
-  download: function(id) {
-    this.controller.goto_export(id);
+  settings: function(slug) {
+    NSB.API.setSurveyIdFromSlug(slug, this.controller.goto_settings)
   },
   
-  scans: function(id) {
-    this.controller.goto_scans(id);
+  export: function(slug) {
+    NSB.API.setSurveyIdFromSlug(slug, this.controller.goto_export)
   },
   
-  upload: function(id) {
-    this.controller.goto_upload(id);
+  scans: function(slug) {
+    NSB.API.setSurveyIdFromSlug(slug, this.controller.goto_scans)
+  },
+  
+  upload: function(slug) {
+    NSB.API.setSurveyIdFromSlug(slug, this.controller.goto_upload)
   },
     
   default_route: function(actions) {

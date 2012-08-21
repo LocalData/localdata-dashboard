@@ -74,7 +74,7 @@
         <div class="survey-list floatcontainer">
           <% _.each(surveys, function(d) { %>
             <div class="survey">
-              <h2><a href='#surveys/<%= d.id %>'><%= d.name %></a> </h2>
+              <h2><a href='#surveys/<%= d.slug %>'><%= d.name %></a> </h2>
             </div>
           <% }); %>
         </div>
@@ -95,49 +95,74 @@
         </div>
         
         <div id="content">
-          <div id="response-view-container">
-          </div>   
-      
-          <div id="map-view-container">
-          </div>   
+          <div id="response-view-container"></div>   
+          <div id="map-view-container"></div>   
+          <div id="settings-view-container"></div>
+          <div id="export-view-container"></div>
         </div>
       </div>   
+    </script>
+    
+    <script type="text/template" id="settings-view">
+      <h2>Survey Settings</h2>
+      
+      <% _.each(forms, function(form) { %>
+        <form action="" method="get" accept-charset="utf-8" data-id="<%= form.id %>">
+          <textarea name="questions" rows="8" cols="40"><%= JSON.stringify(form.questions) %></textarea>
+          <input type="submit" value="Save">
+        </form>
+      <% }); %>
+      
     </script>
     
     <!-- Response .........................................................-->
     <script type="text/template" id="response-view">
       <div class="response-list">  
-      <h2><%= _.size(responses) %> Responses</h2>
+      <h2><%= _.size(responses) %> Response<% if(_.size(responses) != 1) { %>s<% } %></h2>
       
-      <% _.each(responses, function(r) { %>
-        <div class="response">
-          <div class="created"><%- r.createdHumanized %></div>
-          <div class="address icon-map-marker">
-            <% if(r.geo_info != undefined) { %>
-              <%- r.geo_info.humanReadableName %>
-            <% }else { %>
-              <%- r.parcel_id %>
-            <% }; %>
-          </div>
-          <div class="collector icon-user">
-            <% if(r.geo_info != undefined) { %>
-              <%- r.source.collector %>
-            <% } else{ %>
-              <%- r.responses.collector %>
-            <% } %>
-          </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Location</th>
+            <th>By</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+            
+        <tbody>
+        <% _.each(responses, function(r) { %>
+          <tr class="response">
+            <td class="created"><%- r.createdHumanized %></td>
+            <td class="address icon-map-marker">
+              <% if(r.geo_info != undefined) { %>
+                <%- r.geo_info.humanReadableName %>
+              <% }else { %>
+                <%- r.parcel_id %>
+              <% }; %>
+            </td>
+            <td class="collector icon-user">
+              <% if(r.geo_info != undefined) { %>
+                <%- r.source.collector %>
+              <% } else{ %>
+                <%- r.responses.collector %>
+              <% } %>
+            </td>
           
-          <div class="answers">
-          <% _.each(r.responses, function(resp, key) { %>
-            <div class="answer">
-              <span class="key"><%- key %>:</span> 
-              <span class="value"><%- resp %>&nbsp;</span>
-            </div>
-          <% }); %>
-          </div>
-        </div>
+            <td class="answers">
+            <% _.each(r.responses, function(resp, key) { %>
+              <div class="answer">
+                <span class="key"><%- key %>:</span> 
+                <span class="value"><%- resp %>&nbsp;</span>
+              </div>
+            <% }); %>
+            </td>
+          </tr>
         
-      <% }); %>
+        <% }); %>
+        </tbody>
+      </table>
+      
       </div>
       
       <div id="result-pagination"></div>
@@ -146,9 +171,27 @@
     
     <!-- Map ..............................................................-->
     <script type="text/template" id="map-view">
+      <div id="map-controls">
+        <input type="text" id="address-search" placeholder="address">
+        <a href="" class="button icon-search">Jump to address</a>
+      </div>
       <div id="map">Map here</div>
       <div id="parceldeets"></div>
     </script>
+    
+    <!-- Export ...........................................................-->
+    <script type="text/template" id="export-view">
+      <h3>Export your data</h3>
+      <div class="button-container">
+        <a href="<%= baseurl %>/surveys/<%= surveyId %>/csv" class="button"><span class="icon-table"></span> Download CSV</a>
+        <a href="<%= baseurl %>/surveys/<%= surveyId %>/kml" class="button"><span class="button-in"><span class="icon-globe"></span> Download KML (points) </span></a>
+        <!--
+        <a href="<%= baseurl %>/surveys/<%= surveyId %>/kml" class="button"><span class="button-in"><span class="icon-globe"></span> Download KML (parcels)</span></a>
+        -->
+      </div>
+    </script>
+    
+    
     
     <!-- Upload ...........................................................-->
     <script type="text/template" id="upload-view">
@@ -177,7 +220,7 @@
     <!-- Subnav ...........................................................-->
     <script type="text/template" id="subnav-view">
     <% _.each(items, function(item) {  %>
-      <li class="<%= item.active %> <%= item.icon %>"><a href="#<%= item.fragment %>"><%= item.title %></a></li>
+      <li class="<%= item.active %>"><a href="#<%= item.fragment %>"><span class="<%= item.icon %>"></span><%= item.title %></a></li>
     <% }); %>
     </script>
     
@@ -198,6 +241,7 @@
     <script type="text/javascript" src="js/models/surveys.js"></script>
     <script type="text/javascript" src="js/models/responses.js"></script>
     <script type="text/javascript" src="js/models/scans.js"></script>
+    <script type="text/javascript" src="js/models/forms.js"></script>
     <script type="text/javascript" src="js/routers/index.js"></script>
     
     <!-- Views -->
@@ -209,6 +253,8 @@
     <script type="text/javascript" src="js/views/upload_view.js"></script>
     <script type="text/javascript" src="js/views/scan_view.js"></script>
     <script type="text/javascript" src="js/views/map_view.js"></script>
+    <script type="text/javascript" src="js/views/settings_view.js"></script>
+    <script type="text/javascript" src="js/views/export_view.js"></script>
 
     <!-- Root controls all: start here -->
     <script type="text/javascript" src="js/views/root.js"></script>

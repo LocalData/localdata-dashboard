@@ -15,7 +15,7 @@ NSB.views.PaginationView = Backbone.View.extend({
     console.log("Rendering pagination view");
     var context = { pageCount: this.pageCount };    
     $(this.el).html(_.template($('#pagination-view').html(), context));
-    return this;
+    // return this;
   },
   
   goToPage: function(e) {

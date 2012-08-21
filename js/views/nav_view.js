@@ -4,14 +4,16 @@ NSB.views.SubnavView = Backbone.View.extend({
   
   initialize: function(options) {
     _.bindAll(this, 'render', 'makeNavItem', 'makeNavItem');
-    this.surveyId = options.surveyId;
+    this.slug = options.slug;
     
     // Set up the navigation elements. 
     // Each has an ID, a route, and text that displays in the tab
     this.items = [
-      this.makeNavItem('nav-responses', 'surveys/' + this.surveyId, 'Overview', 'icon-home'),
-      this.makeNavItem('nav-map', 'surveys/' + this.surveyId + '/map', 'Map', 'icon-map-marker'),
-      this.makeNavItem('nav-export', 'surveys/' + this.surveyId + '/export', 'Export', 'icon-download'),
+      this.makeNavItem('nav-responses', 'surveys/' + this.slug, 'Overview', 'icon-home'),
+      this.makeNavItem('nav-map', 'surveys/' + this.slug + '/map', 'Map', 'icon-map-marker'),
+      this.makeNavItem('nav-export', 'surveys/' + this.slug + '/export', 'Export', 'icon-download'),
+      
+      // this.makeNavItem('nav-settings', 'surveys/' + this.surveyId + '/settings', '', 'icon-cog'),
       
      //  this.makeNavItem('nav-scans', 'surveys/' + this.surveyId + '/scans', 'Scans'),
      //  this.makeNavItem('nav-upload', 'surveys/' + this.surveyId + '/upload', 'Upload'),

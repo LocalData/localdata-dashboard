@@ -60,38 +60,45 @@ NSB.views.Root = Backbone.View.extend({
     this.currentContentView = this.getOrCreateView("Home");
   },
   
-  goto_survey: function(id) {
-    this.currentContentView = this.getOrCreateView("SurveyView", {id: id});
+  goto_survey: function() {
+    this.currentContentView = this.getOrCreateView("SurveyView", {id: NSB.settings.surveyId});
     this.currentContentView.showResponses();
     _kmq.push(['record', "SurveyView"]);
-    this._router.navigate("surveys/" + id);
+    this._router.navigate("surveys/" + NSB.settings.slug);
   },
   
-  goto_upload: function(id) {
-    this.currentContentView = this.getOrCreateView("SurveyView", {id: id});
+  goto_upload: function() {
+    this.currentContentView = this.getOrCreateView("SurveyView", {id: NSB.settings.surveyId});
     this.currentContentView.showUpload();
     _kmq.push(['record', "UploadView"]);
-    this._router.navigate("surveys/" + id + "/upload");
+    this._router.navigate("surveys/" + NSB.settings.slug + "/upload");
   },
   
-  goto_map: function(id) {
-    this.currentContentView = this.getOrCreateView("SurveyView", {id: id});
+  goto_map: function() {
+    this.currentContentView = this.getOrCreateView("SurveyView", {id: NSB.settings.surveyId});
     this.currentContentView.showMap();
     _kmq.push(['record', "MapView"]);
-    this._router.navigate("surveys/" + id + "/map");
+    this._router.navigate("surveys/" + NSB.settings.slug + "/map");
   },
   
-  goto_scans: function(id) {
-    this.currentContentView = this.getOrCreateView("SurveyView", {id: id});
+  goto_settings: function() {
+    this.currentContentView = this.getOrCreateView("SurveyView", {id: NSB.settings.surveyId});
+    this.currentContentView.showSettings();
+    _kmq.push(['record', "SettingsView"]);
+    this._router.navigate("surveys/" + NSB.settings.slug + "/settings");
+  },
+  
+  goto_scans: function() {
+    this.currentContentView = this.getOrCreateView("SurveyView", {id: NSB.settings.surveyId});
     this.currentContentView.showScans();
-    this._router.navigate("surveys/" + id + "/scans");
+    this._router.navigate("surveys/" + NSB.settings.slug + "/scans");
   },
   
-  goto_export: function(id) {
-    this.currentContentView = this.getOrCreateView("ExportView");
-    this.currentContentView.reset(id);
+  goto_export: function() {
+    this.currentContentView = this.getOrCreateView("SurveyView", {id: NSB.settings.surveyId});
+    this.currentContentView.showExport();
     _kmq.push(['record', "ExportView"]);
-    this._router.navigate("surveys/" + id + "/export");
+    this._router.navigate("surveys/" + NSB.settings.slug + "/export");
   }
   
 });

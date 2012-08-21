@@ -2,7 +2,6 @@ NSB.models.Survey = Backbone.Model.extend({
   urlRoot: NSB.settings.api.baseurl + "/surveys/",
   
   initialize: function(options) {
-    console.log(NSB.API);
     _.bindAll(this, 'parse');
     this.fetch();
   },
@@ -30,6 +29,7 @@ NSB.collections.Surveys = Backbone.Collection.extend({
   },
   
   parse: function(response) {
+    console.log(response.surveys);
     return response.surveys;
   }
   
