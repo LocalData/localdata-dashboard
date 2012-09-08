@@ -62,7 +62,6 @@ NSB.views.SurveyView = Backbone.View.extend({
   show: function(id, tab) {
     // This is a really bad way to show the right stuff
     this.toshow = [id, tab];
-    console.log("Showing " + id);
     $("#content > div").hide();
     $(id).show();
     this.subnavView.setActiveTab(tab);

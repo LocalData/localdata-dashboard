@@ -11,8 +11,6 @@ NSB.views.ExportView = Backbone.View.extend({
   
     
   render: function() {
-    console.log("Rendering upload view");
-    
     // Set the context & render the page
     var context = {
       surveyId: this.surveyId,

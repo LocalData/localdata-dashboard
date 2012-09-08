@@ -19,7 +19,6 @@ NSB.collections.Forms = Backbone.Collection.extend({
   model: NSB.models.Form,
   
   initialize: function(options) {
-    console.log("Getting forms");
     this.surveyId = options.surveyId;
     this.fetch();
   },
@@ -29,7 +28,6 @@ NSB.collections.Forms = Backbone.Collection.extend({
   },
   
   parse: function(response) {
-    console.log("Parsing forms");
     console.log(response);
     
     if (response.forms.length === 0) {

@@ -55,7 +55,6 @@ NSB.views.ResponseListView = Backbone.View.extend({
   },
   
   render: function() {  
-    console.log("Rendering response view");
     var thisPage = this.responses.toJSON().slice(this.pageStart, this.pageEnd);
     this.humanizeDates(thisPage);  
       

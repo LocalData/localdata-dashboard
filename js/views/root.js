@@ -44,17 +44,18 @@ NSB.views.Root = Backbone.View.extend({
     return this.views[name];
   },
   
-  switchPage: function(page) {
-    /*
-     * Show the given page; hide the others
-     */
-    $('.page').hide();
-    if (page.show !== undefined) {
-      page.show();
-    } else {
-      page.$el.show();
-    }
-  },
+  // Not used anywhere
+  // switchPage: function(page) {
+  //   /*
+  //    * Show the given page; hide the others
+  //    */
+  //   $('.page').hide();
+  //   if (page.show !== undefined) {
+  //     page.show();
+  //   } else {
+  //     page.$el.show();
+  //   }
+  // },
   
   goto_home: function() {
     this.currentContentView = this.getOrCreateView("Home");

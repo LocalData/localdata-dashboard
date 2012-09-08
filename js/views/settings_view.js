@@ -47,7 +47,6 @@ NSB.views.SettingsView = Backbone.View.extend({
   },
   
   render: function() {  
-    console.log("Settings view");
     console.log(this.forms);
     
     var context = { 

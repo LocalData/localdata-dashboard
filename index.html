@@ -184,7 +184,9 @@
       <h3>Export your data</h3>
       <div class="button-container">
         <a href="<%= baseurl %>/surveys/<%= surveyId %>/csv" class="button"><span class="icon-table"></span> Download CSV</a>
+        
         <a href="<%= baseurl %>/surveys/<%= surveyId %>/kml" class="button"><span class="button-in"><span class="icon-globe"></span> Download KML (points) </span></a>
+        
         <!--
         <a href="<%= baseurl %>/surveys/<%= surveyId %>/kml" class="button"><span class="button-in"><span class="icon-globe"></span> Download KML (parcels)</span></a>
         -->
@@ -197,7 +199,7 @@
     <script type="text/template" id="upload-view">
       <h3>Upload scanned paper forms</h3>
       
-      <p>When you've scanned in the paper forms, you can upload them here.</p>
+      <p>When you&apos;ve scanned in the paper forms, you can upload them here.</p>
       <p>Either click the button and select the files, or drag and drop them right onto the page!</p>
       <div id="file-uploader"></div>
       <div class="drop-area"></div>
@@ -226,7 +228,7 @@
     
     <!-- Pagination .......................................................-->
     <script type="text/template" id="pagination-view">
-      <div class="pagination">
+      <!--<div class="pagination">
         <ul>
           <li><a href="#">Prev</a></li>          
           <% _.each(_.range(1, pageCount + 1), function(page) { %>
@@ -234,7 +236,7 @@
           <% }); %>
           <li><a href="#">Next</a></li>
         </ul>
-      </div>
+      </div>-->
     </script>
          
     <!-- Models & router -->
