@@ -15,23 +15,23 @@ NSB.views.MapView = Backbone.View.extend({
       'addResultsToMap');
     
     this.responses = options.responses;
+    this.responses.on('all', this.mapResponses, this);
     
     this.parcelIdsOnTheMap = {};
-    this.parcelsLayerGroup = new L.LayerGroup();
-    this.doneMarkersLayerGroup = new L.LayerGroup();
+    this.parcelsLayerGroup = new L.FeatureGroup();
+    this.doneMarkersLayerGroup = new L.FeatureGroup();
     
     this.CheckIcon = L.Icon.extend({
       options: {
         className: 'CheckIcon',
         iconUrl: 'img/icons/check-16.png',
         shadowUrl: 'img/icons/check-16.png',
-      	iconSize: new L.Point(16, 16),
-      	shadowSize: new L.Point(16, 16),
-      	iconAnchor: new L.Point(8, 8),
-      	popupAnchor: new L.Point(8, 8)
+        iconSize: new L.Point(16, 16),
+        shadowSize: new L.Point(16, 16),
+        iconAnchor: new L.Point(8, 8),
+        popupAnchor: new L.Point(8, 8)
       }
     });
-    
     
     this.defaultStyle = {
       'opacity': 1,
@@ -64,20 +64,42 @@ NSB.views.MapView = Backbone.View.extend({
     
     this.map.setView([42.374891,-83.069504], 17);
     
-    this.getParcelsInBounds();  
-    this.getResponsesInBounds();  
-    
-    this.map.on('moveend', this.getParcelsInBounds);
-    this.map.on('moveend', this.getResponsesInBounds);
+    // this.getParcelsInBounds();  
+    // this.getResponsesInBounds();  
+
+    // this.map.on('moveend', this.getParcelsInBounds);
+    // this.map.on('moveend', this.getResponsesInBounds);
+  },
+
+  mapResponses: function() {
+    console.log(this.responses);
+
+    _.each(this.responses.models, function(response){
+      // Make sure we have the geometry for this parcel
+      console.log(response);
+      console.log(response.get("geo_info").geometry);
+      if(_.has(response.get("geo_info"), "geometry")) {
+        this.renderObject({
+          parcelId: response.get("parcel_id"),
+          geometry: response.get("geo_info").geometry
+        });
+      }
+
+    }, this);
+
+    this.map.fitBounds(this.parcelsLayerGroup.getBounds());
+
   },
   
   renderObject: function(obj) {
     // We don't want to re-draw parcels that are already on the map
     // So we keep a hash map with the layers so we can unrender them
     if (! _.has(this.parcelIdsOnTheMap, obj.parcelId)){
+
+      console.log(obj);
      
       // Make sure the format fits Leaflet's geoJSON expectations
-      obj['geometry'] = obj.polygon;
+      // obj['geometry'] = obj.polygon;
       obj['type'] = "Feature";
   
       // Create a new geojson layer and style it. 
@@ -108,10 +130,10 @@ NSB.views.MapView = Backbone.View.extend({
     }
     
     // If there are a lot of objects, let's reset.
-    if( _.size(this.parcelIdsOnTheMap) > 1000 ) {
+    if( _.size(this.parcelIdsOnTheMap) > 1250 ) {
       this.parcelsLayerGroup.clearLayers();
       this.parcelIdsOnTheMap = {};
-    };
+    }
     
     // Get parcel data in the bounds
     NSB.API.getObjectsInBounds(this.map.getBounds(), this.renderObjects); 
