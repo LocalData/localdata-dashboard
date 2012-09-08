@@ -52,6 +52,9 @@ copy:
 	cp *.html $(OUTPUT)/
 	mkdir -p $(OUTPUT)/img
 	cp -r img/* $(OUTPUT)/img/
+	mkdir -p $(OUTPUT)/img
+	cp -r img/* $(OUTPUT)/img/
+
 	mkdir -p $(OUTPUT)/js/lib
 	cp -r js/lib/* $(OUTPUT)/js/lib/
 
