@@ -3,19 +3,28 @@ NSB.views.Home = Backbone.View.extend({
   el: $("#container"),
   
   initialize: function(options) {
-    _.bindAll(this, 'render');
+    _.bindAll(this, 'render', 'appendSurvey');
+
     this.surveys = new NSB.collections.Surveys();
-    this.surveys.bind('all', this.render);
+    this.surveys.bind('reset', this.render);
+    this.surveys.fetch();
   },
   
   render: function() {  
-    console.log("Rendering home");
-    var context = { 
-      surveys: this.surveys.toJSON()
-    };
-    
+    var self = this;
+    var context = {};
     this.$el.html(_.template($('#home').html(), context));  
+
+    this.surveys.each(function(survey) {
+      self.appendSurvey(survey);
+    });
+  },
+
+  appendSurvey: function(survey) {
+    var surveyListItemView = new NSB.views.SurveyListItemView({
+      model: survey
+    });
+    $('.survey-list', this.el).append(surveyListItemView.render().el);
   }
   
 });
-

@@ -1,3 +1,18 @@
+NSB.views.SurveyListItemView = Backbone.View.extend({
+
+  initialize: function() {
+    _.bindAll(this, 'render');
+    this.model.bind('change', this.render);
+  },
+
+  render: function() {
+    this.$el.html(_.template($('#survey-list-item-view').html(), {survey: this.model }));  
+    return this;
+  },
+
+});
+
+
 NSB.views.SurveyView = Backbone.View.extend({
   el: $("#container"),
   
@@ -45,15 +60,18 @@ NSB.views.SurveyView = Backbone.View.extend({
     console.log(this.settingsView);
     
     // Render the sub components
+    //$('#map-view-container').hide();
+    $('#response-view-container').hide();
+    $('#settings-view-container').hide();
+    $('#export-view-container').hide();
+
+
     this.subnavView.render();
     this.mapView.render(); 
     this.settingsView.render(); 
     this.exportView.render(); 
     
     this.responseListView.render();
-    $('#map-view-container').hide();
-    $('#response-view-container').hide();
-    $('#settings-view-container').hide();
     
     // This is a really bad way to show the right stuff
     this.show(this.toshow[0], this.toshow[1]);

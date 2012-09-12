@@ -72,17 +72,16 @@ NSB.views.MapView = Backbone.View.extend({
   },
 
   mapResponses: function() {
-    console.log(this.responses);
-
     _.each(this.responses.models, function(response){
-      // Make sure we have the geometry for this parcel
       console.log(response);
-      console.log(response.get("geo_info").geometry);
+      // Make sure we have the geometry for this parcel
       if(_.has(response.get("geo_info"), "geometry")) {
         this.renderObject({
           parcelId: response.get("parcel_id"),
           geometry: response.get("geo_info").geometry
         });
+      } else {
+        console.log("No shape for this object");
       }
 
     }, this);
@@ -95,8 +94,6 @@ NSB.views.MapView = Backbone.View.extend({
     // We don't want to re-draw parcels that are already on the map
     // So we keep a hash map with the layers so we can unrender them
     if (! _.has(this.parcelIdsOnTheMap, obj.parcelId)){
-
-      console.log(obj);
      
       // Make sure the format fits Leaflet's geoJSON expectations
       // obj['geometry'] = obj.polygon;
@@ -109,7 +106,6 @@ NSB.views.MapView = Backbone.View.extend({
       
       geojsonLayer.on('click', this.selectObject);
       
-      console.log("Adding layer to the map");
       // Add the layer to the layergroup and the hashmap
       this.parcelsLayerGroup.addLayer(geojsonLayer);
       this.parcelIdsOnTheMap[obj.parcelId] = geojsonLayer;

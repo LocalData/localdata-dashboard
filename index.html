@@ -71,18 +71,15 @@
     
       <div id="content" class="container">
         <div id="body">
-        <div class="survey-list floatcontainer">
-          <% _.each(surveys, function(d) { %>
-            <div class="survey">
-              <h2><a href='#surveys/<%= d.slug %>'><%= d.name %></a> </h2>
-            </div>
-          <% }); %>
-        </div>
+          <div class="survey-list floatcontainer">
+          </div>
         </div>   
       </div>
     </script>
     
     <!-- Survey view ......................................................-->
+
+    
     <script type="text/template" id="survey-view">
       <header id="survey-header">
         <div class="container">
@@ -102,6 +99,13 @@
         </div>
       </div>   
     </script>
+
+    <script type="text/template" id="survey-list-item-view">
+      <div class="survey">
+        <h2><a href='#surveys/<%= survey.attributes.slug %>'><%= survey.attributes.name %></a></h2>
+        <%=survey.attributes.id %>
+      </div>
+    </script>
     
     <script type="text/template" id="settings-view">
       <h2>Survey Settings</h2>
@@ -115,6 +119,7 @@
       
     </script>
     
+
     <!-- Response .........................................................-->
     <script type="text/template" id="response-view">
       <div class="response-list">  
@@ -123,6 +128,7 @@
       <table>
         <thead>
           <tr>
+            <th>ID</th>
             <th>Time</th>
             <th>Location</th>
             <th>By</th>
@@ -133,6 +139,8 @@
         <tbody>
         <% _.each(responses, function(r) { %>
           <tr class="response">
+            <td class="created"><%- r.id %></td>
+
             <td class="created"><%- r.createdHumanized %></td>
             <td class="address icon-map-marker">
               <% if(r.geo_info != undefined) { %>

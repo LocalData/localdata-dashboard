@@ -14,7 +14,7 @@ NSB.models.Survey = Backbone.Model.extend({
     };
     
     return response;
-  }
+  },
   
 });
 
@@ -25,7 +25,7 @@ NSB.collections.Surveys = Backbone.Collection.extend({
   
   initialize: function(options) {
     _.bindAll(this, 'parse');
-    this.fetch();
+    // this.fetch();
   },
   
   parse: function(response) {

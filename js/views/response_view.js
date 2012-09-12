@@ -21,7 +21,7 @@ NSB.views.ResponseListView = Backbone.View.extend({
   
   setup: function() {
     this.page = 0;
-    this.pageListCount = 100;
+    this.pageListCount = 2000;
     this.pageStart = 0;
     this.pageEnd = this.pageStart + this.pageListCount;
 
