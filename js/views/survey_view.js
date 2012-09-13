@@ -8,7 +8,7 @@ NSB.views.SurveyListItemView = Backbone.View.extend({
   render: function() {
     this.$el.html(_.template($('#survey-list-item-view').html(), {survey: this.model }));  
     return this;
-  },
+  }
 
 });
 
@@ -33,19 +33,7 @@ NSB.views.SurveyView = Backbone.View.extend({
     this.responses.on('all', this.render, this);
     
     // Get the forms
-    this.forms = new NSB.collections.Forms({surveyId: this.surveyId}); 
-            
-    // Create sub views
-    this.mapView = new NSB.views.MapView({responses: this.responses});
-    this.responseListView = new NSB.views.ResponseListView({responses: this.responses});
-    
-    this.subnavView = new NSB.views.SubnavView({slug: NSB.settings.slug});  
-    this.exportView = new NSB.views.ExportView({surveyId: this.surveyId});  
-    this.settingsView = new NSB.views.SettingsView({
-      surveyId: this.surveyId,
-      forms: this.forms
-    });  
-    
+    this.forms = new NSB.collections.Forms({surveyId: this.surveyId});     
   },
     
   render: function() {
@@ -60,11 +48,23 @@ NSB.views.SurveyView = Backbone.View.extend({
     console.log(this.settingsView);
     
     // Render the sub components
-    //$('#map-view-container').hide();
     $('#response-view-container').hide();
     $('#settings-view-container').hide();
     $('#export-view-container').hide();
 
+    // Create sub views
+    this.mapView = new NSB.views.MapView({responses: this.responses});
+    this.responseListView = new NSB.views.ResponseListView({
+      el: $("#response-view-container"),
+      responses: this.responses 
+    });
+    
+    this.subnavView = new NSB.views.SubnavView({slug: NSB.settings.slug});  
+    this.exportView = new NSB.views.ExportView({surveyId: this.surveyId});  
+    this.settingsView = new NSB.views.SettingsView({
+      surveyId: this.surveyId,
+      forms: this.forms
+    });  
 
     this.subnavView.render();
     this.mapView.render(); 

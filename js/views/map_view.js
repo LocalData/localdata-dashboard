@@ -11,8 +11,7 @@ NSB.views.MapView = Backbone.View.extend({
   
   initialize: function(options) {
     _.bindAll(this, 'render', 'selectObject', 'renderObject', 
-      'renderObjects', 'getParcelsInBounds', 'getResponsesInBounds', 'addDoneMarker',
-      'addResultsToMap');
+      'renderObjects', 'getResponsesInBounds', 'addDoneMarker', 'addResultsToMap');
     
     this.responses = options.responses;
     this.responses.on('all', this.mapResponses, this);
@@ -62,28 +61,18 @@ NSB.views.MapView = Backbone.View.extend({
     this.map.addLayer(this.parcelsLayerGroup);
     this.map.addLayer(this.doneMarkersLayerGroup);
     
-    this.map.setView([42.374891,-83.069504], 17);
-    
-    // this.getParcelsInBounds();  
-    // this.getResponsesInBounds();  
-
-    // this.map.on('moveend', this.getParcelsInBounds);
-    // this.map.on('moveend', this.getResponsesInBounds);
+    this.map.setView([42.374891,-83.069504], 17); // default center
   },
 
   mapResponses: function() {
     _.each(this.responses.models, function(response){
-      console.log(response);
       // Make sure we have the geometry for this parcel
       if(_.has(response.get("geo_info"), "geometry")) {
         this.renderObject({
           parcelId: response.get("parcel_id"),
           geometry: response.get("geo_info").geometry
         });
-      } else {
-        console.log("No shape for this object");
-      }
-
+      } 
     }, this);
 
     this.map.fitBounds(this.parcelsLayerGroup.getBounds());

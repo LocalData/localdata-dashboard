@@ -44,7 +44,9 @@
     </div>
     
     <!-- Core scripts -->
-    <script type="text/javascript" src="js/lib/jquery-1.7.1.js"></script>    
+    <script type="text/javascript" src="js/lib/jquery.js"></script>
+    <script type="text/javascript" src="js/lib/tinypubsub.js"></script>    
+    
     <script type="text/javascript" src="js/lib/underscore.js"></script>    
     <script type="text/javascript" src="js/lib/backbone.js"></script>
     <script type="text/javascript" src="js/lib/backbone.paginator.js"></script>
@@ -124,11 +126,16 @@
     <script type="text/template" id="response-view">
       <div class="response-list">  
       <h2><%= _.size(responses) %> Response<% if(_.size(responses) != 1) { %>s<% } %></h2>
+
+      <select id="filter">
+      <% _.each(filters, function(filter) {%>
+        <option value="<%- filter %>"><%- filter %></option>
+      <% }); %>
+      </select>
       
       <table>
         <thead>
           <tr>
-            <th>ID</th>
             <th>Time</th>
             <th>Location</th>
             <th>By</th>
@@ -139,8 +146,6 @@
         <tbody>
         <% _.each(responses, function(r) { %>
           <tr class="response">
-            <td class="created"><%- r.id %></td>
-
             <td class="created"><%- r.createdHumanized %></td>
             <td class="address icon-map-marker">
               <% if(r.geo_info != undefined) { %>
