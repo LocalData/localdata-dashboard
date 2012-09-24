@@ -108,7 +108,7 @@
         <%=survey.attributes.id %>
       </div>
     </script>
-    
+
     <script type="text/template" id="settings-view">
       <h2>Survey Settings</h2>
       
@@ -122,17 +122,39 @@
     </script>
     
 
-    <!-- Response .........................................................-->
+    <!-- Response ...........................................................-->
+    
+    <script type="text/template" id="filter-results">
+      <% _.each(choices, function(choice) { %>
+        <a><%- choice %></a>
+      <% }); %>
+    </script>
+    
     <script type="text/template" id="response-view">
+
+      <div id="filters">
+        <div id="current-filter">
+
+        </div>
+
+        <h3>Filter results by:</h3>
+
+        <select id="filter">
+        <% _.each(filters, function(filter) {%>
+          <option value="<%- filter %>"><%- filter %></option>
+        <% }); %>
+        </select>
+
+        <div id="subfilter">
+        </div>
+
+        <a id="reset">Reset</a>
+
+      </div>
+      
       <div class="response-list">  
       <h2><%= _.size(responses) %> Response<% if(_.size(responses) != 1) { %>s<% } %></h2>
 
-      <select id="filter">
-      <% _.each(filters, function(filter) {%>
-        <option value="<%- filter %>"><%- filter %></option>
-      <% }); %>
-      </select>
-      
       <table>
         <thead>
           <tr>
@@ -207,7 +229,6 @@
     </script>
     
     
-    
     <!-- Upload ...........................................................-->
     <script type="text/template" id="upload-view">
       <h3>Upload scanned paper forms</h3>
@@ -217,6 +238,7 @@
       <div id="file-uploader"></div>
       <div class="drop-area"></div>
     </script>
+
     
     <!-- Scan .............................................................-->
     <script type="text/template" id="scan-view">

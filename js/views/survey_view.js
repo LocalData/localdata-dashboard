@@ -29,8 +29,7 @@ NSB.views.SurveyView = Backbone.View.extend({
     this.survey.bind('change', this.render, this);
     
     // Get the relevant responses    
-    this.responses = new NSB.collections.Responses({surveyId: this.surveyId}); 
-    this.responses.on('all', this.render, this);
+    this.responses = new NSB.collections.Responses([], {surveyId: this.surveyId}); 
     
     // Get the forms
     this.forms = new NSB.collections.Forms({surveyId: this.surveyId});     

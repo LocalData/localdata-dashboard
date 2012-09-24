@@ -5,10 +5,14 @@ NSB.models.Response = Backbone.Model.extend({
 NSB.collections.Responses = Backbone.Collection.extend({
   model: NSB.models.Response,
   
-  initialize: function(options) {
+  initialize: function(models, options) {
     // Ugly -- we'll need to find a nicer way to init this thing.s
     // Maybe: function(models, options)
-    if(options !== null) {
+    if(models !== []) {
+      this.models = models;
+    }
+
+    if(options !== undefined) {
       console.log("Getting responses");
       this.surveyId = options.surveyId;
       this.fetch();
@@ -33,6 +37,7 @@ NSB.collections.Responses = Backbone.Collection.extend({
         this.responseKeys = _.union(this.responseKeys, _.keys(responseJSON.responses));
       }
     }, this);
+
     return this.responseKeys;
   },
 
@@ -44,8 +49,12 @@ NSB.collections.Responses = Backbone.Collection.extend({
         }
       }
     });
-    console.log(answers);
-    return _.unique(answers);
+    uniqueAnswers = _.unique(answers);
+
+    // Replace undefined with a string for nice rendering
+    var idxOfUndefinedToReplace = _.indexOf(uniqueAnswers, undefined);
+    uniqueAnswers[idxOfUndefinedToReplace] = "[empty]";
+    return uniqueAnswers;
   }
   
 });

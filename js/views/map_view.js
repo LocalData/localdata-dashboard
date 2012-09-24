@@ -14,7 +14,7 @@ NSB.views.MapView = Backbone.View.extend({
       'renderObjects', 'getResponsesInBounds', 'addDoneMarker', 'addResultsToMap');
     
     this.responses = options.responses;
-    this.responses.on('all', this.mapResponses, this);
+    this.responses.on('reset', this.mapResponses, this);
     
     this.parcelIdsOnTheMap = {};
     this.parcelsLayerGroup = new L.FeatureGroup();
@@ -35,7 +35,7 @@ NSB.views.MapView = Backbone.View.extend({
     this.defaultStyle = {
       'opacity': 1,
       'fillOpacity': 0,
-      'weight': 1.5,
+      'weight': 2,
       'color': '#cec40d'
     };
     
@@ -43,7 +43,7 @@ NSB.views.MapView = Backbone.View.extend({
       'opacity': 1,
       'fillOpacity': 0.5,
       'fillColor': '#faf6ad',
-      'weight': 1.5,
+      'weight': 2,
       'color': '#f4eb4d'
     };
   },  
@@ -52,7 +52,6 @@ NSB.views.MapView = Backbone.View.extend({
     console.log("Rendering map view");
     $(this.elId).html(_.template($('#map-view').html(), {}));
     
-    // Set up the map with Google Maps
     this.map = new L.map('map');
     this.markers = {};
     
@@ -66,17 +65,25 @@ NSB.views.MapView = Backbone.View.extend({
 
   mapResponses: function() {
     _.each(this.responses.models, function(response){
-      // Make sure we have the geometry for this parcel
+
+      // Skip old records that don't have geo_info
+      geoInfo = response.get("geo_info");
+      if (geoInfo === undefined) {
+        return;
+      }
+
+      // Make sure were have the geometry for this parcel
       if(_.has(response.get("geo_info"), "geometry")) {
         this.renderObject({
           parcelId: response.get("parcel_id"),
           geometry: response.get("geo_info").geometry
         });
-      } 
+      }
+
     }, this);
 
+    console.log(this.parcelsLayerGroup);
     this.map.fitBounds(this.parcelsLayerGroup.getBounds());
-
   },
   
   renderObject: function(obj) {
@@ -87,7 +94,7 @@ NSB.views.MapView = Backbone.View.extend({
       // Make sure the format fits Leaflet's geoJSON expectations
       // obj['geometry'] = obj.polygon;
       obj['type'] = "Feature";
-  
+
       // Create a new geojson layer and style it. 
       var geojsonLayer = new L.GeoJSON();
       geojsonLayer.addData(obj);
@@ -178,7 +185,7 @@ NSB.views.MapView = Backbone.View.extend({
   },
   
   details: function(parcelId) {
-    console.log("Filtering for " + parcelId);
+    console.log("Finding parcels " + parcelId);
     this.sel = new NSB.collections.Responses();
     this.sel.add(this.responses.where({'parcel_id': parcelId}));
     

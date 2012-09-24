@@ -1,5 +1,5 @@
 NSB.settings.api = {
-  baseurl: 'http://localhost:3000/api', // 'http://surveydet.herokuapp.com', 
+  baseurl: 'http://surveyapidev.herokuapp.com/api', // http://localhost:3000/api', // 'http://surveydet.herokuapp.com', 
   geo: 'http://localhost:3000/api' //'http://surveydet.herokuapp.com/api',
 };
 

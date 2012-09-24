@@ -170,8 +170,16 @@ header a {
   display:block;
 }
 
+/* Filtering .................................................................*/
+#filters {
+  display:block;
+  float:left;
+  padding-right:40px;
+  max-width:250px;
+}
 
-/* Responses ...............................................................*/
+
+/* Responses .................................................................*/
 
 .response-list {
   overflow:auto;

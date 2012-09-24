@@ -7,7 +7,6 @@ NSB.views.SettingsView = Backbone.View.extend({
     _.bindAll(this, 'render', 'save');
     this.surveyId = options.surveyId;
     this.forms = options.forms;
-    console.log(this.responses);
     
     if (_.has(options, 'elId')) {
       this.elId = options.elId;

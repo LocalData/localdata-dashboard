@@ -5,20 +5,25 @@ NSB.views.ResponseListView = Backbone.View.extend({
 
   events: { 
     "change #filter":  "filter",
+    "click #subfilter a": "subFilter",
+    "click #reset": "reset"
   },
 
   initialize: function(options) {
-    _.bindAll(this, 'render', 'goTo', 'humanizeDates', 'filter');
+    _.bindAll(this, 'render', 'goTo', 'humanizeDates', 'filter', 'subFilter');
 
     this.responses = options.responses;
+    this.allResponses = new NSB.collections.Responses(options.responses.models);
+
     console.log(this.responses);
         
     this.responses.on('all', this.render, this);
+    this.responses.on('reset', this.render, this);
   },
   
   setup: function() {
     this.page = 0;
-    this.pageListCount = 2000;
+    this.pageListCount = 20000;
     this.pageStart = 0;
     this.pageEnd = this.pageStart + this.pageListCount;
     this.pageCount = Math.floor(this.responses.length / this.pageListCount);  
@@ -33,15 +38,44 @@ NSB.views.ResponseListView = Backbone.View.extend({
     this.render();
   },
 
-  filter: function(e) {
-    console.log(e);
-    var $target = $(e.target);
-    console.log($target.val());
+  reset: function(e) {
+    this.responses.reset(this.allResponses.models);
 
-    var results = this.responses.getUniqueAnswersForQuestion($target.val());
-    console.log(results);
-    var stuff = _.template($('#response-view').html(), { choices: results });
-    console.log(stuff);
+    // render should be triggered by an event...
+    this.render();
+
+    $("#current-filter").html("");
+  },
+
+  filter: function(e) {
+    var $question = $(e.target);
+    var results = this.responses.getUniqueAnswersForQuestion($question.val());
+    $("#subfilter").html(_.template($('#filter-results').html(), { choices: results }));
+  },
+
+  subFilter: function(e) {
+    var $answer = $(e.target);
+
+    // Reset the collection 
+    this.responses.reset(this.allResponses.models);
+
+    // Filter the responses
+    var answerValue = $answer.text();
+    var questionValue = $("#filter").val();
+
+    console.log(answerValue);
+    console.log(questionValue);
+
+    var filteredResponses = this.responses.filter(function(resp) {
+      if (_.has(resp.attributes, 'responses')) {
+        return resp.attributes.responses[questionValue] === answerValue;
+      }
+      return false;
+    });
+
+    this.responses.reset(filteredResponses);
+
+    $("#current-filter").html("<h4>Current filter:</h4> <h3>" + questionValue + ": " + answerValue + "</h3>");
   },
 
   humanizeDates: function(responses, field) {
@@ -63,8 +97,6 @@ NSB.views.ResponseListView = Backbone.View.extend({
       responses: thisPage,
       filters: this.responses.getResponseKeys()
     };    
-
-    console.log(this.$el);
 
     this.$el.html(_.template($('#response-view').html(), context));
     
