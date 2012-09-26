@@ -43,21 +43,18 @@ NSB.views.SurveyView = Backbone.View.extend({
       'survey': this.survey.toJSON()
     };
     this.$el.html(_.template($('#survey-view').html(), context));
-    
-    console.log(this.settingsView);
-    
+        
     // Render the sub components
-    $('#response-view-container').hide();
     $('#settings-view-container').hide();
     $('#export-view-container').hide();
 
-    // Create sub views
-    this.mapView = new NSB.views.MapView({responses: this.responses});
+    // List the responses
     this.responseListView = new NSB.views.ResponseListView({
       el: $("#response-view-container"),
       responses: this.responses 
     });
-    
+
+    // Subnav    
     this.subnavView = new NSB.views.SubnavView({slug: NSB.settings.slug});  
     this.exportView = new NSB.views.ExportView({surveyId: this.surveyId});  
     this.settingsView = new NSB.views.SettingsView({
@@ -66,19 +63,16 @@ NSB.views.SurveyView = Backbone.View.extend({
     });  
 
     this.subnavView.render();
-    this.mapView.render(); 
     this.settingsView.render(); 
     this.exportView.render(); 
-    
-    this.responseListView.render();
-    
-    // This is a really bad way to show the right stuff
+
     this.show(this.toshow[0], this.toshow[1]);
   },
   
   show: function(id, tab) {
     // This is a really bad way to show the right stuff
     this.toshow = [id, tab];
+
     $("#content > div").hide();
     $(id).show();
     this.subnavView.setActiveTab(tab);
@@ -103,15 +97,10 @@ NSB.views.SurveyView = Backbone.View.extend({
   // Not yet implemented
   showUpload: function() {
     console.log("[not] Using upload view");
-   // this.bodyView = new NSB.views.UploadView({surveyId: this.surveyId});
-   // this.subnavView.setActiveTab(2);
-   // this.bodyView.render();
   },
   
   showScans: function() {
     console.log("[not] Using scans view");
-   // this.bodyView = new NSB.views.ScansListView({surveyId: this.surveyId});
-   // this.subnavView.setActiveTab(1);
   }
   
 });

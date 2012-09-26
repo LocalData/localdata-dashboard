@@ -1,5 +1,6 @@
 NSB.views.ResponseListView = Backbone.View.extend({
   responses: null,
+  firstRun: true,
   surveyId: null,
   paginationView: null,
 
@@ -10,26 +11,48 @@ NSB.views.ResponseListView = Backbone.View.extend({
   },
 
   initialize: function(options) {
-    _.bindAll(this, 'render', 'goTo', 'humanizeDates', 'filter', 'subFilter');
+    _.bindAll(this, 'render', 'goToPage', 'humanizeDates', 'filter', 'subFilter', 'setupPagination');
+    this.template = _.template($('#response-view').html());
 
     this.responses = options.responses;
-    this.allResponses = new NSB.collections.Responses(options.responses.models);
-
-    console.log(this.responses);
-        
-    this.responses.on('all', this.render, this);
     this.responses.on('reset', this.render, this);
   },
   
-  setup: function() {
+  render: function() { 
+    console.log("Rendering response view");
+
+    // The first time we render, we want to save a copy of the original responses
+    if (this.firstRun) {
+      this.allResponses = new NSB.collections.Responses(this.responses.models);
+      this.firstRun = false;
+    };
+
+    this.setupPagination();
+
+    var thisPage = this.responses.toJSON().slice(this.pageStart, this.pageEnd);
+    this.humanizeDates(thisPage);  
+
+    var context = { 
+      responses: thisPage,
+      filters: this.responses.getResponseKeys()
+    };    
+    this.$el.html(this.template(context));
+
+    this.mapView = new NSB.views.MapView({
+      el: $("#map-view-container"),
+      responses: this.responses 
+    });
+  },
+
+  setupPagination: function() {
     this.page = 0;
     this.pageListCount = 20000;
     this.pageStart = 0;
     this.pageEnd = this.pageStart + this.pageListCount;
     this.pageCount = Math.floor(this.responses.length / this.pageListCount);  
   },
-  
-  goTo: function(pageStr) {
+
+  goToPage: function(pageStr) {
     var page = parseInt(pageStr, 10); 
     this.page = page;
     this.pageStart = (this.page - 1) * this.pageListCount;
@@ -39,10 +62,10 @@ NSB.views.ResponseListView = Backbone.View.extend({
   },
 
   reset: function(e) {
+    console.log(this.allResponses.models);
     this.responses.reset(this.allResponses.models);
-
     // render should be triggered by an event...
-    this.render();
+    // this.render();
 
     $("#current-filter").html("");
   },
@@ -57,7 +80,7 @@ NSB.views.ResponseListView = Backbone.View.extend({
     var $answer = $(e.target);
 
     // Reset the collection 
-    this.responses.reset(this.allResponses.models);
+    // this.responses.reset(this.allResponses.models);
 
     // Filter the responses
     var answerValue = $answer.text();
@@ -85,36 +108,6 @@ NSB.views.ResponseListView = Backbone.View.extend({
         response.createdHumanized = moment(response.created, "YYYY-MM-DDThh:mm:ss.SSSZ").format("MMM Do h:mma");
       }
     });
-  },
-  
-  render: function() { 
-    this.setup();
-
-    var thisPage = this.responses.toJSON().slice(this.pageStart, this.pageEnd);
-    this.humanizeDates(thisPage);  
-      
-    var context = { 
-      responses: thisPage,
-      filters: this.responses.getResponseKeys()
-    };    
-
-    this.$el.html(_.template($('#response-view').html(), context));
-    
-    // this.paginationView = new NSB.views.PaginationView({ 
-    //   pageCount: this.pageCount
-    // });
-    // this.paginationView.bind('changePage', this.goTo);
-
-    // TOTALLY NOT THE RIGHT WAY
-    // This is not the right way to set up an event -- but with our render 
-    // process the element isn't available earlier. 
-    // $("#filter").change(function(e){
-    //   console.log(e);
-    // });
-
-
-
-    return this;
   }
   
 });

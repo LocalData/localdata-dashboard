@@ -52,9 +52,9 @@
     <script type="text/javascript" src="js/lib/backbone.paginator.js"></script>
     <script type="text/javascript" src="js/lib/fileuploader.js"></script>
     <script type="text/javascript" src="js/lib/moment.min.js"></script>
+
     <script type="text/javascript" src="js/lib/leaflet/leaflet-src.js"></script>
     <script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
-  	
     <script type="text/javascript" src="js/lib/leaflet/leaflet.google.js"></script>
 
     <script type="text/javascript" src="js/application.js"></script>
@@ -79,9 +79,8 @@
       </div>
     </script>
     
-    <!-- Survey view ......................................................-->
 
-    
+    <!-- Survey view ......................................................-->    
     <script type="text/template" id="survey-view">
       <header id="survey-header">
         <div class="container">
@@ -95,7 +94,6 @@
         
         <div id="content">
           <div id="response-view-container"></div>   
-          <div id="map-view-container"></div>   
           <div id="settings-view-container"></div>
           <div id="export-view-container"></div>
         </div>
@@ -118,7 +116,6 @@
           <input type="submit" value="Save">
         </form>
       <% }); %>
-      
     </script>
     
 
@@ -154,6 +151,8 @@
       
       <div class="response-list">  
       <h2><%= _.size(responses) %> Response<% if(_.size(responses) != 1) { %>s<% } %></h2>
+
+      <div id="map-view-container"></div>   
 
       <table>
         <thead>

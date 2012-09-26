@@ -1046,6 +1046,7 @@ L.Projection.SphericalMercator = {
 	MAX_LATITUDE: 85.0511287798,
 
 	project: function (latlng) { // (LatLng) -> Point
+
 		var d = L.LatLng.DEG_TO_RAD,
 			max = this.MAX_LATITUDE,
 			lat = Math.max(Math.min(max, latlng.lat), -max),
@@ -5160,13 +5161,18 @@ L.Util.extend(L.GeoJSON, {
 	},
 
 	coordsToLatLng: function (coords, reverse) { // (Array, Boolean) -> LatLng
+		console.log(reverse);
+		console.log(coords);
 		var lat = parseFloat(coords[reverse ? 0 : 1]),
 		    lng = parseFloat(coords[reverse ? 1 : 0]);
+
+		console.log(lat, lng);
 
 		return new L.LatLng(lat, lng, true);
 	},
 
 	coordsToLatLngs: function (coords, levelsDeep, reverse) { // (Array, Number, Boolean) -> Array
+
 		var latlng,
 		    latlngs = [],
 		    i, len;
@@ -5175,7 +5181,6 @@ L.Util.extend(L.GeoJSON, {
 			latlng = levelsDeep ?
 					this.coordsToLatLngs(coords[i], levelsDeep - 1, reverse) :
 					this.coordsToLatLng(coords[i], reverse);
-
 			latlngs.push(latlng);
 		}
 

@@ -1,6 +1,5 @@
 NSB.views.MapView = Backbone.View.extend({
   
-  elId: "#map-view-container",
   map: null,
   responses: null,
   surveyId: null,
@@ -10,93 +9,87 @@ NSB.views.MapView = Backbone.View.extend({
   markers: {},  
   
   initialize: function(options) {
-    _.bindAll(this, 'render', 'selectObject', 'renderObject', 
-      'renderObjects', 'getResponsesInBounds', 'addDoneMarker', 'addResultsToMap');
+    console.log("Init map view");
+    _.bindAll(this, 'render', 'selectObject', 'renderObject', 'renderObjects', 'getResponsesInBounds', 'addDoneMarker', 'addResultsToMap', 'updateMapStyleBasedOnZoom', 'updateObjectStyles');
     
     this.responses = options.responses;
-    this.responses.on('reset', this.mapResponses, this);
-    
+    this.responses.on('reset', this.render, this);
+
     this.parcelIdsOnTheMap = {};
     this.parcelsLayerGroup = new L.FeatureGroup();
     this.doneMarkersLayerGroup = new L.FeatureGroup();
-    
-    this.CheckIcon = L.Icon.extend({
-      options: {
-        className: 'CheckIcon',
-        iconUrl: 'img/icons/check-16.png',
-        shadowUrl: 'img/icons/check-16.png',
-        iconSize: new L.Point(16, 16),
-        shadowSize: new L.Point(16, 16),
-        iconAnchor: new L.Point(8, 8),
-        popupAnchor: new L.Point(8, 8)
-      }
-    });
-    
-    this.defaultStyle = {
-      'opacity': 1,
-      'fillOpacity': 0,
-      'weight': 2,
-      'color': '#cec40d'
-    };
-    
-    this.selectedStyle = {
-      'opacity': 1,
-      'fillOpacity': 0.5,
-      'fillColor': '#faf6ad',
-      'weight': 2,
-      'color': '#f4eb4d'
-    };
-  },  
+
+    this.defaultStyle = NSB.settings.farZoomStyle;
+
+    // Here, we set up the template so that re-renders only reset the 
+    this.$el.html(_.template($('#map-view').html(), {}));
   
-  render: function() {  
-    console.log("Rendering map view");
-    $(this.elId).html(_.template($('#map-view').html(), {}));
-    
     this.map = new L.map('map');
     this.markers = {};
     
-    var googleLayer = new L.Google("HYBRID");
-    this.map.addLayer(googleLayer);  
+    this.googleLayer = new L.Google("TERRAIN");
+    this.map.addLayer(this.googleLayer);  
     this.map.addLayer(this.parcelsLayerGroup);
     this.map.addLayer(this.doneMarkersLayerGroup);
     
     this.map.setView([42.374891,-83.069504], 17); // default center
+    this.render();
+  },  
+  
+  render: function() {  
+    this.mapResponses();
   },
 
   mapResponses: function() {
+    // Clear out all the old results
+    this.parcelsLayerGroup.clearLayers();
+
     _.each(this.responses.models, function(response){
 
       // Skip old records that don't have geo_info
-      geoInfo = response.get("geo_info");
+      var geoInfo = response.get("geo_info");
       if (geoInfo === undefined) {
         return;
       }
 
+      console.log(response);
+
       // Make sure were have the geometry for this parcel
-      if(_.has(response.get("geo_info"), "geometry")) {
+      if(_.has(geoInfo, "geometry")) {
         this.renderObject({
           parcelId: response.get("parcel_id"),
-          geometry: response.get("geo_info").geometry
+          geometry: response.get("geo_info").geometry 
         });
       }
 
     }, this);
 
-    console.log(this.parcelsLayerGroup);
     this.map.fitBounds(this.parcelsLayerGroup.getBounds());
+  },
+
+  updateObjectStyles: function(style) {
+    this.parcelsLayerGroup.setStyle(NSB.settings.closeZoomStyle);
   },
   
   renderObject: function(obj) {
     // We don't want to re-draw parcels that are already on the map
     // So we keep a hash map with the layers so we can unrender them
-    if (! _.has(this.parcelIdsOnTheMap, obj.parcelId)){
+
+    if(! _.has(this.parcelIdsOnTheMap, obj.parcelId)){
      
       // Make sure the format fits Leaflet's geoJSON expectations
       // obj['geometry'] = obj.polygon;
-      obj['type'] = "Feature";
+      obj.type = "Feature";
+      obj.geometry.type = "Polygon";
+
+      if(obj.geometry.coordinates[0][0].length > 2) {
+        obj.geometry.type = "MultiPolygon";
+      }
+      // obj.geometry.coordinates
 
       // Create a new geojson layer and style it. 
       var geojsonLayer = new L.GeoJSON();
+      console.log(obj);
       geojsonLayer.addData(obj);
       geojsonLayer.setStyle(this.defaultStyle);
       
@@ -105,7 +98,39 @@ NSB.views.MapView = Backbone.View.extend({
       // Add the layer to the layergroup and the hashmap
       this.parcelsLayerGroup.addLayer(geojsonLayer);
       this.parcelIdsOnTheMap[obj.parcelId] = geojsonLayer;
-    };    
+
+      this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
+    }
+  },
+
+  updateMapStyleBasedOnZoom: function(e) {
+    if(this.map.getZoom() > 14 ) {
+      if (this.googleLayer._type !== "HYBRID") {
+        // Show the satellite view when close in
+        this.map.removeLayer(this.googleLayer);
+        this.googleLayer = new L.Google("HYBRID");
+        this.map.addLayer(this.googleLayer);
+
+        // Objects should be more detailed close up
+        this.defaultStyle = NSB.settings.closeZoomStyle;
+        this.updateObjectStyles(NSB.settings.closeZoomStyle);
+      }
+    } else {
+      if (this.googleLayer._type !== "TERRAIN") {
+        // Show a more abstract map when zoomed out
+        this.map.removeLayer(this.googleLayer);
+        this.googleLayer = new L.Google("TERRAIN");
+        this.map.addLayer(this.googleLayer);
+
+        // Objects should be more abstract far out
+        this.defaultStyle = NSB.settings.farZoomStyle;
+        this.updateObjectStyles(NSB.settings.farZoomStyle);
+      }
+    }
+
+    if (this.selectedLayer !== null) {
+      this.selectedLayer.setStyle(NSB.settings.selectedStyle);
+    };
   },
     
   renderObjects: function(results) {
@@ -140,7 +165,7 @@ NSB.views.MapView = Backbone.View.extend({
       var doneMarker = new L.Marker(latlng, {icon: doneIcon});
       this.doneMarkersLayerGroup.addLayer(doneMarker);
       this.markers[id] = doneMarker;
-    };
+    }
   },
   
   addResultsToMap: function(results){    
@@ -162,23 +187,23 @@ NSB.views.MapView = Backbone.View.extend({
     }
 
     // Get the objects in the bounds
-    // And add them to the map   
+    // And add them to the map
     NSB.API.getResponsesInBounds(this.map.getBounds(), this.addResultsToMap);
   },
   
   selectObject: function(event) {
     _kmq.push(['record', "Map object selected"]);
     
-    if (this.selectedLayer != null) {
+    if (this.selectedLayer !== null) {
       this.selectedLayer.setStyle(this.defaultStyle);
     };
     
     // Select the current layer
     this.selectedLayer = event.layer;
-    this.selectedLayer.setStyle(this.selectedStyle);
+    this.selectedLayer.setStyle(NSB.settings.selectedStyle);
     
     // Let's show some info about this object.
-    this.details(this.selectedLayer.feature.parcelId);
+    // this.details(this.selectedLayer.feature.parcelId);
     
     // Let other parts of the app know that we've selected something.
     // $.publish("objectSelected");
@@ -186,9 +211,8 @@ NSB.views.MapView = Backbone.View.extend({
   
   details: function(parcelId) {
     console.log("Finding parcels " + parcelId);
-    this.sel = new NSB.collections.Responses();
-    this.sel.add(this.responses.where({'parcel_id': parcelId}));
-    
+    this.sel = new NSB.collections.Responses(this.responses.where({'parcel_id': parcelId}));
+
     console.log(this.sel);
     this.parcelView = new NSB.views.ResponseListView({
       elId: "#parceldeets",

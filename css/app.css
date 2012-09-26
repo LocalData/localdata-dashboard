@@ -62,7 +62,7 @@ input {
 /* Structure ...............................................................*/
 
 .container {
-  max-width:960px;
+  mmax-width:960px;
   margin:0px auto;
 }
 
@@ -74,6 +74,8 @@ input {
   background:#fff;
   border:5px solid #c7d3e5;
   border-top:0;
+  border-right:0;
+  border-left:0;
   padding:30px;
 }
 
