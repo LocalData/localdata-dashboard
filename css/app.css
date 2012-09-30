@@ -47,6 +47,7 @@ input {
   -moz-box-shadow: 0 0 16px rgba(0,0,0, 0.25);
   -webkit-box-shadow: 0 0 16px rgba(0,0,0, 0.25);
   margin:20px 8px;
+  cursor:pointer;
 }
 
 .button:hover {
@@ -180,7 +181,6 @@ header a {
   max-width:250px;
 }
 
-
 /* Responses .................................................................*/
 
 .response-list {
@@ -311,6 +311,19 @@ header a {
   font-family:Courier New, Courier, monospace;
   font-size:16px;
   height:15em;
+}
+
+form input, form label {
+  display:block;
+}
+
+form label {
+  font-weight:bold; 
+  margin-top:1em;
+}
+
+form input {
+  font-size:24px;
 }
 
 

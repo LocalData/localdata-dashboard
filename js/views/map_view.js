@@ -52,8 +52,6 @@ NSB.views.MapView = Backbone.View.extend({
         return;
       }
 
-      console.log(response);
-
       // Make sure were have the geometry for this parcel
       if(_.has(geoInfo, "geometry")) {
         this.renderObject({
@@ -68,7 +66,7 @@ NSB.views.MapView = Backbone.View.extend({
   },
 
   updateObjectStyles: function(style) {
-    this.parcelsLayerGroup.setStyle(NSB.settings.closeZoomStyle);
+    this.parcelsLayerGroup.setStyle(style);
   },
   
   renderObject: function(obj) {
@@ -89,7 +87,6 @@ NSB.views.MapView = Backbone.View.extend({
 
       // Create a new geojson layer and style it. 
       var geojsonLayer = new L.GeoJSON();
-      console.log(obj);
       geojsonLayer.addData(obj);
       geojsonLayer.setStyle(this.defaultStyle);
       
@@ -123,6 +120,9 @@ NSB.views.MapView = Backbone.View.extend({
         this.map.addLayer(this.googleLayer);
 
         // Objects should be more abstract far out
+        console.log("Updating styles!");
+        console.log(NSB.settings.farZoomStyle);
+
         this.defaultStyle = NSB.settings.farZoomStyle;
         this.updateObjectStyles(NSB.settings.farZoomStyle);
       }

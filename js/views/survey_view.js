@@ -54,16 +54,17 @@ NSB.views.SurveyView = Backbone.View.extend({
       responses: this.responses 
     });
 
+    this.settingsView = new NSB.views.SettingsView({
+      el: $("#settings-view-container"),
+      survey: this.survey,
+      forms: this.forms
+    });
+
     // Subnav    
     this.subnavView = new NSB.views.SubnavView({slug: NSB.settings.slug});  
     this.exportView = new NSB.views.ExportView({surveyId: this.surveyId});  
-    this.settingsView = new NSB.views.SettingsView({
-      surveyId: this.surveyId,
-      forms: this.forms
-    });  
 
     this.subnavView.render();
-    this.settingsView.render(); 
     this.exportView.render(); 
 
     this.show(this.toshow[0], this.toshow[1]);

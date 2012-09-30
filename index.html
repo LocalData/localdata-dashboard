@@ -103,36 +103,49 @@
     <script type="text/template" id="survey-list-item-view">
       <div class="survey">
         <h2><a href='#surveys/<%= survey.attributes.slug %>'><%= survey.attributes.name %></a></h2>
-        <%=survey.attributes.id %>
+        <%= survey.attributes.id %>
       </div>
     </script>
 
     <script type="text/template" id="settings-view">
       <h2>Survey Settings</h2>
-      
+
+      <form>
+        <label>Survey Name</label>
+        <input type="text" value="<%= survey.name %>" />
+
+        <label>Passcode</label>
+        <input type="text" value="<%= survey.passcode %>" id="survey-password" />
+
+        <input type="submit" value="Save">
+      </form>
+
+
+      <!--
       <% _.each(forms, function(form) { %>
         <form action="" method="get" accept-charset="utf-8" data-id="<%= form.id %>">
           <textarea name="questions" rows="8" cols="40"><%= JSON.stringify(form.questions) %></textarea>
           <input type="submit" value="Save">
         </form>
       <% }); %>
+      -->
     </script>
     
 
     <!-- Response ...........................................................-->
     
     <script type="text/template" id="filter-results">
+    <ul>
       <% _.each(choices, function(choice) { %>
-        <a><%- choice %></a>
+        <li><a><%- choice %></a></li>
       <% }); %>
+    </ul>
     </script>
     
     <script type="text/template" id="response-view">
 
       <div id="filters">
-        <div id="current-filter">
-
-        </div>
+        <div id="current-filter" class="floatcontainer"></div>
 
         <h3>Filter results by:</h3>
 
@@ -144,9 +157,6 @@
 
         <div id="subfilter">
         </div>
-
-        <a id="reset">Reset</a>
-
       </div>
       
       <div class="response-list">  
@@ -283,13 +293,13 @@
     <!-- Views -->
     <script type="text/javascript" src="js/views/home.js"></script>
     <script type="text/javascript" src="js/views/nav_view.js"></script>
+    <script type="text/javascript" src="js/views/settings_view.js"></script>
     <script type="text/javascript" src="js/views/survey_view.js"></script>
     <script type="text/javascript" src="js/views/response_view.js"></script>
     <script type="text/javascript" src="js/views/pagination_view.js"></script>
     <script type="text/javascript" src="js/views/upload_view.js"></script>
     <script type="text/javascript" src="js/views/scan_view.js"></script>
     <script type="text/javascript" src="js/views/map_view.js"></script>
-    <script type="text/javascript" src="js/views/settings_view.js"></script>
     <script type="text/javascript" src="js/views/export_view.js"></script>
 
     <!-- Root controls all: start here -->

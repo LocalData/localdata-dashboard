@@ -3,6 +3,7 @@ NSB.views.ResponseListView = Backbone.View.extend({
   firstRun: true,
   surveyId: null,
   paginationView: null,
+  filters: {},
 
   events: { 
     "change #filter":  "filter",
@@ -11,7 +12,7 @@ NSB.views.ResponseListView = Backbone.View.extend({
   },
 
   initialize: function(options) {
-    _.bindAll(this, 'render', 'goToPage', 'humanizeDates', 'filter', 'subFilter', 'setupPagination');
+    _.bindAll(this, 'render', 'goToPage', 'humanizeDates', 'filter', 'subFilter', 'setupPagination', 'doesQuestionHaveTheRightAnswer');
     this.template = _.template($('#response-view').html());
 
     this.responses = options.responses;
@@ -23,6 +24,7 @@ NSB.views.ResponseListView = Backbone.View.extend({
 
     // The first time we render, we want to save a copy of the original responses
     if (this.firstRun) {
+      console.log("First run!");
       this.allResponses = new NSB.collections.Responses(this.responses.models);
       this.firstRun = false;
     };
@@ -42,6 +44,12 @@ NSB.views.ResponseListView = Backbone.View.extend({
       el: $("#map-view-container"),
       responses: this.responses 
     });
+
+    // If there is a filter, list it 
+    // (should be done through a view in the future) 
+    if (_.has(this.filters, "answerValue")) {
+      $("#current-filter").html("<h4>Current filter:</h4> <h3>" + this.filters.questionValue + ": " + this.filters.answerValue + "</h3>   <a id=\"reset\" class=\"button\">Clear filter</a>");
+    }
   },
 
   setupPagination: function() {
@@ -62,7 +70,7 @@ NSB.views.ResponseListView = Backbone.View.extend({
   },
 
   reset: function(e) {
-    console.log(this.allResponses.models);
+    this.filters = {};
     this.responses.reset(this.allResponses.models);
     // render should be triggered by an event...
     // this.render();
@@ -83,22 +91,22 @@ NSB.views.ResponseListView = Backbone.View.extend({
     // this.responses.reset(this.allResponses.models);
 
     // Filter the responses
-    var answerValue = $answer.text();
-    var questionValue = $("#filter").val();
+    this.filters.answerValue = $answer.text();
+    this.filters.questionValue = $("#filter").val();
 
-    console.log(answerValue);
-    console.log(questionValue);
+    var filteredResponses = this.responses.filter(this.doesQuestionHaveTheRightAnswer);
 
-    var filteredResponses = this.responses.filter(function(resp) {
-      if (_.has(resp.attributes, 'responses')) {
-        return resp.attributes.responses[questionValue] === answerValue;
-      }
-      return false;
-    });
+    console.log(filteredResponses);
 
     this.responses.reset(filteredResponses);
+  },
 
-    $("#current-filter").html("<h4>Current filter:</h4> <h3>" + questionValue + ": " + answerValue + "</h3>");
+  doesQuestionHaveTheRightAnswer: function(resp) {
+    if (_.has(resp.attributes, 'responses')) {
+      console.log(this.filters.questionValue);
+      return resp.attributes.responses[this.filters.questionValue] === this.filters.answerValue;
+    }
+    return false;
   },
 
   humanizeDates: function(responses, field) {

@@ -38,7 +38,7 @@ NSB.collections.Responses = Backbone.Collection.extend({
       }
     }, this);
 
-    return this.responseKeys;
+    return this.responseKeys.sort();
   },
 
   getUniqueAnswersForQuestion: function(question) {
@@ -49,7 +49,7 @@ NSB.collections.Responses = Backbone.Collection.extend({
         }
       }
     });
-    uniqueAnswers = _.unique(answers);
+    uniqueAnswers = _.unique(answers).sort();
 
     // Replace undefined with a string for nice rendering
     var idxOfUndefinedToReplace = _.indexOf(uniqueAnswers, undefined);

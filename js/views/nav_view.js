@@ -11,7 +11,7 @@ NSB.views.SubnavView = Backbone.View.extend({
     this.items = [
       this.makeNavItem('nav-responses', 'surveys/' + this.slug, 'Results', 'icon-home'),
       this.makeNavItem('nav-export', 'surveys/' + this.slug + '/export', 'Export', 'icon-download'),
-      this.makeNavItem('nav-settings', 'surveys/' + this.surveyId + '/settings', 'Survey Settings', 'icon-cog'),
+      this.makeNavItem('nav-settings', 'surveys/' + this.slug + '/settings', 'Survey Settings', 'icon-cog'),
 
       //this.makeNavItem('nav-map', 'surveys/' + this.slug + '/map', 'Results', 'icon-map-marker'),
      //  this.makeNavItem('nav-scans', 'surveys/' + this.surveyId + '/scans', 'Scans'),

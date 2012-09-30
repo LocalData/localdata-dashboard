@@ -21,12 +21,11 @@ NSB.settings.CheckIcon = L.Icon.extend({
 });
 
 NSB.settings.closeZoomStyle = {
-  'color': '#ffffff', //'#cec40d'
+  'color': '#f4eb4d', //'#cec40d'
   'opacity': 1,
-  'weight': 1.5,
-
-  'fillColor': '#ffffff',
-  'fillOpacity': 0.5
+  'weight': 2,
+  'fillOpacity': 0,
+  'fillColor': '#faf6ad'
 };
 
 NSB.settings.farZoomStyle = {
@@ -38,9 +37,21 @@ NSB.settings.farZoomStyle = {
 };
 
 NSB.settings.selectedStyle = {
+	'color': '#f4eb4d',
   'opacity': 1,
-  'color': '#f4eb4d',
-  'fillOpacity': 0.5,
-  'fillColor': '#faf6ad',
-  'weight': 2
+	'weight': 3,
+	'fillOpacity': 0.5,
+	'fillColor': '#faf6ad'
 };
+
+NSB.settings.googleMapsFarZoom = [
+  {
+    "elementType": "geometry",
+    "stylers": [
+      { "lightness": 40 },
+      { "gamma": 1.33 },
+      { "saturation": -52 },
+      { "hue": "#00fff7" }
+    ]
+  }
+];
