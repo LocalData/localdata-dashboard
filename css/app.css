@@ -181,6 +181,20 @@ header a {
   max-width:250px;
 }
 
+#subfilter li {
+  line-height:2;
+}
+
+#subfilter li a {
+  text-decoration:none;
+  color:#fff; 
+  background:#3f5b88;
+  border-radius:10px;
+  font-size:.9em;
+  cursor:pointer;
+  padding:4px;
+}
+
 /* Responses .................................................................*/
 
 .response-list {
