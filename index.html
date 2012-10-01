@@ -162,7 +162,9 @@
       <div class="response-list">  
       <h2><%= _.size(responses) %> Response<% if(_.size(responses) != 1) { %>s<% } %></h2>
 
-      <div id="map-view-container"></div>   
+      <div id="map-view-container"></div> 
+
+      <div id="individual-result-container"></div>  
 
       <table>
         <thead>
@@ -210,6 +212,52 @@
       </div>
       
       <div id="result-pagination"></div>
+    </script>
+
+    <script type="text/template" id="indivdual-result">
+    <div id="indiv-in">
+      <table>
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Location</th>
+            <th>By</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+            
+        <tbody>
+          <tr class="response">
+            <td class="created"><%- r.createdHumanized %></td>
+            <td class="address icon-map-marker">
+              <% if(r.geo_info != undefined) { %>
+                <%- r.geo_info.humanReadableName %>
+              <% }else { %>
+                <%- r.parcel_id %>
+              <% }; %>
+            </td>
+            <td class="collector icon-user">
+              <% if(r.geo_info != undefined) { %>
+                <%- r.source.collector %>
+              <% } else{ %>
+                <%- r.responses.collector %>
+              <% } %>
+            </td>
+          
+            <td class="answers">
+            <% _.each(r.responses, function(resp, key) { %>
+              <div class="answer">
+                <span class="key"><%- key %>:</span> 
+                <span class="value"><%- resp %>&nbsp;</span>
+              </div>
+            <% }); %>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <a href="" class="close button">Close</a>
+    </div>
     </script>
     
     

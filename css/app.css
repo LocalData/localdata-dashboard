@@ -195,6 +195,11 @@ header a {
   padding:4px;
 }
 
+#indiv-in {
+  border:10px solid #ddd;
+  padding:10px;
+}
+
 /* Responses .................................................................*/
 
 .response-list {

@@ -203,10 +203,10 @@ NSB.views.MapView = Backbone.View.extend({
     this.selectedLayer.setStyle(NSB.settings.selectedStyle);
     
     // Let's show some info about this object.
-    // this.details(this.selectedLayer.feature.parcelId);
+    this.details(this.selectedLayer.feature.parcelId);
     
     // Let other parts of the app know that we've selected something.
-    // $.publish("objectSelected");
+    $.publish("objectSelected");
   },
   
   details: function(parcelId) {
@@ -214,11 +214,22 @@ NSB.views.MapView = Backbone.View.extend({
     this.sel = new NSB.collections.Responses(this.responses.where({'parcel_id': parcelId}));
 
     console.log(this.sel);
-    this.parcelView = new NSB.views.ResponseListView({
-      elId: "#parceldeets",
-      responses: this.sel
+    selRes = this.sel.toJSON()[0];
+    selRes.createdHumanized = moment(selRes.created, "YYYY-MM-DDThh:mm:ss.SSSZ").format("MMM Do h:mma");
+
+    $("#individual-result-container").html(_.template($('#indivdual-result').html(), {r: selRes}));
+
+    $("#individual-result-container .close").click(function(e) {
+      e.preventDefault();
+      console.log("HI!");
+      $("#individual-result-container").html("");
     });
-    this.parcelView.render();
+
+    // this.parcelView = new NSB.views.ResponseListView({
+    //   elId: "#parceldeets",
+    //   responses: this.sel
+    // });
+    // this.parcelView.render();
   }
 
 });
