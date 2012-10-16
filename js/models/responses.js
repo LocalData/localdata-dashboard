@@ -51,7 +51,7 @@ NSB.collections.Responses = Backbone.Collection.extend({
         }
       }
     });
-    uniqueAnswers = _.unique(answers).sort();
+    var uniqueAnswers = _.unique(answers).sort();
 
     // Replace undefined with a string for nice rendering
     var idxOfUndefinedToReplace = _.indexOf(uniqueAnswers, undefined);

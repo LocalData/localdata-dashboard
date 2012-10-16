@@ -14,7 +14,7 @@ NSB.views.ResponseListView = Backbone.View.extend({
   initialize: function(options) {
     _.bindAll(this, 'render', 'goToPage', 'humanizeDates', 'filter', 'subFilter', 'setupPagination', 'doesQuestionHaveTheRightAnswer');
     this.template = _.template($('#response-view').html());
-
+    
     this.responses = options.responses;
     this.responses.on('reset', this.render, this);
 
@@ -26,7 +26,6 @@ NSB.views.ResponseListView = Backbone.View.extend({
 
     // The first time we render, we want to save a copy of the original responses
     if (this.firstRun) {
-      console.log("First run!");
       this.allResponses = new NSB.collections.Responses(this.responses.models);
       this.firstRun = false;
     }
@@ -38,11 +37,8 @@ NSB.views.ResponseListView = Backbone.View.extend({
     // Humanize the dates so people who aren't robots can read them
     this.humanizeDates(thisPage);  
 
-
     // Set up for filtering
     var flattenedForm = this.forms.getFlattenedForm();
-    console.log(flattenedForm);
-
 
     // Actually render the page
     var context = { 
@@ -110,8 +106,6 @@ NSB.views.ResponseListView = Backbone.View.extend({
     this.filters.questionValue = $("#filter").val();
 
     var filteredResponses = this.responses.filter(this.doesQuestionHaveTheRightAnswer);
-
-    console.log(filteredResponses);
 
     this.responses.reset(filteredResponses);
   },

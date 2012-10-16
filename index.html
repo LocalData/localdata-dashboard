@@ -79,8 +79,12 @@
       </div>
     </script>
     
+    <script type="text/template" id="loading-view">
+      <h2>Loading!!</h2>
+    </script>
 
-    <!-- Survey view ......................................................-->    
+
+    <!-- Survey ...........................................................-->    
     <script type="text/template" id="survey-view">
       <header id="survey-header">
         <div class="container">
@@ -88,10 +92,12 @@
         </div>
       </header>
       
+
       <div id="body" class="container">
-        <div id="subnav" class="nav nav-tabs">
-        </div>
-        
+        <div id="subnav" class="nav nav-tabs"></div>
+
+        <div id="loading-view-container"></div>
+
         <div id="content">
           <div id="response-view-container"></div>   
           <div id="settings-view-container"></div>
@@ -120,20 +126,10 @@
         <input type="submit" value="Save">
       </form>
 
-
-      <!--
-      <% _.each(forms, function(form) { %>
-        <form action="" method="get" accept-charset="utf-8" data-id="<%= form.id %>">
-          <textarea name="questions" rows="8" cols="40"><%= JSON.stringify(form.questions) %></textarea>
-          <input type="submit" value="Save">
-        </form>
-      <% }); %>
-      -->
     </script>
     
 
     <!-- Response ...........................................................-->
-    
     <script type="text/template" id="filter-results">
     <h2>Select an answer to filter by:</h2>
     <ul>
@@ -352,6 +348,7 @@
     <script type="text/javascript" src="js/views/scan_view.js"></script>
     <script type="text/javascript" src="js/views/map_view.js"></script>
     <script type="text/javascript" src="js/views/export_view.js"></script>
+    <script type="text/javascript" src="js/views/loading_view.js"></script>
 
     <!-- Root controls all: start here -->
     <script type="text/javascript" src="js/views/root.js"></script>

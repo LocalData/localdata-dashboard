@@ -37,6 +37,7 @@ NSB.views.MapView = Backbone.View.extend({
   
   render: function() {  
     this.mapResponses();
+    NSB.setLoading(false);
   },
 
   mapResponses: function() {
@@ -104,6 +105,8 @@ NSB.views.MapView = Backbone.View.extend({
   },
 
   updateMapStyleBasedOnZoom: function(e) {
+    _kmq.push(['record', "Map zoomed"]);
+    
     if(this.map.getZoom() > 14 ) {
       if (this.googleLayer._type !== "HYBRID") {
         // Show the satellite view when close in
