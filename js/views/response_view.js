@@ -92,12 +92,14 @@ NSB.views.ResponseListView = Backbone.View.extend({
   },
 
   filter: function(e) {
+    _kmq.push(['record', "Question filter selected"]);
     var $question = $(e.target);
     var results = this.responses.getUniqueAnswersForQuestion($question.val());
     $("#subfilter").html(_.template($('#filter-results').html(), { choices: results }));
   },
 
   subFilter: function(e) {
+    _kmq.push(['record', "Answer filter selected"]);
     var $answer = $(e.target);
 
     // Reset the collection 
