@@ -21,7 +21,7 @@ NSB.views.SurveyView = Backbone.View.extend({
   bodyView: null,
   
   initialize: function(options) {
-    _.bindAll(this, 'render', 'show', 'showResponses', 'showUpload', 'showMap', 'showSettings');
+    _.bindAll(this, 'render', 'show', 'showResponses', 'showUpload', 'showMap', 'showSettings', 'toggleLoading');
     
     // Set up the page and show the given survey
     this.surveyId = options.id;
@@ -29,12 +29,26 @@ NSB.views.SurveyView = Backbone.View.extend({
     this.survey.bind('change', this.render, this);
     
     // Get the relevant responses    
+    this.toggleLoading();
     this.responses = new NSB.collections.Responses([], {surveyId: this.surveyId}); 
     
     // Get the forms
-    this.forms = new NSB.collections.Forms({surveyId: this.surveyId});     
+    this.forms = new NSB.collections.Forms({surveyId: this.surveyId});
+    this.forms.bind("all", this.testing, this);
   },
-    
+
+  // Tracks if the page is currently loading data
+  // Pretty naieve for now (really only used for responses) 
+  toggleLoading: function() {
+    if (this.loading === true) {
+      this.loading = false;
+    }else {
+      this.loading = true;
+    }
+    console.log(this.loading);
+    return this.toggleLoading;
+  },
+
   render: function() {
     console.log("Rendering survey view");
     
@@ -51,7 +65,8 @@ NSB.views.SurveyView = Backbone.View.extend({
     // List the responses
     this.responseListView = new NSB.views.ResponseListView({
       el: $("#response-view-container"),
-      responses: this.responses 
+      responses: this.responses,
+      forms: this.forms
     });
 
     this.settingsView = new NSB.views.SettingsView({

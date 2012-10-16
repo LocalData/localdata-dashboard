@@ -21,7 +21,6 @@ NSB.views.MapView = Backbone.View.extend({
 
     this.defaultStyle = NSB.settings.farZoomStyle;
 
-    // Here, we set up the template so that re-renders only reset the 
     this.$el.html(_.template($('#map-view').html(), {}));
   
     this.map = new L.map('map');
@@ -62,7 +61,11 @@ NSB.views.MapView = Backbone.View.extend({
 
     }, this);
 
-    this.map.fitBounds(this.parcelsLayerGroup.getBounds());
+    if(this.responses.models.length > 0) {
+      // This fails if there aren't any results, hence the test.
+      this.map.fitBounds(this.parcelsLayerGroup.getBounds());
+    }
+    
   },
 
   updateObjectStyles: function(style) {

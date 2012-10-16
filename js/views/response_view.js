@@ -17,6 +17,8 @@ NSB.views.ResponseListView = Backbone.View.extend({
 
     this.responses = options.responses;
     this.responses.on('reset', this.render, this);
+
+    this.forms = options.forms;
   },
   
   render: function() { 
@@ -27,29 +29,40 @@ NSB.views.ResponseListView = Backbone.View.extend({
       console.log("First run!");
       this.allResponses = new NSB.collections.Responses(this.responses.models);
       this.firstRun = false;
-    };
+    }
 
+    // TODO: Pagination
     this.setupPagination();
-
     var thisPage = this.responses.toJSON().slice(this.pageStart, this.pageEnd);
+
+    // Humanize the dates so people who aren't robots can read them
     this.humanizeDates(thisPage);  
 
+
+    // Set up for filtering
+    var flattenedForm = this.forms.getFlattenedForm();
+    console.log(flattenedForm);
+
+
+    // Actually render the page
     var context = { 
       responses: thisPage,
-      filters: this.responses.getResponseKeys()
+      flattenedForm: flattenedForm
     };    
     this.$el.html(this.template(context));
 
+    // Set up the map view _after_ the results have arrived. 
     this.mapView = new NSB.views.MapView({
       el: $("#map-view-container"),
       responses: this.responses 
     });
 
-    // If there is a filter, list it 
-    // (should be done through a view in the future) 
+    // If the data has been filtered, show that on the page. 
+    // TODO: This should be done in a view. 
     if (_.has(this.filters, "answerValue")) {
       $("#current-filter").html("<h4>Current filter:</h4> <h3>" + this.filters.questionValue + ": " + this.filters.answerValue + "</h3>   <a id=\"reset\" class=\"button\">Clear filter</a>");
     }
+
   },
 
   setupPagination: function() {
@@ -102,11 +115,10 @@ NSB.views.ResponseListView = Backbone.View.extend({
   },
 
   doesQuestionHaveTheRightAnswer: function(resp) {
-    if (_.has(resp.attributes, 'responses')) {
-      console.log(this.filters.questionValue);
-      return resp.attributes.responses[this.filters.questionValue] === this.filters.answerValue;
-    }
-    return false;
+    //if (_.has(resp.attributes, 'responses')) {
+    return resp.attributes.responses !== undefined && resp.attributes.responses[this.filters.questionValue] === this.filters.answerValue;
+    //}
+    // return false;
   },
 
   humanizeDates: function(responses, field) {

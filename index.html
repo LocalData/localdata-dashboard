@@ -135,6 +135,7 @@
     <!-- Response ...........................................................-->
     
     <script type="text/template" id="filter-results">
+    <h2>Select an answer to filter by:</h2>
     <ul>
       <% _.each(choices, function(choice) { %>
         <li><a><%- choice %></a></li>
@@ -146,20 +147,21 @@
 
       <div id="filters">
         <div id="current-filter" class="floatcontainer"></div>
-
-        <h3>Filter results by:</h3>
-
-        <select id="filter">
-        <% _.each(filters, function(filter) {%>
-          <option value="<%- filter %>"><%- filter %></option>
-        <% }); %>
-        </select>
-
         <div id="subfilter">
         </div>
       </div>
       
       <div class="response-list">  
+      <h3>Filter results by:</h3>
+
+      <select id="filter">
+        <option value="">Select a question to filter by</option>
+      <% _.each(flattenedForm, function(filter) {%>
+        <option value="<%- filter.name %>"><%- filter.text %></option>
+      <% }); %>
+      </select>
+
+
       <h2><%= _.size(responses) %> Response<% if(_.size(responses) != 1) { %>s<% } %></h2>
 
       <div id="map-view-container"></div> 
@@ -182,7 +184,8 @@
             <td class="created"><%- r.createdHumanized %></td>
             <td class="address icon-map-marker">
               <% if(r.geo_info != undefined) { %>
-                <%- r.geo_info.humanReadableName %>
+                <%- r.geo_info.humanReadableName %><br />
+                (Id: <%- r.parcel_id %>)
               <% }else { %>
                 <%- r.parcel_id %>
               <% }; %>

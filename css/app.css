@@ -156,16 +156,14 @@ header a {
   border:1px solid #c7d3e5;
   border-radius:10px;
   padding:20px;
-  width:250px;
-  float:left;
   margin-bottom:20px;
   margin-right:10px;
+  color:#ddd;
 }
 
 .survey-list h2 {
   font-weight:700;
   font-size:24px;
-  text-align:center;
 }
 
 .survey-list h2 a {

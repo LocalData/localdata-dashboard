@@ -1,5 +1,5 @@
 NSB.settings.api = {
-  baseurl: 'http://surveyapidev.herokuapp.com/api', // http://localhost:3000/api', // 'http://surveydet.herokuapp.com', 
+  baseurl: 'http://localhost:3000/api', // http://localhost:3000/api', // 'http://surveydet.herokuapp.com', 
   geo: 'http://localhost:3000/api' //'http://surveydet.herokuapp.com/api',
 };
 
@@ -30,10 +30,9 @@ NSB.settings.closeZoomStyle = {
 
 NSB.settings.farZoomStyle = {
   'opacity': 1,
-  'color': '#d7191c', //'#cec40d'
   'fillOpacity': 1,
   'fillColor': '#d7191c',
-  'weight': 3
+  'weight': 0
 };
 
 NSB.settings.selectedStyle = {

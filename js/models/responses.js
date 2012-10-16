@@ -29,6 +29,7 @@ NSB.collections.Responses = Backbone.Collection.extend({
     return response.responses;
   },
 
+  // Returns a list of strings of all answer keys that have been submitted so far
   getResponseKeys: function() {
     this.responseKeys = [];
     _.each(this.models, function(response) {
@@ -39,6 +40,7 @@ NSB.collections.Responses = Backbone.Collection.extend({
     }, this);
 
     return this.responseKeys.sort();
+
   },
 
   getUniqueAnswersForQuestion: function(question) {
