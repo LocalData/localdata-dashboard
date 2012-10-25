@@ -1,10 +1,11 @@
+/* LocalData Styles .........................................................*/
 html, body {
   padding:0;
   margin:0;
 }
 
 body {
-  background:#d9e1ed;
+  background:#fff;
   padding:0;
   color:#333;
   font-family:"Open Sans", "Source Sans Pro", Helvetica, sans-serif;
@@ -13,8 +14,8 @@ body {
 /* Type ....................................................................*/
 a {
   text-decoration:none;
-  color:#3f5b88;
-  border-bottom:1px solid #3f5b88;
+  color:#00949b;
+  border-bottom:1px solid #00949b;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -25,6 +26,7 @@ h3 {
   font-size:24px;
 }
 
+/* Forms....................................................................*/
 input {
   font-family:"Open Sans", "Source Sans Pro", Helvetica, sans-serif;
   font-size:1em;
@@ -50,21 +52,24 @@ input {
   cursor:pointer;
 }
 
-.button:hover {
-  background:#3f5b88;
-  color:#ffe;
-  border-color:#3f5b88;
-  -moz-box-shadow: inset 0 0 16px rgba(47, 68, 101, 0.5);
-  -webkit-box-shadow: inset 0 0 16px rgba(47, 68, 101, 0.5);
-  
-}
+  .button:hover {
+    background:#3f5b88;
+    color:#ffe;
+    border-color:#3f5b88;
+    -moz-box-shadow: inset 0 0 16px rgba(47, 68, 101, 0.5);
+    -webkit-box-shadow: inset 0 0 16px rgba(47, 68, 101, 0.5);
+  }
+
+  .button-container {
+    overflow:auto;
+  }
 
 
 /* Structure ...............................................................*/
 
 .container {
-  mmax-width:960px;
-  margin:0px auto;
+  background:#39abb7;
+  padding:20px 30px 20px 30px; 
 }
 
 .floatcontainer {
@@ -73,41 +78,39 @@ input {
 
 #content {
   background:#fff;
-  border:5px solid #c7d3e5;
-  border-top:0;
-  border-right:0;
-  border-left:0;
   padding:30px;
+  -webkit-box-shadow: 0 0 16px rgba(0, 124, 129, 1);
+  box-shadow: 0 0 16px rgba(0, 124, 129, 1);
 }
 
-.button-container {
-  overflow:auto;
-}
 
 /* Header ..................................................................*/
 header {
-  color:#fefefe;
+  color:#333;
   padding:10px 0;
 }
 
 header a {
-  color:#fefefe;
+  color:#333;
   border:0;
 }
 
 #site-header {
-  font-family:Pacifico, Helvetica, sans-serif;
-  font-size:18px;
-  background:#476799;
-  border-bottom:0px solid #a18464;
+  font-size:24px;
+  background:#fff;
+  border-bottom:0px  #a18464;
+  padding:15px 30px 15px 40px;
+}
+
+#site-header h1 {
+  font-weight:400;
 }
 
 #survey-header {
-  background:#3f5b88;
-  border-top:1px solid #476799;
+  background:#39abb7;
   color:#fefefe;
   font-size:35px;
-  padding:20px 0 60px 0;
+  padding:20px 0 1px 20px;
 }
 
 #site-header .container,
@@ -116,40 +119,46 @@ header a {
 }
 
 #survey-header h2 {
-  font-weight:bold;
+  font-size:36px;
+  font-weight:600;
+  text-shadow: 0.08em 0.08em #00949b;
+  letter-spacing:1px;
 }
 
 /* Nav .....................................................................*/
 #subnav {
-  margin-top:-36px;
+  background:#eee;
   overflow:auto;
-  background:#c7d3e5;
-  border:5px solid #c7d3e5;
-  border-bottom:0;
-  
+
+  -webkit-box-shadow: 0 0 16px rgba(0, 124, 129, 1);
+  box-shadow: 0 0 16px rgba(0, 124, 129, 1);
 }
 
-.nav-tabs li {
-  list-style:none;
-  display:inline;
-  color: #3f5b88;
-}
+  .nav-tabs li {
+    color: #666;
+    font-size:16px;
+    text-align:center;
 
-.nav-tabs li {
-  display:block;
-  float:left;
-  padding:13px 20px 13px 13px;
-  font-size:18px;
-  border:0;
-}
+    list-style:none;
+    display:block;
+    float:left;
+    padding:18px 35px 18px 35px;
+    border:0;
+  }
 
-.nav-tabs li a {
-  border: 0!important;
-}
+    .nav-tabs li.active {
+      background:#fff;
+      color:;
+    }
 
-.nav-tabs li.active {
-  background:#fff;
-}
+    .nav-tabs li a {
+      border: 0;
+      color: #666;
+    }
+
+    .nav-tabs li.active a {
+      color: #ef6d4a;
+    }
 
 /* Surveys ...............................................................*/
 .survey-list .survey {
@@ -204,53 +213,53 @@ header a {
   overflow:auto;
 }
 
-.response-list > h2 {
-  text-transform:uppercase;
-  font-size:24px;
-  font-weight:800;
-  color:#96c4b2;
-  border-bottom:1px dotted #86bba6;
-  text-align:center;
-  margin-bottom:10px;
-  padding-bottom:10px;
-}
+  .response-list > h2 {
+    text-transform:uppercase;
+    font-size:24px;
+    font-weight:800;
+    color:#96c4b2;
+    border-bottom:1px dotted #86bba6;
+    text-align:center;
+    margin-bottom:10px;
+    padding-bottom:10px;
+  }
 
-.response-list table {
-  width:100%;
-}
+  .response-list table {
+    width:100%;
+  }
 
-.response-list thead {
-  color: #96c4b2;
-  border-bottom: 5px solid #b7d6ca;
-  padding-top:20px;
-}
+    .response-list thead {
+      color: #333;
+      border-bottom: 8px solid #b7d6ca;
+      padding-top:20px;
+    }
 
-.response-list th {
-  font-weight:bold;
-  font-size:16px;
-  text-align:left;
-  padding:20px 10px 10px 10px;
-}
+    .response-list th {
+      font-weight:bold;
+      font-size:16px;
+      text-align:left;
+      padding:20px 10px 10px 10px;
+    }
 
-.response-list .response td {
-  padding:7px 15px 15px 10px;
-  border-bottom:1px dotted #86bba6;
-}
+    .response-list .response td {
+      padding:7px 15px 15px 10px;
+      border-bottom:1px dotted #86bba6;
+    }
 
-.response-list .response .created  {
+  .response-list .response .created  {
 
-}
+  }
 
-.response-list .response h3:before {
-  padding-right:10px;
-  color:#96c4b2;
-}
+  .response-list .response h3:before {
+    padding-right:10px;
+    color:#96c4b2;
+  }
 
-.response-list .address:before,
-.response-list .collector:before {
-  color:#bbb;
-  padding-right:2px;
-}
+  .response-list .address:before,
+  .response-list .collector:before {
+    color:#bbb;
+    padding-right:2px;
+  }
 
 .answers {
   margin-top:10px;
