@@ -36,6 +36,7 @@ NSB.views.MapView = Backbone.View.extend({
   },  
   
   render: function() {  
+    NSB.setLoading(true);
     this.mapResponses();
     NSB.setLoading(false);
   },

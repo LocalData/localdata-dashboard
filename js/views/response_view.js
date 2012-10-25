@@ -98,6 +98,9 @@ NSB.views.ResponseListView = Backbone.View.extend({
     _kmq.push(['record', "Answer filter selected"]);
     var $answer = $(e.target);
 
+    // Notify the user we're working on it.
+    NSB.setLoading(true);
+
     // Reset the collection 
     // this.responses.reset(this.allResponses.models);
 
@@ -108,6 +111,9 @@ NSB.views.ResponseListView = Backbone.View.extend({
     var filteredResponses = this.responses.filter(this.doesQuestionHaveTheRightAnswer);
 
     this.responses.reset(filteredResponses);
+
+    // Let the user know we're done
+    NSB.setLoading(false);
   },
 
   doesQuestionHaveTheRightAnswer: function(resp) {

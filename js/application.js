@@ -8,6 +8,7 @@ window.NSB = {
     console.log(NSB.loading);
 
     if (NSB.loading) {
+      console.log("Show the loading view");
       NSB.loadingView = new NSB.views.LoadingView({
         el: $("#loading-view-container"),
       });
