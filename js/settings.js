@@ -21,26 +21,26 @@ NSB.settings.CheckIcon = L.Icon.extend({
 });
 
 NSB.settings.closeZoomStyle = {
-  'color': '#f4eb4d', //'#cec40d'
+  'color': '#ef6d4a', //'#cec40d'
   'opacity': 1,
   'weight': 2,
-  'fillOpacity': 0,
-  'fillColor': '#faf6ad'
+  'fillOpacity': 0.5,
+  'fillColor': '#ef6d4a'
 };
 
 NSB.settings.farZoomStyle = {
   'opacity': 1,
   'fillOpacity': 1,
-  'fillColor': '#d7191c',
+  'fillColor': '#ef6d4a',
   'weight': 0
 };
 
 NSB.settings.selectedStyle = {
-	'color': '#f4eb4d',
+	'color': '#fcd96c',
   'opacity': 1,
 	'weight': 3,
 	'fillOpacity': 0.5,
-	'fillColor': '#faf6ad'
+	'fillColor': '#fcd96c'
 };
 
 NSB.settings.googleMapsFarZoom = [

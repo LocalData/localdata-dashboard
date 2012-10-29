@@ -5,7 +5,7 @@ html, body {
 }
 
 body {
-  background:#fff;
+  background:#39abb7 url('../img/tile.gif');
   padding:0;
   color:#333;
   font-family:"Open Sans", "Source Sans Pro", Helvetica, sans-serif;
@@ -53,9 +53,9 @@ input {
 }
 
   .button:hover {
-    background:#3f5b88;
+    background:#00949b;
     color:#ffe;
-    border-color:#3f5b88;
+    border-color:#00949b;
     -moz-box-shadow: inset 0 0 16px rgba(47, 68, 101, 0.5);
     -webkit-box-shadow: inset 0 0 16px rgba(47, 68, 101, 0.5);
   }
@@ -68,7 +68,6 @@ input {
 /* Structure ...............................................................*/
 
 .container {
-  background:#39abb7;
   padding:20px 30px 20px 30px; 
 }
 
@@ -79,8 +78,8 @@ input {
 #content {
   background:#fff;
   padding:30px;
-  -webkit-box-shadow: 0 0 16px rgba(0, 124, 129, 1);
-  box-shadow: 0 0 16px rgba(0, 124, 129, 1);
+  -webkit-box-shadow: 0 16px 16px rgba(0, 124, 129, 1);
+  box-shadow: 0 6px 16px rgba(0, 124, 129, 1);
 }
 
 
@@ -100,14 +99,33 @@ header a {
   background:#fff;
   border-bottom:0px  #a18464;
   padding:15px 30px 15px 40px;
+  overflow:auto;
+  -webkit-box-shadow: 0 0 16px rgba(0, 124, 129, 1);
+  box-shadow: 0 0 16px rgba(0, 124, 129, 1);
+
 }
 
-#site-header h1 {
-  font-weight:400;
-}
+  #site-header h1 {
+    font-weight:400;
+    display:inline;
+    float:left;
+  }
+
+  #topnav {
+    font-size:14px;
+    float:right;
+    padding-top:5px;
+  }
+
+  .mysurveys {
+    background:#f39379;
+    color:#fff;
+    padding:4px 8px;
+    border-radius:15px;
+    margin-right:10px;
+  }
 
 #survey-header {
-  background:#39abb7;
   color:#fefefe;
   font-size:35px;
   padding:20px 0 1px 20px;
@@ -129,6 +147,8 @@ header a {
 #subnav {
   background:#eee;
   overflow:auto;
+  border:1px solid #fff;
+  border-width: 1px 1px 0px 1px;
 
   -webkit-box-shadow: 0 0 16px rgba(0, 124, 129, 1);
   box-shadow: 0 0 16px rgba(0, 124, 129, 1);
@@ -142,13 +162,15 @@ header a {
     list-style:none;
     display:block;
     float:left;
-    padding:18px 35px 18px 35px;
+    margin-top:5px;
+    padding:18px 35px 20px 35px;
     border:0;
   }
 
     .nav-tabs li.active {
       background:#fff;
-      color:;
+      -webkit-box-shadow: 0 0 7px rgba(0, 124, 129, 0.4);
+      box-shadow: 0 0 7px rgba(0, 124, 129, 0.4);
     }
 
     .nav-tabs li a {
