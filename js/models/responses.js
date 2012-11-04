@@ -1,62 +1,83 @@
-NSB.models.Response = Backbone.Model.extend({ 
-  
-});
+/*jslint nomen: true */
+/*globals define: true */
 
-NSB.collections.Responses = Backbone.Collection.extend({
-  model: NSB.models.Response,
-  
-  initialize: function(models, options) {
-    // Ugly -- we'll need to find a nicer way to init this thing.s
-    // Maybe: function(models, options)
-    if(models !== []) {
-      this.models = models;
-    }
+define([
+  'jquery',
+  'lib/lodash',
+  'backbone',
+  'settings'
+],
 
-    if(options !== undefined) {
-      console.log("Getting responses");
-      this.surveyId = options.surveyId;
-      this.fetch();
-    }
-  },
-  
-  url: function() {
-    return NSB.settings.api.baseurl + '/surveys/' + this.surveyId + '/responses';
-  },
-        
-  parse: function(response) {
-    console.log("Parsing response collection");
-    console.log(response);
-    return response.responses;
-  },
+function($, _, Backbone, settings) {
+  'use strict'; 
 
-  // Returns a list of strings of all answer keys that have been submitted so far
-  getResponseKeys: function() {
-    this.responseKeys = [];
-    _.each(this.models, function(response) {
-      var responseJSON = response.toJSON();
-      if (_.has(responseJSON, 'responses')) {
-        this.responseKeys = _.union(this.responseKeys, _.keys(responseJSON.responses));
+  var Responses = {};
+
+  Responses.Model = Backbone.Model.extend({ 
+  
+  });
+
+  Responses.Collection = Backbone.Collection.extend({
+    model: Responses.Model,
+    
+    initialize: function(models, options) {
+      // Ugly -- we'll need to find a nicer way to init this thing.s
+      // Maybe: function(models, options)
+      if(! _.isEmpty(models)) {
+        this.models = models;
       }
-    }, this);
 
-    return this.responseKeys.sort();
+      if(options !== undefined) {
+        console.log("Getting responses");
+        this.surveyId = options.surveyId;
+        this.fetch();
+      }
+    },
+    
+    url: function() {
+      return settings.api.baseurl + '/surveys/' + this.surveyId + '/responses';
+    },
+          
+    parse: function(response) {
+      console.log("Parsing response collection");
+      console.log(response);
+      return response.responses;
+    },
 
-  },
-
-  getUniqueAnswersForQuestion: function(question) {
-    var answers = _.map(this.models, function(response){
-      if(_.has(response.attributes, 'responses')) {
-        if (_.has(response.attributes.responses, question)) {
-          return response.attributes.responses[question];
+    // Returns a list of strings of all answer keys that have been submitted so far
+    getResponseKeys: function() {
+      this.responseKeys = [];
+      _.each(this.models, function(response) {
+        var responseJSON = response.toJSON();
+        if (_.has(responseJSON, 'responses')) {
+          this.responseKeys = _.union(this.responseKeys, _.keys(responseJSON.responses));
         }
-      }
-    });
-    var uniqueAnswers = _.unique(answers).sort();
+      }, this);
 
-    // Replace undefined with a string for nice rendering
-    var idxOfUndefinedToReplace = _.indexOf(uniqueAnswers, undefined);
-    uniqueAnswers[idxOfUndefinedToReplace] = "[empty]";
-    return uniqueAnswers;
-  }
-  
-});
+      return this.responseKeys.sort();
+
+    },
+
+    getUniqueAnswersForQuestion: function(question) {
+      var answers = _.map(this.models, function(response){
+        if(_.has(response.attributes, 'responses')) {
+          if (_.has(response.attributes.responses, question)) {
+            return response.attributes.responses[question];
+          }
+        }
+      });
+      var uniqueAnswers = _.unique(answers).sort();
+
+      // Replace undefined with a string for nice rendering
+      var idxOfUndefinedToReplace = _.indexOf(uniqueAnswers, undefined);
+      uniqueAnswers[idxOfUndefinedToReplace] = "[empty]";
+      return uniqueAnswers;
+    }
+    
+  });
+
+  return Responses;
+
+}); // End Responses module
+
+

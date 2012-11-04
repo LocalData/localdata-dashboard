@@ -36,9 +36,10 @@ NSB.views.MapView = Backbone.View.extend({
   },  
   
   render: function() {  
-    NSB.setLoading(true);
+    // TODO: better message passing
+    // NSB.setLoading(true);
     this.mapResponses();
-    NSB.setLoading(false);
+    // NSB.setLoading(false);
   },
 
   mapResponses: function() {

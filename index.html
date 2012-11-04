@@ -19,14 +19,11 @@
       _kms('//doug1izaerwt3.cloudfront.net/' + _kmk + '.1.js');
     </script>
     
-    <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,900|Pacifico' rel='stylesheet' type='text/css'>
+    <!-- Styles -->
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,300|Pacifico' rel='stylesheet' type='text/css'>
     
     <style type="text/css" media="screen">
-      /*@import url("css/bootstrap.min.css");
-      @import url("css/bootstrap-responsive.min.css");*/
       @import url("css/lib/reset.css");
-      /*@import url("css/lib/font-awesome.css");*/
       @import url("http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.css");
       @import url("css/app.css");
     </style>
@@ -47,6 +44,7 @@
     </div>
     
     <!-- Core scripts -->
+    <!--
     <script type="text/javascript" src="js/lib/jquery.js"></script>
     <script type="text/javascript" src="js/lib/tinypubsub.js"></script>    
     
@@ -63,7 +61,8 @@
     <script type="text/javascript" src="js/application.js"></script>
     <script type="text/javascript" src="js/settings.js"></script>
     <script type="text/javascript" src="js/api.js"></script>
-    
+    -->
+
     <!-- Templates ========================================================-->
     <!-- Home .............................................................-->
     <script type="text/template" id="home">
@@ -336,13 +335,16 @@
     </script>
          
     <!-- Models & router -->
+    <!--
     <script type="text/javascript" src="js/models/surveys.js"></script>
     <script type="text/javascript" src="js/models/responses.js"></script>
     <script type="text/javascript" src="js/models/scans.js"></script>
     <script type="text/javascript" src="js/models/forms.js"></script>
     <script type="text/javascript" src="js/routers/index.js"></script>
+    -->
     
     <!-- Views -->
+    <!--
     <script type="text/javascript" src="js/views/home.js"></script>
     <script type="text/javascript" src="js/views/nav_view.js"></script>
     <script type="text/javascript" src="js/views/settings_view.js"></script>
@@ -354,8 +356,10 @@
     <script type="text/javascript" src="js/views/map_view.js"></script>
     <script type="text/javascript" src="js/views/export_view.js"></script>
     <script type="text/javascript" src="js/views/loading_view.js"></script>
+    -->
 
     <!-- Root controls all: start here -->
+    <!--
     <script type="text/javascript" src="js/views/root.js"></script>
     <script type="text/javascript">
         $(function() {
@@ -363,7 +367,9 @@
             Everything.startRouting();
         })
     </script>
+    -->
     
-    
+    <script data-main="js/main" src="js/require.js"></script>
+
 </body>
 </html>
