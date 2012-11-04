@@ -10,12 +10,15 @@ define([
   // Router
   'routers/index',
 
-  // Views
   'views/home'
+
 ],
 
 function($, _, Backbone, settings, IndexRouter, HomeView) {
   'use strict'; 
+
+  var AllViews = {};
+  AllViews.HomeView = HomeView;
 
   /*
    * The singleton view which manages all others. Essentially, a "controller".
@@ -55,7 +58,7 @@ function($, _, Backbone, settings, IndexRouter, HomeView) {
       }
 
       console.log("Creating " + name);
-      this.views[name] = new NSB.views[name](options);
+      this.views[name] = new AllViews[name](options);
 
       return this.views[name];
     },
