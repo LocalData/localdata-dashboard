@@ -2,11 +2,10 @@
 /*globals require: true */
 
 // TODO: Tinypubsub
-//       Google Maps
 
 require.config({
   paths: { 
-    jquery: 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery',
+    jquery: 'lib/jquery-1.7.1',
     backbone: 'lib/backbone',
     moment: 'lib/moment.min'
   },

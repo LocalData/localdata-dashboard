@@ -11,8 +11,8 @@ function(L) {
   var settings = {};
 
   settings.api = {
-    baseurl: 'http://localhost:3000/api', // http://localhost:3000/api', // 'http://surveydet.herokuapp.com', 
-    geo: 'http://localhost:3000/api' //'http://surveydet.herokuapp.com/api',
+    baseurl: 'http://localhost:3000/api', // http://localhost:3000/api', 
+    geo: 'http://localhost:3000/api' 
   };
 
   // These get set by the app. 
