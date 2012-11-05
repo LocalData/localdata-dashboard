@@ -30,7 +30,7 @@ function($, _, settings, api, RootView) {
   LD.templates = {};
 
 
-    // Kick off the LocalData app
+  // Kick off the LocalData app
   LD.initialize = function() {
       console.log("Initalize dashboard");
       LD.router = new RootView();
