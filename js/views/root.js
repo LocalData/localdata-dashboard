@@ -10,15 +10,18 @@ define([
   // Router
   'routers/index',
 
-  'views/home'
+  // Views
+  'views/home',
+  'views/surveys'
 
 ],
 
-function($, _, Backbone, settings, IndexRouter, HomeView) {
+function($, _, Backbone, settings, IndexRouter, HomeView, SurveyViews) {
   'use strict'; 
 
   var AllViews = {};
   AllViews.HomeView = HomeView;
+  AllViews.SurveyView = SurveyViews.SurveyView;
 
   /*
    * The singleton view which manages all others. Essentially, a "controller".

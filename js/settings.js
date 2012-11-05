@@ -2,12 +2,12 @@
 /*globals define: true */
 
 define([
-  'lib/leaflet/leaflet'
+  'lib/leaflet/leaflet.google'
 ],
 
 function(L) {
   'use strict';
-
+  
   var settings = {};
 
   settings.api = {

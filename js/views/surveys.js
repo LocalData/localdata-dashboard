@@ -10,10 +10,15 @@ define([
   // Models
   'models/surveys',
   'models/responses',
-  'models/forms'
+  'models/forms',
+
+  // Views
+  'views/subnav',
+  'views/export',
+  'views/responses'
 ],
 
-function($, _, Backbone, settings, SurveyModels, ResponseModels, FormModels) {
+function($, _, Backbone, settings, SurveyModels, ResponseModels, FormModels, SubnavView, ExportView, ResponseViews) {
   'use strict'; 
 
   var SurveyViews = {};
@@ -44,7 +49,7 @@ function($, _, Backbone, settings, SurveyModels, ResponseModels, FormModels) {
       
       // Set up the page and show the given survey
       this.surveyId = options.id;
-      this.survey = new Surveys.Model({id: this.surveyId});
+      this.survey = new SurveyModels.Model({id: this.surveyId});
       this.survey.on('change', this.render, this);
       
       // Get the relevant responses    
@@ -62,29 +67,30 @@ function($, _, Backbone, settings, SurveyModels, ResponseModels, FormModels) {
         'survey': this.survey.toJSON()
       };
       this.$el.html(_.template($('#survey-view').html(), context));
-          
-      NSB.setLoading(true);
+      
+      // TODO -- reenable setLoading 
+      // NSB.setLoading(true);
 
       // Render the sub components
       $('#settings-view-container').hide();
       $('#export-view-container').hide();
 
       // List the responses
-      this.responseListView = new NSB.views.ResponseListView({
+      this.responseListView = new ResponseViews.ListView({
         el: $("#response-view-container"),
         responses: this.responses,
         forms: this.forms
       });
 
-      this.settingsView = new NSB.views.SettingsView({
-        el: $("#settings-view-container"),
-        survey: this.survey,
-        forms: this.forms
-      });
+      // this.settingsView = new NSB.views.SettingsView({
+      //   el: $("#settings-view-container"),
+      //   survey: this.survey,
+      //   forms: this.forms
+      // });
 
       // Subnav    
-      this.subnavView = new NSB.views.SubnavView({slug: NSB.settings.slug});  
-      this.exportView = new NSB.views.ExportView({surveyId: this.surveyId});  
+      this.subnavView = new SubnavView({slug: settings.slug});  
+      this.exportView = new ExportView({surveyId: this.surveyId});  
 
       this.subnavView.render();
       this.exportView.render(); 

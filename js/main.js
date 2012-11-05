@@ -8,14 +8,13 @@ require.config({
   paths: { 
     jquery: 'http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery',
     backbone: 'lib/backbone',
-    moment: 'moment.min'
+    moment: 'lib/moment.min'
   },
 
   shim: {
     'lib/lodash': {
       exports: '_'
     },
-
 
     backbone: {
       deps: ['lib/lodash', 'jquery'],
@@ -24,9 +23,14 @@ require.config({
 
     'lib/leaflet/leaflet': {
       exports: 'L'
-    }
+    },
 
-  }
+    'lib/leaflet/leaflet.google': {
+      deps: ['lib/leaflet/leaflet'],
+      exports: 'L'
+    }
+  },
+
 });
 
 require(['jquery', 'lib/lodash', 'backbone', 'app'],

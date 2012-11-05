@@ -11,19 +11,44 @@ define(function (require) {
 
   var api = {};
 
-  api.getSurveyFromSlug = function() {
-    var slug = window.location.hash.slice(1);
-    
+  // Given a slug (eg 'just-a-surey'), find the corresponding survey 
+  // Sets settings.surveyId
+  api.setSurveyIdFromSlug = function(slug, callback) {    
     var url = settings.api.baseurl +  "/slugs/" + slug;
-    console.log("I'm using this URL to get ");
+    console.log("I'm using this URL to get the survey ID");
     console.log(url);
+    
+    // Save ourselves an ajax request
+    if (settings.slug === slug && settings.surveyId !== null) {
+      callback();
+    }
     
     // TODO: Display a nice error if the survey wans't found.
     $.getJSON(url, function(data) {
       console.log(data.survey);
+      settings.slug = slug;
       settings.surveyId = data.survey;
+      callback();
     });
   };
+
+  // Same as setSureyIdFromSlug above, but uses window.hash.
+  // Used by the mobile client.
+  // TODO: generalize
+  // ---------
+  // api.getSurveyFromSlug = function() {
+  //   var slug = window.location.hash.slice(1);
+  //   
+  //   var url = settings.api.baseurl +  "/slugs/" + slug;
+  //   console.log("I'm using this URL to get ");
+  //   console.log(url);
+  //   
+  //   // TODO: Display a nice error if the survey wans't found.
+  //   $.getJSON(url, function(data) {
+  //     console.log(data.survey);
+  //     settings.surveyId = data.survey;
+  //   });
+  // };
   
   /*
    * Generates the URL to retrieve results for a given parcel
@@ -119,7 +144,7 @@ define(function (require) {
         var point = data.resourceSets[0].resources[0].point;
         var latlng = new L.LatLng(point.coordinates[0], point.coordinates[1]);
         callback(latlng);
-      };
+      }
     });    
   };
   
@@ -138,7 +163,7 @@ define(function (require) {
     $.getJSON(url, function(data){
       if(data.responses) {
         callback(data.responses);
-      };
+      }
     });
   };
   
