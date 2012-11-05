@@ -37,7 +37,7 @@
     <header id="site-header">
         <h1><small><a href="index.html">localdata</a></small></h1>
         <div id="topnav">
-          <a href="" class="mysurveys">My Surveys</a>
+          <a href="" class="mysurveys">All Surveys</a>
           <a href="">Log out</a>
         </div>
     </header>
@@ -46,26 +46,6 @@
     <div id="container">
     </div>
     
-    <!-- Core scripts -->
-    <!--
-    <script type="text/javascript" src="js/lib/jquery.js"></script>
-    <script type="text/javascript" src="js/lib/tinypubsub.js"></script>    
-    
-    <script type="text/javascript" src="js/lib/underscore.js"></script>    
-    <script type="text/javascript" src="js/lib/backbone.js"></script>
-    <script type="text/javascript" src="js/lib/backbone.paginator.js"></script>
-    <script type="text/javascript" src="js/lib/fileuploader.js"></script>
-    <script type="text/javascript" src="js/lib/moment.min.js"></script>
-
-    <script type="text/javascript" src="js/lib/leaflet/leaflet-src.js"></script>
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
-    <script type="text/javascript" src="js/lib/leaflet/leaflet.google.js"></script>
-
-    <script type="text/javascript" src="js/application.js"></script>
-    <script type="text/javascript" src="js/settings.js"></script>
-    <script type="text/javascript" src="js/api.js"></script>
-    -->
-
     <!-- Templates ========================================================-->
     <!-- Home .............................................................-->
     <script type="text/template" id="home">
@@ -123,6 +103,7 @@
     <script type="text/template" id="settings-view">
       <h2>Survey Settings</h2>
 
+      <!--
       <form>
         <label>Survey Name</label>
         <input type="text" value="<%= survey.name %>" />
@@ -132,7 +113,7 @@
 
         <input type="submit" value="Save">
       </form>
-
+      -->
     </script>
     
 
@@ -336,42 +317,7 @@
         </ul>
       </div>-->
     </script>
-         
-    <!-- Models & router -->
-    <!--
-    <script type="text/javascript" src="js/models/surveys.js"></script>
-    <script type="text/javascript" src="js/models/responses.js"></script>
-    <script type="text/javascript" src="js/models/scans.js"></script>
-    <script type="text/javascript" src="js/models/forms.js"></script>
-    <script type="text/javascript" src="js/routers/index.js"></script>
-    -->
-    
-    <!-- Views -->
-    <!--
-    <script type="text/javascript" src="js/views/home.js"></script>
-    <script type="text/javascript" src="js/views/nav_view.js"></script>
-    <script type="text/javascript" src="js/views/settings_view.js"></script>
-    <script type="text/javascript" src="js/views/survey_view.js"></script>
-    <script type="text/javascript" src="js/views/response_view.js"></script>
-    <script type="text/javascript" src="js/views/pagination_view.js"></script>
-    <script type="text/javascript" src="js/views/upload_view.js"></script>
-    <script type="text/javascript" src="js/views/scan_view.js"></script>
-    <script type="text/javascript" src="js/views/map_view.js"></script>
-    <script type="text/javascript" src="js/views/export_view.js"></script>
-    <script type="text/javascript" src="js/views/loading_view.js"></script>
-    -->
-
-    <!-- Root controls all: start here -->
-    <!--
-    <script type="text/javascript" src="js/views/root.js"></script>
-    <script type="text/javascript">
-        $(function() {
-            window.Everything = new NSB.views.Root();
-            Everything.startRouting();
-        })
-    </script>
-    -->
-    
+             
     <script data-main="js/main" src="js/require.js"></script>
 
 </body>

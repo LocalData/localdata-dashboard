@@ -7,7 +7,7 @@ define([
 
 function(L) {
   'use strict';
-  
+
   var settings = {};
 
   settings.api = {

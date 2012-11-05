@@ -15,10 +15,11 @@ define([
   // Views
   'views/subnav',
   'views/export',
+  'views/settings',
   'views/responses'
 ],
 
-function($, _, Backbone, settings, SurveyModels, ResponseModels, FormModels, SubnavView, ExportView, ResponseViews) {
+function($, _, Backbone, settings, SurveyModels, ResponseModels, FormModels, SubnavView, ExportView, SettingsView, ResponseViews) {
   'use strict'; 
 
   var SurveyViews = {};
@@ -82,24 +83,28 @@ function($, _, Backbone, settings, SurveyModels, ResponseModels, FormModels, Sub
         forms: this.forms
       });
 
-      // this.settingsView = new NSB.views.SettingsView({
-      //   el: $("#settings-view-container"),
-      //   survey: this.survey,
-      //   forms: this.forms
-      // });
+      // TODO 
+      // Settings view
+      this.settingsView = new SettingsView({
+        survey: this.survey,
+        forms: this.forms
+      });
 
-      // Subnav    
+      // Subnav & Export views   
       this.subnavView = new SubnavView({slug: settings.slug});  
       this.exportView = new ExportView({surveyId: this.surveyId});  
 
       this.subnavView.render();
       this.exportView.render(); 
+      this.settingsView.render();
 
+      // TODO -- this should only run after SubnavView is read. 
+      // By default, we show the first tab
       this.show(this.toshow[0], this.toshow[1]);
     },
     
     show: function(id, tab) {
-      // This is a really bad way to show the right stuff
+      // This is a really bad way to show the right tab
       this.toshow = [id, tab];
 
       $("#content > div").hide();
@@ -111,16 +116,12 @@ function($, _, Backbone, settings, SurveyModels, ResponseModels, FormModels, Sub
       this.show('#response-view-container', 0);
     },
     
-    showMap: function() {
-      this.show('#map-view-container', 1);
-    },
-    
     showExport: function() {
-      this.show('#export-view-container', 2);
+      this.show('#export-view-container', 1);
     },
     
     showSettings: function() {
-      this.show('#settings-view-container', 3);
+      this.show('#settings-view-container', 2);
     },
         
     // Not yet implemented

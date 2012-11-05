@@ -22,7 +22,6 @@ function($, _, Backbone, settings, api) {
       this.surveyId = options.surveyId;
           
     },
-    
       
     render: function() {
       // Set the context & render the page
