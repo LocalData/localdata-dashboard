@@ -71,7 +71,6 @@ function($, _, Backbone, L, moment, settings, api, Responses) {
       this.parcelsLayerGroup.clearLayers();
 
       _.each(this.responses.models, function(response){
-
         // Skip old records that don't have geo_info
         var geoInfo = response.get("geo_info");
         if (geoInfo === undefined) {
@@ -88,9 +87,14 @@ function($, _, Backbone, L, moment, settings, api, Responses) {
 
       }, this);
 
-      if(this.responses.models.length > 0) {
-        // This fails if there aren't any results, hence the test.
+
+      // fitBounds fails if there aren't any results, hence this test:
+      try {
         this.map.fitBounds(this.parcelsLayerGroup.getBounds());
+      }
+      catch (e) {
+        // statements to handle any exceptions
+        console.log(e); // pass exception object to error handler
       }
       
     },
