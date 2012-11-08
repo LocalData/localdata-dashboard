@@ -46,8 +46,10 @@ function($, _, Backbone, settings, SurveyModels, ResponseModels, FormModels, Sub
     bodyView: null,
     
     initialize: function(options) {
-      _.bindAll(this, 'render', 'show', 'showResponses', 'showUpload', 'showMap', 'showSettings');
-      
+      console.log("Here");
+      _.bindAll(this, 'render', 'show', 'showResponses', 'showUpload', 'showSettings');
+      console.log("Here");
+
       // Set up the page and show the given survey
       this.surveyId = options.id;
       this.survey = new SurveyModels.Model({id: this.surveyId});
