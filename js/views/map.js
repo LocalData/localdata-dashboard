@@ -104,20 +104,16 @@ function($, _, Backbone, L, moment, settings, api, Responses) {
     },
     
     renderObject: function(obj) {
+      // Expects an object with properties
+      // parcelId: ID of the given object
+      // geometry: GeoJSON geometry object
+
       // We don't want to re-draw parcels that are already on the map
       // So we keep a hash map with the layers so we can unrender them
-
       if(! _.has(this.parcelIdsOnTheMap, obj.parcelId)){
        
         // Make sure the format fits Leaflet's geoJSON expectations
-        // obj['geometry'] = obj.polygon;
         obj.type = "Feature";
-        obj.geometry.type = "Polygon";
-
-        if(obj.geometry.coordinates[0][0].length > 2) {
-          obj.geometry.type = "MultiPolygon";
-        }
-        // obj.geometry.coordinates
 
         // Create a new geojson layer and style it. 
         var geojsonLayer = new L.GeoJSON();
@@ -132,6 +128,12 @@ function($, _, Backbone, L, moment, settings, api, Responses) {
 
         this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
       }
+    },
+
+    renderObjects: function(results) {
+      _.each(results, function(elt) { 
+        this.renderObject(elt);   
+      }, this); 
     },
 
     updateMapStyleBasedOnZoom: function(e) {
@@ -167,12 +169,6 @@ function($, _, Backbone, L, moment, settings, api, Responses) {
       if (this.selectedLayer !== null) {
         this.selectedLayer.setStyle(settings.selectedStyle);
       }
-    },
-      
-    renderObjects: function(results) {
-      _.each(results, function(elt) { 
-        this.renderObject(elt);   
-      }, this); 
     },
     
     getParcelsInBounds: function() {

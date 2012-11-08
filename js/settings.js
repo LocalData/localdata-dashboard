@@ -11,15 +11,9 @@ function(L) {
   var settings = {};
 
   settings.api = {
-    baseurl: 'http://localhost:3000/api', // http://localhost:3000/api', 
-    geo: 'http://localhost:3000/api' 
+    baseurl: '/api', // http://localhost:3000/api', 
+    geo: '/api' 
   };
-
-  // These get set by the app. 
-  // Really should be tracked elsewhere. 
-  // Are they even used? Let's comment them out and see what breaks. 
-  // settings.surveyId = null;
-  // settings.slug = null;
 
   // Basic map styles
   settings.CheckIcon = L.Icon.extend({
@@ -45,10 +39,11 @@ function(L) {
   };
 
   settings.farZoomStyle = {
+    'color': '#df455d', 
     'opacity': 1,
     'fillOpacity': 1,
-    'fillColor': '#ef6d4a',
-    'weight': 0
+    'fillColor': '#df455d',
+    'weight': 4
   };
 
   settings.selectedStyle = {
