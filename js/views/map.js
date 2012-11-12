@@ -27,16 +27,18 @@ function($, _, Backbone, L, moment, settings, api, Responses) {
     surveyId: null,
     paginationView: null,
     selectedLayer: null,
+    filtered: false,
     selectedObject: {},
     markers: {},  
     
     initialize: function(options) {
       console.log("Init map view");
-      _.bindAll(this, 'render', 'selectObject', 'renderObject', 'renderObjects', 'getResponsesInBounds', 'addDoneMarker', 'addResultsToMap', 'updateMapStyleBasedOnZoom', 'updateObjectStyles');
+      _.bindAll(this, 'render', 'selectObject', 'renderObject', 'renderObjects', 'getResponsesInBounds', 'updateMapStyleBasedOnZoom', 'updateObjectStyles', 'styleBy');
       
       this.responses = options.responses;
       this.responses.on('reset', this.render, this);
 
+      // We track the results on the map using these two groups
       this.parcelIdsOnTheMap = {};
       this.parcelsLayerGroup = new L.FeatureGroup();
       this.doneMarkersLayerGroup = new L.FeatureGroup();
@@ -45,17 +47,20 @@ function($, _, Backbone, L, moment, settings, api, Responses) {
 
       this.$el.html(_.template($('#map-view').html(), {}));
     
+      // Initialize the map
       this.map = new L.map('map');
-      this.markers = {};
-      
-      console.log(L);
 
-      this.googleLayer = new L.Google("TERRAIN");
-      this.map.addLayer(this.googleLayer);  
-      this.map.addLayer(this.parcelsLayerGroup);
-      this.map.addLayer(this.doneMarkersLayerGroup);
+      // Don't think this is needed: this.markers = {};
       
+      // Set up the base map; add the parcels and done markers
+      this.googleLayer = new L.Google("TERRAIN");
+      this.map.addLayer(this.googleLayer); 
+      this.map.addLayer(this.doneMarkersLayerGroup); // no longer used??
+      this.map.addLayer(this.parcelsLayerGroup);
+
       this.map.setView([42.374891,-83.069504], 17); // default center
+      this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
+
       this.render();
     },  
     
@@ -66,11 +71,25 @@ function($, _, Backbone, L, moment, settings, api, Responses) {
       // NSB.setLoading(false);
     },
 
-    mapResponses: function() {
+    // Map all the responses on the map
+    // Optional paramemters: "question", [answers] 
+    // If given, the each result on the map will be styled by answers to
+    // question.
+    mapResponses: function(question, answers) {
+      var indexOfColorToUse;
+      var color;
+      var style;
+
+      if(question !== undefined) {
+        this.filtered = true;
+      }
+
       // Clear out all the old results
       this.parcelsLayerGroup.clearLayers();
+      this.parcelIdsOnTheMap = {};
 
       _.each(this.responses.models, function(response){
+
         // Skip old records that don't have geo_info
         var geoInfo = response.get("geo_info");
         if (geoInfo === undefined) {
@@ -79,10 +98,38 @@ function($, _, Backbone, L, moment, settings, api, Responses) {
 
         // Make sure were have the geometry for this parcel
         if(_.has(geoInfo, "geometry")) {
-          this.renderObject({
+          var toRender = {
             parcelId: response.get("parcel_id"),
             geometry: response.get("geo_info").geometry 
-          });
+          };
+
+          style = this.defaultStyle;
+
+          // Color the results if necessary
+          // TODO: lots of optimization possible here! 
+          if (this.filtered) {
+            var questions = response.get("responses");
+            var answerToQuestion = questions[question];
+
+            // Figure out what color to use
+            indexOfColorToUse = _.indexOf(answers, answerToQuestion);
+            color = settings.colorRange[indexOfColorToUse + 1];
+
+            if (indexOfColorToUse == -1) {
+              console.log(settings.colorRange[0]);
+              color = settings.colorRange[0];
+            }
+
+            style = settings.styleTemplate;
+            style.color = color;
+            style.fillColor = color;
+          }
+          
+          // Use that style!
+          console.log("Going to render");
+          console.log(toRender);
+          console.log(style);
+          this.renderObject(toRender, style);
         }
 
       }, this);
@@ -90,6 +137,10 @@ function($, _, Backbone, L, moment, settings, api, Responses) {
 
       // fitBounds fails if there aren't any results, hence this test:
       try {
+        console.log("Fitting bounds");
+        console.log(this.map);
+        console.log(this.parcelsLayerGroup.getBounds());
+
         this.map.fitBounds(this.parcelsLayerGroup.getBounds());
       }
       catch (e) {
@@ -103,30 +154,32 @@ function($, _, Backbone, L, moment, settings, api, Responses) {
       this.parcelsLayerGroup.setStyle(style);
     },
     
-    renderObject: function(obj) {
+    renderObject: function(obj, style) {
       // Expects an object with properties
-      // parcelId: ID of the given object
-      // geometry: GeoJSON geometry object
+      // obj.parcelId: ID of the given object
+      // obj.geometry: GeoJSON geometry object
+
+      if(style === undefined) {
+        style = this.defaultStyle;
+      }
 
       // We don't want to re-draw parcels that are already on the map
       // So we keep a hash map with the layers so we can unrender them
       if(! _.has(this.parcelIdsOnTheMap, obj.parcelId)){
-       
         // Make sure the format fits Leaflet's geoJSON expectations
         obj.type = "Feature";
 
         // Create a new geojson layer and style it. 
         var geojsonLayer = new L.GeoJSON();
+        console.log("Adding geoJSON layer");
         geojsonLayer.addData(obj);
-        geojsonLayer.setStyle(this.defaultStyle);
+        geojsonLayer.setStyle(style);
         
         geojsonLayer.on('click', this.selectObject);
         
         // Add the layer to the layergroup and the hashmap
         this.parcelsLayerGroup.addLayer(geojsonLayer);
         this.parcelIdsOnTheMap[obj.parcelId] = geojsonLayer;
-
-        this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
       }
     },
 
@@ -137,20 +190,51 @@ function($, _, Backbone, L, moment, settings, api, Responses) {
     },
 
     updateMapStyleBasedOnZoom: function(e) {
-      // _kmq.push(['record', "Map zoomed"]);
-      
-      if(this.map.getZoom() > 14 ) {
-        if (this.googleLayer._type !== "HYBRID") {
-          // Show the satellite view when close in
-          this.map.removeLayer(this.googleLayer);
-          this.googleLayer = new L.Google("HYBRID");
-          this.map.addLayer(this.googleLayer);
+      console.log("Map style update triggered");
 
-          // Objects should be more detailed close up
-          this.defaultStyle = settings.closeZoomStyle;
-          this.updateObjectStyles(settings.closeZoomStyle);
+      // Don't update the styles if there's a filter in place
+      if(this.filtered) {
+        return;
+      }
+
+      // _kmq.push(['record', "Map zoomed"]);
+      var zoom = this.map.getZoom();
+
+      // Objects should be more detailed close up (zoom 14+) ...................
+      if(zoom > 10) {
+
+        // If we're in pretty close, show the satellite view
+        if(zoom > 14) {
+          if(this.googleLayer._type !== "HYBRID") {
+            this.map.removeLayer(this.googleLayer);
+            this.googleLayer = new L.Google("HYBRID");
+            this.map.addLayer(this.googleLayer);
+          }
+
+          if(this.defaultStyle !== settings.closeZoomStyle) {
+            this.defaultStyle = settings.closeZoomStyle;
+            this.updateObjectStyles(settings.closeZoomStyle);
+          }
+
+        } else {
+          // Mid zoom (11-14)...................................................
+          // We're not that close, show the mid zoom styles
+          if(this.defaultStyle !== settings.midZoomStyle) {
+            this.defaultStyle = settings.closeZoomStyle;
+            this.updateObjectStyles(settings.closeZoomStyle);
+          }
+
+          // And use the terrain map
+          if (this.googleLayer._type !== "TERRAIN") {
+            // Show a more abstract map when zoomed out
+            this.map.removeLayer(this.googleLayer);
+            this.googleLayer = new L.Google("TERRAIN");
+            this.map.addLayer(this.googleLayer);
+          }
         }
-      } else {
+
+      }else {
+        // Far zoom (>14) ......................................................
         if (this.googleLayer._type !== "TERRAIN") {
           // Show a more abstract map when zoomed out
           this.map.removeLayer(this.googleLayer);
@@ -158,14 +242,12 @@ function($, _, Backbone, L, moment, settings, api, Responses) {
           this.map.addLayer(this.googleLayer);
 
           // Objects should be more abstract far out
-          console.log("Updating styles!");
-          console.log(settings.farZoomStyle);
-
           this.defaultStyle = settings.farZoomStyle;
           this.updateObjectStyles(settings.farZoomStyle);
         }
       }
 
+      // If a parcel is selected, make sure it says visually selected
       if (this.selectedLayer !== null) {
         this.selectedLayer.setStyle(settings.selectedStyle);
       }
@@ -190,23 +272,23 @@ function($, _, Backbone, L, moment, settings, api, Responses) {
       
     // TODO 
     // Adds a checkbox marker to the given point
-    addDoneMarker: function(latlng, id) {
-      // Only add markers if they aren't already on the map.
-      // if (true){ //this.markers[id] == undefined
-      //   var doneIcon = new this.CheckIcon();
-      //   var doneMarker = new L.Marker(latlng, {icon: doneIcon});
-      //   this.doneMarkersLayerGroup.addLayer(doneMarker);
-      //   this.markers[id] = doneMarker;
-      // }
-    },
+    // addDoneMarker: function(latlng, id) {
+    //   // Only add markers if they aren't already on the map.
+    //   // if (true){ //this.markers[id] == undefined
+    //   //   var doneIcon = new this.CheckIcon();
+    //   //   var doneMarker = new L.Marker(latlng, {icon: doneIcon});
+    //   //   this.doneMarkersLayerGroup.addLayer(doneMarker);
+    //   //   this.markers[id] = doneMarker;
+    //   // }
+    // },
     
-    addResultsToMap: function(results){    
-      _.each(results, function(elt) {
-        var point = new L.LatLng(elt.geo_info.centroid[0], elt.geo_info.centroid[1]);
-        var id = elt.parcel_id;
-        this.addDoneMarker(point, id);
-      }, this);
-    },
+    // addResultsToMap: function(results){    
+    //   _.each(results, function(elt) {
+    //     var point = new L.LatLng(elt.geo_info.centroid[0], elt.geo_info.centroid[1// ]);
+    //     var id = elt.parcel_id;
+    //     this.addDoneMarker(point, id);
+    //   }, this);
+    // },
     
     // Get all the responses in a map 
     getResponsesInBounds: function(){  

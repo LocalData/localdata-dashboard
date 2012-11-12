@@ -113,8 +113,14 @@ function($, _, Backbone, moment, settings, api, Responses, MapView) {
     filter: function(e) {
       // _kmq.push(['record', "Question filter selected"]);
       var $question = $(e.target);
-      var results = this.responses.getUniqueAnswersForQuestion($question.val());
-      $("#subfilter").html(_.template($('#filter-results').html(), { choices: results }));
+      var question = $question.val();
+
+      // Get the list of distinct options
+      var answers = this.responses.getUniqueAnswersForQuestion(question);
+      $("#subfilter").html(_.template($('#filter-results').html(), { choices: answers }));
+
+      // Distinguish the responses visually on the map
+      this.mapView.mapResponses(question, answers);
     },
 
     subFilter: function(e) {

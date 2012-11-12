@@ -11,9 +11,19 @@ function(L) {
   var settings = {};
 
   settings.api = {
-    baseurl: '/api', // http://localhost:3000/api', 
-    geo: '/api' 
+    baseurl: 'http://localhost:3000/api', // http://localhost:3000/api', 
+    geo: 'http://localhost:3000/api' 
   };
+
+  // Colors for option maps
+  settings.colorRange = [
+    "#df455d",
+    "#ce40bf",
+    "#404ecd",
+    "#40cd98",
+    "#d4e647",
+    "#ee6d4a"
+  ];
 
   // Basic map styles
   settings.CheckIcon = L.Icon.extend({
@@ -28,7 +38,12 @@ function(L) {
     }
   });
 
-  // Basic map styles
+  // Just add color! (and fillColor)
+  settings.styleTemplate = {
+    'opacity': 1,
+    'weight': 2,
+    'fillOpacity': 0.5,
+  };
 
   settings.closeZoomStyle = {
     'color': '#ef6d4a', //'#cec40d'
@@ -38,12 +53,20 @@ function(L) {
     'fillColor': '#ef6d4a'
   };
 
+  settings.midZoomStyle = {
+    'color': '#df455d', 
+    'opacity': 0,
+    'weight': 1,
+    'fillOpacity': 0.5,
+    'fillColor': '#df455d',
+  };
+
   settings.farZoomStyle = {
     'color': '#df455d', 
     'opacity': 1,
-    'fillOpacity': 1,
+    'fillOpacity': .9,
     'fillColor': '#df455d',
-    'weight': 4
+    'weight': 8
   };
 
   settings.selectedStyle = {
