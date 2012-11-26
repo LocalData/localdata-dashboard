@@ -28,7 +28,7 @@ require.config({
       deps: ['lib/leaflet/leaflet'],
       exports: 'L'
     }
-  },
+  }
 
 });
 

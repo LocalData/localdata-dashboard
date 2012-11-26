@@ -12,7 +12,6 @@ function(L) {
   /*
    * Google layer using Google Maps API
    */
-  console.log(L);
 
   L.Google = L.Class.extend({
   	includes: L.Mixin.Events,

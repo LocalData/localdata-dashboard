@@ -5,6 +5,8 @@ define([
   'jquery',
   'lib/lodash',
   'backbone',
+
+  // LocalData
   'settings',
 
   // Router
@@ -13,7 +15,6 @@ define([
   // Views
   'views/home',
   'views/surveys'
-
 ],
 
 function($, _, Backbone, settings, IndexRouter, HomeView, SurveyViews) {

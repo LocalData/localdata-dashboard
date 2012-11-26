@@ -8,6 +8,7 @@ define([
   'backbone',
   'lib/leaflet/leaflet.google',
   'moment',
+  'lib/tinypubsub',
 
   // LocalData
   'settings',
@@ -17,7 +18,7 @@ define([
   'models/responses'
 ],
 
-function($, _, Backbone, L, moment, settings, api, Responses) {
+function($, _, Backbone, L, moment, events, settings, api, Responses) {
   'use strict'; 
   
   var MapView = Backbone.View.extend({
@@ -66,9 +67,9 @@ function($, _, Backbone, L, moment, settings, api, Responses) {
     
     render: function() {  
       // TODO: better message passing
-      // NSB.setLoading(true);
+      events.publish('loading', [true]);
       this.mapResponses();
-      // NSB.setLoading(false);
+      events.publish('loading', [false]);
     },
 
     // Map all the responses on the map
@@ -93,6 +94,7 @@ function($, _, Backbone, L, moment, settings, api, Responses) {
         // Skip old records that don't have geo_info
         var geoInfo = response.get("geo_info");
         if (geoInfo === undefined) {
+          console.log("Skipping geo object");
           return;
         }
 
@@ -126,9 +128,6 @@ function($, _, Backbone, L, moment, settings, api, Responses) {
           }
           
           // Use that style!
-          console.log("Going to render");
-          console.log(toRender);
-          console.log(style);
           this.renderObject(toRender, style);
         }
 
@@ -139,7 +138,7 @@ function($, _, Backbone, L, moment, settings, api, Responses) {
       try {
         console.log("Fitting bounds");
         console.log(this.map);
-        console.log(this.parcelsLayerGroup.getBounds());
+        console.log(this.parcelsLayerGroup);
 
         this.map.fitBounds(this.parcelsLayerGroup.getBounds());
       }
@@ -171,7 +170,6 @@ function($, _, Backbone, L, moment, settings, api, Responses) {
 
         // Create a new geojson layer and style it. 
         var geojsonLayer = new L.GeoJSON();
-        console.log("Adding geoJSON layer");
         geojsonLayer.addData(obj);
         geojsonLayer.setStyle(style);
         

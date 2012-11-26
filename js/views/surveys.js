@@ -5,6 +5,9 @@ define([
   'jquery',
   'lib/lodash',
   'backbone',
+  'lib/tinypubsub',
+
+  // LocalData
   'settings',
 
   // Models
@@ -19,7 +22,7 @@ define([
   'views/responses'
 ],
 
-function($, _, Backbone, settings, SurveyModels, ResponseModels, FormModels, SubnavView, ExportView, SettingsView, ResponseViews) {
+function($, _, Backbone, events, settings, SurveyModels, ResponseModels, FormModels, SubnavView, ExportView, SettingsView, ResponseViews) {
   'use strict'; 
 
   var SurveyViews = {};
@@ -46,9 +49,7 @@ function($, _, Backbone, settings, SurveyModels, ResponseModels, FormModels, Sub
     bodyView: null,
     
     initialize: function(options) {
-      console.log("Here");
       _.bindAll(this, 'render', 'show', 'showResponses', 'showUpload', 'showSettings');
-      console.log("Here");
 
       // Set up the page and show the given survey
       this.surveyId = options.id;
@@ -72,7 +73,8 @@ function($, _, Backbone, settings, SurveyModels, ResponseModels, FormModels, Sub
       this.$el.html(_.template($('#survey-view').html(), context));
       
       // TODO -- reenable setLoading 
-      // NSB.setLoading(true);
+      events.publish('loading', [true]);
+      // app.setLoading(true);
 
       // Render the sub components
       $('#settings-view-container').hide();
@@ -110,6 +112,7 @@ function($, _, Backbone, settings, SurveyModels, ResponseModels, FormModels, Sub
       this.toshow = [id, tab];
 
       $("#content > div").hide();
+      $("#content #loading-view-container").show();
       $(id).show();
       this.subnavView.setActiveTab(tab);
     },

@@ -27,7 +27,6 @@ function($, _, Backbone, settings, api) {
       this.survey = options.survey;
       this.forms = options.forms;
       console.log(this.survey);
-      console.log(this.forms);
     },
     
     // TODO
@@ -37,17 +36,13 @@ function($, _, Backbone, settings, api) {
       console.log(event);
     },
     
-    render: function() {  
-      console.log("RENDERING settings view");
-      console.log(this.forms);
-      
+    render: function() {        
       var context = { 
         survey: this.survey.toJSON(),
         forms: this.forms.toJSON() 
       };    
 
       $(this.elId).html(_.template($('#settings-view').html(), context));
-      console.log($(this.elId));  
     }
     
   });

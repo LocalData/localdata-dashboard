@@ -202,6 +202,21 @@ header a {
   display:block;
 }
 
+.loading {
+  text-align:center;
+  margin:0px auto;
+  width:150px;
+  background:#eee;
+  border-radius:20px;
+  border:2px solid #ddd;
+  padding:20px;
+}
+
+.loading h2 {
+  text-transform: none;
+
+}
+
 /* Filtering .................................................................*/
 #filters {
   display:block;

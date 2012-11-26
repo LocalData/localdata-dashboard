@@ -4,20 +4,17 @@
 define([
   'jquery',
   'lib/lodash',
+  'lib/tinypubsub',
 
   'settings',
   'api',
 
-  // Models
-  // 'models/forms',
-  // 'models/responses',
-  // 'models/surveys',
-
   // Views
-  'views/root'
+  'views/root',
+  'views/loading'
 ],
 
-function($, _, settings, api, RootView) {
+function($, _, events, settings, api, RootView, LoadingView) {
   'use strict';
 
   // Here's the dashboard app:
@@ -25,27 +22,29 @@ function($, _, settings, api, RootView) {
   var LD = {};
 
   // TODO
-  LD.collections = {};
-  LD.routers = {};
-  LD.templates = {};
-
+  // LD.collections = {};
+  // LD.routers = {};
+  // LD.templates = {};
 
   // Kick off the LocalData app
   LD.initialize = function() {
-      console.log("Initalize dashboard");
-      LD.router = new RootView();
-      LD.router.startRouting();
+    console.log("Initalize dashboard");
+    LD.router = new RootView();
+    LD.router.startRouting();
+
+    // Listen for loading events
+    events.subscribe('loading', LD.setLoading);
   };
 
+  // Is the app currently loading data?
+  // These functions help keep track of that. 
   LD.setLoading = function(state) {
     LD.loading = state;
     console.log(LD.loading);
 
     if (LD.loading) {
       console.log("Show the loading view");
-      LD.loadingView = new LD.views.LoadingView({
-        el: $("#loading-view-container")
-      });
+      LD.loadingView = new LoadingView();
     }else {
       console.log("Hide the loading view");
       LD.loadingView.remove();

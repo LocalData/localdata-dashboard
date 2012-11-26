@@ -6,6 +6,9 @@ define([
   'lib/lodash',
   'backbone',
   'moment',
+  'lib/tinypubsub',
+
+  // LocalData
   'settings',
   'api',
 
@@ -16,7 +19,7 @@ define([
   'views/map'
 ],
 
-function($, _, Backbone, moment, settings, api, Responses, MapView) {
+function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
   'use strict'; 
 
   var ResponseViews = {};
@@ -127,9 +130,8 @@ function($, _, Backbone, moment, settings, api, Responses, MapView) {
       // _kmq.push(['record', "Answer filter selected"]);
       var $answer = $(e.target);
 
-      // TODO
       // Notify the user we're working on it.
-      // NSB.setLoading(true);
+      events.publish('loading', [true]);
 
       // Reset the collection 
       // this.responses.reset(this.allResponses.models);
@@ -142,9 +144,8 @@ function($, _, Backbone, moment, settings, api, Responses, MapView) {
 
       this.responses.reset(filteredResponses);
 
-      // TODO
       // Let the user know we're done
-      // NSB.setLoading(false);
+      events.publish('loading', [false]);
     },
 
     doesQuestionHaveTheRightAnswer: function(resp) {
