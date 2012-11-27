@@ -44,8 +44,6 @@ function($, _, Backbone, settings, api) {
     setActiveTab: function(n) {
       this.current.active = '';
       this.current = this.items[n];
-            console.log(n);
-            console.log(this.current);
       this.render();
     },
       

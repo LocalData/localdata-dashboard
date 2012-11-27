@@ -15,8 +15,7 @@ define(function (require) {
   // Sets settings.surveyId
   api.setSurveyIdFromSlug = function(slug, callback) {    
     var url = settings.api.baseurl +  "/slugs/" + slug;
-    console.log("I'm using this URL to get the survey ID");
-    console.log(url);
+    console.log("Survey slug: " + url);
     
     // Save ourselves an ajax request
     if (settings.slug === slug && settings.surveyId !== null) {
@@ -25,7 +24,7 @@ define(function (require) {
     
     // TODO: Display a nice error if the survey wans't found.
     $.getJSON(url, function(data) {
-      console.log(data.survey);
+      console.log("Survey Id: " + data.survey);
       settings.slug = slug;
       settings.surveyId = data.survey;
       callback();

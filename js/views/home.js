@@ -30,10 +30,15 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews) {
 
       this.surveys = new Surveys.Collection();
       this.surveys.bind('reset', this.render);
+    },
+
+    update: function() {
       this.surveys.fetch();
     },
     
     render: function() {  
+      console.log("Rendering HomeView"); 
+      
       var self = this;
       var context = {};
       this.$el.html(_.template($('#home').html(), context));  

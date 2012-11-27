@@ -39,7 +39,6 @@ function($, _, Backbone, settings) {
     },
           
     parse: function(response) {
-      console.log("Parsing response collection");
       console.log(response);
       return response.responses;
     },

@@ -27,6 +27,7 @@ function($, _, Backbone, events, settings, SurveyModels, ResponseModels, FormMod
 
   var SurveyViews = {};
 
+
   SurveyViews.ListItemView = Backbone.View.extend({
     initialize: function() {
       _.bindAll(this, 'render');
@@ -37,7 +38,6 @@ function($, _, Backbone, events, settings, SurveyModels, ResponseModels, FormMod
       this.$el.html(_.template($('#survey-list-item-view').html(), {survey: this.model }));  
       return this;
     }
-
   });
 
 
@@ -49,7 +49,7 @@ function($, _, Backbone, events, settings, SurveyModels, ResponseModels, FormMod
     bodyView: null,
     
     initialize: function(options) {
-      _.bindAll(this, 'render', 'show', 'showResponses', 'showUpload', 'showSettings');
+      _.bindAll(this, 'update', 'render', 'show', 'showResponses', 'showUpload', 'showSettings');
 
       // Set up the page and show the given survey
       this.surveyId = options.id;
@@ -63,6 +63,11 @@ function($, _, Backbone, events, settings, SurveyModels, ResponseModels, FormMod
       this.forms = new FormModels.Collection({surveyId: this.surveyId});
     },
 
+    update: function() {
+      //console.log("Updating survey");
+      // this.render();
+    },
+
     render: function() {
       console.log("Rendering survey view");
       
@@ -72,9 +77,8 @@ function($, _, Backbone, events, settings, SurveyModels, ResponseModels, FormMod
       };
       this.$el.html(_.template($('#survey-view').html(), context));
       
-      // TODO -- reenable setLoading 
+      // Show the loading state 
       events.publish('loading', [true]);
-      // app.setLoading(true);
 
       // Render the sub components
       $('#settings-view-container').hide();
@@ -87,7 +91,6 @@ function($, _, Backbone, events, settings, SurveyModels, ResponseModels, FormMod
         forms: this.forms
       });
 
-      // TODO 
       // Settings view
       this.settingsView = new SettingsView({
         survey: this.survey,
@@ -98,11 +101,11 @@ function($, _, Backbone, events, settings, SurveyModels, ResponseModels, FormMod
       this.subnavView = new SubnavView({slug: settings.slug});  
       this.exportView = new ExportView({surveyId: this.surveyId});  
 
+      // Render subnav, export, and settings views
       this.subnavView.render();
       this.exportView.render(); 
       this.settingsView.render();
 
-      // TODO -- this should only run after SubnavView is read. 
       // By default, we show the first tab
       this.show(this.toshow[0], this.toshow[1]);
     },

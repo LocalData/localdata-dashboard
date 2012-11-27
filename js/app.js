@@ -36,11 +36,11 @@ function($, _, events, settings, api, RootView, LoadingView) {
     events.subscribe('loading', LD.setLoading);
   };
 
+  // Loading ...................................................................
   // Is the app currently loading data?
   // These functions help keep track of that. 
   LD.setLoading = function(state) {
     LD.loading = state;
-    console.log(LD.loading);
 
     if (LD.loading) {
       console.log("Show the loading view");
@@ -59,7 +59,7 @@ function($, _, events, settings, api, RootView, LoadingView) {
     }
     return LD.loading;
   };
-
+ 
   return LD;
 });
 

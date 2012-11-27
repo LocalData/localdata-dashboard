@@ -100,7 +100,6 @@ function($, _, Backbone, settings) {
 
       // Process the form if we have one
       if (mostRecentForm !== undefined) {
-        console.log("getting flattened form");
         _.each(mostRecentForm.get("questions"), function(question) {
           flattenedForm = flattenedForm.concat(this.flattenForm(question, flattenedForm));
         }, this);

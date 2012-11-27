@@ -44,7 +44,6 @@ function($, _, Backbone, settings) {
     },
     
     parse: function(response) {
-      console.log(response.surveys);
       return response.surveys;
     }
     

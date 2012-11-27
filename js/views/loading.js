@@ -13,7 +13,6 @@ function($, _, Backbone) {
   var LoadingView = Backbone.View.extend({
 	  initialize: function() {
 	  	this.$el = $("#loading-view-container");
-	  	console.log(this.$el)
 	    _.bindAll(this, 'render');
 	    this.render();
 	  },

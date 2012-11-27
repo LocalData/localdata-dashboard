@@ -24,9 +24,7 @@ function($, _, Backbone, settings, IndexRouter, HomeView, SurveyViews) {
   AllViews.HomeView = HomeView;
   AllViews.SurveyView = SurveyViews.SurveyView;
 
-  /*
-   * The singleton view which manages all others. Essentially, a "controller".
-   */
+  // The singleton view which manages all others. Essentially, a "controller".
   var RootView = Backbone.View.extend({
     
     el: $("body"),
@@ -44,85 +42,61 @@ function($, _, Backbone, settings, IndexRouter, HomeView, SurveyViews) {
       return this;
     },
     
+    // Start Backbone routing. Separated from initialize() so that the
+    // global controller is available for any preset routes (direct links).
     startRouting: function() {
-      /*
-       * Start Backbone routing. Separated from initialize() so that the
-       * global controller is available for any preset routes (direct links).
-       */
       Backbone.history.start();
     },
       
-    getOrCreateView: function(name, options) {
+    // Register each view as it is created and never create more than one.
+    getOrCreateView: function(viewClass, viewName, options) {
       // _kmq.push(['record', name]);
       
-      // Register each view as it is created and never create more than one.
-      if (name in this.views) {
-        console.log("Going to " + name);
-        return this.views[name];
+      // If the view already exists, use it.
+      // If it doesn't exist, create it.
+      if (viewName in this.views) {
+        console.log("Going to " + viewName);
+
+      } else {
+        console.log("Creating " + viewName);
+        this.views[viewName] = new AllViews[viewClass](options);
       }
 
-      console.log("Creating " + name);
-      this.views[name] = new AllViews[name](options);
-
-      return this.views[name];
+      this.views[viewName].update();
+      return this.views[viewName];
     },
-    
-    // Not used anywhere
-    // switchPage: function(page) {
-    //   /*
-    //    * Show the given page; hide the others
-    //    */
-    //   $('.page').hide();
-    //   if (page.show !== undefined) {
-    //     page.show();
-    //   } else {
-    //     page.$el.show();
-    //   }
-    // },
-    
+        
+    // Handle routes (they're in routers/index.js) .............................
+    // Home
     goto_home: function() {
-      this.currentContentView = new HomeView(); // = this.getOrCreateView("Home");
+      this.currentContentView = this.getOrCreateView("HomeView", "HomeView");
     },
     
-    goto_survey: function() {
-      this.currentContentView = this.getOrCreateView("SurveyView", {id: settings.surveyId});
-      this.currentContentView.showResponses();
+    // Survey dashboard routes .................................................
+    goto_survey: function(tab) {
       // _kmq.push(['record', "SurveyView"]);
-      this._router.navigate("surveys/" + settings.slug);
-    },
-    
-    goto_upload: function() {
-      this.currentContentView = this.getOrCreateView("SurveyView", {id: settings.surveyId});
-      this.currentContentView.showUpload();
-      // _kmq.push(['record', "UploadView"]);
-      this._router.navigate("surveys/" + settings.slug + "/upload");
-    },
-    
-    goto_map: function() {
-      this.currentContentView = this.getOrCreateView("SurveyView", {id: settings.surveyId});
-      this.currentContentView.showMap();
-      // _kmq.push(['record', "MapView"]);
-      this._router.navigate("surveys/" + settings.slug + "/map");
+
+      // Get or create a view for the survey
+      var surveyViewName = "Survey" + settings.surveyId;
+      this.currentContentView = this.getOrCreateView("SurveyView", surveyViewName, {id: settings.surveyId});
+
+      // Show the correct tab
+      this.currentContentView.showResponses();
+
+      // Update the URL.
+      // this._router.navigate("surveys/" + settings.slug);
     },
     
     goto_settings: function() {
-      this.currentContentView = this.getOrCreateView("SurveyView", {id: settings.surveyId});
-      this.currentContentView.showSettings();
       // _kmq.push(['record', "SettingsView"]);
       this._router.navigate("surveys/" + settings.slug + "/settings");
-    },
-    
-    goto_scans: function() {
-      this.currentContentView = this.getOrCreateView("SurveyView", {id: settings.surveyId});
-      this.currentContentView.showScans();
-      this._router.navigate("surveys/" + settings.slug + "/scans");
+      this.goto_survey("settings");
     },
     
     goto_export: function() {
-      this.currentContentView = this.getOrCreateView("SurveyView", {id: settings.surveyId});
-      this.currentContentView.showExport();
       // _kmq.push(['record', "ExportView"]);
       this._router.navigate("surveys/" + settings.slug + "/export");
+      this.goto_survey("export");
     }
     
   });
