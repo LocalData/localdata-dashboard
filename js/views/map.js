@@ -133,18 +133,12 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
       }, this);
 
-
       // fitBounds fails if there aren't any results, hence this test:
       try {
-        console.log("Fitting bounds");
-        console.log(this.map);
-        console.log(this.parcelsLayerGroup);
-
         this.map.fitBounds(this.parcelsLayerGroup.getBounds());
       }
       catch (e) {
-        // statements to handle any exceptions
-        console.log(e); // pass exception object to error handler
+        console.log(e);
       }
       
     },
@@ -153,10 +147,10 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       this.parcelsLayerGroup.setStyle(style);
     },
     
+    // Expects an object with properties
+    // obj.parcelId: ID of the given object
+    // obj.geometry: GeoJSON geometry object
     renderObject: function(obj, style) {
-      // Expects an object with properties
-      // obj.parcelId: ID of the given object
-      // obj.geometry: GeoJSON geometry object
 
       if(style === undefined) {
         style = this.defaultStyle;
@@ -198,7 +192,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       // _kmq.push(['record', "Map zoomed"]);
       var zoom = this.map.getZoom();
 
-      // Objects should be more detailed close up (zoom 14+) ...................
+      // Objects should be more detailed close up (zoom 10+) 
       if(zoom > 10) {
 
         // If we're in pretty close, show the satellite view
@@ -215,7 +209,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
           }
 
         } else {
-          // Mid zoom (11-14)...................................................
+          // Mid zoom (11-14)
           // We're not that close, show the mid zoom styles
           if(this.defaultStyle !== settings.midZoomStyle) {
             this.defaultStyle = settings.closeZoomStyle;
@@ -232,14 +226,13 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         }
 
       }else {
-        // Far zoom (>14) ......................................................
+        // Far zoom (>14)
+        // Show a more abstract map when zoomed out
         if (this.googleLayer._type !== "TERRAIN") {
-          // Show a more abstract map when zoomed out
           this.map.removeLayer(this.googleLayer);
           this.googleLayer = new L.Google("TERRAIN");
           this.map.addLayer(this.googleLayer);
 
-          // Objects should be more abstract far out
           this.defaultStyle = settings.farZoomStyle;
           this.updateObjectStyles(settings.farZoomStyle);
         }
@@ -258,7 +251,8 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         return;
       }
       
-      // If there are a lot of objects, let's reset.
+      // If there are a lot of objects, let's clear them out 
+      // to improve performance
       if( _.size(this.parcelIdsOnTheMap) > 1250 ) {
         this.parcelsLayerGroup.clearLayers();
         this.parcelIdsOnTheMap = {};
@@ -288,7 +282,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     //   }, this);
     // },
     
-    // Get all the responses in a map 
+    // Get all the responses in the current viewport 
     getResponsesInBounds: function(){  
       console.log("Getting responses in the map");
       
@@ -316,10 +310,6 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       
       // Let's show some info about this object.
       this.details(this.selectedLayer.feature.parcelId);
-      
-      // TODO
-      // Let other parts of the app know that we've selected something.
-      // $.publish("objectSelected");
     },
 
     // When a parcel is clicked, show details for just that parcel. 
