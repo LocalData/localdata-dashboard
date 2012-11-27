@@ -11,6 +11,15 @@ define(function (require) {
 
   var api = {};
 
+  // Check if the user is authenticated
+  api.getUser = function(callback) {
+    var url = settings.api.baseurl + "/user";
+
+    $.getJSON(url, function(data) {
+      callback(data);
+    });
+  };
+
   // Given a slug (eg 'just-a-surey'), find the corresponding survey 
   // Sets settings.surveyId
   api.setSurveyIdFromSlug = function(slug, callback) {    

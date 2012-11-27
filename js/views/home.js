@@ -5,20 +5,21 @@ define([
   'jquery',
   'lib/lodash',
   'backbone',
-  'settings',
 
-  // Router
-  'routers/index',
+  // LocalData
+  'settings',
+  'api',
 
   // Models
+  'models/users',
   'models/surveys',
 
   // Views
   'views/surveys'
-
+  
 ],
 
-function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews) {
+function($, _, Backbone, settings, api, Users, Surveys, SurveyViews) {
   'use strict'; 
 
   var HomeView = Backbone.View.extend({
@@ -26,14 +27,17 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews) {
     el: $("#container"),
     
     initialize: function(options) {
-      _.bindAll(this, 'render', 'appendSurvey');
+      _.bindAll(this, 'render', 'update');
 
-      this.surveys = new Surveys.Collection();
-      this.surveys.bind('reset', this.render);
+      var userModel = new Users.Model();
+      console.log(userModel)
+     // api.getUser(function(user) {
+     //   console.log(user);
+     // });
     },
 
     update: function() {
-      this.surveys.fetch();
+      this.render();
     },
     
     render: function() {  
@@ -42,17 +46,6 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews) {
       var self = this;
       var context = {};
       this.$el.html(_.template($('#home').html(), context));  
-
-      this.surveys.each(function(survey) {
-        self.appendSurvey(survey);
-      });
-    },
-
-    appendSurvey: function(survey) {
-      var surveyListItemView = new SurveyViews.ListItemView({
-        model: survey
-      });
-      $('.survey-list', this.el).append(surveyListItemView.render().el);
     }
     
   });
