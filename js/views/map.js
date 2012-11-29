@@ -129,13 +129,20 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
           
           // Use that style!
           this.renderObject(toRender, style);
+
+        } else if(_.has(geoInfo, "centroid") {
+          console.log("This parcel has a centroid");
         }
 
       }, this);
 
+
+      var bounds = this.parcelsLayerGroup.getBounds();
+
       // fitBounds fails if there aren't any results, hence this test:
       try {
-        this.map.fitBounds(this.parcelsLayerGroup.getBounds());
+        console.log(bounds)
+        this.map.fitBounds(bounds);
       }
       catch (e) {
         console.log(e);
