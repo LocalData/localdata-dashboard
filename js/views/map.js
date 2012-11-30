@@ -34,7 +34,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     
     initialize: function(options) {
       console.log("Init map view");
-      _.bindAll(this, 'render', 'selectObject', 'renderObject', 'renderObjects', 'getResponsesInBounds', 'updateMapStyleBasedOnZoom', 'updateObjectStyles', 'styleBy');
+      _.bindAll(this, 'render', 'selectObject', 'renderObject', 'renderObjects', 'getResponsesInBounds', 'updateMapStyleBasedOnZoom', 'updateObjectStyles');
       
       this.responses = options.responses;
       this.responses.on('reset', this.render, this);
@@ -181,6 +181,9 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         // Make sure the format fits Leaflet's geoJSON expectations
         obj.type = "Feature";
 
+        // Mongo coordinates are reversed from Leaflet coordinates
+        // AARGH.
+        obj.geometry.coordinates = obj.geometry.coordinates.reverse();
 
         // Create a new geojson layer and style it. 
         var geojsonLayer = new L.geoJson(obj, {
