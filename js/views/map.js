@@ -161,6 +161,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     },
 
     updateObjectStyles: function(style) {
+      console.log("Changing style");
       this.objectsOnTheMap.setStyle(style);
     },
     
@@ -175,41 +176,28 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
       // We don't want to re-draw parcels that are already on the map
       // So we keep a hash map with the layers so we can unrender them
-      if(! _.has(this.parcelIdsOnTheMap, obj.parcelId)){
+      if(! _.has(this.parcelIdsOnTheMap, obj.parcelId) || obj.parcelId === ''){
 
         // Make sure the format fits Leaflet's geoJSON expectations
         obj.type = "Feature";
 
 
-        /// NEWS-----
-        var geojsonMarkerOptions = {
-          radius: 8,
-          fillColor: "#ff7800",
-          color: "#000",
-          weight: 1,
-          opacity: 1,
-          fillOpacity: 0.8
-        };
-
-        var lay = L.geoJson(obj, {
+        // Create a new geojson layer and style it. 
+        var geojsonLayer = new L.geoJson(obj, {
             pointToLayer: function (feature, latlng) {
-                return L.circleMarker(latlng, geojsonMarkerOptions);
+              return new L.circleMarker(latlng, style); 
             }
         });
-        /// ---------
-
-
-        // Create a new geojson layer and style it. 
-        // var geojsonLayer = new L.GeoJSON();
-
-        // geojsonLayer.addData();
-        // geojsonLayer.setStyle(style);
+        geojsonLayer.setStyle(style);
+        geojsonLayer.on('click', this.selectObject);
         
-        // geojsonLayer.on('click', this.selectObject);
-        
+
+        console.log("RENDERING OBJECT");
+
+
         // Add the layer to the layergroup and the hashmap
-        this.objectsOnTheMap.addLayer(lay); // was (geojsonLayer);
-        // this.parcelIdsOnTheMap[obj.parcelId] = geojsonLayer;
+        this.objectsOnTheMap.addLayer(geojsonLayer); // was (geojsonLayer);
+        this.parcelIdsOnTheMap[obj.parcelId] = geojsonLayer;
       }
     },
 

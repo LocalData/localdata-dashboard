@@ -16,11 +16,10 @@ function($, _, Backbone, settings, api) {
     routes: {
       "": "home",
       
-      "surveys/:slug": "survey",
-      "surveys/:slug/map": "map",
       "surveys/:slug/export": "export",
       "surveys/:slug/settings": "settings",
-      
+      "surveys/:slug": "survey",
+
       "surveys/:slug/scans": "scans",
       "surveys/:slug/upload": "upload",
       

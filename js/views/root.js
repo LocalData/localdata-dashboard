@@ -81,10 +81,16 @@ function($, _, Backbone, settings, IndexRouter, HomeView, SurveyViews) {
       this.currentContentView = this.getOrCreateView("SurveyView", surveyViewName, {id: settings.surveyId});
 
       // Show the correct tab
-      this.currentContentView.showResponses();
-
-      // Update the URL.
-      // this._router.navigate("surveys/" + settings.slug);
+      switch(tab) {
+        case "export": 
+          this.currentContentView.showExport();
+          break;
+        case "settings":
+          this.currentContentView.showSettings();
+          break;
+        default: 
+          this.currentContentView.showResponses();
+      }
     },
     
     goto_settings: function() {
