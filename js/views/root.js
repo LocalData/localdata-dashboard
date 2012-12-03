@@ -14,15 +14,19 @@ define([
 
   // Views
   'views/home',
+  'views/dashboard',
+  'views/users',
   'views/surveys'
 ],
 
-function($, _, Backbone, settings, IndexRouter, HomeView, SurveyViews) {
+function($, _, Backbone, settings, IndexRouter, HomeView, DashboardView, UserViews, SurveyViews) {
   'use strict'; 
 
   var AllViews = {};
   AllViews.HomeView = HomeView;
+  AllViews.DashboardView = DashboardView;
   AllViews.SurveyView = SurveyViews.SurveyView;
+  AllViews.LoginView = UserViews.LoginView;
 
   // The singleton view which manages all others. Essentially, a "controller".
   var RootView = Backbone.View.extend({
@@ -69,7 +73,13 @@ function($, _, Backbone, settings, IndexRouter, HomeView, SurveyViews) {
     // Handle routes (they're in routers/index.js) .............................
     // Home
     goto_home: function() {
-      this.currentContentView = this.getOrCreateView("HomeView", "HomeView");
+      // this.currentContentView = this.getOrCreateView("HomeView", "HomeView");
+      this.currentContentView = this.getOrCreateView("DashboardView", "DashboardView");
+
+    },
+
+    goto_login: function() {
+      this.currentContentView = this.getOrCreateView("LoginView", "LoginView");
     },
     
     // Survey dashboard routes .................................................

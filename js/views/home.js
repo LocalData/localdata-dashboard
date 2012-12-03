@@ -27,22 +27,24 @@ function($, _, Backbone, settings, api, Users, Surveys, SurveyViews) {
     el: $("#container"),
     
     initialize: function(options) {
-      _.bindAll(this, 'render', 'update');
+      _.bindAll(this, 'render', 'update', 'checkUserView');
 
-      var userModel = new Users.Model();
-      console.log(userModel)
-     // api.getUser(function(user) {
-     //   console.log(user);
-     // });
+      this.userModel = new Users.Model();
+      this.userModel.on("change", this.checkUserView)
     },
 
     update: function() {
       this.render();
     },
+
+    checkUserView: function() {
+      console.log(this.userModel.isLoggedIn());
+    },
     
     render: function() {  
       console.log("Rendering HomeView"); 
       
+
       var self = this;
       var context = {};
       this.$el.html(_.template($('#home').html(), context));  

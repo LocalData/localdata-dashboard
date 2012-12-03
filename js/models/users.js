@@ -17,9 +17,14 @@ function($, _, Backbone, settings) {
     urlRoot: settings.api.baseurl + "/user/",
     
     initialize: function(options) {
-      _.bindAll(this, 'parse');
+      _.bindAll(this, 'parse', 'isLoggedIn');
       this.fetch();
-    }    
+    },
+
+    isLoggedIn: function() {
+      console.log(this.attributes);
+      return (this.attributes.username !== undefined);
+    }
   });
 
   return Users;
