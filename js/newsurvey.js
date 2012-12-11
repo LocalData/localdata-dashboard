@@ -4,7 +4,7 @@
 define(function (require) {
   'use strict';
   var $ = require('jquery');
-  var u = require('lib/lodash');
+  var _ = require('lib/lodash');
 
   var allSurveyQuestions = require('survey_questions');
 
@@ -64,7 +64,7 @@ define(function (require) {
     if (questions === undefined || questions === null) {
       return [];
     }
-    return u.reduce(questions, function (memo, question) {
+    return _.reduce(questions, function (memo, question) {
       var sub = [];
       var i;
       for (i = 0; i < question[node].length; i += 1) {
@@ -75,17 +75,19 @@ define(function (require) {
     }, []);
   }
 
-   function selectSurveyQuestions(builderQuestions) {
+
+
+  function selectSurveyQuestions(builderQuestions) {
     var surveyQList = linearize(allSurveyQuestions, 'answers');
 
     function findQByName(name) {
-      return u.find(surveyQList, function (q) {
+      return _.find(surveyQList, function (q) {
         return q.name === name;
       });
     }
     function activateQuestions(names) {
-      u.forEach(surveyQList, function (q) {
-        if (u.include(names, q.name)) {
+      _.forEach(surveyQList, function (q) {
+        if (_.include(names, q.name)) {
           q.active = true;
         } else {
           q.active = false;
@@ -103,14 +105,14 @@ define(function (require) {
       activate.push('in-use');
 
       var useCount = 0;
-      if (u.include(builderQuestions[1].responses, 0)) {
+      if (_.include(builderQuestions[1].responses, 0)) {
         // Residential
         activate.push('units');
         activate.push('condition');
         activate.push('occupancy');
         useCount += 1;
       }
-      if (u.include(builderQuestions[1].responses, 1)) {
+      if (_.include(builderQuestions[1].responses, 1)) {
         // Commercial
         activate.push('condition-commercial');
         activate.push('storefront-condition');
@@ -118,13 +120,13 @@ define(function (require) {
         activate.push('commercial-use');
         useCount += 1;
       }
-      if (u.include(builderQuestions[1].responses, 2)) {
+      if (_.include(builderQuestions[1].responses, 2)) {
         // Industrial
         activate.push('condition-industrial');
         activate.push('industrial-detailed-use');
         useCount += 1;
       }
-      if (u.include(builderQuestions[1].responses, 3)) {
+      if (_.include(builderQuestions[1].responses, 3)) {
         // Institutional
         activate.push('condition-institutional');
         activate.push('detailed-use');
@@ -134,7 +136,7 @@ define(function (require) {
         activate.push('multiple-uses-check');
       }
 
-      if (u.include(builderQuestions[2].responses, 0)) {
+      if (_.include(builderQuestions[2].responses, 0)) {
         // Vacant Lots
         activate.push('vacant-property-details');
         activate.push('maintenance');
@@ -147,10 +149,9 @@ define(function (require) {
     activateQuestions(activate);
   }
 
-
   function selectByIndex(arr, indices) {
-    return u.filter(arr, function (el, index) {
-      return u.include(indices, index);
+    return _.filter(arr, function (el, index) {
+      return _.include(indices, index);
     });
   }
 
@@ -212,7 +213,7 @@ define(function (require) {
 
   function renderQuestion(index) {
     var question = questionList[index];
-    var html = u.template(tPromptContent, {
+    var html = _.template(tPromptContent, {
       index: index,
       question: question.text
     });
@@ -224,22 +225,22 @@ define(function (require) {
       // Don't let the user go ahead until one of the options has been selected
       disableNext();
       template = tPromptRadio;
-      $el = $(u.map(question.options, function (option, index) {
-        return u.template(template, {
+      $el = $(_.map(question.options, function (option, index) {
+        return _.template(template, {
           text: option.text,
           radioGroup: question.id,
           index: index,
-          checked: question.responses !== undefined && u.include(question.responses, index)
+          checked: question.responses !== undefined && _.include(question.responses, index)
         });
       }).join(''));
     } else {
       // Checkboxes
       template = tPromptCheck;
-      $el = $(u.map(question.options, function (option, index) {
-        return u.template(template, {
+      $el = $(_.map(question.options, function (option, index) {
+        return _.template(template, {
           text: option.text,
           index: index,
-          checked: question.responses !== undefined && u.include(question.responses, index)
+          checked: question.responses !== undefined && _.include(question.responses, index)
         });
       }).join(''));
     }
@@ -257,14 +258,14 @@ define(function (require) {
       question.responses = indices.toArray();
 
       // Activate/deactivate the appropriate subquestions.
-      u.forEach(question.options, function (option, index) {
+      _.forEach(question.options, function (option, index) {
         if (option.questions !== undefined) {
-          if (u.include(indices, index)) {
-            u.forEach(option.questions, function (q) {
+          if (_.include(indices, index)) {
+            _.forEach(option.questions, function (q) {
               q.active = true;
             });
           } else {
-            u.forEach(option.questions, function (q) {
+            _.forEach(option.questions, function (q) {
               q.active = false;
             });
           }
@@ -288,7 +289,7 @@ define(function (require) {
 
       $container.html('');
 
-      var html = u.map(progressIndices, function (index) {
+      var html = _.map(progressIndices, function (index) {
         var data = {
           label: questionList[index].summary,
           active: false
@@ -296,7 +297,7 @@ define(function (require) {
         if (index === current) {
           data.active = true;
         }
-        return u.template(template, data);
+        return _.template(template, data);
       }).join('');
 
       $container.html(html);
@@ -305,7 +306,7 @@ define(function (require) {
     // Add a progress tab for the questionList index.
     self.add = function (index) {
       current = -1;
-      if (!u.include(progressIndices, index)) {
+      if (!_.include(progressIndices, index)) {
         progressIndices.push(index);
       }
       self.render();
@@ -321,10 +322,10 @@ define(function (require) {
   }());
 
   function renderPreview() {
-    var boxTemplate = u.template($('#t-preview-questions-container').html());
-    var questionTemplate = u.template($('#t-preview-question').html());
-    var titleTemplate = u.template($('#t-preview-title').html());
-    var nameTemplate = u.template($('#t-preview-name').html());
+    var boxTemplate = _.template($('#t-preview-questions-container').html());
+    var questionTemplate = _.template($('#t-preview-question').html());
+    var titleTemplate = _.template($('#t-preview-title').html());
+    var nameTemplate = _.template($('#t-preview-name').html());
 
     var letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
     function walkActive(questions, depth, condition) {
@@ -341,15 +342,15 @@ define(function (require) {
       }
       var box = $(boxTemplate(boxData));
 
-      var contents = u.map(u.filter(questions, function (question) { return question.active; }),
+      var contents = _.map(_.filter(questions, function (question) { return question.active; }),
                               function (question) {
         var $question = $(questionTemplate({
           prompt: question.text,
-          answers: u.pluck(question.answers, 'text'),
+          answers: _.pluck(question.answers, 'text'),
           letters: letters
         }));
 
-        var subQuestions = u.filter(u.map(question.answers, function (answer, i) {
+        var subQuestions = _.filter(_.map(question.answers, function (answer, i) {
           if (answer.questions === undefined) {
             return null;
           }
@@ -358,7 +359,7 @@ define(function (require) {
           return sub;
         }), function (item) { return item !== null; });
 
-        $question = u.reduce(subQuestions, function (memo, $sub) {
+        $question = _.reduce(subQuestions, function (memo, $sub) {
           return memo.add($sub);
         }, $question);
 
@@ -370,7 +371,7 @@ define(function (require) {
         return null;
       }
 
-      box.append(u.reduce(contents, function (memo, $el) {
+      box.append(_.reduce(contents, function (memo, $el) {
         return memo.add($el);
       }, $()));
       return box;
@@ -404,7 +405,7 @@ define(function (require) {
       if (questions === undefined || questions === null) {
         return [];
       }
-      return u.reduce(questions, function (memo, question) {
+      return _.reduce(questions, function (memo, question) {
         if (!question.active) {
           return memo;
         }
@@ -419,7 +420,7 @@ define(function (require) {
       }, []);
     }
 
-    console.log(u.pluck(linearizeActive(allSurveyQuestions), 'text').join(', '));
+    console.log(_.pluck(linearizeActive(allSurveyQuestions), 'text').join(', '));
   });
 
   app.initialize = function () {
