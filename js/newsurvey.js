@@ -48,6 +48,8 @@ define(function (require) {
     }]
   }];
 
+  // Generate a unique ID. 
+  // TODO: why not use _.uniqueId() ? 
   var createId = (function () {
     var id = 0;
     return function () {
@@ -56,6 +58,12 @@ define(function (require) {
     };
   }());
 
+  // Take a hierarchical list of questions and return 
+  // them as a flat ordered list. 
+
+  // question: a list of question objects
+  // a string that identifies what key in each 
+  // returns: TODO ??
   function linearize(questions, node) {
     if (node === undefined) {
       node = 'options';
@@ -76,7 +84,10 @@ define(function (require) {
   }
 
 
-
+  // Figure out which questions should be included in a survey.
+  // Right now, this builder => survey question mapping is hard-coded below
+  // but in the future, the relationship between survey builder questions and 
+  // survey questions will be stored in the survey templates. 
   function selectSurveyQuestions(builderQuestions) {
     var surveyQList = linearize(allSurveyQuestions, 'answers');
 
@@ -85,9 +96,10 @@ define(function (require) {
         return q.name === name;
       });
     }
+
     function activateQuestions(names) {
       _.forEach(surveyQList, function (q) {
-        if (_.include(names, q.name)) {
+        if (_.contains(names, q.name)) {
           q.active = true;
         } else {
           q.active = false;
@@ -95,6 +107,7 @@ define(function (require) {
       });
     }
 
+    // A list of question keys to include in the final survey
     var activate = [];
 
     // TODO: This logic should get coded into the data structure that holds the
@@ -105,14 +118,14 @@ define(function (require) {
       activate.push('in-use');
 
       var useCount = 0;
-      if (_.include(builderQuestions[1].responses, 0)) {
+      if (_.contains(builderQuestions[1].responses, 0)) {
         // Residential
         activate.push('units');
         activate.push('condition');
         activate.push('occupancy');
         useCount += 1;
       }
-      if (_.include(builderQuestions[1].responses, 1)) {
+      if (_.contains(builderQuestions[1].responses, 1)) {
         // Commercial
         activate.push('condition-commercial');
         activate.push('storefront-condition');
@@ -120,13 +133,13 @@ define(function (require) {
         activate.push('commercial-use');
         useCount += 1;
       }
-      if (_.include(builderQuestions[1].responses, 2)) {
+      if (_.contains(builderQuestions[1].responses, 2)) {
         // Industrial
         activate.push('condition-industrial');
         activate.push('industrial-detailed-use');
         useCount += 1;
       }
-      if (_.include(builderQuestions[1].responses, 3)) {
+      if (_.contains(builderQuestions[1].responses, 3)) {
         // Institutional
         activate.push('condition-institutional');
         activate.push('detailed-use');
@@ -136,7 +149,7 @@ define(function (require) {
         activate.push('multiple-uses-check');
       }
 
-      if (_.include(builderQuestions[2].responses, 0)) {
+      if (_.contains(builderQuestions[2].responses, 0)) {
         // Vacant Lots
         activate.push('vacant-property-details');
         activate.push('maintenance');
@@ -149,9 +162,10 @@ define(function (require) {
     activateQuestions(activate);
   }
 
+  // Select a couple of indexes from a list
   function selectByIndex(arr, indices) {
     return _.filter(arr, function (el, index) {
-      return _.include(indices, index);
+      return _.contains(indices, index);
     });
   }
 
@@ -191,6 +205,7 @@ define(function (require) {
   var questionList = linearize(metaQuestions);
   questionList[0].active = true;
 
+  // Get templates for quick reference
   var $promptContainer = $('#prompt-container');
   var tPromptContent = $('#t-prompt-content').html();
   var tPromptRadio = $('#t-prompt-radio').html();
@@ -198,6 +213,7 @@ define(function (require) {
   var $nextButton = $('#next-button');
   var $prevButton = $('#prev-button');
 
+  // Functions to enable and disable the previous / next buttons
   function disableNext() {
     $nextButton.hide();
   }
@@ -211,26 +227,37 @@ define(function (require) {
     $prevButton.show();
   }
 
+  // Show survey builder questions to users
+  // index: the index of a question in the questionList
   function renderQuestion(index) {
     var question = questionList[index];
+
+    // html sets the frame for the question -- eg the title, prompt, etc. 
     var html = _.template(tPromptContent, {
       index: index,
       question: question.text
     });
+
+    // $el contains the choices the user has to make
+    var $el;
+
     var template;
     var data;
-    var $el;
+
     if (question.type === 'radio') {
       // Radio buttons
+
       // Don't let the user go ahead until one of the options has been selected
       disableNext();
+
+      // Render the radio button template
       template = tPromptRadio;
       $el = $(_.map(question.options, function (option, index) {
         return _.template(template, {
           text: option.text,
           radioGroup: question.id,
           index: index,
-          checked: question.responses !== undefined && _.include(question.responses, index)
+          checked: question.responses !== undefined && _.contains(question.responses, index)
         });
       }).join(''));
     } else {
@@ -240,18 +267,23 @@ define(function (require) {
         return _.template(template, {
           text: option.text,
           index: index,
-          checked: question.responses !== undefined && _.include(question.responses, index)
+          checked: question.responses !== undefined && _.contains(question.responses, index)
         });
       }).join(''));
     }
 
+    // Attach a click handler to the question
     $el.click(function (e) {
       var checked = $promptContainer.find(':checked');
+
+      // Enable the next button when an option is selected
       if (question.type === 'radio' &&
           index < questionList.length - 1 &&
             checked.length > 0) {
         enableNext();
       }
+
+      // Comment TODO: not sure what this does
       var indices = checked.map(function () {
         return parseInt($(this).attr('data-index'), 10);
       });
@@ -260,7 +292,7 @@ define(function (require) {
       // Activate/deactivate the appropriate subquestions.
       _.forEach(question.options, function (option, index) {
         if (option.questions !== undefined) {
-          if (_.include(indices, index)) {
+          if (_.contains(indices, index)) {
             _.forEach(option.questions, function (q) {
               q.active = true;
             });
@@ -277,6 +309,9 @@ define(function (require) {
     $promptContainer.append($el);
   }
 
+
+  // Progress Tabs show track the user's progress through the form
+  // They usually display on the left side of the screen
   var progressTabs = (function () {
     var self = {};
     var progressIndices = [];
@@ -303,10 +338,10 @@ define(function (require) {
       $container.html(html);
     };
 
-    // Add a progress tab for the questionList index.
+    // Add a progress tab for the given question (aka questionList index)
     self.add = function (index) {
       current = -1;
-      if (!_.include(progressIndices, index)) {
+      if (!_.contains(progressIndices, index)) {
         progressIndices.push(index);
       }
       self.render();
@@ -327,7 +362,9 @@ define(function (require) {
     var titleTemplate = _.template($('#t-preview-title').html());
     var nameTemplate = _.template($('#t-preview-name').html());
 
+    // Don't you wish JavaScript had Python's string.uppercase? 
     var letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+
     function walkActive(questions, depth, condition) {
       if (questions === undefined || questions === null || questions.length === 0) {
         return null;
