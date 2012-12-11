@@ -37,6 +37,7 @@
     <header id="site-header">
         <h1><small><a href="index.html">localdata</a></small></h1>
         <div id="topnav">
+          <a href="newsurvey.html">New Survey</a>
           <a href="/" class="mysurveys">All Surveys</a>
           <a href="/logout">Log out</a>
         </div>
@@ -320,7 +321,14 @@
       </div>-->
     </script>
              
-    <script data-main="js/main" src="js/require.js"></script>
-
+    <script src="js/require.js"></script>
+    <script>
+      require(['./js/common'], function (common) {
+          //js/common sets the baseUrl to be js/ so
+          //can just ask for 'main' here instead
+          //of 'js/main'
+          require(['main']);
+      });
+    </script>
 </body>
 </html>

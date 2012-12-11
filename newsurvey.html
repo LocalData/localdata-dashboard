@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>LocalData</title>
+    <style type="text/css" media="screen">
+      @import url("css/lib/reset.css");
+      @import url("css/app.css");
+      @import url("css/newsurvey.css");
+      @import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700,400italic,700italic);
+      @import url(http://fonts.googleapis.com/css?family=Open+Sans:700italic,700);
+      @import url(http://fonts.googleapis.com/css?family=Montserrat);
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header id="site-header">
+        <h1><small><a href="index.html">localdata</a></small></h1>
+        <div id="topnav">
+          <a href="newsurvey.html" class="mysurveys">New Survey</a>
+          <a href="/">All Surveys</a>
+          <a href="/logout">Log out</a>
+        </div>
+    </header>
+
+
+    <div id="container">
+    </div>
+	  <div class="container">
+      <div class="row">
+        <div class="span3" id="progress-container">
+          <div class="help">
+            <a href="#"><div id="save" class="help-icons">
+              <img src="img/icon_save.png" />Save your progress
+            </div></a>
+            <a href="#"><div class="help-icons">	
+              <img src="img/icon_question.png" />Help
+            </div></a>
+          </div>
+        </div>
+        <div class="span13">
+          <div id="maincontent-container">
+            <div class="solidtopbar">
+            </div>
+            <div id="prompt-container" class="content-container">
+            </div>
+            <div id="advance-question">
+              <div id="prev-button" class="prev-button">Previous</div>
+              <div id="next-button" class="next-button">Next</div>
+            </div>
+	      	</div>
+        </div>
+	    </div>
+    </div>
+
+    <div id="preview-sidebar">
+      <p>Preview<br />your<br />survey</p>
+    </div>
+  </div> <!-- /container -->
+
+  <div id="preview-dimmer"></div>
+  <div id="preview"></div>
+
+
+    <!-- Templates ========================================================-->
+    <script type="text/template" id="t-prompt-content">
+      <h2 class="builder">Question #<%= index + 1 %></h2>
+      <h1 class="builder"><%= question %></h1>
+    </script>
+    <script type="text/template" id="t-prompt-check">
+      <input type="checkbox" <% if (checked) { print('checked="true"'); } %> data-index="<%= index %>"><%= text %></input>
+    </script>
+    <script type="text/template" id="t-prompt-radio">
+      <input type="radio" <% if (checked) { print('checked="true"'); } %> name="<%= radioGroup %>" data-index="<%= index %>"><%= text %></input>
+    </script>
+
+    <script type="text/template" id="t-progress-tab">
+      <a href="#"><div class="progress-bar" data-active="<%= active %>"><p><%= label %></p></div></a>
+    </script>
+
+    <script type="text/template" id="t-preview-title">
+      <div id="preview-title">Previewing...</div>
+    </script>
+    <script type="text/template" id="t-preview-name">
+      <div id="preview-name">Survey: <%= name %></div>
+    </script>
+    <script type="text/template" id="t-preview-questions-container">
+      <div class="preview-q-box depth-<%= depth %>">
+      <% if (condition !== null) { %>
+        <div class="condition">
+          If they choose <%= condition %>:
+        </div>
+      <% } %>
+      </div>
+    </script>
+    <script type="text/template" id="t-preview-question">
+      <div class="preview-question">
+        <div class="question-prompt">
+          <b><%= prompt %></b>
+        </div>
+        <% _.each(answers, function (answer, i) { %> <div class="preview-answer"> <%= letters[i] %>: <%= answer %> </div> <% }); %>
+      </div>
+    </script>
+
+    <script src="js/require.js"></script>
+    <script>
+      require(['./js/common'], function (common) {
+          require(['main_newsurvey']);
+      });
+    </script>
+
+</body>
+</html>
