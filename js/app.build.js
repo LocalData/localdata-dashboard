@@ -2,10 +2,19 @@
     appDir: "../",
     baseUrl: "js",
     dir: "../../dashboard-build",
-    mainConfigFile: 'main.js',
+    mainConfigFile: 'common.js',
     modules: [
         {
-            name: "main"
+            name: "common",
+            include: ["jquery"]
+        },
+        {
+            name: "main",
+            exclude: ["common"]
+        },
+        {
+            name: "main_newsurvey",
+            exclude: ["common"]
         }
     ],
     fileExclusionRegExp: /^\./,
