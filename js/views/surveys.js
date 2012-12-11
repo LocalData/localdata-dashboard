@@ -41,6 +41,35 @@ function($, _, Backbone, events, settings, SurveyModels, ResponseModels, FormMod
   });
 
 
+  SurveyViews.NewSurveyView = Backbone.View.extend({
+    el: $("#container"),
+
+    initialize: function(options) {
+      console.log("Init new survey view");
+    },
+
+    update: function() {
+      this.render();
+    },
+
+    render: function() {
+      console.log("Rendering new survey view");
+
+      // Set the context & render the page
+      var context = {};
+      this.$el.html(_.template($('#new-survey-view').html(), context));
+
+      $("#new-survey-form").submit(function(event){
+        event.preventDefault();
+        console.log("Survey submitted");
+        console.log(event);
+      });
+
+    }
+
+  });
+
+
   SurveyViews.SurveyView = Backbone.View.extend({
     el: $("#container"),
     

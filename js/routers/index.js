@@ -16,7 +16,8 @@ function($, _, Backbone, settings, api) {
     routes: {
       "": "home",
       "login": "login",
-      
+
+      "surveys/new": "new",      
       "surveys/:slug": "survey",
       "surveys/:slug/map": "map",
       "surveys/:slug/export": "export_",
@@ -41,6 +42,10 @@ function($, _, Backbone, settings, api) {
       console.log("Going to login view");
       this.controller.goto_login();
     },
+
+    new: function() {
+      this.controller.goto_new();
+    },
     
     survey: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_survey);
@@ -62,7 +67,7 @@ function($, _, Backbone, settings, api) {
     scans: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_scans);
     },
-    
+
     default_route: function(actions) {
       console.log(actions);
     }  

@@ -26,6 +26,7 @@ function($, _, Backbone, settings, IndexRouter, HomeView, DashboardView, UserVie
   AllViews.HomeView = HomeView;
   AllViews.DashboardView = DashboardView;
   AllViews.SurveyView = SurveyViews.SurveyView;
+  AllViews.NewSurveyView= SurveyViews.NewSurveyView;
   AllViews.LoginView = UserViews.LoginView;
 
   // The singleton view which manages all others. Essentially, a "controller".
@@ -95,6 +96,11 @@ function($, _, Backbone, settings, IndexRouter, HomeView, DashboardView, UserVie
 
       // Update the URL.
       // this._router.navigate("surveys/" + settings.slug);
+    },
+
+    goto_new: function() {
+      console.log("Going to new");
+      this.currentContentView = this.getOrCreateView("NewSurveyView", "NewSurveyView");
     },
     
     goto_settings: function() {
