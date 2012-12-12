@@ -9,6 +9,7 @@ define([
 
   // LocalData
   'settings',
+  'api',
 
   // Models
   'models/surveys',
@@ -22,7 +23,7 @@ define([
   'views/responses'
 ],
 
-function($, _, Backbone, events, settings, SurveyModels, ResponseModels, FormModels, SubnavView, ExportView, SettingsView, ResponseViews) {
+function($, _, Backbone, events, settings, api, SurveyModels, ResponseModels, FormModels, SubnavView, ExportView, SettingsView, ResponseViews) {
   'use strict'; 
 
   var SurveyViews = {};
@@ -59,14 +60,66 @@ function($, _, Backbone, events, settings, SurveyModels, ResponseModels, FormMod
       var context = {};
       this.$el.html(_.template($('#new-survey-view').html(), context));
 
+      // On submisision of the new survey form...
       $("#new-survey-form").submit(function(event){
         event.preventDefault();
-        console.log("Survey submitted");
-        console.log(event);
+
+        // Get the name and other details
+        // TODO: this should probably be a new Survey model? 
+        var survey = {
+          "name": $("input.survey-name").val(),
+          "location": $("input.survey-location").val()
+        };
+
+        console.log("Survey form submitted");
+        console.log(survey);
+
+        // Submit the details as a new survey.
+        api.createSurvey(survey, function(survey) {
+          console.log("Survey created");
+          console.log(survey);
+
+          // LD.router._router.navigate("surveys/" + survey.slug, {trigger: true});
+
+          // TODO -- use the router
+          location.href = "/#surveys/" + survey.slug;
+
+        });
       });
 
     }
 
+  });
+
+
+  SurveyViews.DesignView = Backbone.View.extend({
+    el: $("#container"),
+    
+    survey: null,
+    
+    initialize: function(options) {
+      _.bindAll(this, 'update', 'render');
+      console.log(options);
+      // Set up the page and show the given survey
+      this.surveyId = options.id;
+      this.survey = new SurveyModels.Model({id: this.surveyId});
+      this.survey.on('change', this.render, this);
+    },
+
+    update: function() {
+      console.log("Updating survey");
+      this.render();
+    },
+
+    render: function() {
+      console.log("Rendering survey view");
+      
+      // Set the context & render the page
+      var context = {
+        'survey': this.survey.toJSON()
+      };
+      this.$el.html(_.template($('#new-survey-design').html(), context));
+    },    
   });
 
 

@@ -67,11 +67,10 @@
 
     <!-- Dashboard ..........................................................-->
     <script type="text/template" id="dashboard">
-    
       <div class="container">
         <header id="survey-header">
             <h2>Surveys</h2>
-            <a href="" class="button" id="newsurvey">New Survey</a>
+            <a href="#/surveys/new" class="button" id="newsurvey">New Survey</a>
         </header>
       </div>
     
@@ -85,8 +84,8 @@
       </div>
     </script>
 
+    <!-- New surveys ........................................................-->
     <script type="text/template" id="new-survey-view">
-    
       <div class="container">
         <header id="survey-header">
             <h2>Create a new survey</h2>
@@ -97,14 +96,56 @@
       <div id="content">
         <div id="body">
           <form action="" id="new-survey-form">
-            <input type="text" placeholder="Survey name">
-            <input type="text" placeholder="Survey location (city or state)">
+            <input type="text" placeholder="Survey name" class="survey-name">
+            <input type="text" placeholder="Survey city and state" class="survey-location">
             <input type="submit" value="Create new survey" />
           </form>
         </div>   
       </div>
       </div>
+    </script>
 
+    <script type="text/template" id="new-survey-design">
+      <div class="container">
+        <header id="survey-header">
+          <h2><%= survey.name %></h2>
+        </header>
+      </div>
+    
+      <div class="container">
+      <div id="content">
+        <div id="body" class="survey-designer">
+          <h2>What kind of survey would you like to run?</h2>
+          <h3>Pick from one of our pre-made survey templates</h3>
+
+          <div class="choice-boxes">
+            <div class="choice-box">
+              <h3>Standard neigbhorhood survey</h3>
+              <p>Asks about condition, vacancy and other basic factors</p>
+              <p class="time-estimate">About 1 minute per property</p>
+              <a href="" class="preview">Preview survey</a>
+            </div>
+
+            <div class="choice-box">
+              <h3>Comprehensive neigbhorhood survey</h3>
+              <p>Asks about condition, use, vacancy, details, and more</p>
+              <p class="time-estimate">About 4 minutes per property</p>
+              <a href="" class="preview">Preview survey</a>
+            </div>
+
+            <div class="choice-box">
+              <h3>Neighborhood asset survey</h3>
+              <p>Map parks, churches, stores, and more.</p>
+              <p class="time-estimate">About 2 minutes per property</p>
+              <a href="" class="preview">Preview survey</a>
+            </div>
+
+          </div>
+
+          <p class="advanced">Or, <a href="">design your own custom survey</a>.
+        </div>    
+      </div>
+      </div>
     </script>
 
     <!-- Loading / login ....................................................-->

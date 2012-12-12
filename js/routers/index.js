@@ -17,15 +17,13 @@ function($, _, Backbone, settings, api) {
       "": "home",
       "login": "login",
 
-      "surveys/new": "new",      
+      "surveys/new": "new_survey",      
       "surveys/:slug": "survey",
       "surveys/:slug/map": "map",
-      "surveys/:slug/export": "export_",
+      "surveys/:slug/export": "survey_export",
       "surveys/:slug/settings": "settings",
-      
-      // "surveys/:slug/scans": "scans",
-      // "surveys/:slug/upload": "upload",
-      
+      "surveys/:slug/design": "design",
+
       "*actions": "default_route"
     },
     
@@ -43,7 +41,7 @@ function($, _, Backbone, settings, api) {
       this.controller.goto_login();
     },
 
-    new: function() {
+    new_survey: function() {
       this.controller.goto_new();
     },
     
@@ -60,12 +58,16 @@ function($, _, Backbone, settings, api) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_settings);
     },
     
-    export_: function(slug) {
+    survey_export: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_export);
     },
     
     scans: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_scans);
+    },
+
+    design: function(slug) {
+      api.setSurveyIdFromSlug(slug, this.controller.goto_design);
     },
 
     default_route: function(actions) {

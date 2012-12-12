@@ -25,11 +25,15 @@ function($, _, Backbone, settings, IndexRouter, HomeView, DashboardView, UserVie
   var AllViews = {};
   AllViews.HomeView = HomeView;
   AllViews.DashboardView = DashboardView;
+
   AllViews.SurveyView = SurveyViews.SurveyView;
   AllViews.NewSurveyView= SurveyViews.NewSurveyView;
+  AllViews.DesignView = SurveyViews.DesignView;
+
   AllViews.LoginView = UserViews.LoginView;
 
-  // The singleton view which manages all others. Essentially, a "controller".
+  // The singleton view which manages all others.
+  // Essentially, a "controller".
   var RootView = Backbone.View.extend({
     
     el: $("body"),
@@ -59,7 +63,7 @@ function($, _, Backbone, settings, IndexRouter, HomeView, DashboardView, UserVie
       
       // If the view already exists, use it.
       // If it doesn't exist, create it.
-      if (viewName in this.views) {
+      if (_.has(this.views, viewName)) {
         console.log("Going to " + viewName);
 
       } else {
@@ -93,9 +97,6 @@ function($, _, Backbone, settings, IndexRouter, HomeView, DashboardView, UserVie
 
       // Show the correct tab
       this.currentContentView.showResponses();
-
-      // Update the URL.
-      // this._router.navigate("surveys/" + settings.slug);
     },
 
     goto_new: function() {
@@ -113,6 +114,13 @@ function($, _, Backbone, settings, IndexRouter, HomeView, DashboardView, UserVie
       // _kmq.push(['record', "ExportView"]);
       this._router.navigate("surveys/" + settings.slug + "/export");
       this.goto_survey("export");
+    },
+
+    goto_design: function() {
+      console.log("Going to design");
+      this.currentContentView = this.getOrCreateView("DesignView", "DesignView", {id: settings.surveyId});
+
+      // this.currentContentView = this.getOrCreateView("DesignView", "DesignView");
     }
     
   });

@@ -22,11 +22,6 @@ function($, _, events, settings, api, RootView, LoadingView) {
   // So fancy!
   var LD = {};
 
-  // TODO
-  // LD.collections = {};
-  // LD.routers = {};
-  // LD.templates = {};
-
   // Kick off the LocalData app
   LD.initialize = function() {
     console.log("Initalizing app");
@@ -37,15 +32,11 @@ function($, _, events, settings, api, RootView, LoadingView) {
     // If any request is returned with a 401, we want to redirect users to the
     // login page
     var redirectToLogin = function () {
-      var locationhref = "/#login";
-      if (location.hash && location.hash.length > 0) {
-        locationhref += "?hash=" + location.hash.substring(1);
-      }
-      location.href = locationhref;
+      LD.router._router.navigate("/login", {trigger: true});
     };
 
     $(document).ajaxError(function (event, xhr) {
-      console.log("ajax error triggered");
+      console.log("Ajax error: " + xhr.status);
         if (xhr.status === 401) {
           redirectToLogin();
         }    
@@ -70,14 +61,14 @@ function($, _, events, settings, api, RootView, LoadingView) {
     }
   };
 
-  // Return true if the page is in the loading state,
-  // false if not 
+  // Return true if the page is in the loading state, false if not 
   LD.getLoading = function() {
     if(LD.loading === undefined){
       return false;
     }
     return LD.loading;
   };
+ 
  
   return LD;
 });
