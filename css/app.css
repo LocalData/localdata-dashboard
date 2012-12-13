@@ -40,14 +40,13 @@ input {
 }
 
 .button {
-  display:block;
+  display:inline-block;
   width:auto;
-  float:left;
   padding:10px;
   border:1px solid #ccc;
   border-radius:10px;
-  -moz-box-shadow: 0 0 16px rgba(0,0,0, 0.25);
-  -webkit-box-shadow: 0 0 16px rgba(0,0,0, 0.25);
+  -moz-box-shadow: 0 0 10px rgba(0,0,0, 0.15);
+  -webkit-box-shadow: 0 0 10px rgba(0,0,0, 0.15);
   margin:20px 8px;
   cursor:pointer;
 }
@@ -229,15 +228,15 @@ header a {
   line-height:2;
 }
 
-#subfilter li a {
-  text-decoration:none;
-  color:#fff; 
-  background:#3f5b88;
-  border-radius:10px;
-  font-size:.9em;
-  cursor:pointer;
-  padding:4px;
-}
+  #subfilter li a {
+    text-decoration:none;
+    color:#fff; 
+    background:#3f5b88;
+    border-radius:10px;
+    font-size:.9em;
+    cursor:pointer;
+    padding:4px;
+  }
 
 #indiv-in {
   border:10px solid #ddd;
@@ -327,20 +326,24 @@ header a {
   background:#3f5b88;
 }
 
-#map-controls a {
-  color:#fefefe;
-  border-radius:8px;
-  padding:0px 5px;
-}
+  #map-controls a {
+    color:#fefefe;
+    border-radius:8px;
+    padding:0px 5px;
+  }
 
-#map-controls #address-search {
-  background:transparent;
-  color:#fefefe;
-  border:0;
-  border-bottom:1px dotted #fefefe;
-  min-width:200px;
-  max-width:400px;
-}
+  #map-controls #address-search {
+    background:transparent;
+    color:#fefefe;
+    border:0;
+    border-bottom:1px dotted #fefefe;
+    min-width:200px;
+    max-width:400px;
+  }
+
+  #map-controls .icon-search:before {
+    padding-right:5px; 
+  }
 
 /*  Note that we can't combine these two rules because they're 
     browser-specific */
@@ -362,9 +365,6 @@ header a {
     line-height:25px;
 }
 
-#map-controls .icon-search:before {
-  padding-right:5px; 
-}
 
 
 /* Settings ................................................................*/
@@ -396,3 +396,161 @@ form input {
   padding:50px;
   width:45%;
 }
+
+
+/* Builder .................................................................*/
+.survey-designer {
+
+}
+  .survey-designer h2 {
+    text-align:center;
+    font-size:3em;
+  }
+
+  .survey-designer h3 {
+    text-align:center;
+    font-size:2em;
+  }
+
+  .survey-designer .advanced {
+    text-align:center;
+  }
+
+.choice-boxes {
+  text-align:center;
+  padding: 20px 0px;
+}
+
+  .choice-box {
+    display: inline-block; /*add this*/
+
+    width:250px;
+    border: 1px solid #faf6ad;
+    border-radius: 10px;
+    padding:20px;
+    margin:15px;
+
+    -moz-box-shadow: inset 0 0 24px rgba(250, 246, 143, 0.5);
+    -webkit-box-shadow: inset 0 0 24px rgba(250, 246, 143, 0.5);
+
+    text-align:center;
+
+  }
+    .choice-box h3 { 
+      padding-top:75px;
+      font-weight:bold;
+      font-size:24px;
+    }
+
+    .choice-box p {
+      font-size:14px;
+      line-height:1.2;
+      text-align:left;
+      margin-top:10px;
+    }
+
+    .choice-box .time-estimate {
+      padding-top:20px;
+      padding-bottom:5px;
+      text-align:center;
+      color:#666;
+    }
+
+    .choice-box a.preview.button {
+      font-size:14px;
+      text-transform:uppercase;
+      padding-top:10px;
+    }
+
+/* Preview ...................................................................*/
+
+#preview-dimmer {
+  background: #fff;
+  opacity: 0.95;
+  position: fixed;
+  left: 0px;
+  top: 0px;
+  width: 100%;
+  height: 100%;
+  display: none;
+}
+
+#preview {
+  position: absolute;
+  left: 25%;
+  top: 50px;
+
+  margin:50px auto 50px auto;
+  padding-bottom: 20px;
+
+  width: 700px;
+  background: #fff;
+
+  border: 1px solid #eee;
+  -moz-box-shadow: 0 0 20px rgba(0,0,0, 0.25);
+  -webkit-box-shadow: 0 0 20px rgba(0,0,0, 0.25);
+}
+
+  #preview-close {
+    height:34px;
+    width:34px;
+    background:transparent url(../img/icons/close.png) no-repeat center center;
+    position:absolute;
+    top:-15px;
+    left:-15px;
+    display:inline;
+    float:left;
+    cursor:pointer;
+  }
+
+  #preview-title {
+    background: #f35351;
+    color: #f8bdad;
+    font-size:14px;
+    text-align: center;
+    text-transform:uppercase;
+    padding: 8px 0;
+    border-top:1px solid #ddd;
+    letter-spacing:1px;
+    font-weight:bold;
+  }
+
+  #preview-survey-title {
+    text-align:center;
+  }
+
+    #preview h3 {
+      padding: 30px 10px 0px 10px;
+    }
+
+  .preview-q-box {
+    padding-left: 20px;
+  }
+
+  .preview-q-box .depth-0,
+  .preview-q-box .depth-1,
+  .preview-q-box .depth-2,
+  .preview-q-box .depth-3 {
+    margin-left: 15px;
+  }
+
+  .preview-question {
+    border-left: 5px solid #44A9BA;
+    padding-left: 10px;
+    margin: 5px 5px 20px 5px;
+  }
+
+    .question-prompt {
+      padding: 5px;
+      font-weight: bold;
+    }
+
+    .preview-answer {
+      padding: 2px 0 2px 20px;
+    }
+
+  .condition {
+    padding: 5px;
+    font-style: italic;
+    color: #777;
+  }

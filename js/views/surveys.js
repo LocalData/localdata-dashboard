@@ -20,10 +20,15 @@ define([
   'views/subnav',
   'views/export',
   'views/settings',
-  'views/responses'
+  'views/responses',
+  'views/forms',
+
+  // Misc
+  'misc/exampleform'
+
 ],
 
-function($, _, Backbone, events, settings, api, SurveyModels, ResponseModels, FormModels, SubnavView, ExportView, SettingsView, ResponseViews) {
+function($, _, Backbone, events, settings, api, SurveyModels, ResponseModels, FormModels, SubnavView, ExportView, SettingsView, ResponseViews, PreviewView, exampleForm) {
   'use strict'; 
 
   var SurveyViews = {};
@@ -91,7 +96,6 @@ function($, _, Backbone, events, settings, api, SurveyModels, ResponseModels, Fo
 
   });
 
-
   SurveyViews.DesignView = Backbone.View.extend({
     el: $("#container"),
     
@@ -107,8 +111,8 @@ function($, _, Backbone, events, settings, api, SurveyModels, ResponseModels, Fo
     },
 
     update: function() {
-      console.log("Updating survey");
-      this.render();
+      // console.log("Updating survey");
+      // this.render();
     },
 
     render: function() {
@@ -119,6 +123,18 @@ function($, _, Backbone, events, settings, api, SurveyModels, ResponseModels, Fo
         'survey': this.survey.toJSON()
       };
       this.$el.html(_.template($('#new-survey-design').html(), context));
+
+      $('.preview').click(function(event){
+        console.log("Survey preview clicked");
+        event.preventDefault();
+
+        this.previewView = new PreviewView({
+          el: "#preview-view-container",
+          forms: [exampleForm]
+        });  
+
+      });
+
     },    
   });
 

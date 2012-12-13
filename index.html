@@ -115,35 +115,38 @@
       <div class="container">
       <div id="content">
         <div id="body" class="survey-designer">
-          <h2>What kind of survey would you like to run?</h2>
+          <h2>What kind of survey are you planning?</h2>
           <h3>Pick from one of our pre-made survey templates</h3>
 
-          <div class="choice-boxes">
+          <div class="choice-boxes floatcontainer">
             <div class="choice-box">
               <h3>Standard neigbhorhood survey</h3>
-              <p>Asks about condition, vacancy and other basic factors</p>
-              <p class="time-estimate">About 1 minute per property</p>
-              <a href="" class="preview">Preview survey</a>
+              <p>Asks basic questions about condition, vacancy and other factors. Quick and informative.</p>
+              <p class="time-estimate"><img src="img/icons/watch.png" alt=""> About 1 minute per property</p>
+              <a href="" class="preview button">Preview survey</a>
             </div>
 
             <div class="choice-box">
               <h3>Comprehensive neigbhorhood survey</h3>
-              <p>Asks about condition, use, vacancy, details, and more</p>
-              <p class="time-estimate">About 4 minutes per property</p>
-              <a href="" class="preview">Preview survey</a>
+              <p>Collect detailed information about condition, use, vacancy, and more. Takes longer to complete.</p>
+              <p class="time-estimate"><img src="img/icons/watch.png" alt=""> About 4 minutes per property</p>
+              <a href="" class="preview button">Preview survey</a>
             </div>
 
             <div class="choice-box">
               <h3>Neighborhood asset survey</h3>
               <p>Map parks, churches, stores, and more.</p>
-              <p class="time-estimate">About 2 minutes per property</p>
-              <a href="" class="preview">Preview survey</a>
+              <p class="time-estimate"><img src="img/icons/watch.png" alt=""> About 2 minutes per property</p>
+              <a href="" class="preview button">Preview survey</a>
             </div>
 
           </div>
 
           <p class="advanced">Or, <a href="">design your own custom survey</a>.
-        </div>    
+        </div>  
+
+        <div id="preview-view-container"></div>
+  
       </div>
       </div>
     </script>
@@ -173,6 +176,42 @@
       </div>
     </script>
 
+    <!-- Previews .........................................................-->
+    <script type="text/template" id="preview-view">
+      <div id="preview-dimmer"></div>
+      <div id="preview"></div>
+    </script>
+
+    <script type="text/template" id="t-preview-title">
+      <div id="preview-close"></div>
+      <div id="preview-title">Preview</div>
+    </script>
+
+    <script type="text/template" id="t-preview-name">
+      <div id="preview-survey-title">
+        <h3><%= name %></h3>
+        <a class="button use-surey">Use this survey</a>
+      </div>
+    </script>
+
+    <script type="text/template" id="t-preview-questions-container">
+      <div class="preview-q-box depth-<%= depth %>">
+      <% if (condition !== null) { %>
+        <div class="condition">
+          If they choose <%= condition %>:
+        </div>
+      <% } %>
+      </div>
+    </script>
+
+    <script type="text/template" id="t-preview-question">
+      <div class="preview-question">
+        <div class="question-prompt">
+          <b><%= prompt %></b>
+        </div>
+        <% _.each(answers, function (answer, i) { %> <div class="preview-answer"> <%= letters[i] %>: <%= answer %> </div> <% }); %>
+      </div>
+    </script>
 
     <!-- Survey ...........................................................-->    
     <script type="text/template" id="survey-view">
