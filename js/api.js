@@ -23,7 +23,7 @@ define(function (require) {
 
   // Create a new survey
   api.createSurvey = function(survey, callback) {
-    var url = "http://localhost:3000/api/surveys";
+    var url = settings.api.baseurl + "/surveys";
 
     console.log(url);
 
@@ -43,8 +43,9 @@ define(function (require) {
     });
   };
 
-  // Given a slug (eg 'just-a-surey'), find the corresponding survey 
-  // Sets settings.surveyId
+
+  // Find a survey by slug
+  // Given a slug (eg 'just-a-surey') Sets settings.surveyId
   api.setSurveyIdFromSlug = function(slug, callback) {    
     var url = settings.api.baseurl +  "/slugs/" + slug;
     console.log("Survey slug: " + url);
@@ -65,19 +66,20 @@ define(function (require) {
   };
 
   
-  // Generates the URL to retrieve results for a given parcel
+  // Generates the URL for the current survey
+  // (Current survey is set by setSurveyIdFromSlug, above)
   api.getSurveyURL = function() {
     return settings.api.baseurl + "/surveys/" + settings.surveyId;
   };
   
 
-  // Get the URL for a survey's resposnes
+  // Generates the URL for the current survey's resposnes
   api.getParcelDataURL = function(parcel_id) {
     return settings.api.baseurl + '/surveys/' + settings.surveyId + '/parcels/' + parcel_id + '/responses';
   };
 
     
-  // Get the form for a surevy
+  // Get the form for the urrent survey
   api.getForm = function(callback) {
     console.log("Getting form data");
     var url = api.getSurveyURL() + "/forms";
@@ -97,12 +99,35 @@ define(function (require) {
       });
       settings.formData = mobileForms[0];
       
-      console.log("Mobile forms");
-      console.log(mobileForms);
+      console.log("Mobile forms: ", mobileForms);
       
       // Endpoint should give the most recent form first.
       callback();
     });
+  };
+
+  // Add a form form to a survey
+  api.createForm = function(form, callback, options) {
+    console.log("Creating a form");
+    var key;
+
+    // Add the form to the current survey
+    // Or, if a custom surveyId is defined in options, use that. 
+    var surveyId = settings.surveyId;
+    if(_.has(options, "surveyId")) {
+      surveyId = options.surveyId;
+    }
+
+    var url = settings.api.baseurl + '/surveys/' + surveyId + '/forms/';
+    var data = { "forms": [ form ] };
+
+    // Post the form data
+    $.post(url, data, function() {}, "text").error(function(){ 
+        console.log("Error posting form:");
+    }).success(function(){
+      callback();
+    });
+
   };
     
   // Deal with the formatting of the geodata API.

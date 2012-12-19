@@ -5,11 +5,17 @@ define([
   'jquery',
   'lib/lodash',
   'backbone',
+
+  // LocalData
   'settings',
-  'api'
+  'api',
+
+  // Views
+  'views/forms',
+  'views/design'
 ],
 
-function($, _, Backbone, settings, api) {
+function($, _, Backbone, settings, api, PreviewView, DesignViews) {
   'use strict'; 
 
   var SettingsView = Backbone.View.extend({
@@ -23,17 +29,59 @@ function($, _, Backbone, settings, api) {
     // },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'save');
+      _.bindAll(this, 'render', 'save', 'showEditor', 'showSurveySetup');
       this.survey = options.survey;
       this.forms = options.forms;
       console.log(this.survey);
+      console.log(this.forms);
     },
     
     // TODO
     save: function(event) {
       event.preventDefault();
-      console.log("SUBMITTED!");
+      console.log("Submitting settings. Not yet implemented.");
       console.log(event);
+    },
+
+    showSurveySetup: function(event) {
+      event.preventDefault();
+      this.designView = new DesignViews.DesignView({
+        elId: "#survey-design-container",
+        survey: this.survey
+      });  
+      this.designView.render();
+    },
+
+    showEditor: function() {
+      $("#survey-design-container").empty();
+
+      // If there isn't a form yet, let's show the survey creation view
+      if (settings.formData === undefined) {
+        $('.button').hide();
+
+        var designView = new DesignViews.DesignView({
+          elId: "#survey-design-container",
+          survey: this.survey
+        });
+        designView.render();
+
+      }else {
+
+        // Preview a form
+        $('.preview').click(function(event){
+          console.log("Survey preview clicked");
+          event.preventDefault();
+          
+          this.previewView = new PreviewView({
+            elId: "#preview-view-container",
+            forms: [settings.formData]
+          });  
+        });
+
+        // Design a form
+        $('.edit').click(this.showSurveySetup);
+
+      }    
     },
     
     render: function() {        
@@ -43,8 +91,9 @@ function($, _, Backbone, settings, api) {
       };    
 
       $(this.elId).html(_.template($('#settings-view').html(), context));
+
+      api.getForm(this.showEditor);
     }
-    
   });
 
   return SettingsView;

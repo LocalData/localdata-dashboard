@@ -18,18 +18,33 @@ function($, _, Backbone, settings, api) {
   var FormPreviewView = Backbone.View.extend({
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'renderPreview');
+      _.bindAll(this, 'render', 'renderPreview', 'useSurvey');
       console.log("Init form view");
       console.log(this.options);
 
       this.forms = options.forms;
       this.form = this.forms[0];
-      this.$el = $(options.el);
+      this.$el = $(options.elId);
+
+      // Set if we want the preview to appear as a popup or not.
+      this.popup = "";
+      if (options.popup !== undefined) {
+        this.popup = "popup"
+      };
+
       this.render();
     },
 
+    useSurvey: function(event) {
+      console.log("Using the survey");
+      api.createForm(this.form, function() {
+        console.log("Form added!");
+      });
+    },
+
     renderPreview: function() {
-      console.log("Rendering preview");
+      console.log("Rendering form preview");
+
       // Get the templates ready to go 
       var boxTemplate = _.template($('#t-preview-questions-container').html());
       var questionTemplate = _.template($('#t-preview-question').html());
@@ -39,7 +54,6 @@ function($, _, Backbone, settings, api) {
       var letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
 
       function walkActive(questions, depth, condition) {
-        console.log(questions);
         if (questions === undefined || questions === null || questions.length === 0) {
           return null;
         }
@@ -87,44 +101,49 @@ function($, _, Backbone, settings, api) {
         return box;
       }
 
+      if (this.popup === "popup") {
+        // Dim the screen behind the preview
+        var $dimmer = $("#preview-dimmer");
+        $dimmer.fadeIn(100);
+      };
+
       // Actually render the preview
       var $preview = $("#preview");
+      $preview.hide();
       $preview.empty();
       $preview.append(titleTemplate());
       $preview.append(nameTemplate({name: this.form.name}));
-      console.log(this.form);
       $preview.append(walkActive(this.form.questions, 0));
-      $preview.show();
+      $preview.fadeIn(250);
 
+      // If the user wants to use the given survey...
+      $('.use-survey').click(this.useSurvey);
 
-      // Dim the screen behind the preview
-      var $dimmer = $("#preview-dimmer");
-      $dimmer.show();
-      $dimmer.click(function (event) {
+      // Functions to close the preview popup + dimmer
+      var closePreview = function(event) {
         event.preventDefault();
 
-        $preview.hide();
-        $dimmer.hide();
-      });
+        $preview.fadeOut(100);
+        $dimmer.fadeOut(150);
+      }
 
-      $("#preview-close").click(function (event) {
-        event.preventDefault();
-
-        $preview.hide();
-        $dimmer.hide();
-      });
+      if (this.popup === "popup") {
+        $dimmer.click(closePreview);
+        $("#preview-close").click(closePreview);
+      }
 
     },
 
     render: function() {        
-      var context = { };    
+      var context = { 
+        popup: this.popup
+      };    
+
       this.$el.html(_.template($('#preview-view').html(), context));
 
       this.renderPreview();
     }
 
-
-    
   });
 
   return FormPreviewView;

@@ -17,7 +17,7 @@ define([
   'models/forms',
 
   // Views
-  'views/subnav',
+  'views/nav',
   'views/export',
   'views/settings',
   'views/responses',
@@ -28,7 +28,31 @@ define([
 
 ],
 
-function($, _, Backbone, events, settings, api, SurveyModels, ResponseModels, FormModels, SubnavView, ExportView, SettingsView, ResponseViews, PreviewView, exampleForm) {
+function(
+  $, 
+  _, 
+  Backbone, 
+  events, 
+
+  // LocalData
+  settings, 
+  api, 
+
+  // Models
+  SurveyModels, 
+  ResponseModels, 
+  FormModels, 
+
+  // Views
+  NavView, 
+  ExportView, 
+  SettingsView, 
+  ResponseViews, 
+  PreviewView, 
+
+  // Misc
+  exampleForm 
+){
   'use strict'; 
 
   var SurveyViews = {};
@@ -87,7 +111,7 @@ function($, _, Backbone, events, settings, api, SurveyModels, ResponseModels, Fo
           // LD.router._router.navigate("surveys/" + survey.slug, {trigger: true});
 
           // TODO -- use the router
-          location.href = "/#surveys/" + survey.slug;
+          location.href = "/#surveys/" + survey.slug + "/settings";
 
         });
       });
@@ -95,49 +119,6 @@ function($, _, Backbone, events, settings, api, SurveyModels, ResponseModels, Fo
     }
 
   });
-
-  SurveyViews.DesignView = Backbone.View.extend({
-    el: $("#container"),
-    
-    survey: null,
-    
-    initialize: function(options) {
-      _.bindAll(this, 'update', 'render');
-      console.log(options);
-      // Set up the page and show the given survey
-      this.surveyId = options.id;
-      this.survey = new SurveyModels.Model({id: this.surveyId});
-      this.survey.on('change', this.render, this);
-    },
-
-    update: function() {
-      // console.log("Updating survey");
-      // this.render();
-    },
-
-    render: function() {
-      console.log("Rendering survey view");
-      
-      // Set the context & render the page
-      var context = {
-        'survey': this.survey.toJSON()
-      };
-      this.$el.html(_.template($('#new-survey-design').html(), context));
-
-      $('.preview').click(function(event){
-        console.log("Survey preview clicked");
-        event.preventDefault();
-
-        this.previewView = new PreviewView({
-          el: "#preview-view-container",
-          forms: [exampleForm]
-        });  
-
-      });
-
-    },    
-  });
-
 
   SurveyViews.SurveyView = Backbone.View.extend({
     el: $("#container"),
@@ -195,12 +176,12 @@ function($, _, Backbone, events, settings, api, SurveyModels, ResponseModels, Fo
         forms: this.forms
       });
 
-      // Subnav & Export views   
-      this.subnavView = new SubnavView({slug: settings.slug});  
+      // Nav & Export views   
+      this.navView = new NavView({slug: settings.slug});  
       this.exportView = new ExportView({surveyId: this.surveyId});  
 
-      // Render subnav, export, and settings views
-      this.subnavView.render();
+      // Render navigation, export, and settings views
+      this.navView.render();
       this.exportView.render(); 
       this.settingsView.render();
 
@@ -215,7 +196,7 @@ function($, _, Backbone, events, settings, api, SurveyModels, ResponseModels, Fo
       $("#content > div").hide();
       $("#content #loading-view-container").show();
       $(id).show();
-      this.subnavView.setActiveTab(tab);
+      this.navView.setActiveTab(tab);
     },
     
     showResponses: function() {

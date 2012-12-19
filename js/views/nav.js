@@ -12,8 +12,8 @@ define([
 function($, _, Backbone, settings, api) {
   'use strict'; 
 
-  var SubnavView = Backbone.View.extend({
-    elId: '#subnav',
+  var NavView = Backbone.View.extend({
+    elId: '#nav',
     active: null,
     
     initialize: function(options) {
@@ -54,12 +54,12 @@ function($, _, Backbone, settings, api) {
         };
       }, this);
         
-      $(this.elId).html(_.template($('#subnav-view').html(), { items: this.items }));    
+      $(this.elId).html(_.template($('#nav-view').html(), { items: this.items }));    
     }
 
   });
   
-  return SubnavView;
+  return NavView;
   
 });
 

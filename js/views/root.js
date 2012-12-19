@@ -16,10 +16,11 @@ define([
   'views/home',
   'views/dashboard',
   'views/users',
-  'views/surveys'
+  'views/surveys',
+  'views/design'
 ],
 
-function($, _, Backbone, settings, IndexRouter, HomeView, DashboardView, UserViews, SurveyViews) {
+function($, _, Backbone, settings, IndexRouter, HomeView, DashboardView, UserViews, SurveyViews, DesignViews) {
   'use strict'; 
 
   var AllViews = {};
@@ -28,7 +29,7 @@ function($, _, Backbone, settings, IndexRouter, HomeView, DashboardView, UserVie
 
   AllViews.SurveyView = SurveyViews.SurveyView;
   AllViews.NewSurveyView= SurveyViews.NewSurveyView;
-  AllViews.DesignView = SurveyViews.DesignView;
+  AllViews.DesignView = DesignViews.DesignView;
 
   AllViews.LoginView = UserViews.LoginView;
 
@@ -96,7 +97,17 @@ function($, _, Backbone, settings, IndexRouter, HomeView, DashboardView, UserVie
       this.currentContentView = this.getOrCreateView("SurveyView", surveyViewName, {id: settings.surveyId});
 
       // Show the correct tab
-      this.currentContentView.showResponses();
+      switch(tab) {
+        case undefined:
+          this.currentContentView.showResponses();
+          break;
+        case "export":
+          this.currentContentView.showExport();
+          break;
+        case "settings":
+          this.currentContentView.showSettings();
+          break;
+      }
     },
 
     goto_new: function() {

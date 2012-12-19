@@ -143,7 +143,7 @@ header a {
 }
 
 /* Nav .....................................................................*/
-#subnav {
+#nav {
   background:#eee;
   overflow:auto;
   border:1px solid #fff;
@@ -181,7 +181,27 @@ header a {
       color: #ef6d4a;
     }
 
-/* Surveys ...............................................................*/
+/* Subnav .................................................................. */
+.subnav {
+  padding-bottom:10px;
+  margin-bottom:10px;
+  border-bottom:1px solid #ddd;
+  overflow:auto;
+}
+
+  .subnav li {
+    display:inline-block;
+    float:left;
+    margin-right:15px;
+  }
+
+  .subnav a {
+    cursor: pointer;
+  }
+
+
+
+/* Surveys ................................................................. */
 .survey-list .survey {
   border:1px solid #c7d3e5;
   border-radius:10px;
@@ -399,12 +419,37 @@ form input {
 
 
 /* Builder .................................................................*/
+#new-survey-form {
+    width:400px;
+    border: 1px solid #faf6ad;
+    border-radius: 10px;
+    padding:20px;
+    margin:15px auto;
+
+    -moz-box-shadow: inset 0 0 24px rgba(250, 246, 143, 0.5);
+    -webkit-box-shadow: inset 0 0 24px rgba(250, 246, 143, 0.5);
+
+}
+
+  #new-survey-form input[type='text'] { 
+    margin-bottom:10px;
+    width:350px;
+  }
+
 .survey-designer {
 
 }
   .survey-designer h2 {
     text-align:center;
     font-size:3em;
+  }
+
+  .survey-designer h2.getting-started {
+    font-size:1em;
+    text-transform:uppercase;
+    font-weight:bold;
+    letter-spacing:1px;
+    color:#ef6d4a;
   }
 
   .survey-designer h3 {
@@ -422,7 +467,7 @@ form input {
 }
 
   .choice-box {
-    display: inline-block; /*add this*/
+    display: inline-block; 
 
     width:250px;
     border: 1px solid #faf6ad;
@@ -437,7 +482,7 @@ form input {
 
   }
     .choice-box h3 { 
-      padding-top:75px;
+      padding-top:10px;
       font-weight:bold;
       font-size:24px;
     }
@@ -475,44 +520,42 @@ form input {
   display: none;
 }
 
+  #preview-dimmer.popup {
+    display:block;
+  }
+
 #preview {
-  position: absolute;
-  left: 25%;
-  top: 50px;
-
-  margin:50px auto 50px auto;
   padding-bottom: 20px;
-
-  width: 700px;
   background: #fff;
-
-  border: 1px solid #eee;
-  -moz-box-shadow: 0 0 20px rgba(0,0,0, 0.25);
-  -webkit-box-shadow: 0 0 20px rgba(0,0,0, 0.25);
 }
+  
+  #preview.popup {
+    display:block;
+    padding-top:20px;
+    width: 700px;
+    position: absolute;
+    left: 25%;
+    margin:50px auto 50px auto;
+    border: 1px solid #eee;
+    -moz-box-shadow: 0 0 20px rgba(0,0,0, 0.25);
+    -webkit-box-shadow: 0 0 20px rgba(0,0,0, 0.25);
+  }
 
   #preview-close {
+    display:none;
+
     height:34px;
     width:34px;
     background:transparent url(../img/icons/close.png) no-repeat center center;
     position:absolute;
     top:-15px;
     left:-15px;
-    display:inline;
     float:left;
     cursor:pointer;
   }
 
-  #preview-title {
-    background: #f35351;
-    color: #f8bdad;
-    font-size:14px;
-    text-align: center;
-    text-transform:uppercase;
-    padding: 8px 0;
-    border-top:1px solid #ddd;
-    letter-spacing:1px;
-    font-weight:bold;
+  #preview.popup #preview-close {
+    display:inline; 
   }
 
   #preview-survey-title {
