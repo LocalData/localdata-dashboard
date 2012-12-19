@@ -84,8 +84,8 @@ function($, _, Backbone, settings, IndexRouter, HomeView, DashboardView, UserVie
 
     },
 
-    goto_login: function() {
-      this.currentContentView = this.getOrCreateView("LoginView", "LoginView");
+    goto_login: function(redirectTo) {
+      this.currentContentView = this.getOrCreateView("LoginView", "LoginView", {redirectTo: redirectTo});
     },
     
     // Survey dashboard routes .................................................

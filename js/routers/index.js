@@ -15,20 +15,22 @@ function($, _, Backbone, settings, api) {
   var IndexRouter = Backbone.Router.extend({
     routes: {
       "": "home",
-      "login": "login",
 
       "surveys/new": "new_survey",      
       "surveys/:slug": "survey",
       "surveys/:slug/map": "map",
       "surveys/:slug/export": "survey_export",
       "surveys/:slug/settings": "settings",
-      "surveys/:slug/design": "design",
+      "surveys/:slug/design": "design"
 
-      "*actions": "default_route"
     },
     
     initialize: function(options) {
       this.controller = options.controller;
+      
+      this.route(/^login\/(.*)$/, "login", this.login);
+
+      // "*actions": "default_route"
     },
     
     home: function() {
@@ -36,9 +38,9 @@ function($, _, Backbone, settings, api) {
       this.controller.goto_home();
     },
 
-    login: function() {
+    login: function(redirectTo) {
       console.log("Going to login view");
-      this.controller.goto_login();
+      this.controller.goto_login(redirectTo);
     },
 
     new_survey: function() {

@@ -23,12 +23,18 @@ function($, _, Backbone, events, settings, UserModels) {
   UserViews.LoginView = Backbone.View.extend({
     el: "#container",
 
-    initialize: function() {
+    initialize: function(options) {
+      this.redirectTo = options.redirectTo || "/";
+      this.redirectTo = this.redirectTo.replace("?redirectTo=", "")
+      console.log("Creating login view");
       _.bindAll(this, 'render', 'update');
     },
 
     render: function() {
-      this.$el.html(_.template($('#login-view').html(), { }));  
+      var context = {
+        redirectTo: this.redirectTo
+      }
+      this.$el.html(_.template($('#login-view').html(), context));  
       return this;
     },
 

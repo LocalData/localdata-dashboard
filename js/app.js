@@ -5,6 +5,7 @@
 define([
   'jquery',
   'lib/lodash',
+  'backbone',
   'lib/tinypubsub',
 
   'settings',
@@ -15,7 +16,7 @@ define([
   'views/loading'
 ],
 
-function($, _, events, settings, api, RootView, LoadingView) {
+function($, _, Backbone, events, settings, api, RootView, LoadingView) {
   'use strict';
 
   // Here's the dashboard app:
@@ -32,7 +33,7 @@ function($, _, events, settings, api, RootView, LoadingView) {
     // If any request is returned with a 401, we want to redirect users to the
     // login page
     var redirectToLogin = function () {
-      LD.router._router.navigate("/login", {trigger: true});
+      LD.router._router.navigate("/login/?redirectTo=" + Backbone.history.fragment, {trigger: true});
     };
 
     $(document).ajaxError(function (event, xhr) {
