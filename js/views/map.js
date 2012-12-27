@@ -118,7 +118,6 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
             color = settings.colorRange[indexOfColorToUse + 1];
 
             if (indexOfColorToUse == -1) {
-              console.log(settings.colorRange[0]);
               color = settings.colorRange[0];
             }
 

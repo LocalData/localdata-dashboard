@@ -227,6 +227,25 @@ define(function (require) {
       }
     });
   };
+
+
+  // TODO: Get a short URL for a survey from 
+  // api.getShortURL = function(long_url, login, api_key, func){ 
+  //   $.getJSON(
+  //     "http://api.bitly.com/v3/shorten?callback=?", 
+  //     { 
+  //         "format": "json",
+  //         "apiKey": api_key,
+  //         "login": login,
+  //         "longUrl": long_url
+  //     },
+  //     function(response)
+  //     {
+  //         func(response.data.url);
+  //     }
+  //   );
+  // };
+
     
   return api;
 });

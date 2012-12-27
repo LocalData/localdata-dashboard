@@ -45,9 +45,9 @@ input {
   padding:10px;
   border:1px solid #ccc;
   border-radius:10px;
-  -moz-box-shadow: 0 0 10px rgba(0,0,0, 0.15);
-  -webkit-box-shadow: 0 0 10px rgba(0,0,0, 0.15);
-  margin:20px 8px;
+  -moz-box-shadow: 0 0 6px rgba(0,0,0, 0.15);
+  -webkit-box-shadow: 0 0 6px rgba(0,0,0, 0.15);
+  margin:10px 4px;
   cursor:pointer;
 }
 
@@ -62,6 +62,29 @@ input {
   .button-container {
     overflow:auto;
   }
+
+  .button.flat {
+    -moz-box-shadow:none;
+    -webkit-box-shadow:none;
+    box-shadow:none;
+    margin:9px;
+    background:#f39379;
+    color:#fff;
+    padding:4px 8px;
+    border-radius:15px;
+    margin-right:10px;
+  }
+
+    .button.flat:hover {
+      -moz-box-shadow:none;
+      -webkit-box-shadow:none;
+      box-shadow:none;
+      background:#f39379;
+      color:#fff;
+      padding:4px 8px;
+      border-radius:15px;
+      margin-right:10px;
+    }
 
 
 /* Structure ...............................................................*/
@@ -127,7 +150,8 @@ header a {
 #survey-header {
   color:#fefefe;
   font-size:35px;
-  padding:20px 0 1px 20px;
+  padding-bottom:0;
+  padding:14px 20px 0px 20px;
 }
 
 #site-header .container,
@@ -138,9 +162,10 @@ header a {
 #survey-header h2 {
   font-size:36px;
   font-weight:600;
-  text-shadow: 0.08em 0.08em #00949b;
+  text-shadow: 0.05em 0.05em #00949b;
   letter-spacing:1px;
 }
+
 
 /* Nav .....................................................................*/
 #nav {
@@ -187,6 +212,7 @@ header a {
   margin-bottom:10px;
   border-bottom:1px solid #ddd;
   overflow:auto;
+  line-height:30px;
 }
 
   .subnav li {
@@ -197,6 +223,12 @@ header a {
 
   .subnav a {
     cursor: pointer;
+    background:#39abb7;
+    color:#fff;
+    padding:4px 8px;
+    border-radius:15px;
+    margin-right:5px;
+    border:0px none;
   }
 
 
@@ -409,6 +441,21 @@ form input {
   font-size:24px;
 }
 
+#settings-view-container #preview-view-container {
+}
+
+#send-survey-container {
+
+}
+
+  #send-survey-container h3 {
+    margin-bottom:10px;
+  }
+
+  #send-survey-container p {
+    margin-bottom:1.2em;
+  }
+
 
 /* Export ..................................................................*/
 .export-block {
@@ -418,17 +465,35 @@ form input {
 }
 
 
+/* New survey ..............................................................*/
+#newsurvey {
+  font-size:16px;
+  border:0px none;
+  text-shadow:none;
+  font-weight:normal;
+  letter-spacing: 0;
+}
+
+#survey-header.new-survey h2 {
+  text-align:center;
+}
+
+
+
 /* Builder .................................................................*/
 #new-survey-form {
     width:400px;
-    border: 1px solid #faf6ad;
+    border: 1px solid #39abb7;
     border-radius: 10px;
     padding:20px;
-    margin:15px auto;
+    margin:0px auto;
+    margin-top:-20px;
 
-    -moz-box-shadow: inset 0 0 24px rgba(250, 246, 143, 0.5);
-    -webkit-box-shadow: inset 0 0 24px rgba(250, 246, 143, 0.5);
+    -moz-box-shadow: inset 0 0 24px rgba(0, 148,155, 0.5);
+    -webkit-box-shadow: inset 0 0 24px rgba(0, 148,155, 0.5);
+    box-shadow: inset 0 0 24px rgba(0, 148,155, 0.5);
 
+    background:#fff;
 }
 
   #new-survey-form input[type='text'] { 

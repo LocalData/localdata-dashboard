@@ -69,8 +69,8 @@
     <script type="text/template" id="dashboard">
       <div class="container">
         <header id="survey-header">
-            <h2>My Surveys</h2>
-            <a href="#/surveys/new" class="button" id="newsurvey">New Survey</a>
+            <h2>My Surveys <a href="#/surveys/new" class="button flat" id="newsurvey">Create a new survey</a></h2>
+            
         </header>
       </div>
     
@@ -87,21 +87,21 @@
     <!-- New surveys ........................................................-->
     <script type="text/template" id="new-survey-view">
       <div class="container">
-        <header id="survey-header">
+        <header id="survey-header" class="new-survey">
             <h2>Create a new survey</h2>
         </header>
       </div>
     
       <div class="container">
-      <div id="content">
-        <div id="body">
-          <form action="" id="new-survey-form">
-            <input type="text" placeholder="Survey name" class="survey-name">
-            <input type="text" placeholder="Survey city and state" class="survey-location">
-            <input type="submit" value="Create new survey" />
-          </form>
-        </div>   
-      </div>
+        <!--<div id="content">
+          <div id="body">-->
+            <form action="" id="new-survey-form">
+              <input type="text" placeholder="Survey name" class="survey-name">
+              <input type="text" placeholder="Survey city and state" class="survey-location">
+              <a class="button submit">Create new survey</a>
+            </form>
+        <!--  </div>   
+        </div>-->
       </div>
     </script>
 
@@ -187,6 +187,7 @@
     </script>
 
     <script type="text/template" id="t-preview-name">
+      <h3>Survey Preview</h3>
     </script>
 
     <script type="text/template" id="t-preview-questions-container">
@@ -237,18 +238,23 @@
     </script>
 
     <script type="text/template" id="settings-view">
+    <!--
       <div class="nav subnav">
-        <li><a class="basic-info">Basic info</a></li>
-        <li><a class="preview">Preview form</a></li>
-        <li><a class="edit">Edit form</a></li>
+        <li><a class="basic-info">Edit survey name &amp; basic info</a></li> 
+        <li><a class="preview">Preview survey questions</a></li>
+        <li><a class="edit">Edit survey questions</a></li>
+      </div>
+    -->
+
+      <div id="send-survey-container">
+        <h3>Send your survey to staff and volunteers</h3>
+        <p>Your survey is at <a href="http://matth-dev.herokuapp.com/mobile/#<%= survey.slug %>">http://matth-dev.herokuapp.com/mobile/#<%= survey.slug %></a></p>
+        <p>Text the survey URL to someone: <input type="text" placeholder="313 555 5555"> <input type="submit" value="Send text message"></p>
       </div>
 
-      <!-- 
-      <p>Your survey is at <a href="">http://example.com/surveyurl</a></p>
-      <p>Text this URL to a user: <input type="text" placeholder="phone number"> <input type="submit" value="Send text message"></p>
-      -->
 
-      <div id="preview-view-container"></div>
+      <div id="preview-view-container">
+      </div>
       <div id="editor-view-container"></div>
       <div id="survey-design-container"></div>
 

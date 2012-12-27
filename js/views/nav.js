@@ -25,7 +25,7 @@ function($, _, Backbone, settings, api) {
       this.items = [
         this.makeNavItem('nav-responses', 'surveys/' + this.slug, 'Results', 'icon-home'),
         this.makeNavItem('nav-export', 'surveys/' + this.slug + '/export', 'Export', 'icon-download'),
-        this.makeNavItem('nav-settings', 'surveys/' + this.slug + '/settings', 'Survey Settings', 'icon-cog'),
+        this.makeNavItem('nav-settings', 'surveys/' + this.slug + '/settings', 'Form', 'icon-cog'),
       ];
       this.current = this.items[0];
     },

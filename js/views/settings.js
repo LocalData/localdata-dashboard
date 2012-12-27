@@ -57,6 +57,9 @@ function($, _, Backbone, settings, api, PreviewView, DesignViews) {
 
       // If there isn't a form yet, let's show the survey creation view
       if (settings.formData === undefined) {
+
+        $("#send-survey-container").hide();
+
         $('.button').hide();
 
         var designView = new DesignViews.DesignView({
@@ -67,19 +70,13 @@ function($, _, Backbone, settings, api, PreviewView, DesignViews) {
 
       }else {
 
-        // Preview a form
-        $('.preview').click(function(event){
-          console.log("Survey preview clicked");
-          event.preventDefault();
-          
-          this.previewView = new PreviewView({
-            elId: "#preview-view-container",
-            forms: [settings.formData]
-          });  
-        });
+        $("#send-survey-container").show(); // hacky!
 
-        // Design a form
-        $('.edit').click(this.showSurveySetup);
+        // Preview the form if there already is one.
+        this.previewView = new PreviewView({
+          elId: "#preview-view-container",
+          forms: [settings.formData]
+        });  
 
       }    
     },
@@ -93,6 +90,7 @@ function($, _, Backbone, settings, api, PreviewView, DesignViews) {
       $(this.elId).html(_.template($('#settings-view').html(), context));
 
       api.getForm(this.showEditor);
+
     }
   });
 

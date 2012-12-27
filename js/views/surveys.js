@@ -89,6 +89,10 @@ function(
       var context = {};
       this.$el.html(_.template($('#new-survey-view').html(), context));
 
+      $("#new-survey-form .submit").click(function(){
+        $("#new-survey-form").submit();
+      })
+
       // On submisision of the new survey form...
       $("#new-survey-form").submit(function(event){
         event.preventDefault();
