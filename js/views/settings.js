@@ -29,7 +29,7 @@ function($, _, Backbone, settings, api, PreviewView, DesignViews) {
     // },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'save', 'showEditor', 'showSurveySetup');
+      _.bindAll(this, 'render', 'showEditor');
       this.survey = options.survey;
       this.forms = options.forms;
       console.log(this.survey);
@@ -37,20 +37,11 @@ function($, _, Backbone, settings, api, PreviewView, DesignViews) {
     },
     
     // TODO
-    save: function(event) {
-      event.preventDefault();
-      console.log("Submitting settings. Not yet implemented.");
-      console.log(event);
-    },
-
-    showSurveySetup: function(event) {
-      event.preventDefault();
-      this.designView = new DesignViews.DesignView({
-        elId: "#survey-design-container",
-        survey: this.survey
-      });  
-      this.designView.render();
-    },
+    // save: function(event) {
+    //   event.preventDefault();
+    //   console.log("Submitting settings. Not yet implemented.");
+    //   console.log(event);
+    // },
 
     showEditor: function() {
       $("#survey-design-container").empty();
@@ -67,6 +58,8 @@ function($, _, Backbone, settings, api, PreviewView, DesignViews) {
           survey: this.survey
         });
         designView.render();
+
+        designView.on("formAdded", this.render, this);
 
       }else {
 

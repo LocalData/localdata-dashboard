@@ -31,7 +31,7 @@ function($, _, Backbone, events, settings, api, SurveyModels, FormModels, Previe
     survey: null,
     
     initialize: function(options) {
-      _.bindAll(this, 'update', 'render');
+      _.bindAll(this, 'update', 'render', 'useSurvey');
 
       this.$el = $(options.elId);
 
@@ -42,6 +42,15 @@ function($, _, Backbone, events, settings, api, SurveyModels, FormModels, Previe
     update: function() {
       console.log("Update design view called, but not operational");
       // this.render();
+    },
+
+    useSurvey: function(event) {
+      console.log("Using the survey");
+      api.createForm(exampleForm, function() {
+        console.log("Form added!");
+      });
+
+      this.trigger('formAdded');
     },
 
     render: function() {
@@ -64,6 +73,8 @@ function($, _, Backbone, events, settings, api, SurveyModels, FormModels, Previe
           forms: [exampleForm]
         });  
       });
+
+      $('.use-survey').click(this.useSurvey);
 
     }    
   });
