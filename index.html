@@ -238,18 +238,18 @@
     </script>
 
     <script type="text/template" id="settings-view">
-    <!--
-      <div class="nav subnav">
-        <li><a class="basic-info">Edit survey name &amp; basic info</a></li> 
-        <li><a class="preview">Preview survey questions</a></li>
-        <li><a class="edit">Edit survey questions</a></li>
-      </div>
-    -->
 
-      <div id="send-survey-container">
-        <h3>Send your survey to staff and volunteers</h3>
-        <p>Your survey is at <a href="http://matth-dev.herokuapp.com/mobile/#<%= survey.slug %>">http://matth-dev.herokuapp.com/mobile/#<%= survey.slug %></a></p>
-        <p>Text the survey URL to someone: <input type="text" placeholder="313 555 5555"> <input type="submit" value="Send text message"></p>
+      <div id="survey-form-tools-container">
+        <a class="button">Edit form</a>
+        <a href="http://localhost:3000/mobile/#<%= survey.slug %>">Go to the mobile app</a>
+        <label>
+          Copy link to app 
+          <input type="text" value="http://localhost:3000/mobile/#<%= survey.slug %>">
+        </label>
+
+        <!--
+        Text the app URL: <input type="text" placeholder="313 555 5555"> <input type="submit" value="Send text message">
+        -->
       </div>
 
 
