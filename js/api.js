@@ -81,10 +81,8 @@ define(function (require) {
     
   // Get the form for the urrent survey
   api.getForm = function(callback) {
-    console.log("Getting form data");
+    console.log("API: getting form data");
     var url = api.getSurveyURL() + "/forms";
-    
-    console.log(url);
 
     $.getJSON(url, function(data){
       
@@ -99,7 +97,7 @@ define(function (require) {
       });
       settings.formData = mobileForms[0];
       
-      console.log("Mobile forms: ", mobileForms);
+      console.log("API: mobile forms: ", mobileForms);
       
       // Endpoint should give the most recent form first.
       callback();
@@ -108,7 +106,7 @@ define(function (require) {
 
   // Add a form form to a survey
   api.createForm = function(form, callback, options) {
-    console.log("Creating a form");
+    console.log("API: creating a form");
     var key;
 
     // Add the form to the current survey

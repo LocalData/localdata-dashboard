@@ -68,7 +68,7 @@ function($, _, Backbone, settings, IndexRouter, HomeView, DashboardView, UserVie
         console.log("Going to " + viewName);
 
       } else {
-        console.log("Creating " + viewName);
+        console.log("Creating view " + viewName);
         this.views[viewName] = new AllViews[viewClass](options);
       }
 
@@ -104,8 +104,8 @@ function($, _, Backbone, settings, IndexRouter, HomeView, DashboardView, UserVie
         case "export":
           this.currentContentView.showExport();
           break;
-        case "settings":
-          this.currentContentView.showSettings();
+        case "form":
+          this.currentContentView.showForm();
           break;
       }
     },
@@ -121,6 +121,11 @@ function($, _, Backbone, settings, IndexRouter, HomeView, DashboardView, UserVie
       this.goto_survey("settings");
     },
     
+    goto_form: function() {
+      this._router.navigate("surveys/" + settings.slug + "/form");
+      this.goto_survey("form");
+    },
+
     goto_export: function() {
       // _kmq.push(['record', "ExportView"]);
       this._router.navigate("surveys/" + settings.slug + "/export");

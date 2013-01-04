@@ -224,7 +224,7 @@
         <div id="content">
           <div id="loading-view-container"></div>
           <div id="response-view-container"></div>   
-          <div id="settings-view-container"></div>
+          <div id="form-view-container"></div>
           <div id="export-view-container"></div>
         </div>
       </div>   
@@ -237,7 +237,25 @@
       </div>
     </script>
 
+    <!-- Settings .......................................................... -->
     <script type="text/template" id="settings-view">
+      TODO
+      <!--
+      <form>
+        <label>Survey Name</label>
+        <input type="text" value="<%= survey.name %>" />
+
+        <label>Passcode</label>
+        <input type="text" value="<%= survey.passcode %>" id="survey-password" />
+
+        <input type="submit" value="Save">
+      </form>
+      -->
+
+    </script>
+
+    <!-- Form settings ..................................................... -->
+    <script type="text/template" id="form-view">
 
       <div id="survey-form-tools-container">
         <a class="button">Edit form</a>
@@ -257,22 +275,10 @@
       </div>
       <div id="editor-view-container"></div>
       <div id="survey-design-container"></div>
-
-      <!--
-      <form>
-        <label>Survey Name</label>
-        <input type="text" value="<%= survey.name %>" />
-
-        <label>Passcode</label>
-        <input type="text" value="<%= survey.passcode %>" id="survey-password" />
-
-        <input type="submit" value="Save">
-      </form>
-      -->
     </script>
     
 
-    <!-- Response ...........................................................-->
+    <!-- Responses & Filtering ..............................................-->
     <script type="text/template" id="filter-results">
     <h2>Select an answer to filter by:</h2>
     <ul>

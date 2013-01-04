@@ -8,14 +8,75 @@ define([
 
   // LocalData
   'settings',
-  'api'
+  'api',
 
+  // Views
+  'views/design'
 ],
 
-function($, _, Backbone, settings, api) {
+function($, _, Backbone, settings, api, DesignViews) {
   'use strict'; 
 
-  var FormPreviewView = Backbone.View.extend({
+  var FormViews = {};
+
+  FormViews.FormView = Backbone.View.extend({
+    
+    elId: "#form-view-container",
+
+    initialize: function(options) {
+      _.bindAll(this, 'render', 'showEditor');
+      console.log("Init forms view");
+      this.survey = options.survey;
+      this.forms = options.forms;
+      // console.log(this.survey);
+      // console.log(this.forms);
+    },
+    
+    showEditor: function() {
+      $("#survey-design-container").empty();
+
+      // If there isn't a form yet, let's show the survey creation view
+      if (settings.formData === undefined) {
+
+        $("#send-survey-container").hide();
+
+        $('.button').hide();
+
+        var designView = new DesignViews.DesignView({
+          elId: "#survey-design-container",
+          survey: this.survey
+        });
+        designView.render();
+
+        designView.on("formAdded", this.render, this);
+
+      }else {
+
+        $("#send-survey-container").show(); // hacky!
+
+        // Preview the form if there already is one.
+        this.previewView = new FormViews.PreviewView({
+          elId: "#preview-view-container",
+          forms: [settings.formData]
+        });  
+
+      }    
+    },
+    
+    render: function() {        
+      var context = { 
+        survey: this.survey.toJSON(),
+        forms: this.forms.toJSON() 
+      };    
+
+      $(this.elId).html(_.template($('#form-view').html(), context));
+
+      api.getForm(this.showEditor);
+
+    }
+  });
+
+  FormViews.PreviewView = Backbone.View.extend({
 
     initialize: function(options) {
       _.bindAll(this, 'render', 'renderPreview', 'useSurvey');
@@ -29,8 +90,8 @@ function($, _, Backbone, settings, api) {
       // Set if we want the preview to appear as a popup or not.
       this.popup = "";
       if (options.popup !== undefined) {
-        this.popup = "popup"
-      };
+        this.popup = "popup";
+      }
 
       this.render();
     },
@@ -101,11 +162,12 @@ function($, _, Backbone, settings, api) {
         return box;
       }
 
+      var $dimmer;
       if (this.popup === "popup") {
         // Dim the screen behind the preview
-        var $dimmer = $("#preview-dimmer");
+        $dimmer = $("#preview-dimmer");
         $dimmer.fadeIn(100);
-      };
+      }
 
       // Actually render the preview
       var $preview = $("#preview");
@@ -125,7 +187,7 @@ function($, _, Backbone, settings, api) {
 
         $preview.fadeOut(100);
         $dimmer.fadeOut(150);
-      }
+      };
 
       if (this.popup === "popup") {
         $dimmer.click(closePreview);
@@ -146,5 +208,5 @@ function($, _, Backbone, settings, api) {
 
   });
 
-  return FormPreviewView;
+  return FormViews;
 });

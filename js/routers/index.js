@@ -20,8 +20,10 @@ function($, _, Backbone, settings, api) {
       "surveys/:slug": "survey",
       "surveys/:slug/map": "map",
       "surveys/:slug/export": "survey_export",
-      "surveys/:slug/settings": "settings",
-      "surveys/:slug/design": "design"
+      "surveys/:slug/design": "design",
+
+      "surveys/:slug/form/edit": "form_edit",
+      "surveys/:slug/form": "form"
 
     },
     
@@ -58,6 +60,10 @@ function($, _, Backbone, settings, api) {
     
     settings: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_settings);
+    },
+
+    form: function(slug) {
+      api.setSurveyIdFromSlug(slug, this.controller.goto_form);
     },
     
     survey_export: function(slug) {
