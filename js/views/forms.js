@@ -24,15 +24,15 @@ function($, _, Backbone, settings, api, DesignViews) {
     elId: "#form-view-container",
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'showEditor');
-      console.log("Init forms view");
+      _.bindAll(this, 'render', 'showDesigner');
+      console.log("Initializing forms view");
       this.survey = options.survey;
       this.forms = options.forms;
       // console.log(this.survey);
       // console.log(this.forms);
     },
     
-    showEditor: function() {
+    showDesigner: function() {
       $("#survey-design-container").empty();
 
       // If there isn't a form yet, let's show the survey creation view
@@ -62,6 +62,10 @@ function($, _, Backbone, settings, api, DesignViews) {
 
       }    
     },
+
+    showEditor: function() {
+      
+    },
     
     render: function() {        
       var context = { 
@@ -71,7 +75,11 @@ function($, _, Backbone, settings, api, DesignViews) {
 
       $(this.elId).html(_.template($('#form-view').html(), context));
 
-      api.getForm(this.showEditor);
+      api.getForm(this.showDesigner);
+
+      $(".edit-form-button").click(function(event){ 
+        this.showEditor();
+      });
 
     }
   });

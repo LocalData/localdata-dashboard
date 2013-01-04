@@ -258,7 +258,7 @@
     <script type="text/template" id="form-view">
 
       <div id="survey-form-tools-container">
-        <a class="button">Edit form</a>
+        <a class="button" class="edit-form-button">Edit form</a>
         <a href="http://localhost:3000/mobile/#<%= survey.slug %>">Go to the mobile app</a>
         <label>
           Copy link to app 
@@ -459,6 +459,7 @@
       </ul>
     </script>
     
+    
     <!-- Navigation ........................................................-->
     <script type="text/template" id="nav-view">
     <% _.each(items, function(item) {  %>
@@ -466,6 +467,7 @@
     <% }); %>
     </script>
     
+
     <!-- Pagination .......................................................-->
     <script type="text/template" id="pagination-view">
       <!--<div class="pagination">
@@ -479,8 +481,9 @@
       </div>-->
     </script>
 
-    <!-- EDITOR!!!! .......................................................-->
-    <!-- Kick it off -->
+
+    <!-- Editor  ...........................................................-->
+    <!-- Editor: Base template ............................................ -->
     <script type="text/template" id="survey-editor">
         <div class="row" id="top">
             <div class="span7">
@@ -510,23 +513,11 @@
                 </div>
 
                 <hr>
-
-<!--                 <pre id="form-json"></pre>
- -->            </div>
         </div>
     </script>
 
-
-    <!-- Form editing templates -->
-    <script type="text/template" id="select-survey-template">
-        <select>
-            <% _.each(surveys, function(survey){ %>
-                <option value="<%= survey.id %>"><%= survey.name %></option>
-            <% }); %>
-        </select>
-    </script>
-
-    <script type="text/template" id="question-template">
+    <!-- Editor: Form templates ........................................... -->
+    <script type="text/template" id="question-edit-template">
         <div class="question" data-type="yesno" data-name="<%= question.name %>">
             <input type="text" placeholder="Question" value="<%= question.text %>" data-role="question" class="input-xxlarge" style="width:90%" />
             <br>
@@ -543,59 +534,12 @@
         </div>
     </script>
 
-    <script type="text/template" id="answer-template">
+    <script type="text/template" id="answer-edit-template">
         <div data-role="answer" class="iinputs-append">
             <input type="text" value="<%= text %>" />
             <button type="button" class="btn add-sub-question"><i class="icon-share-alt "></i> Add a sub-question</button>
             <button type="button" class="btn remove"><i class="icon-trash"></i></button>
         </div>
-    </script>
-
-    <!-- Form rendering templates -->
-
-    <script type="text/template" id="question">
-        <fieldset data-role="controlgroup" class="control-group" id="<%= id %>" data-parent="<%= parentID %>" data-trigger="<%= triggerID %>">
-          <legend class="control-legend"><%= text %></legend>
-          <% if(info !== undefined) { %>
-            <a href="" class="show-info" data-role="button" data-inline="true" data-icon="info" data-trigger="info-<%= id %>">More info</a>
-            <div id="info-<%= id %>" class="info">
-              <%= info %>
-              <a href="" data-role="button" data-icon="check" data-inline="true" class="box-close">Got it!</a>
-            </div>
-          <% }; %>
-        </fieldset>
-    </script>
-
-    <script type="text/template" id="answer-radio">
-    <label for="<%= id %>">
-      <input type="radio" name="<%= questionName %>" id="<%= id %>" value="<%= value %>">
-      <%= text %>
-    </label>
-    </script>
-
-    <script type="text/template" id="answer-checkbox">
-      <label for="<%= id %>">
-        <input type="checkbox" name="<%= questionName %>" id="<%= id %>" value="<%= value %>" data-theme="<%= theme %>">
-        <%= text %>
-    </label>
-    </script>
-
-    <script type="text/template" id="answer-text">
-      <label for="<%= id %>"><%= text %></label>
-      <input type="text" name="<%= questionName %>" id="<%= id %>" value="<%= value %>">
-    </script>
-    
-    <script type="text/template" id="answer-texarea">
-      <label for="<%= id %>"><%= text %></label>
-      <input type="text" name="<%= questionName %>" id="<%= id %>" value="<%= value %>">
-    </script>
-    
-
-    <script type="text/template" id="repeat-button">
-      <div class="repeating-button" style="display:none" data-parent="<%= parentID %>" data-trigger="<%= triggerID %>">
-        <div class="append-to"></div>
-        <a class="repeating-button button" href="#" data-icon="plus" data-role="button" data-inline="true">Add another</a>
-      </div>
     </script>
              
     <script data-main="js/main" src="js/require.js"></script>
