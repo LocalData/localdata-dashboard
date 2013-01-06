@@ -348,7 +348,8 @@ function($, _, Backbone, settings, api, FormViews) {
 
 
     updatePreview: function() {
-      console.log("TODO: Implement preview");
+      console.log("Preview");
+      this.trigger("formUpdated");
       // this.preview = new FormView("#preview");
     }
 

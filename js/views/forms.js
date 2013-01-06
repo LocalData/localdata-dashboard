@@ -69,20 +69,27 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews) {
         forms: this.forms
       });
       this.builderView.render();
+
+      this.builderView.on("formUpdated", function() {
+        console.log("Builder: Telling preview to update...");
+        console.log(this.previewView);
+        this.previewView.render();
+      }, this);
     },
     
     render: function() {        
       var context = { 
         survey: this.survey.toJSON(),
         forms: this.forms.toJSON() 
-      };    
-
+      };
       $(this.elId).html(_.template($('#form-view').html(), context));
 
+      // old: Make sure we have up-to-date form data before showing the design view
+      // ;
       api.getForm(this.showDesigner);
 
+      // Show the editor 
       $(".edit-form-button").click(this.showBuilder);
-
     }
   });
 
