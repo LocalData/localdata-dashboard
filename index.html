@@ -28,6 +28,7 @@
     <style type="text/css" media="screen">
       @import url("css/lib/reset.css");
       @import url("http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.css");
+      @import url("css/buttons.css");
       @import url("css/app.css");
     </style>
 </head>
@@ -258,7 +259,7 @@
     <script type="text/template" id="form-view">
 
       <div id="survey-form-tools-container">
-        <a class="button" class="edit-form-button">Edit form</a>
+        <a class="button edit-form-button">Edit form</a>
         <a href="http://localhost:3000/mobile/#<%= survey.slug %>">Go to the mobile app</a>
         <label>
           Copy link to app 
@@ -270,9 +271,8 @@
         -->
       </div>
 
-
-      <div id="preview-view-container">
-      </div>
+      <div id="builder-view-container"></div>
+      <div id="preview-view-container"></div>
       <div id="editor-view-container"></div>
       <div id="survey-design-container"></div>
     </script>
@@ -485,35 +485,23 @@
     <!-- Editor  ...........................................................-->
     <!-- Editor: Base template ............................................ -->
     <script type="text/template" id="survey-editor">
-        <div class="row" id="top">
-            <div class="span7">
-                <form id="select-survey">
-                </form>
-                <hr>
-            </div>
-            <div class="span5 ">
-                 <button type="button" class="btn btn-success save">Save form</strong></button>
-                 <div id="last-save"></div>
-            </div>
+      <div class="row" id="top">
+        <button type="button" class="btn btn-success save">Save form</strong></button>
+        <div id="last-save"></div>
+      </div>
+
+      <form>
+        <div id="editor"></div>
+
+        <div>
         </div>
+      </form>
 
-        <div class="row">
-            <div class="span7">
-                <form>
-                    <div id="editor"></div>
+      <div id="preview">
+        <div id="questions"></div>
+      </div>
 
-                    <div>
-                    </div>
-                </form>
-
-            </div>
-            <div class="span5 ">
-                <div id="preview">
-                    <div id="questions"></div>
-                </div>
-
-                <hr>
-        </div>
+      <hr>
     </script>
 
     <!-- Editor: Form templates ........................................... -->
