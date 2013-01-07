@@ -66,7 +66,7 @@ function($, _, Backbone, settings, api, FormViews) {
 
     renderForm: function() {
       // Clear out the editor window
-      $(this.elId).html(_.template($('#survey-editor').html(), {}));
+      $(this.elId).html(_.template($('#form-editor').html(), {}));
 
       this.formQuestions = $('#editor');
       this.formQuestions.html('');
@@ -210,14 +210,6 @@ function($, _, Backbone, settings, api, FormViews) {
         triggerID = '';
       }
 
-      // Load the templates
-      // if (this.templates === undefined) {
-      //   this.templates = {
-      //     question: _.template($('#question-template').html()),
-      //     answer: _.template($('#answer-template').html())
-      //   };
-      // }
-
       // Give the question an ID based on its name
       var id = _.uniqueId(question.name);
 
@@ -255,6 +247,7 @@ function($, _, Backbone, settings, api, FormViews) {
       }
       siblings.push($question); 
 
+      // Figure out the right place to append the rendered template
       if (appendTo !== undefined) {
         $(appendTo).append($question);
       }else {
@@ -267,8 +260,9 @@ function($, _, Backbone, settings, api, FormViews) {
       // if(question.info !== undefined) {
       // }
 
-      // Deal with answers -------------------------------------------------------
+      // Deal with answers ....................................................
       var questionID = id;
+
       // Add each answer to the question
       _.each(question.answers, function (answer, index) {
         // The triggerID is used to hide/show other question groups
@@ -336,7 +330,6 @@ function($, _, Backbone, settings, api, FormViews) {
       }, this);
     }, // end renderQuestion
 
-
     // Slugify a string
     // Used to generate the name attribute of forms 
     slugify: function(text) {
@@ -346,11 +339,8 @@ function($, _, Backbone, settings, api, FormViews) {
       return text;
     },
 
-
     updatePreview: function() {
-      console.log("Preview");
       this.trigger("formUpdated");
-      // this.preview = new FormView("#preview");
     }
 
   }); // end BuilderView{}

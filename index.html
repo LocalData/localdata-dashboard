@@ -222,7 +222,7 @@
       <div id="body" class="container">
         <div id="nav" class="nav nav-tabs"></div>
 
-        <div id="content">
+        <div id="content" class="floatcontainer">
           <div id="loading-view-container"></div>
           <div id="response-view-container"></div>   
           <div id="form-view-container"></div>
@@ -484,31 +484,26 @@
 
     <!-- Editor  ...........................................................-->
     <!-- Editor: Base template ............................................ -->
-    <script type="text/template" id="survey-editor">
+    <script type="text/template" id="form-editor">
       <div class="row" id="top">
         <button type="button" class="btn btn-success save">Save form</strong></button>
         <div id="last-save"></div>
       </div>
 
       <form>
+        <h2>Questions</h2>
         <div id="editor"></div>
 
         <div>
         </div>
       </form>
-
-      <div id="preview">
-        <div id="questions"></div>
-      </div>
-
-      <hr>
     </script>
 
     <!-- Editor: Form templates ........................................... -->
     <script type="text/template" id="question-edit-template">
         <div class="question" data-type="yesno" data-name="<%= question.name %>">
-            <input type="text" placeholder="Question" value="<%= question.text %>" data-role="question" class="input-xxlarge" style="width:90%" />
-            <br>
+            <input type="text" placeholder="Question" value="<%= question.text %>" data-role="question" class="question-input" style="width:90%" />
+
             <button type="button" class="btn btn-small question-type" data-role="radio-question">Radio</button>
             <button type="button" class="btn btn-small question-type" data-role="checkbox-question">Checkbox</button>
             <button type="button" class="btn btn-warning btn-small remove right"><i class="icon-trash icon-white"></i> Delete question</button>
@@ -525,8 +520,8 @@
     <script type="text/template" id="answer-edit-template">
         <div data-role="answer" class="iinputs-append">
             <input type="text" value="<%= text %>" />
-            <button type="button" class="btn add-sub-question"><i class="icon-share-alt "></i> Add a sub-question</button>
-            <button type="button" class="btn remove"><i class="icon-trash"></i></button>
+            <a class="action remove">Delete question</a>
+            <a class="action add-sub-question"><i class="icon-share-alt "></i> Add a sub-question</a>
         </div>
     </script>
              

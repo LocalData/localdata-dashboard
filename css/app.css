@@ -572,6 +572,47 @@ form input {
       padding-top:10px;
     }
 
+/* Editor ....................................................................*/
+#builder-view-container {
+  width:45%;
+  margin-right:5%;
+  float:left;
+}
+
+  #builder-view-container form input {
+    font-size:1em;
+    color:#333;
+  }
+
+  input.question-input {
+    font-weight:600;
+  }
+
+  .question .question {
+    margin-left:20px; 
+  }
+
+  .action {
+    text-decoration:none;
+    border:0px none;
+    padding-left:15px;
+    cursor: pointer;
+    font-size:12px;
+    text-transform:uppercase;
+
+  }
+
+    .add-sub-question {
+      background:transparent url(../img/icons/branch.png) no-repeat center left;
+    }
+
+    .remove {
+      background:transparent url(../img/icons/delete-10.png) no-repeat center left;
+      color: #db6a6e;
+      text-indent:-1000!important;
+      display:inline-block;
+    }
+
 /* Preview ...................................................................*/
 
 #preview-dimmer {
@@ -592,6 +633,10 @@ form input {
 #preview {
   padding-bottom: 20px;
   background: #fff;
+
+  width:45%;
+  float:right;
+
 }
   
   #preview.popup {
