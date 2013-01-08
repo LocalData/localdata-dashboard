@@ -162,7 +162,20 @@
       <div class="container">
       <div id="content">
         <div id="body">
-          <h2><a href="/auth/return?redirectTo=<%= redirectTo %>">Please log in with Facebook.</a></h2>
+          <h2>Please Log In</h2>
+          <form action="/login" method="post">
+            <input type="text" name="email" placeholder="Your email">
+            <input type="password" name="password" placeholder="Password">
+            <button>Sign up</button>
+          </form>
+
+          <h2>Or, sign up for LocalData</h2>
+          <form id="create-user">
+            <input type="text" name="email" placeholder="Your email">
+            <input type="text" name="password" placeholder="Password">
+            <input type="text" name="name" placeholder="Your name">
+            <button>Sign up</button>
+          </form>
         </div>   
       </div>
       </div>

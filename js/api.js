@@ -20,6 +20,30 @@ define(function (require) {
     });
   };
 
+  // Create a new user 
+  // 
+  // @param {Object} user Name, email, and password for the user
+  // @param {Function} callback Parameters: (error, user)
+  api.createUser = function(user, callback) {
+
+    var url = settings.api.baseurl + "/user";
+
+    var request = $.ajax({
+      url: url,
+      type: "POST",
+      data: user,
+      dataType: "json"
+    });
+
+    request.done(function(user) {
+      callback(null, user);
+    });
+
+    request.fail(function(jqXHR, textStatus, errorThrown) {
+      console.log("Request failed: ", jqXHR.responseText);
+      callback(jqXHR.responseText, null);
+    });
+  };
 
   // Create a new survey
   api.createSurvey = function(survey, callback) {
