@@ -11,8 +11,97 @@ define(function (require) {
 
   var api = {};
 
-  // Given a slug (eg 'just-a-surey'), find the corresponding survey 
-  // Sets settings.surveyId
+  // Check if the user is authenticated
+  api.getUser = function(callback) {
+    var url = settings.api.baseurl + "/user";
+
+    $.getJSON(url, function(data) {
+      callback(data);
+    });
+  };
+
+  // Create a new user 
+  // 
+  // @param {Object} user Name, email, and password for the user
+  // @param {Function} callback Parameters: (error, user)
+  api.createUser = function(user, callback) {
+
+    var url = settings.api.baseurl + "/user";
+
+    var request = $.ajax({
+      url: url,
+      type: "POST",
+      data: user,
+      dataType: "json"
+    });
+
+    request.done(function(user) {
+      callback(null, user);
+    });
+
+    request.fail(function(jqXHR, textStatus, errorThrown) {
+      console.log("Request failed: ", jqXHR);
+      callback(jqXHR.responseText, null);
+    });
+  };
+
+
+  // Log a user in 
+  // 
+  // @param {Object} user Email and password for the user
+  // @param {Function} callback Parameters: (error, user)
+  api.logIn = function(user, callback) {
+
+    var url = settings.api.baseurl + "/login"
+
+    var request = $.ajax({
+      url: url,
+      type: "POST",
+      data: user,
+      dataType: "json"
+    });
+
+    request.done(function(response) {
+      console.log(response);
+      if(response.name === "BadRequestError") {
+        callback(response, null);
+        return;
+      }
+      callback(null, response);
+    });
+
+    request.fail(function(jqXHR, textStatus, errorThrown) {
+      console.log("Request failed: ", jqXHR.responseText);
+      callback(jqXHR.responseText, null);
+    });
+
+  }
+
+  // Create a new survey
+  api.createSurvey = function(survey, callback) {
+    var url = settings.api.baseurl + "/surveys";
+
+    console.log(url);
+
+    var request = $.ajax({
+      url: url,
+      type: "POST",
+      data: {"surveys": [survey]},
+      dataType: "json"
+    });
+
+    request.done(function(surveys) {
+      callback(surveys.surveys[0]);
+    });
+
+    request.fail(function(jqXHR, textStatus) {
+      console.log("Request failed: " + textStatus);
+    });
+  };
+
+
+  // Find a survey by slug
+  // Given a slug (eg 'just-a-surey') Sets settings.surveyId
   api.setSurveyIdFromSlug = function(slug, callback) {    
     var url = settings.api.baseurl +  "/slugs/" + slug;
     console.log("Survey slug: " + url);
@@ -28,47 +117,25 @@ define(function (require) {
       settings.slug = slug;
       settings.surveyId = data.survey;
       callback();
+
     });
   };
 
-  // Same as setSureyIdFromSlug above, but uses window.hash.
-  // Used by the mobile client.
-  // TODO: generalize
-  // ---------
-  // api.getSurveyFromSlug = function() {
-  //   var slug = window.location.hash.slice(1);
-  //   
-  //   var url = settings.api.baseurl +  "/slugs/" + slug;
-  //   console.log("I'm using this URL to get ");
-  //   console.log(url);
-  //   
-  //   // TODO: Display a nice error if the survey wans't found.
-  //   $.getJSON(url, function(data) {
-  //     console.log(data.survey);
-  //     settings.surveyId = data.survey;
-  //   });
-  // };
   
-  /*
-   * Generates the URL to retrieve results for a given parcel
-   */
+  // Generates the URL for the current survey
+  // (Current survey is set by setSurveyIdFromSlug, above)
   api.getSurveyURL = function() {
     return settings.api.baseurl + "/surveys/" + settings.surveyId;
   };
   
+
+  // Generates the URL for the current survey's resposnes
   api.getParcelDataURL = function(parcel_id) {
     return settings.api.baseurl + '/surveys/' + settings.surveyId + '/parcels/' + parcel_id + '/responses';
   };
-  
-  // Deprecated
-  // api.getGeoPointInfoURL = function(lat, lng) {
-  //   return settings.api.geo + '/parcels/parcel?lat=' + lat + '&lng=' + lng;
-  // };
-  
-  api.getGeoBoundsObjectsURL = function(southwest, northeast) {
-    return settings.api.geo + '/parcels?bbox=' + southwest.lng + "," + southwest.lat + "," + northeast.lng + "," + northeast.lat;
-  };
-  
+
+    
+  // Get the form for the urrent survey
   api.getForm = function(callback) {
     console.log("Getting form data");
     var url = api.getSurveyURL() + "/forms";
@@ -88,33 +155,37 @@ define(function (require) {
       });
       settings.formData = mobileForms[0];
       
-      console.log("Mobile forms");
-      console.log(mobileForms);
+      console.log("Mobile forms: ", mobileForms);
       
       // Endpoint should give the most recent form first.
       callback();
     });
   };
-  
-  
-  // DEPRECATED -- everything goes through the KML. 
-  // Given a Leaflet latlng object, return a JSON object that describes the 
-  // parcel.
-  // api.getObjectDataAtPoint = function(latlng, callback) {
-  //   console.log("Waiting for PostGIS data");
-  //   var lat = latlng.lat;
-  //   var lng = latlng.lng; 
-  //   
-  //   var url = api.getGeoPointInfoURL(lat, lng);
-  //   
-  //   $.getJSON(url, function(data){
-  //     // Process the results. Strip whitespace. Convert the polygon to geoJSON
-  //     // TODO: This will need to be genercized (id column, addres, etc.)
-  //     console.log("Got PostGIS data");
-  //     callback(API.parseObjectData(data));
-  //   }, api);
-  // };
-  
+
+  // Add a form form to a survey
+  api.createForm = function(form, callback, options) {
+    console.log("Creating a form");
+    var key;
+
+    // Add the form to the current survey
+    // Or, if a custom surveyId is defined in options, use that. 
+    var surveyId = settings.surveyId;
+    if(_.has(options, "surveyId")) {
+      surveyId = options.surveyId;
+    }
+
+    var url = settings.api.baseurl + '/surveys/' + surveyId + '/forms/';
+    var data = { "forms": [ form ] };
+
+    // Post the form data
+    $.post(url, data, function() {}, "text").error(function(){ 
+        console.log("Error posting form:");
+    }).success(function(){
+      callback();
+    });
+
+  };
+    
   // Deal with the formatting of the geodata API.
   // In the future, this will be more genericized. 
   // parcel_id => object_id
@@ -127,7 +198,14 @@ define(function (require) {
       centroid: data.centroid
     };
   };
-  
+
+
+  // Geodata stuff .............................................................
+  api.getGeoBoundsObjectsURL = function(southwest, northeast) {
+    return settings.api.geo + '/parcels?bbox=' + southwest.lng + "," + southwest.lat + "," + northeast.lng + "," + northeast.lat;
+  };
+
+  // Geocode an address  
   // Take an address string. 
   // Add "Detroit" to the end.
   // Return the first result as a lat-lng for convenience.
@@ -147,6 +225,7 @@ define(function (require) {
     });    
   };
   
+  // Get all the responses in a given bounding box
   // Take a map bounds object
   // Find the objects in the bounds
   // Feed those objects to the callback
@@ -184,6 +263,7 @@ define(function (require) {
     return new L.LatLngBounds(newSW, newNE);
   };
   
+  // Get all the objects in the map bounds from the GeoAPI
   // Take a map bounds object
   // Find the parcels in the bounds
   // Feed those objects to the callback
@@ -203,6 +283,25 @@ define(function (require) {
       }
     });
   };
+
+
+  // TODO: Get a short URL for a survey from 
+  // api.getShortURL = function(long_url, login, api_key, func){ 
+  //   $.getJSON(
+  //     "http://api.bitly.com/v3/shorten?callback=?", 
+  //     { 
+  //         "format": "json",
+  //         "apiKey": api_key,
+  //         "login": login,
+  //         "longUrl": long_url
+  //     },
+  //     function(response)
+  //     {
+  //         func(response.data.url);
+  //     }
+  //   );
+  // };
+
     
   return api;
 });

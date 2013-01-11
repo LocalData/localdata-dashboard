@@ -47,7 +47,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       this.defaultStyle = settings.farZoomStyle;
 
       this.$el.html(_.template($('#map-view').html(), {}));
-    
+
       // Initialize the map
       this.map = new L.map('map');
 
@@ -116,7 +116,6 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
             color = settings.colorRange[indexOfColorToUse + 1];
 
             if (indexOfColorToUse == -1) {
-              console.log(settings.colorRange[0]);
               color = settings.colorRange[0];
             }
 

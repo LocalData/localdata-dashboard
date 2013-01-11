@@ -53,7 +53,25 @@
     
       <div class="container">
         <header id="survey-header">
-            <h2>Surveys</h2>
+            <h2>Welcome to LocalData!</h2>
+        </header>
+      </div>
+    
+      <div class="container">
+      <div id="content">
+        <div id="body">
+        </div>   
+      </div>
+      </div>
+    </script>
+    
+
+    <!-- Dashboard ..........................................................-->
+    <script type="text/template" id="dashboard">
+      <div class="container">
+        <header id="survey-header">
+            <h2>My Surveys <a href="#/surveys/new" class="button flat" id="newsurvey">Create a new survey</a></h2>
+            
         </header>
       </div>
     
@@ -66,7 +84,107 @@
       </div>
       </div>
     </script>
+
+    <!-- New surveys ........................................................-->
+    <script type="text/template" id="new-survey-view">
+      <div class="container">
+        <header id="survey-header" class="new-survey">
+            <h2>Create a new survey</h2>
+        </header>
+      </div>
     
+      <div class="container">
+        <!--<div id="content">
+          <div id="body">-->
+            <form action="" id="new-survey-form">
+              <input type="text" placeholder="Survey name" class="survey-name">
+              <input type="text" placeholder="Survey city and state" class="survey-location">
+              <a class="button submit">Create new survey</a>
+            </form>
+        <!--  </div>   
+        </div>-->
+      </div>
+    </script>
+
+    <script type="text/template" id="survey-design-view">
+      <div class="survey-designer">
+        <h2 class="getting-started">Getting started</h2>
+        <h2>What kind of survey are you planning?</h2>
+        <h3>Pick from one of our pre-made survey templates</h3>
+
+        <div class="choice-boxes floatcontainer">
+          <div class="choice-box">
+            <img src="img/icons/builder-icon.png" alt="">
+            <h3>Standard neigbhorhood survey</h3>
+            <p>Asks basic questions about condition, vacancy and other factors. Quick and informative.</p>
+            <p class="time-estimate"><img src="img/icons/watch.png" alt=""> About 1 minute per property</p>
+            <a href="" class="preview button">Preview survey</a>
+            <a class="button use-survey">Use this survey</a>
+          </div>
+
+          <div class="choice-box">
+            <img src="img/icons/builder-icon.png" alt="">
+            <h3>Comprehensive neigbhorhood survey</h3>
+            <p>Collect detailed information about condition, use, vacancy, and more. Takes longer to complete.</p>
+            <p class="time-estimate"><img src="img/icons/watch.png" alt=""> About 4 minutes per property</p>
+            <a href="" class="preview button">Preview survey</a>
+            <a class="button use-survey">Use this survey</a>
+          </div>
+
+          <div class="choice-box">
+            <img src="img/icons/builder-icon.png" alt="">
+            <h3>Neighborhood<br> asset<br> survey</h3>
+            <p>Map parks, churches, stores, and more.<br><br></p>
+            <p class="time-estimate"><img src="img/icons/watch.png" alt=""> About 2 minutes per property</p>
+            <a href="" class="preview button">Preview survey</a>
+            <a class="button use-survey">Use this survey</a>
+          </div>
+        </div>
+
+              <div id="preview-survey-title">
+        <h3><%= name %></h3>
+      </div>
+
+
+        <p class="advanced">Or, <a href="">design your own custom survey</a>.
+
+        <div id="preview-view-container"></div>
+      </div>
+    </script>
+
+    <!-- Loading / 2 ....................................................-->
+    <script type="text/template" id="login-view">
+      <div class="container">
+        <header id="survey-header">
+            <h2>Welcome to LocalData</h2>
+        </header>
+      </div>
+    
+      <div class="container">
+      <div id="content">
+        <div id="body">
+          <h2>Please Log In</h2>
+          <form id="login">
+            <div class="error"></div>
+            <input type="text" name="email" placeholder="Your email">
+            <input type="password" name="password" placeholder="Password">
+            <button>Log in</button>
+          </form>
+
+          <h2>Or, sign up for LocalData</h2>
+          <form id="create-user">
+            <div class="error"></div>
+            <input type="text" name="email" placeholder="Your email">
+            <input type="text" name="password" placeholder="Password">
+            <input type="text" name="name" placeholder="Your name">
+            <button>Sign up</button>
+          </form>
+        </div>   
+      </div>
+      </div>
+
+    </script>
+
     <script type="text/template" id="loading-view">
       <div class="loading">
         <img src="img/preloader.gif" alt="" />
@@ -74,6 +192,38 @@
       </div>
     </script>
 
+    <!-- Previews .........................................................-->
+    <script type="text/template" id="preview-view">
+      <div id="preview-dimmer" class="<%= popup %>"></div>
+      <div id="preview" class="<%= popup %>"></div>
+    </script>
+
+    <script type="text/template" id="t-preview-title">
+      <div id="preview-close"></div>
+    </script>
+
+    <script type="text/template" id="t-preview-name">
+      <h3>Survey Preview</h3>
+    </script>
+
+    <script type="text/template" id="t-preview-questions-container">
+      <div class="preview-q-box depth-<%= depth %>">
+      <% if (condition !== null) { %>
+        <div class="condition">
+          If they choose <%= condition %>:
+        </div>
+      <% } %>
+      </div>
+    </script>
+
+    <script type="text/template" id="t-preview-question">
+      <div class="preview-question">
+        <div class="question-prompt">
+          <b><%= prompt %></b>
+        </div>
+        <% _.each(answers, function (answer, i) { %> <div class="preview-answer"> <%= letters[i] %>: <%= answer %> </div> <% }); %>
+      </div>
+    </script>
 
     <!-- Survey ...........................................................-->    
     <script type="text/template" id="survey-view">
@@ -85,7 +235,7 @@
       
 
       <div id="body" class="container">
-        <div id="subnav" class="nav nav-tabs"></div>
+        <div id="nav" class="nav nav-tabs"></div>
 
         <div id="content">
           <div id="loading-view-container"></div>
@@ -104,7 +254,25 @@
     </script>
 
     <script type="text/template" id="settings-view">
-      <h2>Survey Settings</h2>
+
+      <div id="survey-form-tools-container">
+        <a class="button">Edit form</a>
+        <a href="http://localhost:3000/mobile/#<%= survey.slug %>">Go to the mobile app</a>
+        <label>
+          Copy link to app 
+          <input type="text" value="http://localhost:3000/mobile/#<%= survey.slug %>">
+        </label>
+
+        <!--
+        Text the app URL: <input type="text" placeholder="313 555 5555"> <input type="submit" value="Send text message">
+        -->
+      </div>
+
+
+      <div id="preview-view-container">
+      </div>
+      <div id="editor-view-container"></div>
+      <div id="survey-design-container"></div>
 
       <!--
       <form>
@@ -301,8 +469,8 @@
       </ul>
     </script>
     
-    <!-- Subnav ...........................................................-->
-    <script type="text/template" id="subnav-view">
+    <!-- Navigation ........................................................-->
+    <script type="text/template" id="nav-view">
     <% _.each(items, function(item) {  %>
       <li class="<%= item.active %>"><a href="#<%= item.fragment %>"><span class="<%= item.icon %>"></span><%= item.title %></a></li>
     <% }); %>
@@ -319,6 +487,125 @@
           <li><a href="#">Next</a></li>
         </ul>
       </div>-->
+    </script>
+
+    <!-- EDITOR!!!! .......................................................-->
+    <!-- Kick it off -->
+    <script type="text/template" id="survey-editor">
+        <div class="row" id="top">
+            <div class="span7">
+                <form id="select-survey">
+                </form>
+                <hr>
+            </div>
+            <div class="span5 ">
+                 <button type="button" class="btn btn-success save">Save form</strong></button>
+                 <div id="last-save"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="span7">
+                <form>
+                    <div id="editor"></div>
+
+                    <div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="span5 ">
+                <div id="preview">
+                    <div id="questions"></div>
+                </div>
+
+                <hr>
+
+<!--                 <pre id="form-json"></pre>
+ -->            </div>
+        </div>
+    </script>
+
+
+    <!-- Form editing templates -->
+    <script type="text/template" id="select-survey-template">
+        <select>
+            <% _.each(surveys, function(survey){ %>
+                <option value="<%= survey.id %>"><%= survey.name %></option>
+            <% }); %>
+        </select>
+    </script>
+
+    <script type="text/template" id="question-template">
+        <div class="question" data-type="yesno" data-name="<%= question.name %>">
+            <input type="text" placeholder="Question" value="<%= question.text %>" data-role="question" class="input-xxlarge" style="width:90%" />
+            <br>
+            <button type="button" class="btn btn-small question-type" data-role="radio-question">Radio</button>
+            <button type="button" class="btn btn-small question-type" data-role="checkbox-question">Checkbox</button>
+            <button type="button" class="btn btn-warning btn-small remove right"><i class="icon-trash icon-white"></i> Delete question</button>
+            
+
+            <h2>Answers</h2>
+            <div class="answers"></div>
+            <label><button type="button" class="btn btn-success btn-small add-answer"><i class="icon-plus-sign icon-white"></i> Add an option</button></label>
+            <button type="button" class="btn btn-success add-question"><i class="icon-plus-sign icon-white"></i> Add a question after <strong><%= question.name %></strong></button>
+
+        </div>
+    </script>
+
+    <script type="text/template" id="answer-template">
+        <div data-role="answer" class="iinputs-append">
+            <input type="text" value="<%= text %>" />
+            <button type="button" class="btn add-sub-question"><i class="icon-share-alt "></i> Add a sub-question</button>
+            <button type="button" class="btn remove"><i class="icon-trash"></i></button>
+        </div>
+    </script>
+
+    <!-- Form rendering templates -->
+
+    <script type="text/template" id="question">
+        <fieldset data-role="controlgroup" class="control-group" id="<%= id %>" data-parent="<%= parentID %>" data-trigger="<%= triggerID %>">
+          <legend class="control-legend"><%= text %></legend>
+          <% if(info !== undefined) { %>
+            <a href="" class="show-info" data-role="button" data-inline="true" data-icon="info" data-trigger="info-<%= id %>">More info</a>
+            <div id="info-<%= id %>" class="info">
+              <%= info %>
+              <a href="" data-role="button" data-icon="check" data-inline="true" class="box-close">Got it!</a>
+            </div>
+          <% }; %>
+        </fieldset>
+    </script>
+
+    <script type="text/template" id="answer-radio">
+    <label for="<%= id %>">
+      <input type="radio" name="<%= questionName %>" id="<%= id %>" value="<%= value %>">
+      <%= text %>
+    </label>
+    </script>
+
+    <script type="text/template" id="answer-checkbox">
+      <label for="<%= id %>">
+        <input type="checkbox" name="<%= questionName %>" id="<%= id %>" value="<%= value %>" data-theme="<%= theme %>">
+        <%= text %>
+    </label>
+    </script>
+
+    <script type="text/template" id="answer-text">
+      <label for="<%= id %>"><%= text %></label>
+      <input type="text" name="<%= questionName %>" id="<%= id %>" value="<%= value %>">
+    </script>
+    
+    <script type="text/template" id="answer-texarea">
+      <label for="<%= id %>"><%= text %></label>
+      <input type="text" name="<%= questionName %>" id="<%= id %>" value="<%= value %>">
+    </script>
+    
+
+    <script type="text/template" id="repeat-button">
+      <div class="repeating-button" style="display:none" data-parent="<%= parentID %>" data-trigger="<%= triggerID %>">
+        <div class="append-to"></div>
+        <a class="repeating-button button" href="#" data-icon="plus" data-role="button" data-inline="true">Add another</a>
+      </div>
     </script>
              
     <script src="js/require.js"></script>

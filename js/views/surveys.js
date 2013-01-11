@@ -9,6 +9,7 @@ define([
 
   // LocalData
   'settings',
+  'api',
 
   // Models
   'models/surveys',
@@ -16,13 +17,42 @@ define([
   'models/forms',
 
   // Views
-  'views/subnav',
+  'views/nav',
   'views/export',
   'views/settings',
-  'views/responses'
+  'views/responses',
+  'views/forms',
+
+  // Misc
+  'misc/exampleform'
+
 ],
 
-function($, _, Backbone, events, settings, SurveyModels, ResponseModels, FormModels, SubnavView, ExportView, SettingsView, ResponseViews) {
+function(
+  $, 
+  _, 
+  Backbone, 
+  events, 
+
+  // LocalData
+  settings, 
+  api, 
+
+  // Models
+  SurveyModels, 
+  ResponseModels, 
+  FormModels, 
+
+  // Views
+  NavView, 
+  ExportView, 
+  SettingsView, 
+  ResponseViews, 
+  PreviewView, 
+
+  // Misc
+  exampleForm 
+){
   'use strict'; 
 
   var SurveyViews = {};
@@ -40,6 +70,59 @@ function($, _, Backbone, events, settings, SurveyModels, ResponseModels, FormMod
     }
   });
 
+
+  SurveyViews.NewSurveyView = Backbone.View.extend({
+    el: $("#container"),
+
+    initialize: function(options) {
+      console.log("Init new survey view");
+    },
+
+    update: function() {
+      this.render();
+    },
+
+    render: function() {
+      console.log("Rendering new survey view");
+
+      // Set the context & render the page
+      var context = {};
+      this.$el.html(_.template($('#new-survey-view').html(), context));
+
+      $("#new-survey-form .submit").click(function(){
+        $("#new-survey-form").submit();
+      })
+
+      // On submisision of the new survey form...
+      $("#new-survey-form").submit(function(event){
+        event.preventDefault();
+
+        // Get the name and other details
+        // TODO: this should probably be a new Survey model? 
+        var survey = {
+          "name": $("input.survey-name").val(),
+          "location": $("input.survey-location").val()
+        };
+
+        console.log("Survey form submitted");
+        console.log(survey);
+
+        // Submit the details as a new survey.
+        api.createSurvey(survey, function(survey) {
+          console.log("Survey created");
+          console.log(survey);
+
+          // LD.router._router.navigate("surveys/" + survey.slug, {trigger: true});
+
+          // TODO -- use the router
+          location.href = "/#surveys/" + survey.slug + "/settings";
+
+        });
+      });
+
+    }
+
+  });
 
   SurveyViews.SurveyView = Backbone.View.extend({
     el: $("#container"),
@@ -97,12 +180,12 @@ function($, _, Backbone, events, settings, SurveyModels, ResponseModels, FormMod
         forms: this.forms
       });
 
-      // Subnav & Export views   
-      this.subnavView = new SubnavView({slug: settings.slug});  
+      // Nav & Export views   
+      this.navView = new NavView({slug: settings.slug});  
       this.exportView = new ExportView({surveyId: this.surveyId});  
 
-      // Render subnav, export, and settings views
-      this.subnavView.render();
+      // Render navigation, export, and settings views
+      this.navView.render();
       this.exportView.render(); 
       this.settingsView.render();
 
@@ -117,7 +200,7 @@ function($, _, Backbone, events, settings, SurveyModels, ResponseModels, FormMod
       $("#content > div").hide();
       $("#content #loading-view-container").show();
       $(id).show();
-      this.subnavView.setActiveTab(tab);
+      this.navView.setActiveTab(tab);
     },
     
     showResponses: function() {

@@ -10,7 +10,7 @@ S3CMD = s3cmd
 
 # Default S3 sub-path to upload to 
 # Main S3 bucket is set below
-S3DIR = admin-test
+S3DIR = admin-matth
 
 all: build
 .PHONY: all
