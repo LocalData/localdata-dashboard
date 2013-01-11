@@ -20,6 +20,62 @@ define(function (require) {
     });
   };
 
+  // Create a new user 
+  // 
+  // @param {Object} user Name, email, and password for the user
+  // @param {Function} callback Parameters: (error, user)
+  api.createUser = function(user, callback) {
+
+    var url = settings.api.baseurl + "/user";
+
+    var request = $.ajax({
+      url: url,
+      type: "POST",
+      data: user,
+      dataType: "json"
+    });
+
+    request.done(function(user) {
+      callback(null, user);
+    });
+
+    request.fail(function(jqXHR, textStatus, errorThrown) {
+      console.log("Request failed: ", jqXHR);
+      callback(jqXHR.responseText, null);
+    });
+  };
+
+
+  // Log a user in 
+  // 
+  // @param {Object} user Email and password for the user
+  // @param {Function} callback Parameters: (error, user)
+  api.logIn = function(user, callback) {
+
+    var url = settings.api.baseurl + "/login"
+
+    var request = $.ajax({
+      url: url,
+      type: "POST",
+      data: user,
+      dataType: "json"
+    });
+
+    request.done(function(response) {
+      console.log(response);
+      if(response.name === "BadRequestError") {
+        callback(response, null);
+        return;
+      }
+      callback(null, response);
+    });
+
+    request.fail(function(jqXHR, textStatus, errorThrown) {
+      console.log("Request failed: ", jqXHR.responseText);
+      callback(jqXHR.responseText, null);
+    });
+
+  }
 
   // Create a new survey
   api.createSurvey = function(survey, callback) {
