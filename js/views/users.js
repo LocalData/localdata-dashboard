@@ -34,7 +34,7 @@ function($, _, Backbone, events, router, settings, api, UserModels) {
       this.redirectTo = options.redirectTo || "/";
       this.redirectTo = this.redirectTo.replace("?redirectTo=", "");
       console.log("Creating login view");
-      _.bindAll(this, 'render', 'update', 'createUser');
+      _.bindAll(this, 'render', 'update', 'createUser', 'logIn');
     },
 
     render: function() {
@@ -49,8 +49,22 @@ function($, _, Backbone, events, router, settings, api, UserModels) {
       this.render();
     },
 
-    logIn: function() {
+    logIn: function(event) {
       console.log("Logging in");
+      event.preventDefault();
+      var user = $(event.target).parent().serializeArray();
+      console.log(user);
+
+      api.logIn(user, function(error, user){
+        if(error) {
+          console.log(error.message);
+          $('#login .error').html(error.message);
+          return;
+        }
+
+        // Todo: use RedirectTo
+        router.navigate("/", true);
+      });
     },  
 
     createUser: function(event) {
@@ -62,6 +76,7 @@ function($, _, Backbone, events, router, settings, api, UserModels) {
       api.createUser(user, function(error, user) {
         if(error) {
           console.log(error);
+          $("#create-user .error").html(error);
           return;
         }
 
