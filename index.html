@@ -152,7 +152,7 @@
       </div>
     </script>
 
-    <!-- Loading / 2 ....................................................-->
+    <!-- Login ............................................................-->
     <script type="text/template" id="login-view">
       <div class="container">
         <header id="survey-header">
@@ -161,26 +161,28 @@
       </div>
     
       <div class="container">
-      <div id="content">
-        <div id="body">
-          <h2>Please Log In</h2>
-          <form id="login">
-            <div class="error"></div>
-            <input type="text" name="email" placeholder="Your email">
-            <input type="password" name="password" placeholder="Password">
-            <button>Log in</button>
-          </form>
+        <div id="content">
+          <div id="body" class="floatcontainer">
+            <form id="login">
+              <h2>Please Log In</h2>
+              <div class="error"></div>
+              
+              <input type="text" name="email" placeholder="Your email">
+              <input type="password" name="password" placeholder="Password">
+              <a class="button">Log in</a>
+            </form>
 
-          <h2>Or, sign up for LocalData</h2>
-          <form id="create-user">
-            <div class="error"></div>
-            <input type="text" name="email" placeholder="Your email">
-            <input type="text" name="password" placeholder="Password">
-            <input type="text" name="name" placeholder="Your name">
-            <button>Sign up</button>
-          </form>
-        </div>   
-      </div>
+            <form id="create-account">
+              <h2>Or, sign up for LocalData</h2>
+              <div class="error"></div>
+
+              <input type="text" name="name" placeholder="Your name">
+              <input type="text" name="email" placeholder="Your email">
+              <input type="password" name="password" placeholder="Password">
+              <a class="button">Sign up</a>
+            </form>
+          </div>   
+        </div>
       </div>
 
     </script>

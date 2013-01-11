@@ -115,7 +115,7 @@ function(
           // LD.router._router.navigate("surveys/" + survey.slug, {trigger: true});
 
           // TODO -- use the router
-          location.href = "/#surveys/" + survey.slug + "/settings";
+          location.href = "/#surveys/" + survey.slug + "/form";
 
         });
       });

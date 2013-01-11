@@ -12,10 +12,11 @@ define([
 
   // Views
   'views/design',
-  'views/builder'
+  'views/builder',
+  'views/preview'
 ],
 
-function($, _, Backbone, settings, api, DesignViews, BuilderViews) {
+function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) {
   'use strict'; 
 
   var FormViews = {};

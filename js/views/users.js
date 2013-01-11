@@ -26,8 +26,8 @@ function($, _, Backbone, events, router, settings, api, UserModels) {
     el: "#container",
 
     events: {
-      "click #login button": "logIn",
-      "click #create-user button": "createUser"
+      "click #login .button": "logIn",
+      "click #create-account .button": "createUser"
     },
 
     initialize: function(options) {
@@ -63,7 +63,9 @@ function($, _, Backbone, events, router, settings, api, UserModels) {
         }
 
         // Todo: use RedirectTo
-        router.navigate("/", true);
+        // TODO: use the router
+
+        window.location.href = "/";
       });
     },  
 
@@ -76,12 +78,13 @@ function($, _, Backbone, events, router, settings, api, UserModels) {
       api.createUser(user, function(error, user) {
         if(error) {
           console.log(error);
-          $("#create-user .error").html(error);
+          $("#create-account .error").html(error);
           return;
         }
 
         // Success! Go to the dashboard. 
-        router.navigate("/", true);
+        // TODO: use the router
+        window.location.href = "/";
       });
     }
 

@@ -16,7 +16,7 @@ define([
   'models/forms',
 
   // Views
-  'views/forms',
+  'views/preview',
 
   // Misc
   'misc/exampleform'
@@ -75,8 +75,8 @@ function($, _, Backbone, events, settings, api, SurveyModels, FormModels, Previe
       });
 
       $('.use-survey').click(this.useSurvey);
+    }   
 
-    }    
   });
 
   return DesignViews;

@@ -27,16 +27,33 @@ h3 {
 }
 
 /* Forms....................................................................*/
-input {
-  font-family:"Open Sans", "Source Sans Pro", Helvetica, sans-serif;
-  font-size:1em;
+form input, form label {
+  display:block;
 }
 
-#map-controls .button {
-  font-weight:600;
-  letter-spacing:.5px;
-  text-transform:uppercase;
-  font-size:12px;
+form input {
+  font-family:"Open Sans", "Source Sans Pro", Helvetica, sans-serif;
+  font-size:24px;
+  text-indent:5px;
+  
+  margin:5px 0px 8px;
+  border:1px solid #ddd;
+
+  -webkit-box-shadow: 
+    inset 0 0 8px  rgba(0,0,0,0.1); 
+  -moz-box-shadow: 
+    inset 0 0 8px  rgba(0,0,0,0.1); 
+  box-shadow: 
+    inset 0 0 8px  rgba(0,0,0,0.1); 
+}
+
+form label {
+  font-weight:bold; 
+  margin-top:1em;
+}
+
+form .error {
+  color:#ef6d4a;
 }
 
 .button {
@@ -232,6 +249,23 @@ header a {
   }
 
 
+/* Login ................................................................... */
+#login h2, 
+#create-account h2 {
+  font-size:24px;
+  margin-bottom:12px;
+}
+
+#login,
+#create-account { 
+  width:45%;
+  float:left;
+}
+
+#login {
+  margin-right:5%;
+  border-right: 1px dotted #ddd;
+}
 
 /* Surveys ................................................................. */
 .survey-list .survey {
@@ -426,19 +460,6 @@ header a {
   font-family:Courier New, Courier, monospace;
   font-size:16px;
   height:15em;
-}
-
-form input, form label {
-  display:block;
-}
-
-form label {
-  font-weight:bold; 
-  margin-top:1em;
-}
-
-form input {
-  font-size:24px;
 }
 
 #settings-view-container #preview-view-container {
