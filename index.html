@@ -508,7 +508,7 @@
       </div>
 
       <form>
-        <h2>Questions</h2>
+        <h3>Questions</h3>
         <div id="editor"></div>
 
         <div>
@@ -521,15 +521,15 @@
         <div class="question" data-type="yesno" data-name="<%= question.name %>">
             <input type="text" placeholder="Question" value="<%= question.text %>" data-role="question" class="question-input" style="width:90%" />
 
-            <button type="button" class="btn btn-small question-type" data-role="radio-question">Radio</button>
-            <button type="button" class="btn btn-small question-type" data-role="checkbox-question">Checkbox</button>
-            <button type="button" class="btn btn-warning btn-small remove right"><i class="icon-trash icon-white"></i> Delete question</button>
-            
+            <a class="action remove">&nbsp;</a>
+
+            <a class="<% if(!question.type) { %>selected<% } %> action question-type" data-role="radio-question">Select one</a>
+            <a class="<% if(question.type === 'checkbox') { %>selected<% } %> action question-type" data-role="checkbox-question">Multiple choice</a>
 
             <h2>Answers</h2>
             <div class="answers"></div>
-            <label><button type="button" class="btn btn-success btn-small add-answer"><i class="icon-plus-sign icon-white"></i> Add an option</button></label>
-            <button type="button" class="btn btn-success add-question"><i class="icon-plus-sign icon-white"></i> Add a question after <strong><%= question.name %></strong></button>
+            <a class="action add-answer"><i class="icon-plus-sign icon-white"></i> Add an option</a>
+            <a class="action add-question"><i class="icon-plus-sign icon-white"></i> Add a question after <strong><%= question.name %></strong></a>
 
         </div>
     </script>
@@ -537,7 +537,7 @@
     <script type="text/template" id="answer-edit-template">
         <div data-role="answer" class="iinputs-append">
             <input type="text" value="<%= text %>" />
-            <a class="action remove">Delete question</a>
+            <a class="action remove">&nbsp;</a>
             <a class="action add-sub-question"><i class="icon-share-alt "></i> Add a sub-question</a>
         </div>
     </script>

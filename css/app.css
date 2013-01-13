@@ -1,4 +1,9 @@
 /* LocalData Styles .........................................................*/
+/* 
+  Colors
+  Link: #00949b
+  Link hover: #138288
+*/
 html, body {
   padding:0;
   margin:0;
@@ -595,22 +600,47 @@ header a {
 
 /* Editor ....................................................................*/
 #builder-view-container {
-  width:45%;
+  width:50%;
   margin-right:5%;
   float:left;
 }
 
-  #builder-view-container form input {
+  #editor input {
     font-size:1em;
     color:#333;
+    display:inline-block;
   }
 
-  input.question-input {
+  #editor input.question-input {
     font-weight:600;
   }
 
-  .question .question {
-    margin-left:20px; 
+  #editor .question {
+    padding:10px 0px 0px 20px;
+    background:#eee; 
+  }
+
+  #editor .question h2 {
+    text-transform: uppercase;
+    font-size:.9em;
+    color:#999;
+    margin-top:10px;
+    margin-bottom:0px;
+    padding:10px 0px 0px 25px;
+    border-top:1px dotted #ddd;
+  }
+
+  #editor.question,
+  #editor .answers {
+    border-bottom:1px dotted #ddd;
+  }
+
+    .question .question {
+      margin-left:20px; 
+    }
+  
+  #editor .answers {
+    padding:0px 20px 20px 20px;
   }
 
   .action {
@@ -620,18 +650,29 @@ header a {
     cursor: pointer;
     font-size:12px;
     text-transform:uppercase;
-
   }
+
+    .action:hover {
+      color:#138288;
+    }
 
     .add-sub-question {
       background:transparent url(../img/icons/branch.png) no-repeat center left;
     }
 
-    .remove {
+    #editor .remove {
       background:transparent url(../img/icons/delete-10.png) no-repeat center left;
       color: #db6a6e;
       text-indent:-1000!important;
       display:inline-block;
+      padding-left:20px;
+      padding-top:5px;
+      margin-left:3px;
+    }
+
+    #editor .action.selected {
+      background:#333;
+      color:#fff;
     }
 
 /* Preview ...................................................................*/
@@ -655,9 +696,8 @@ header a {
   padding-bottom: 20px;
   background: #fff;
 
-  width:45%;
+  width:44%;
   float:right;
-
 }
   
   #preview.popup {
