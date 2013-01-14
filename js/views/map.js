@@ -50,8 +50,6 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
       // Initialize the map
       this.map = new L.map('map');
-
-      // Don't think this is needed: this.markers = {};
       
       // Set up the base map; add the parcels and done markers
       this.googleLayer = new L.Google("TERRAIN");
@@ -90,8 +88,10 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
       _.each(this.responses.models, function(response){
 
+
         // Skip old records that don't have geo_info
         var geoInfo = response.get("geo_info");
+
         if (geoInfo === undefined) {
           console.log("Skipping geo object");
           return;
