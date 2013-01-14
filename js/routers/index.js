@@ -23,11 +23,11 @@ function($, _, Backbone, settings, api) {
       "surveys/:slug": "survey",
 
       "surveys/:slug/form/edit": "form_edit",
-      "surveys/:slug/form": "form"
+      "surveys/:slug/form": "form",
       
       "*actions": "default_route"
     },
-    
+  
     initialize: function(options) {
       this.controller = options.controller;
       
