@@ -7,7 +7,9 @@ require.config({
   paths: { 
     jquery: 'lib/jquery-1.7.1',
     backbone: 'lib/backbone',
-    moment: 'lib/moment.min'
+    moment: 'lib/moment.min',
+    'lib/kissmetrics': '//doug1izaerwt3.cloudfront.net/' + '1f57015c5e8f46bdc07701e1aa74c6cbdf565383' + '.1',
+    'lib/kmq': 'lib/kissmetrics'
   },
 
   shim: {
@@ -29,8 +31,13 @@ require.config({
       exports: 'L'
     },
 
+    'lib/kmq': {
+      exports: '_kmq'
+    },
+
     'lib/kissmetrics': {
-      exports: "_kmq"
+      deps: ['lib/kmq'],
+      exports: '_kmq'
     }
   }
 
