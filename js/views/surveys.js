@@ -48,7 +48,7 @@ function(
   ExportView, 
   SettingsView, 
   ResponseViews, 
-  PreviewView, 
+  FormViews, 
 
   // Misc
   exampleForm 
@@ -91,7 +91,7 @@ function(
 
       $("#new-survey-form .submit").click(function(){
         $("#new-survey-form").submit();
-      })
+      });
 
       // On submisision of the new survey form...
       $("#new-survey-form").submit(function(event){
@@ -101,7 +101,8 @@ function(
         // TODO: this should probably be a new Survey model? 
         var survey = {
           "name": $("input.survey-name").val(),
-          "location": $("input.survey-location").val()
+          "location": $("input.survey-location").val(),
+          "type": "point"
         };
 
         console.log("Survey form submitted");
@@ -115,7 +116,7 @@ function(
           // LD.router._router.navigate("surveys/" + survey.slug, {trigger: true});
 
           // TODO -- use the router
-          location.href = "/#surveys/" + survey.slug + "/settings";
+          location.href = "/#surveys/" + survey.slug + "/form";
 
         });
       });
@@ -132,7 +133,7 @@ function(
     bodyView: null,
     
     initialize: function(options) {
-      _.bindAll(this, 'update', 'render', 'show', 'showResponses', 'showUpload', 'showSettings');
+      _.bindAll(this, 'update', 'render', 'show', 'showResponses', 'showUpload', 'showForm');
 
       // Set up the page and show the given survey
       this.surveyId = options.id;
@@ -164,7 +165,7 @@ function(
       events.publish('loading', [true]);
 
       // Render the sub components
-      $('#settings-view-container').hide();
+      $('#form-view-container').hide();
       $('#export-view-container').hide();
 
       // List the responses
@@ -174,8 +175,8 @@ function(
         forms: this.forms
       });
 
-      // Settings view
-      this.settingsView = new SettingsView({
+      // Form view
+      this.formView = new FormViews.FormView({
         survey: this.survey,
         forms: this.forms
       });
@@ -187,7 +188,7 @@ function(
       // Render navigation, export, and settings views
       this.navView.render();
       this.exportView.render(); 
-      this.settingsView.render();
+      this.formView.render();
 
       // By default, we show the first tab
       this.show(this.toshow[0], this.toshow[1]);
@@ -211,8 +212,8 @@ function(
       this.show('#export-view-container', 1);
     },
     
-    showSettings: function() {
-      this.show('#settings-view-container', 2);
+    showForm: function() {
+      this.show('#form-view-container', 2);
     },
         
     // Not yet implemented

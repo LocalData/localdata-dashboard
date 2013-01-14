@@ -17,14 +17,17 @@ function($, _, Backbone, settings, api) {
       "": "home",
 
       "surveys/new": "new_survey",      
-      "surveys/:slug": "survey",
       "surveys/:slug/map": "map",
       "surveys/:slug/export": "survey_export",
-      "surveys/:slug/settings": "settings",
-      "surveys/:slug/design": "design"
+      "surveys/:slug/design": "design",
+      "surveys/:slug": "survey",
 
+      "surveys/:slug/form/edit": "form_edit",
+      "surveys/:slug/form": "form",
+      
+      "*actions": "default_route"
     },
-    
+  
     initialize: function(options) {
       this.controller = options.controller;
       
@@ -58,6 +61,10 @@ function($, _, Backbone, settings, api) {
     
     settings: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_settings);
+    },
+
+    form: function(slug) {
+      api.setSurveyIdFromSlug(slug, this.controller.goto_form);
     },
     
     survey_export: function(slug) {

@@ -1,4 +1,9 @@
 /* LocalData Styles .........................................................*/
+/* 
+  Colors
+  Link: #00949b
+  Link hover: #138288
+*/
 html, body {
   padding:0;
   margin:0;
@@ -27,16 +32,33 @@ h3 {
 }
 
 /* Forms....................................................................*/
-input {
-  font-family:"Open Sans", "Source Sans Pro", Helvetica, sans-serif;
-  font-size:1em;
+form input, form label {
+  display:block;
 }
 
-#map-controls .button {
-  font-weight:600;
-  letter-spacing:.5px;
-  text-transform:uppercase;
-  font-size:12px;
+form input {
+  font-family:"Open Sans", "Source Sans Pro", Helvetica, sans-serif;
+  font-size:24px;
+  text-indent:5px;
+  
+  margin:5px 0px 8px;
+  border:1px solid #ddd;
+
+  -webkit-box-shadow: 
+    inset 0 0 8px  rgba(0,0,0,0.1); 
+  -moz-box-shadow: 
+    inset 0 0 8px  rgba(0,0,0,0.1); 
+  box-shadow: 
+    inset 0 0 8px  rgba(0,0,0,0.1); 
+}
+
+form label {
+  font-weight:bold; 
+  margin-top:1em;
+}
+
+form .error {
+  color:#ef6d4a;
 }
 
 .button {
@@ -232,6 +254,23 @@ header a {
   }
 
 
+/* Login ................................................................... */
+#login h2, 
+#create-account h2 {
+  font-size:24px;
+  margin-bottom:12px;
+}
+
+#login,
+#create-account { 
+  width:45%;
+  float:left;
+}
+
+#login {
+  margin-right:5%;
+  border-right: 1px dotted #ddd;
+}
 
 /* Surveys ................................................................. */
 .survey-list .survey {
@@ -428,19 +467,6 @@ header a {
   height:15em;
 }
 
-form input, form label {
-  display:block;
-}
-
-form label {
-  font-weight:bold; 
-  margin-top:1em;
-}
-
-form input {
-  font-size:24px;
-}
-
 #settings-view-container #preview-view-container {
 }
 
@@ -572,6 +598,83 @@ form input {
       padding-top:10px;
     }
 
+/* Editor ....................................................................*/
+#builder-view-container {
+  width:50%;
+  margin-right:5%;
+  float:left;
+}
+
+  #editor input {
+    font-size:1em;
+    color:#333;
+    display:inline-block;
+  }
+
+  #editor input.question-input {
+    font-weight:600;
+  }
+
+  #editor .question {
+    padding:10px 0px 0px 20px;
+    background:#eee; 
+  }
+
+  #editor .question h2 {
+    text-transform: uppercase;
+    font-size:.9em;
+    color:#999;
+    margin-top:10px;
+    margin-bottom:0px;
+    padding:10px 0px 0px 25px;
+    border-top:1px dotted #ddd;
+  }
+
+  #editor.question,
+  #editor .answers {
+    border-bottom:1px dotted #ddd;
+  }
+
+    .question .question {
+      margin-left:20px; 
+    }
+  
+  #editor .answers {
+    padding:0px 20px 20px 20px;
+  }
+
+  .action {
+    text-decoration:none;
+    border:0px none;
+    padding-left:15px;
+    cursor: pointer;
+    font-size:12px;
+    text-transform:uppercase;
+  }
+
+    .action:hover {
+      color:#138288;
+    }
+
+    .add-sub-question {
+      background:transparent url(../img/icons/branch.png) no-repeat center left;
+    }
+
+    #editor .remove {
+      background:transparent url(../img/icons/delete-10.png) no-repeat center left;
+      color: #db6a6e;
+      text-indent:-1000!important;
+      display:inline-block;
+      padding-left:20px;
+      padding-top:5px;
+      margin-left:3px;
+    }
+
+    #editor .action.selected {
+      background:#333;
+      color:#fff;
+    }
+
 /* Preview ...................................................................*/
 
 #preview-dimmer {
@@ -592,6 +695,9 @@ form input {
 #preview {
   padding-bottom: 20px;
   background: #fff;
+
+  width:44%;
+  float:right;
 }
   
   #preview.popup {

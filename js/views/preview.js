@@ -8,93 +8,14 @@ define([
 
   // LocalData
   'settings',
-  'api',
-
-  // Views
-  'views/design',
-  'views/builder',
-  'views/preview'
+  'api'
 ],
 
-function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) {
+function($, _, Backbone, settings, api) {
   'use strict'; 
 
-  var FormViews = {};
 
-  FormViews.FormView = Backbone.View.extend({
-    
-    elId: "#form-view-container",
-
-    initialize: function(options) {
-      _.bindAll(this, 'render', 'showDesigner', 'showBuilder');
-      console.log("Initializing forms view");
-      this.survey = options.survey;
-      this.forms = options.forms;
-      // console.log(this.survey);
-      // console.log(this.forms);
-    },
-    
-    showDesigner: function() {
-      $("#survey-design-container").empty();
-
-      // If there isn't a form yet, let's show the survey creation view
-      if (settings.formData === undefined) {
-
-        $("#send-survey-container").hide();
-
-        $('.button').hide();
-
-        var designView = new DesignViews.DesignView({
-          elId: "#survey-design-container",
-          survey: this.survey
-        });
-        designView.render();
-
-        designView.on("formAdded", this.render, this);
-
-      }else {
-
-        $("#send-survey-container").show(); // hacky!
-
-        // Preview the form if there already is one.
-        this.previewView = new FormViews.PreviewView({
-          elId: "#preview-view-container",
-          forms: [settings.formData]
-        });  
-
-      }    
-    },
-
-    showBuilder: function() {
-      this.builderView = new BuilderViews.BuilderView({
-        forms: this.forms
-      });
-      this.builderView.render();
-
-      this.builderView.on("formUpdated", function() {
-        console.log("Builder: Telling preview to update...");
-        console.log(this.previewView);
-        this.previewView.render();
-      }, this);
-    },
-    
-    render: function() {        
-      var context = { 
-        survey: this.survey.toJSON(),
-        forms: this.forms.toJSON() 
-      };
-      $(this.elId).html(_.template($('#form-view').html(), context));
-
-      // old: Make sure we have up-to-date form data before showing the design view
-      // ;
-      api.getForm(this.showDesigner);
-
-      // Show the editor 
-      $(".edit-form-button").click(this.showBuilder);
-    }
-  });
-
-  FormViews.PreviewView = Backbone.View.extend({
+  var PreviewView = Backbone.View.extend({
 
     initialize: function(options) {
       _.bindAll(this, 'render', 'renderPreview', 'useSurvey');
@@ -226,5 +147,5 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
 
   });
 
-  return FormViews;
+  return PreviewView;
 });
