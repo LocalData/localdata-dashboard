@@ -27,6 +27,10 @@ require.config({
     'lib/leaflet/leaflet.google': {
       deps: ['lib/leaflet/leaflet'],
       exports: 'L'
+    },
+
+    'lib/kissmetrics': {
+      exports: "_kmq"
     }
   }
 
