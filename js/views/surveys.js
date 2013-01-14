@@ -101,7 +101,8 @@ function(
         // TODO: this should probably be a new Survey model? 
         var survey = {
           "name": $("input.survey-name").val(),
-          "location": $("input.survey-location").val()
+          "location": $("input.survey-location").val(),
+          "type": "point"
         };
 
         console.log("Survey form submitted");
