@@ -17,14 +17,15 @@ function($, _, Backbone, settings, api) {
       "": "home",
 
       "surveys/new": "new_survey",      
-      "surveys/:slug": "survey",
       "surveys/:slug/map": "map",
       "surveys/:slug/export": "survey_export",
       "surveys/:slug/design": "design",
+      "surveys/:slug": "survey",
 
       "surveys/:slug/form/edit": "form_edit",
       "surveys/:slug/form": "form"
-
+      
+      "*actions": "default_route"
     },
     
     initialize: function(options) {

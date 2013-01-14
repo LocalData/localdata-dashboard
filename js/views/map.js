@@ -34,14 +34,14 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     
     initialize: function(options) {
       console.log("Init map view");
-      _.bindAll(this, 'render', 'selectObject', 'renderObject', 'renderObjects', 'getResponsesInBounds', 'updateMapStyleBasedOnZoom', 'updateObjectStyles', 'styleBy');
+      _.bindAll(this, 'render', 'selectObject', 'renderObject', 'renderObjects', 'getResponsesInBounds', 'updateMapStyleBasedOnZoom', 'updateObjectStyles');
       
       this.responses = options.responses;
       this.responses.on('reset', this.render, this);
 
       // We track the results on the map using these two groups
       this.parcelIdsOnTheMap = {};
-      this.parcelsLayerGroup = new L.FeatureGroup();
+      this.objectsOnTheMap = new L.FeatureGroup();
       this.doneMarkersLayerGroup = new L.FeatureGroup();
 
       this.defaultStyle = settings.farZoomStyle;
@@ -56,8 +56,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       // Set up the base map; add the parcels and done markers
       this.googleLayer = new L.Google("TERRAIN");
       this.map.addLayer(this.googleLayer); 
-      this.map.addLayer(this.doneMarkersLayerGroup); // no longer used??
-      this.map.addLayer(this.parcelsLayerGroup);
+      this.map.addLayer(this.objectsOnTheMap);
 
       this.map.setView([42.374891,-83.069504], 17); // default center
       this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
@@ -79,14 +78,14 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     mapResponses: function(question, answers) {
       var indexOfColorToUse;
       var color;
-      var style;
+      var style = this.defaultStyle;
 
       if(question !== undefined) {
         this.filtered = true;
       }
 
       // Clear out all the old results
-      this.parcelsLayerGroup.clearLayers();
+      this.objectsOnTheMap.clearLayers();
       this.parcelIdsOnTheMap = {};
 
       _.each(this.responses.models, function(response){
@@ -100,12 +99,11 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
         // Make sure were have the geometry for this parcel
         if(_.has(geoInfo, "geometry")) {
+          console.log("This has geometry");
           var toRender = {
             parcelId: response.get("parcel_id"),
             geometry: response.get("geo_info").geometry 
           };
-
-          style = this.defaultStyle;
 
           // Color the results if necessary
           // TODO: lots of optimization possible here! 
@@ -128,13 +126,32 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
           
           // Use that style!
           this.renderObject(toRender, style);
-        }
 
+        } else {
+
+          if(_.has(geoInfo, "centroid")) {
+
+            console.log("This parcel has a centroid");
+
+            var toRender = {
+              parcelId: response.get("parcel_id"),
+              geometry: {
+                "type": "Point",
+                "coordinates": response.get("geo_info").centroid 
+              }
+            };
+
+            this.renderObject(toRender, settings.circleMarker);
+
+          };
+        }
       }, this);
+
 
       // fitBounds fails if there aren't any results, hence this test:
       try {
-        this.map.fitBounds(this.parcelsLayerGroup.getBounds());
+        console.log(this.objectsOnTheMap.getBounds());
+        this.map.fitBounds(this.objectsOnTheMap.getBounds());
       }
       catch (e) {
         console.log(e);
@@ -143,7 +160,8 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     },
 
     updateObjectStyles: function(style) {
-      this.parcelsLayerGroup.setStyle(style);
+      console.log("Changing style");
+      this.objectsOnTheMap.setStyle(style);
     },
     
     // Expects an object with properties
@@ -157,19 +175,30 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
       // We don't want to re-draw parcels that are already on the map
       // So we keep a hash map with the layers so we can unrender them
-      if(! _.has(this.parcelIdsOnTheMap, obj.parcelId)){
+      if(! _.has(this.parcelIdsOnTheMap, obj.parcelId) || obj.parcelId === ''){
+
         // Make sure the format fits Leaflet's geoJSON expectations
         obj.type = "Feature";
 
+        // Mongo coordinates are reversed from Leaflet coordinates
+        // AARGH.
+        obj.geometry.coordinates = obj.geometry.coordinates.reverse();
+
         // Create a new geojson layer and style it. 
-        var geojsonLayer = new L.GeoJSON();
-        geojsonLayer.addData(obj);
+        var geojsonLayer = new L.geoJson(obj, {
+            pointToLayer: function (feature, latlng) {
+              return new L.circleMarker(latlng, style); 
+            }
+        });
         geojsonLayer.setStyle(style);
-        
         geojsonLayer.on('click', this.selectObject);
         
+
+        console.log("RENDERING OBJECT");
+
+
         // Add the layer to the layergroup and the hashmap
-        this.parcelsLayerGroup.addLayer(geojsonLayer);
+        this.objectsOnTheMap.addLayer(geojsonLayer); // was (geojsonLayer);
         this.parcelIdsOnTheMap[obj.parcelId] = geojsonLayer;
       }
     },
@@ -253,34 +282,14 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       // If there are a lot of objects, let's clear them out 
       // to improve performance
       if( _.size(this.parcelIdsOnTheMap) > 1250 ) {
-        this.parcelsLayerGroup.clearLayers();
+        this.objectsOnTheMap.clearLayers();
         this.parcelIdsOnTheMap = {};
       }
       
       // Get parcel data in the bounds
       api.getObjectsInBounds(this.map.getBounds(), this.renderObjects); 
     },
-      
-    // TODO 
-    // Adds a checkbox marker to the given point
-    // addDoneMarker: function(latlng, id) {
-    //   // Only add markers if they aren't already on the map.
-    //   // if (true){ //this.markers[id] == undefined
-    //   //   var doneIcon = new this.CheckIcon();
-    //   //   var doneMarker = new L.Marker(latlng, {icon: doneIcon});
-    //   //   this.doneMarkersLayerGroup.addLayer(doneMarker);
-    //   //   this.markers[id] = doneMarker;
-    //   // }
-    // },
-    
-    // addResultsToMap: function(results){    
-    //   _.each(results, function(elt) {
-    //     var point = new L.LatLng(elt.geo_info.centroid[0], elt.geo_info.centroid[1// ]);
-    //     var id = elt.parcel_id;
-    //     this.addDoneMarker(point, id);
-    //   }, this);
-    // },
-    
+          
     // Get all the responses in the current viewport 
     getResponsesInBounds: function(){  
       console.log("Getting responses in the map");
