@@ -20,7 +20,7 @@ function($, _, Backbone, settings, api, FormViews) {
 
   Builder.BuilderView = Backbone.View.extend({
 
-    elId: "#builder-view-container",
+    elId: '#builder-view-container',
 
     boxAnswersByQuestionId: {},
     formQuestions: $('#editor'),
@@ -36,7 +36,7 @@ function($, _, Backbone, settings, api, FormViews) {
         'renderQuestion', 'editQuestionType', 'deleteQuestion', 
         'createQuestion', 'editQuestion', 'addSubQuestion',
         'createAnswer', 'editAnswer', 'deleteAnswer',
-        'slugify');
+        'save', 'slugify');
       
       this.forms = options.forms;
     },
@@ -44,6 +44,16 @@ function($, _, Backbone, settings, api, FormViews) {
     render: function() {
       this.renderForm();
       this.updatePreview();
+    },
+
+    save: function(event) {
+      event.preventDefault();
+      console.log('Save clicked');
+
+      api.createForm(settings.formData, function(){
+        console.log('Form successfully saved');
+        $(".saved").fadeIn().css("display","inline-block").delay(2000).fadeOut();
+      });
     },
 
     // The blank question template.
@@ -65,11 +75,19 @@ function($, _, Backbone, settings, api, FormViews) {
     },
 
     renderForm: function() {
-      // Clear out the editor window
-      $(this.elId).html(_.template($('#form-editor').html(), {}));
+      // Render the editor template
+      $(this.elId).html(_.template($('#form-editor-template').html(), {}));
 
+      // Hide the toolbar when in editing mode. 
+      // Maybe we'll want to animate this?
+      $('#survey-form-tools-container').hide();
+
+      // Clear out the editor, just in case. 
       this.formQuestions = $('#editor');
       this.formQuestions.html('');
+
+      // Handle save events
+      $(this.elId).find('.save').click(this.save);
 
       // Default to a blank question if the form is empty 
       if (settings.formData === undefined) {
@@ -89,16 +107,16 @@ function($, _, Backbone, settings, api, FormViews) {
     suffix: function(name) {
       if(_.has(this.repeatCounter, name)) {
         this.repeatCounter[name] += 1;
-        return "-" + this.repeatCounter[name].toString();
+        return '-' + this.repeatCounter[name].toString();
       }
 
       this.repeatCounter[name] = 1; 
-      return "";
+      return '';
     },
 
     editQuestion: function(question) {
       return function(event) {
-        console.log("Updating question");
+        console.log('Updating question');
         var text = $(event.target).val(); //$(this).val();
         var name = this.slugify(text);
 

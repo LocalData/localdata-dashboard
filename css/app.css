@@ -675,6 +675,21 @@ header a {
       color:#fff;
     }
 
+/* Toolbar ...................................................................*/
+
+.actionbar {
+  
+}
+  .actionbar div {
+    display: inline-block;
+  }
+
+  .actionbar .saved {
+    color: #8db100;
+    display: none;
+  }
+
+
 /* Preview ...................................................................*/
 
 #preview-dimmer {
