@@ -40,7 +40,7 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
       // If there isn't a form yet, let's show the survey creation view
       if (settings.formData === undefined) {
 
-        $("#send-survey-container").hide();
+        $("#survey-form-tools-container").hide();
 
         $('.button').hide();
 
@@ -53,8 +53,7 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
         designView.on("formAdded", this.render, this);
 
       }else {
-
-        $("#send-survey-container").show(); // hacky!
+        $("#survey-form-tools-container").show(); // hacky!
 
         // Preview the form if there already is one.
         this.previewView = new FormViews.PreviewView({
