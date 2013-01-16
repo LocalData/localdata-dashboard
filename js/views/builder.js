@@ -20,7 +20,7 @@ function($, _, Backbone, settings, api, FormViews) {
 
   Builder.BuilderView = Backbone.View.extend({
 
-    elId: '#builder-view-container',
+    el: '#builder-view-container',
 
     boxAnswersByQuestionId: {},
     formQuestions: $('#editor'),
@@ -36,9 +36,13 @@ function($, _, Backbone, settings, api, FormViews) {
         'renderQuestion', 'editQuestionType', 'deleteQuestion', 
         'createQuestion', 'editQuestion', 'addSubQuestion',
         'createAnswer', 'editAnswer', 'deleteAnswer',
-        'save', 'slugify');
+        'save', 'done', 'slugify');
       
       this.forms = options.forms;
+
+      if(options.elId) {
+        this.el = options.elId;
+      }
     },
 
     render: function() {
@@ -54,6 +58,12 @@ function($, _, Backbone, settings, api, FormViews) {
         console.log('Form successfully saved');
         $(".saved").fadeIn().css("display","inline-block").delay(2000).fadeOut();
       });
+    },
+
+    done: function(event) {
+      event.preventDefault();
+      console.log('Done editing');
+      this.trigger("done");
     },
 
     // The blank question template.
@@ -76,18 +86,15 @@ function($, _, Backbone, settings, api, FormViews) {
 
     renderForm: function() {
       // Render the editor template
-      $(this.elId).html(_.template($('#form-editor-template').html(), {}));
-
-      // Hide the toolbar when in editing mode. 
-      // Maybe we'll want to animate this?
-      $('#survey-form-tools-container').hide();
+      $(this.el).html(_.template($('#form-editor-template').html(), {}));
 
       // Clear out the editor, just in case. 
       this.formQuestions = $('#editor');
       this.formQuestions.html('');
 
       // Handle save events
-      $(this.elId).find('.save').click(this.save);
+      $(this.el).find('.save').click(this.save);
+      $(this.el).find('.done').click(this.done);
 
       // Default to a blank question if the form is empty 
       if (settings.formData === undefined) {
@@ -124,7 +131,6 @@ function($, _, Backbone, settings, api, FormViews) {
         question.name = name;
 
         this.updatePreview();
-        this.trigger("alert", "an event");
       };
     },
 

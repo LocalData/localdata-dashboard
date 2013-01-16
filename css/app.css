@@ -36,7 +36,8 @@ form input, form label {
   display:block;
 }
 
-form input {
+form input,
+form textarea {
   font-family:"Open Sans", "Source Sans Pro", Helvetica, sans-serif;
   font-size:24px;
   text-indent:5px;
@@ -107,6 +108,11 @@ form .error {
       border-radius:15px;
       margin-right:10px;
     }
+
+.advanced {
+  display:none;
+}
+
 
 
 /* Structure ...............................................................*/
@@ -503,7 +509,6 @@ header a {
 #survey-header.new-survey h2 {
   text-align:center;
 }
-
 
 
 /* Builder .................................................................*/

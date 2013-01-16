@@ -89,21 +89,39 @@ function(
       var context = {};
       this.$el.html(_.template($('#new-survey-view').html(), context));
 
+      $('#new-survey-form .show-advanced').click(function() {
+        $('#new-survey-form .advanced').show();
+      });
+
+      // TODO: This should be unnecessary.
       $("#new-survey-form .submit").click(function(){
         $("#new-survey-form").submit();
       });
 
-      // On submisision of the new survey form...
+      // When the new survey form is submitted:
       $("#new-survey-form").submit(function(event){
         event.preventDefault();
 
-        // Get the name and other details
+        // Get the name and other basic details
         // TODO: this should probably be a new Survey model? 
         var survey = {
           "name": $("input.survey-name").val(),
-          "location": $("input.survey-location").val(),
-          "type": "point"
+          "location": $("input.survey-location").val()
         };
+
+        // Get some of the optional parameters
+        // Custom geoObjectSource
+        var geoObjectSource = $(".survey-geoObjectSource").val();
+        if(geoObjectSource) {
+          survey.geoObjectSource = $.parseJSON(geoObjectSource);
+        }
+
+        // Custom survey type
+        // (Right now, only "point" is a real option) 
+        var type = $("input.survey-type").val();
+        if(type) {
+          survey.type = type;
+        }
 
         console.log("Survey form submitted");
         console.log(survey);
