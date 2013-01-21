@@ -290,31 +290,7 @@
     </ul>
     </script>
     
-    <script type="text/template" id="response-view">
-
-      <div id="filters">
-        <div id="current-filter" class="floatcontainer"></div>
-        <div id="subfilter">
-        </div>
-      </div>
-      
-      <div class="response-list">  
-      <h3>Filter results by:</h3>
-
-      <select id="filter">
-        <option value="">Select a question to filter by</option>
-      <% _.each(flattenedForm, function(filter) {%>
-        <option value="<%- filter.name %>"><%- filter.text %></option>
-      <% }); %>
-      </select>
-
-
-      <h2><%= _.size(responses) %> Response<% if(_.size(responses) != 1) { %>s<% } %></h2>
-
-      <div id="map-view-container"></div> 
-
-      <div id="individual-result-container"></div>  
-
+    <script type="text/template" id="responses-table">
       <table>
         <thead>
           <tr>
@@ -358,6 +334,35 @@
         <% }); %>
         </tbody>
       </table>
+    </script>
+
+    <script type="text/template" id="response-view">
+
+      <div id="filters">
+        <div id="current-filter" class="floatcontainer"></div>
+        <div id="subfilter">
+        </div>
+      </div>
+      
+      <div class="response-list">  
+      <h3>Filter results by:</h3>
+
+      <select id="filter">
+        <option value="">Select a question to filter by</option>
+      <% _.each(flattenedForm, function(filter) {%>
+        <option value="<%- filter.name %>"><%- filter.text %></option>
+      <% }); %>
+      </select>
+
+
+      <h2 id="count"><%= _.size(responses) %> Response<% if(_.size(responses) != 1) { %>s<% } %></h2>
+
+      <div id="map-view-container"></div> 
+
+      <div id="individual-result-container"></div>  
+
+      <div id="responses-list">
+      </div>
       
       </div>
       

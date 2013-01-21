@@ -145,15 +145,21 @@ function(
 
       // Get the forms
       this.forms = new FormModels.Collection({surveyId: this.surveyId});
+
+      this.render();
     },
 
-    update: function() {
-      //console.log("Updating survey");
-      // this.render();
+    update: function () {
+      return this.render();
     },
 
     render: function() {
       console.log("Rendering survey view");
+
+      // Remove old sub-views
+      if (this.responseListView !== undefined) {
+        this.responseListView.remove();
+      }
       
       // Set the context & render the page
       var context = {
@@ -169,7 +175,7 @@ function(
       $('#export-view-container').hide();
 
       // List the responses
-      this.responseListView = new ResponseViews.ListView({
+      this.responseListView = new ResponseViews.MapAndListView({
         el: $("#response-view-container"),
         responses: this.responses,
         forms: this.forms

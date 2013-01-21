@@ -37,7 +37,8 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       _.bindAll(this, 'render', 'selectObject', 'renderObject', 'renderObjects', 'getResponsesInBounds', 'updateMapStyleBasedOnZoom', 'updateObjectStyles');
       
       this.responses = options.responses;
-      this.responses.on('reset', this.render, this);
+      this.listenTo(this.responses, 'reset', this.render);
+      this.listenTo(this.responses, 'addSet', this.renderSet);
 
       // We track the results on the map using these two groups
       this.parcelIdsOnTheMap = {};
@@ -46,34 +47,65 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
       this.defaultStyle = settings.farZoomStyle;
 
-      this.$el.html(_.template($('#map-view').html(), {}));
-
-      // Initialize the map
-      this.map = new L.map('map');
-      
-      // Set up the base map; add the parcels and done markers
-      this.googleLayer = new L.Google("TERRAIN");
-      this.map.addLayer(this.googleLayer); 
-      this.map.addLayer(this.objectsOnTheMap);
-
-      this.map.setView([42.374891,-83.069504], 17); // default center
-      this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
-
       this.render();
     },  
     
     render: function() {  
+      // Don't draw a map if there are no responses.
+      if (this.responses === null || this.responses.length === 0) {
+        return;
+      }
+
+      if (this.map === null) {
+        this.$el.html(_.template($('#map-view').html(), {}));
+
+        // Initialize the map
+        this.map = new L.map('map');
+        //this.map = new L.map($('#map'));
+
+        // Don't think this is needed: this.markers = {};
+        
+        // Set up the base map; add the parcels and done markers
+        this.googleLayer = new L.Google("TERRAIN");
+        this.map.addLayer(this.googleLayer); 
+        this.map.addLayer(this.objectsOnTheMap);
+
+        this.map.setView([42.374891,-83.069504], 17); // default center
+        this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
+      }
+
       // TODO: better message passing
       events.publish('loading', [true]);
-      this.mapResponses();
+      this.plotResponses();
       events.publish('loading', [false]);
+      return this;
+    },
+
+    renderSet: function (set) {
+      if (this.map === null) {
+        return this.render();
+      }
+
+      this.plotResponses(set);
     },
 
     // Map all the responses on the map
     // Optional paramemters: "question", [answers] 
     // If given, the each result on the map will be styled by answers to
     // question.
-    mapResponses: function(question, answers) {
+    plotAllResponses: function(question, answers) {
+      // Clear out all the old results
+      this.objectsOnTheMap.clearLayers();
+      this.parcelIdsOnTheMap = {};
+
+      this.plotResponses(this.responses.models, question, answers);
+    },
+
+    // Incrementally plot a set of responses on the map.
+    // Optional parameters: "question", [answers] 
+    // If given, each result on the map will be styled by answers to
+    // question.
+    plotResponses: function (responses, question, answers) {
       var indexOfColorToUse;
       var color;
       var style = this.defaultStyle;
@@ -82,12 +114,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         this.filtered = true;
       }
 
-      // Clear out all the old results
-      this.objectsOnTheMap.clearLayers();
-      this.parcelIdsOnTheMap = {};
-
-      _.each(this.responses.models, function(response){
-
+      _.each(responses, function (response) {
 
         // Skip old records that don't have geo_info
         var geoInfo = response.get("geo_info");
@@ -99,7 +126,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
         // Make sure were have the geometry for this parcel
         if(_.has(geoInfo, "geometry")) {
-          console.log("This has geometry");
+          //console.log("This has geometry");
           var toRender = {
             parcelId: response.get("parcel_id"),
             geometry: response.get("geo_info").geometry 
@@ -115,7 +142,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
             indexOfColorToUse = _.indexOf(answers, answerToQuestion);
             color = settings.colorRange[indexOfColorToUse + 1];
 
-            if (indexOfColorToUse == -1) {
+            if (indexOfColorToUse === -1) {
               color = settings.colorRange[0];
             }
 
@@ -194,7 +221,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         geojsonLayer.on('click', this.selectObject);
         
 
-        console.log("RENDERING OBJECT");
+        //console.log("RENDERING OBJECT");
 
 
         // Add the layer to the layergroup and the hashmap

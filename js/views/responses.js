@@ -24,12 +24,14 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
 
   var ResponseViews = {};
 
-  ResponseViews.ListView = Backbone.View.extend({
+  ResponseViews.MapAndListView = Backbone.View.extend({
     responses: null,
     firstRun: true,
     surveyId: null,
     paginationView: null,
     filters: {},
+    mapView: null,
+    listView: null,
 
     events: { 
       "change #filter":  "filter",
@@ -38,11 +40,13 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'goToPage', 'humanizeDates', 'filter', 'subFilter', 'setupPagination', 'doesQuestionHaveTheRightAnswer');
+      _.bindAll(this, 'render', 'goToPage', 'humanizeDates', 'filter', 'subFilter', 'setupPagination', 'doesQuestionHaveTheRightAnswer', 'remove');
       this.template = _.template($('#response-view').html());
       
       this.responses = options.responses;
       this.responses.on('reset', this.render, this);
+      this.responses.on('add', this.update, this);
+      this.responses.on('addSet', this.update, this);
 
       this.forms = options.forms;
     },
@@ -54,30 +58,47 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       if (this.firstRun) {
         this.allResponses = new Responses.Collection(this.responses.models);
         this.firstRun = false;
+      } else {
+        // If this is not the first time, then we need to remove the current
+        // map and list views, since we'll create new ones.
+        this.mapView.remove();
+        this.mapView = null;
+        this.listView.remove();
+        this.listView = null;
       }
-
-      // TODO: Pagination
-      this.setupPagination();
-      var thisPage = this.responses.toJSON().slice(this.pageStart, this.pageEnd);
-
-      // Humanize the dates so people who aren't robots can read them
-      this.humanizeDates(thisPage);  
 
       // Set up for filtering
       var flattenedForm = this.forms.getFlattenedForm();
 
       // Actually render the page
       var context = { 
-        responses: thisPage,
+        responses: this.responses,
         flattenedForm: flattenedForm
       };    
       this.$el.html(this.template(context));
 
-      // Set up the map view _after_ the results have arrived. 
-      this.mapView = new MapView({
-        el: $("#map-view-container"),
-        responses: this.responses 
-      });
+      // Set up the map view, now that the root exists.
+      if (this.mapView === null) {
+        this.mapView = new MapView({
+          el: $('#map-view-container'),
+          responses: this.responses
+        });
+      }
+
+      // Set up the list view, now that the root exists.
+      if (this.listView === null) {
+        this.listView = new ResponseViews.ListView({ 
+          el: $('#responses-list'),
+          responses: this.responses,
+          parentView: this
+        });
+      }
+
+      // Render the map
+      this.mapView.render();
+
+      // Render the responses list
+      this.listView.render();
 
       // If the data has been filtered, show that on the page. 
       // TODO: This should be done in a view. 
@@ -87,21 +108,13 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
 
     },
 
-    setupPagination: function() {
-      this.page = 0;
-      this.pageListCount = 20000;
-      this.pageStart = 0;
-      this.pageEnd = this.pageStart + this.pageListCount;
-      this.pageCount = Math.floor(this.responses.length / this.pageListCount);  
-    },
-
-    goToPage: function(pageStr) {
-      var page = parseInt(pageStr, 10); 
-      this.page = page;
-      this.pageStart = (this.page - 1) * this.pageListCount;
-      this.pageEnd = this.page * this.pageListCount;
-      
-      this.render();
+    update: function () {
+      if (this.firstRun) {
+        this.render();
+      }
+      // Update the responses area
+      // TODO: Use a template
+      this.$('#count').html(_.template('<%= _.size(responses) %> Response<% if(_.size(responses) != 1) { %>s<% } %>', {responses: this.responses}));
     },
 
     reset: function(e) {
@@ -123,7 +136,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       $("#subfilter").html(_.template($('#filter-results').html(), { choices: answers }));
 
       // Distinguish the responses visually on the map
-      this.mapView.mapResponses(question, answers);
+      this.mapView.plotAllResponses(question, answers);
     },
 
     subFilter: function(e) {
@@ -153,6 +166,106 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       return resp.attributes.responses !== undefined && resp.attributes.responses[this.filters.questionValue] === this.filters.answerValue;
       //}
       // return false;
+    },
+
+    remove: function () {
+      this.$el.remove();
+      this.stopListening();
+      this.responses.off('reset', this.render, this);
+      this.responses.off('add', this.update, this);
+      this.responses.off('addSet', this.update, this);
+      if (this.mapView) {
+        this.mapView.remove();
+      }
+      if (this.listView) {
+        this.listView.remove();
+      }
+      return this;
+    }
+
+  });
+
+  ResponseViews.ListView = Backbone.View.extend({
+    responses: null,
+    firstRun: true,
+    surveyId: null,
+    paginationView: null,
+    filters: {},
+    parentView: null,
+    itemCount: 20,
+    itemStart: 0,
+
+    //events: { 
+    //  "click #next": "pageNext",
+    //  "click #prev": "pagePrev"
+    //},
+
+    initialize: function(options) {
+      _.bindAll(this, 'render', 'goToPage', 'humanizeDates', 'filter', 'subFilter', 'setupPagination', 'doesQuestionHaveTheRightAnswer');
+      this.template = _.template($('#responses-table').html());
+      
+      this.responses = options.responses;
+      this.listenTo(this.responses, 'reset', this.render);
+
+      this.parentView = options.parentView;
+
+      if (options.itemCount) {
+        this.itemCount = options.itemCount;
+      }
+    },
+
+    render: function() { 
+      console.log('Rendering response list');
+
+      // TODO: Pagination
+      this.setupPagination();
+      //var thisPage = this.responses.toJSON().slice(this.pageStart, this.pageEnd);
+      var thisPage = _.map(this.responses.models.slice(this.itemStart, this.itemStart + this.itemCount),
+        function (item) {
+          return item.toJSON();
+        });
+      if (thisPage.length < this.itemCount) {
+        this.listenTo(this.responses, 'addSet', this.render);
+      }
+
+      // Humanize the dates so people who aren't robots can read them
+      this.humanizeDates(thisPage);
+
+      // Set up for filtering
+      var flattenedForm = this.parentView.forms.getFlattenedForm();
+
+      // Actually render the page
+      var context = { 
+        responses: thisPage,
+        flattenedForm: flattenedForm
+      };    
+      this.$el.html(this.template(context));
+
+      // Render the responses table
+      this.$el.html(this.template({responses: thisPage}));
+
+      // If the data has been filtered, show that on the page. 
+      // TODO: This should be done in a view. 
+      if (_.has(this.filters, "answerValue")) {
+        $("#current-filter").html("<h4>Current filter:</h4> <h3>" + this.filters.questionValue + ": " + this.filters.answerValue + "</h3>   <a id=\"reset\" class=\"button\">Clear filter</a>");
+      }
+
+    },
+    setupPagination: function() {
+      this.page = 0;
+      this.pageListCount = 20000;
+      this.pageStart = 0;
+      this.pageEnd = this.pageStart + this.pageListCount;
+      this.pageCount = Math.floor(this.responses.length / this.pageListCount);  
+    },
+
+    goToPage: function(pageStr) {
+      var page = parseInt(pageStr, 10); 
+      this.page = page;
+      this.pageStart = (this.page - 1) * this.pageListCount;
+      this.pageEnd = this.page * this.pageListCount;
+      
+      this.render();
     },
 
     humanizeDates: function(responses, field) {

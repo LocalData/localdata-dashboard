@@ -5,10 +5,11 @@ define([
   'jquery',
   'lib/lodash',
   'backbone',
-  'settings'
+  'settings',
+  'api'
 ],
 
-function($, _, Backbone, settings) {
+function($, _, Backbone, settings, api) {
   'use strict'; 
 
   var Responses = {};
@@ -30,12 +31,38 @@ function($, _, Backbone, settings) {
       if(options !== undefined) {
         console.log("Getting responses");
         this.surveyId = options.surveyId;
-        this.fetch();
+        this.fetchChunks();
       }
     },
     
     url: function() {
       return settings.api.baseurl + '/surveys/' + this.surveyId + '/responses';
+    },
+
+    fetchChunks: function() {
+      var self = this;
+      function getChunk(start, count) {
+        api.getResponses(start, count, function (error, responses) {
+          if (error) {
+            console.log(error);
+            return;
+          }
+
+          // If we got as many entries as we requested, then request another
+          // chunk of data.
+          if (responses.length === count) {
+            getChunk(start + count, count);
+          }
+
+          // Turn the entries into models and add them to the collection.
+          var models = _.map(responses, function (item) { return new self.model(item); });
+          self.add(models, { silent: true });
+          self.trigger('addSet', models);
+        });
+      }
+
+      // Get the first chunk.
+      getChunk(0, 500);
     },
           
     parse: function(response) {

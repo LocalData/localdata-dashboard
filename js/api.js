@@ -223,6 +223,29 @@ define(function (require) {
     });    
   };
   
+  // Get a chunk of responses.
+  // If startIndex or count are not provided, get all of the responses.
+  // callback(error, responses)
+  api.getResponses = function (startIndex, count, callback) {
+    var url;
+    if (startIndex === undefined || count === undefined) {
+      url = api.getSurveyURL() + '/responses';
+    } else {
+      url = api.getSurveyURL() + '/responses?startIndex=' + startIndex + '&count=' + count;
+    }
+
+    $.getJSON(url, function (data) {
+      if (_.isArray(data.responses)) {
+        callback(null, data.responses);
+      } else {
+        callback({
+          type: 'APIError',
+          message: 'Received an invalid response from the API'
+        });
+      }
+    });
+  };
+
   // Get all the responses in a given bounding box
   // Take a map bounds object
   // Find the objects in the bounds
