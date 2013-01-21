@@ -192,41 +192,43 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
     paginationView: null,
     filters: {},
     parentView: null,
-    itemCount: 20,
-    itemStart: 0,
+    visibleItemCount: 20,
+    page: -1,
+    pageCount: null,
 
-    //events: { 
-    //  "click #next": "pageNext",
-    //  "click #prev": "pagePrev"
-    //},
+    events: { 
+      "click #next": "pageNext",
+      "click #prev": "pagePrev"
+    },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'goToPage', 'humanizeDates', 'filter', 'subFilter', 'setupPagination', 'doesQuestionHaveTheRightAnswer');
+      _.bindAll(this, 'updateResponses', 'render', 'goToPage', 'humanizeDates', 'filter', 'subFilter', 'setupPagination', 'doesQuestionHaveTheRightAnswer', 'pagePrev', 'pageNext');
       this.template = _.template($('#responses-table').html());
       
       this.responses = options.responses;
-      this.listenTo(this.responses, 'reset', this.render);
+      this.listenTo(this.responses, 'reset', this.updateResponses);
+      this.listenTo(this.responses, 'addSet', this.updateResponses);
 
       this.parentView = options.parentView;
 
-      if (options.itemCount) {
-        this.itemCount = options.itemCount;
+      if (options.visibleItemCount) {
+        this.visibleItemCount = options.visibleItemCount;
       }
     },
 
     render: function() { 
       console.log('Rendering response list');
 
-      // TODO: Pagination
-      this.setupPagination();
-      //var thisPage = this.responses.toJSON().slice(this.pageStart, this.pageEnd);
-      var thisPage = _.map(this.responses.models.slice(this.itemStart, this.itemStart + this.itemCount),
+      if (this.pageCount === null) {
+        this.setupPagination();
+      }
+
+      var start = this.page * this.visibleItemCount;
+      var end = start + this.visibleItemCount;
+      var thisPage = _.map(this.responses.models.slice(start, end),
         function (item) {
           return item.toJSON();
         });
-      if (thisPage.length < this.itemCount) {
-        this.listenTo(this.responses, 'addSet', this.render);
-      }
 
       // Humanize the dates so people who aren't robots can read them
       this.humanizeDates(thisPage);
@@ -237,12 +239,12 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       // Actually render the page
       var context = { 
         responses: thisPage,
-        flattenedForm: flattenedForm
+        flattenedForm: flattenedForm,
+        startIndex: start
       };    
-      this.$el.html(this.template(context));
 
       // Render the responses table
-      this.$el.html(this.template({responses: thisPage}));
+      this.$el.html(this.template(context));
 
       // If the data has been filtered, show that on the page. 
       // TODO: This should be done in a view. 
@@ -251,20 +253,43 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       }
 
     },
+
+    updateResponses: function () {
+      this.setupPagination();
+      if (this.page === this.pageCount - 1) {
+        this.render();
+      }
+    },
+
     setupPagination: function() {
-      this.page = 0;
-      this.pageListCount = 20000;
-      this.pageStart = 0;
-      this.pageEnd = this.pageStart + this.pageListCount;
-      this.pageCount = Math.floor(this.responses.length / this.pageListCount);  
+      if (this.page === -1) {
+        this.page = 0;
+      }
+      this.pageCount = Math.floor(this.responses.length / this.visibleItemCount);  
     },
 
     goToPage: function(pageStr) {
       var page = parseInt(pageStr, 10); 
       this.page = page;
-      this.pageStart = (this.page - 1) * this.pageListCount;
-      this.pageEnd = this.page * this.pageListCount;
       
+      this.render();
+    },
+
+    pageNext: function () {
+      if (this.page === this.pageCount - 1) {
+        return;
+      }
+
+      this.page += 1;
+      this.render();
+    },
+
+    pagePrev: function () {
+      if (this.page === 0) {
+        return;
+      }
+
+      this.page -= 1;
       this.render();
     },
 

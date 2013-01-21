@@ -291,9 +291,12 @@
     </script>
     
     <script type="text/template" id="responses-table">
+      <button id="prev" class="btn">Previous</button>
+      <button id="next" class="btn">Next</button>
       <table>
         <thead>
           <tr>
+            <th></th>
             <th>Time</th>
             <th>Location</th>
             <th>By</th>
@@ -302,13 +305,13 @@
         </thead>
             
         <tbody>
-        <% _.each(responses, function(r) { %>
+        <% _.each(responses, function(r, i) { %>
           <tr class="response">
+            <td class="index"><%- startIndex + i + 1 %></td>
             <td class="created"><%- r.createdHumanized %></td>
             <td class="address icon-map-marker">
               <% if(r.geo_info != undefined) { %>
                 <%- r.geo_info.humanReadableName %><br />
-                (Id: <%- r.parcel_id %>)
               <% }else { %>
                 <%- r.parcel_id %>
               <% }; %>
