@@ -46,6 +46,9 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       this.doneMarkersLayerGroup = new L.FeatureGroup();
 
       this.defaultStyle = settings.farZoomStyle;
+      this.defaultPointToLayer = function (feature, latlng) {
+        return new L.circleMarker(latlng, settings.farZoomStyle);
+      };
 
       this.render();
     },  
@@ -61,7 +64,6 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
         // Initialize the map
         this.map = new L.map('map');
-        //this.map = new L.map($('#map'));
 
         // Don't think this is needed: this.markers = {};
         
@@ -108,7 +110,6 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     plotResponses: function (responses, question, answers) {
       var indexOfColorToUse;
       var color;
-      var style = this.defaultStyle;
 
       if(question !== undefined) {
         this.filtered = true;
@@ -124,10 +125,13 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
           return;
         }
 
+        var toRender;
+        var itemStyle = this.defaultStyle;
+        var itemPointToLayer = this.defaultPointToLayer;
+
         // Make sure were have the geometry for this parcel
         if(_.has(geoInfo, "geometry")) {
-          //console.log("This has geometry");
-          var toRender = {
+          toRender = {
             parcelId: response.get("parcel_id"),
             geometry: response.get("geo_info").geometry 
           };
@@ -146,32 +150,25 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
               color = settings.colorRange[0];
             }
 
-            style = settings.styleTemplate;
-            style.color = color;
-            style.fillColor = color;
+            // TODO: this modifies the settings.styleTemplate object, which
+            // does not seem like our intention
+            itemStyle = settings.styleTemplate;
+            itemStyle.color = color;
+            itemStyle.fillColor = color;
           }
-          
-          // Use that style!
-          this.renderObject(toRender, style);
-
-        } else {
-
-          if(_.has(geoInfo, "centroid")) {
-
-            console.log("This parcel has a centroid");
-
-            var toRender = {
-              parcelId: response.get("parcel_id"),
-              geometry: {
-                "type": "Point",
-                "coordinates": response.get("geo_info").centroid 
-              }
-            };
-
-            this.renderObject(toRender, settings.circleMarker);
-
+        } else if (_.has(geoInfo, 'centroid')) {
+          toRender = {
+            parcelId: response.get("parcel_id"),
+            geometry: {
+              "type": "Point",
+              "coordinates": response.get("geo_info").centroid 
+            }
           };
+
+          itemStyle = settings.circleMarker;
         }
+
+        this.renderObject(toRender, itemStyle, itemPointToLayer);
       }, this);
 
 
@@ -194,10 +191,14 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     // Expects an object with properties
     // obj.parcelId: ID of the given object
     // obj.geometry: GeoJSON geometry object
-    renderObject: function(obj, style) {
+    renderObject: function(obj, style, pointToLayer) {
 
-      if(style === undefined) {
+      if (style === undefined) {
         style = this.defaultStyle;
+      }
+
+      if (pointToLayer === undefined) {
+        pointToLayer = this.defaultPointToLayer;
       }
 
       // We don't want to re-draw parcels that are already on the map
@@ -213,11 +214,9 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
         // Create a new geojson layer and style it. 
         var geojsonLayer = new L.geoJson(obj, {
-            pointToLayer: function (feature, latlng) {
-              return new L.circleMarker(latlng, style); 
-            }
+          pointToLayer: pointToLayer,
+          style: style
         });
-        geojsonLayer.setStyle(style);
         geojsonLayer.on('click', this.selectObject);
         
 
