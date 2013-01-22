@@ -20,6 +20,26 @@ define([
 
 function($, _, Backbone, L, moment, events, settings, api, Responses) {
   'use strict'; 
+
+  function indexToColor(index) {
+    if (index >= 0) {
+      return settings.colorRange[index + 1];
+    }
+    return settings.colorRange[0];
+  }
+
+  function getFeatureStyle(feature) {
+    if (feature.properties === undefined || feature.properties.color === undefined) {
+      return settings.styleTemplate;
+    }
+
+    var style = {};
+    _.extend(style, settings.styleTemplate, {
+      color: feature.properties.color,
+      fillColor: feature.properties.color
+    });
+    return style;
+  }
   
   var MapView = Backbone.View.extend({
 
@@ -34,10 +54,12 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     
     initialize: function(options) {
       console.log("Init map view");
-      _.bindAll(this, 'render', 'selectObject', 'renderObject', 'renderObjects', 'getResponsesInBounds', 'updateMapStyleBasedOnZoom', 'updateObjectStyles');
+      _.bindAll(this, 'render', 'selectObject', 'renderObject', 'renderObjects', 'getResponsesInBounds', 'updateMapStyleBasedOnZoom', 'updateObjectStyles', 'FitBounds');
       
       this.responses = options.responses;
-      this.listenTo(this.responses, 'reset', this.render);
+      // TODO: if we add the filter logic to the responses collection, we can
+      // more cleanly trigger off its events.
+      //this.listenTo(this.responses, 'reset', this.render);
       this.listenTo(this.responses, 'addSet', this.renderSet);
 
       // We track the results on the map using these two groups
@@ -50,8 +72,20 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         return new L.circleMarker(latlng, settings.farZoomStyle);
       };
 
+      this.delayFitBounds = _.debounce(this.fitBounds, 250);
+
       this.render();
     },  
+
+    fitBounds: function () {
+      try {
+        this.map.fitBounds(this.objectsOnTheMap.getBounds());
+      } catch (e) {
+      }
+    },
+
+    // Debounced version of fitBounds. Created in the initialize method.
+    delayFitBounds: null,
     
     render: function() {  
       // Don't draw a map if there are no responses.
@@ -115,72 +149,101 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         this.filtered = true;
       }
 
-      _.each(responses, function (response) {
+      var tracker = this.parcelIdsOnTheMap;
 
-        // Skip old records that don't have geo_info
-        var geoInfo = response.get("geo_info");
+      // Create GeoJSON FeatureCollection objects to pass to Leaflet for
+      // rendering.
 
-        if (geoInfo === undefined) {
-          console.log("Skipping geo object");
-          return;
-        }
+      var featureCollection = {
+        type: 'FeatureCollection',
+        features: []
+      };
 
-        var toRender;
-        var itemStyle = this.defaultStyle;
-        var itemPointToLayer = this.defaultPointToLayer;
+      var pointCollection = {
+        type: 'FeatureCollection',
+        features: []
+      };
 
-        // Make sure were have the geometry for this parcel
-        if(_.has(geoInfo, "geometry")) {
-          toRender = {
-            parcelId: response.get("parcel_id"),
-            geometry: response.get("geo_info").geometry 
+      // Populate the FeatureCollection for responses with full geometry.
+      featureCollection.features = _.map(_.filter(responses, function (response) {
+        // Get items with geometry that we haven't seen yet
+        return (_.has(response.get('geo_info'), 'geometry')
+                && !_.has(tracker, response.get('parcel_id')));
+      }), function (response) {
+        var id = response.get('parcel_id');
+        tracker[id] = true;
+
+        var feature = {
+          type: 'Feature',
+          parcelId: id,
+          geometry: response.get('geo_info').geometry
+        };
+
+        // Color the results if necessary
+        if (question !== undefined) {
+          var questions = response.get('responses');
+          var answerToQuestion = questions[question];
+
+          // Figure out what color to use
+          // TODO: memoize the index lookup?
+          feature.properties = {
+            color: indexToColor(_.indexOf(answers, answerToQuestion))
           };
+        }
+        return feature;
+      });
 
-          // Color the results if necessary
-          // TODO: lots of optimization possible here! 
-          if (this.filtered) {
-            var questions = response.get("responses");
-            var answerToQuestion = questions[question];
-
-            // Figure out what color to use
-            indexOfColorToUse = _.indexOf(answers, answerToQuestion);
-            color = settings.colorRange[indexOfColorToUse + 1];
-
-            if (indexOfColorToUse === -1) {
-              color = settings.colorRange[0];
-            }
-
-            // TODO: this modifies the settings.styleTemplate object, which
-            // does not seem like our intention
-            itemStyle = settings.styleTemplate;
-            itemStyle.color = color;
-            itemStyle.fillColor = color;
+      // Populate the FeatureCollection for responses with only a centroid.
+      pointCollection.features = _.map(_.filter(responses, function (response) {
+        return (_.has(response.get('geo_info'), 'geometry')
+                && !_.has(tracker, response.get('parcel_id')));
+      }), function (response) {
+        var id = response.get('parcel_id');
+        tracker[id] = true;
+        return {
+          type: 'Feature',
+          parcelId: id,
+          geometry: {
+            type: 'Point',
+            coordinates: response.get('geo_info').centroid
           }
-        } else if (_.has(geoInfo, 'centroid')) {
-          toRender = {
-            parcelId: response.get("parcel_id"),
-            geometry: {
-              "type": "Point",
-              "coordinates": response.get("geo_info").centroid 
-            }
-          };
+        };
+      });
 
-          itemStyle = settings.circleMarker;
+      // If we found some full-geometry responses, set up the style and pass
+      // them to Leaflet.
+      if (featureCollection.features.length > 0) {
+        var style = this.defaultStyle;
+        if (this.filtered) {
+          style = getFeatureStyle;
         }
 
-        this.renderObject(toRender, itemStyle, itemPointToLayer);
-      }, this);
+        var featureLayer = new L.geoJson(featureCollection, {
+          pointToLayer: this.defaultPointToLayer,
+          style: style
+        });
+        featureLayer.on('click', this.selectObject);
 
+        // Add the layer to the layergroup and the hashmap
+        this.objectsOnTheMap.addLayer(featureLayer);
+      }
 
-      // fitBounds fails if there aren't any results, hence this test:
-      try {
-        console.log(this.objectsOnTheMap.getBounds());
-        this.map.fitBounds(this.objectsOnTheMap.getBounds());
+      // If we found some centroid-only responses, set up the style and pass
+      // them to Leaflet.
+      if (pointCollection.features.length > 0) {
+        var pointLayer = new L.geoJson(pointCollection, {
+          pointToLayer: this.defaultPointToLayer,
+          style: settings.circleMarker
+        });
+        pointLayer.on('click', this.selectObject);
+
+        // Add the layer to the layergroup and the hashmap
+        this.objectsOnTheMap.addLayer(pointLayer);
       }
-      catch (e) {
-        console.log(e);
+
+      if (featureCollection.features.length > 0 || pointCollection.features.length > 0) {
+        this.delayFitBounds();
       }
-      
     },
 
     updateObjectStyles: function(style) {
@@ -208,10 +271,6 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         // Make sure the format fits Leaflet's geoJSON expectations
         obj.type = "Feature";
 
-        // Mongo coordinates are reversed from Leaflet coordinates
-        // AARGH.
-        obj.geometry.coordinates = obj.geometry.coordinates.reverse();
-
         // Create a new geojson layer and style it. 
         var geojsonLayer = new L.geoJson(obj, {
           pointToLayer: pointToLayer,
@@ -219,10 +278,6 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         });
         geojsonLayer.on('click', this.selectObject);
         
-
-        //console.log("RENDERING OBJECT");
-
-
         // Add the layer to the layergroup and the hashmap
         this.objectsOnTheMap.addLayer(geojsonLayer); // was (geojsonLayer);
         this.parcelIdsOnTheMap[obj.parcelId] = geojsonLayer;

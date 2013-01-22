@@ -40,11 +40,11 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'goToPage', 'humanizeDates', 'filter', 'subFilter', 'setupPagination', 'doesQuestionHaveTheRightAnswer', 'remove');
+      _.bindAll(this, 'render', 'goToPage', 'humanizeDates', 'filter', 'subFilter', 'setupPagination', 'doesQuestionHaveTheRightAnswer', 'remove', 'updateFilterView');
       this.template = _.template($('#response-view').html());
       
       this.responses = options.responses;
-      this.responses.on('reset', this.render, this);
+      this.responses.on('reset', this.update, this);
       this.responses.on('add', this.update, this);
       this.responses.on('addSet', this.update, this);
 
@@ -100,12 +100,18 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       // Render the responses list
       this.listView.render();
 
+      this.updateFilterView();
+    },
+
+    updateFilterView: function () {
       // If the data has been filtered, show that on the page. 
       // TODO: This should be done in a view. 
       if (_.has(this.filters, "answerValue")) {
         $("#current-filter").html("<h4>Current filter:</h4> <h3>" + this.filters.questionValue + ": " + this.filters.answerValue + "</h3>   <a id=\"reset\" class=\"button\">Clear filter</a>");
+        $('#subfilter').html('');
+      } else {
+        $("#current-filter").html("");
       }
-
     },
 
     update: function () {
@@ -123,7 +129,8 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       // render should be triggered by an event...
       // this.render();
 
-      $("#current-filter").html("");
+      this.mapView.plotAllResponses();
+      this.updateFilterView();
     },
 
     filter: function(e) {
@@ -147,7 +154,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       events.publish('loading', [true]);
 
       // Reset the collection 
-      // this.responses.reset(this.allResponses.models);
+      //this.responses.reset(this.allResponses.models);
 
       // Filter the responses
       this.filters.answerValue = $answer.text();
@@ -156,6 +163,8 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       var filteredResponses = this.responses.filter(this.doesQuestionHaveTheRightAnswer);
 
       this.responses.reset(filteredResponses);
+      this.mapView.plotAllResponses();
+      this.updateFilterView();
 
       // Let the user know we're done
       events.publish('loading', [false]);
