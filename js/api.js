@@ -108,7 +108,7 @@ define(function (require) {
     
     // Save ourselves an ajax request
     if (settings.slug === slug && settings.surveyId !== null) {
-      callback();
+      return callback();
     }
     
     // TODO: Display a nice error if the survey wans't found.
@@ -152,8 +152,6 @@ define(function (require) {
         return false; 
       });
       settings.formData = mobileForms[0];
-      
-      console.log("API: mobile forms: ", mobileForms);
       
       // Endpoint should give the most recent form first.
       callback();

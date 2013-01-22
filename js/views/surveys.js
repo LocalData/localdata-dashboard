@@ -145,16 +145,24 @@ function(
 
       // Get the forms
       this.forms = new FormModels.Collection({surveyId: this.surveyId});
-
-      this.render();
     },
 
     update: function () {
       return this.render();
     },
 
-    render: function() {
+    render: function (model) {
       console.log("Rendering survey view");
+
+      if (model !== undefined) {
+        if (!_.has(model.changedAttributes, 'id')) {
+          // The survey has not changed, just attributes of the survey, like
+          // the name.
+          // TODO: use a separate template/view
+          this.$('#survey-name').html(model.get('name'));
+          return;
+        }
+      }
 
       // Remove old sub-views
       if (this.responseListView !== undefined) {
