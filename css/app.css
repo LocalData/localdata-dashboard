@@ -442,6 +442,10 @@ header a {
     padding-right:5px; 
   }
 
+.leaflet-control-attribution {
+  display:none;
+}
+
 /*  Note that we can't combine these two rules because they're 
     browser-specific */
 #address-search::-webkit-input-placeholder {
