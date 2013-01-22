@@ -17,7 +17,7 @@ define([
 ],
 
 function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) {
-  'use strict'; 
+  'use strict';
 
   var FormViews = {};
 
@@ -59,9 +59,9 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
         this.previewView = new FormViews.PreviewView({
           elId: '#preview-view-container',
           forms: [settings.formData]
-        });  
+        });
 
-      }    
+      }  
     },
 
     showBuilder: function() {
@@ -88,8 +88,8 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
 
     },
     
-    render: function() {        
-      var context = { 
+    render: function() {
+      var context = {
         survey: this.survey.toJSON(),
         forms: this.forms.toJSON() 
       };
@@ -98,7 +98,7 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
       // old: Make sure we have up-to-date form data before showing the design view
       api.getForm(this.showDesigner);
 
-      // Show the editor 
+      // Show the editor
       $('.edit-form-button').click(this.showBuilder);
     }
   });
@@ -133,7 +133,7 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
     renderPreview: function() {
       console.log('Rendering form preview');
 
-      // Get the templates ready to go 
+      // Get the templates ready to go
       var boxTemplate = _.template($('#t-preview-questions-container').html());
       var questionTemplate = _.template($('#t-preview-question').html());
       var titleTemplate = _.template($('#t-preview-title').html());

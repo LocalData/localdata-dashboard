@@ -1,5 +1,6 @@
 /*jslint nomen: true */
 /*globals define: true */
+/*globals console: true */
 
 define([
   'jquery',
@@ -14,7 +15,7 @@ define([
 ],
 
 function($, _, Backbone, settings, api, FormViews) {
-  'use strict'; 
+  'use strict';
 
   var Builder = {};
 
@@ -32,8 +33,8 @@ function($, _, Backbone, settings, api, FormViews) {
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'renderForm', 'updatePreview', 'suffix', 
-        'renderQuestion', 'editQuestionType', 'deleteQuestion', 
+      _.bindAll(this, 'render', 'renderForm', 'updatePreview', 'suffix',
+        'renderQuestion', 'editQuestionType', 'deleteQuestion',
         'createQuestion', 'editQuestion', 'addSubQuestion',
         'createAnswer', 'editAnswer', 'deleteAnswer',
         'save', 'done', 'slugify');
@@ -88,7 +89,7 @@ function($, _, Backbone, settings, api, FormViews) {
       // Render the editor template
       $(this.el).html(_.template($('#form-editor-template').html(), {}));
 
-      // Clear out the editor, just in case. 
+      // Clear out the editor, just in case.
       this.formQuestions = $('#editor');
       this.formQuestions.html('');
 
@@ -96,7 +97,7 @@ function($, _, Backbone, settings, api, FormViews) {
       $(this.el).find('.save').click(this.save);
       $(this.el).find('.done').click(this.done);
 
-      // Default to a blank question if the form is empty 
+      // Default to a blank question if the form is empty
       if (settings.formData === undefined) {
         settings.formData = {};
         settings.formData.questions = [];
@@ -105,7 +106,8 @@ function($, _, Backbone, settings, api, FormViews) {
 
       // Render form
       _.each(settings.formData.questions, function (question, questionIndex) {
-        this.renderQuestion(question, undefined, undefined, undefined, undefined, questionIndex, undefined); 
+        this.renderQuestion(question, undefined, undefined, undefined, undefined, questionIndex, undefined);
+
         // last param was settings.formData.questions
       }, this);
       this.updatePreview();
@@ -117,7 +119,7 @@ function($, _, Backbone, settings, api, FormViews) {
         return '-' + this.repeatCounter[name].toString();
       }
 
-      this.repeatCounter[name] = 1; 
+      this.repeatCounter[name] = 1;
       return '';
     },
 
@@ -259,17 +261,17 @@ function($, _, Backbone, settings, api, FormViews) {
       var createQuestionProxy = $.proxy(this.createQuestion(parent, questionIndex), this);
       $question.find('> .add-question').click(createQuestionProxy);
 
-      // Listen for a request to add an answer 
+      // Listen for a request to add an answer
       var createAnswerProxy = $.proxy(this.createAnswer(question), this);
       $question.find('.add-answer').click(createAnswerProxy);
 
-      // Some stuff with siblings -- forget what this does. 
+      // Some stuff with siblings -- forget what this does.
       var siblings = this.questionsByParentId[parentID];
       if (siblings === undefined) {
         siblings = [];
         this.questionsByParentId[parentID] = siblings;
       }
-      siblings.push($question); 
+      siblings.push($question);
 
       // Figure out the right place to append the rendered template
       if (appendTo !== undefined) {
@@ -355,7 +357,7 @@ function($, _, Backbone, settings, api, FormViews) {
     }, // end renderQuestion
 
     // Slugify a string
-    // Used to generate the name attribute of forms 
+    // Used to generate the name attribute of forms
     slugify: function(text) {
       text = text.replace(/[^-a-zA-Z0-9,&\s]+/ig, '');
       text = text.replace(/-/gi, "_");
@@ -371,8 +373,4 @@ function($, _, Backbone, settings, api, FormViews) {
   
   return Builder;
 
-}); 
-
-
-
-
+});
