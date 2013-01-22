@@ -14,10 +14,10 @@ Some coding standards:
 ** `referencesToAnswersForQuestion` rather than `answerRefs` 
 ** `function(event)` rather than `function(e)` 
 
-More specific Backbon standards:
+More specific Backbone standards:
 * Every view should accept an `options` object.
-* Every view's initialize function should honor `options.elId`, a string of the 
-selector for the container the to use. 
-* A view may provide its own, default `elId`. 
+* Every view's initialize function should honor `options.el`, a string of the 
+selector for the container the to use. (`$el` is a reference to the Jquery object)
+* A view may provide its own, default `el`. 
 * Views should pass on models to their children. For example, a settings view 
 shoud recieve the current `survey` object instead of calling the API it.
