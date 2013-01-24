@@ -17,17 +17,17 @@ define([
 ],
 
 function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) {
-  'use strict'; 
+  'use strict';
 
   var FormViews = {};
 
   FormViews.FormView = Backbone.View.extend({
     
-    elId: "#form-view-container",
+    elId: '#form-view-container',
 
     initialize: function(options) {
       _.bindAll(this, 'render', 'showDesigner', 'showBuilder');
-      console.log("Initializing forms view");
+      console.log('Initializing forms view');
       this.survey = options.survey;
       this.forms = options.forms;
       // console.log(this.survey);
@@ -35,62 +35,71 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
     },
     
     showDesigner: function() {
-      $("#survey-design-container").empty();
+      $('#survey-design-container').empty();
 
       // If there isn't a form yet, let's show the survey creation view
       if (settings.formData === undefined) {
 
-        $("#send-survey-container").hide();
+        $('#survey-form-tools-container').hide();
 
         $('.button').hide();
 
         var designView = new DesignViews.DesignView({
-          elId: "#survey-design-container",
+          elId: '#survey-design-container',
           survey: this.survey
         });
         designView.render();
 
-        designView.on("formAdded", this.render, this);
+        designView.on('formAdded', this.render, this);
 
       }else {
-
-        $("#send-survey-container").show(); // hacky!
+        $('#survey-form-tools-container').show(); // hacky!
 
         // Preview the form if there already is one.
         this.previewView = new FormViews.PreviewView({
-          elId: "#preview-view-container",
+          elId: '#preview-view-container',
           forms: [settings.formData]
-        });  
+        });
 
-      }    
+      }  
     },
 
     showBuilder: function() {
+      // Hide the toolbar when in editing mode. 
+      // Maybe we'll want to animate this?
+      $('#survey-form-tools-container').hide();
+
       this.builderView = new BuilderViews.BuilderView({
         forms: this.forms
       });
       this.builderView.render();
 
-      this.builderView.on("formUpdated", function() {
-        console.log("Builder: Telling preview to update...");
+      this.builderView.on('formUpdated', function() {
+        console.log('Builder: Telling preview to update...');
         console.log(this.previewView);
         this.previewView.render();
       }, this);
+
+      this.builderView.on('done', function() {
+        $(this.builderView.el).html('');
+        $('#survey-form-tools-container').show();
+        delete this.builderView;
+      }, this);
+
     },
     
-    render: function() {        
-      var context = { 
+    render: function() {
+      var context = {
         survey: this.survey.toJSON(),
         forms: this.forms.toJSON() 
       };
       $(this.elId).html(_.template($('#form-view').html(), context));
 
       // old: Make sure we have up-to-date form data before showing the design view
-      // ;
       api.getForm(this.showDesigner);
 
-      // Show the editor 
-      $(".edit-form-button").click(this.showBuilder);
+      // Show the editor
+      $('.edit-form-button').click(this.showBuilder);
     }
   });
 
@@ -98,7 +107,7 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
 
     initialize: function(options) {
       _.bindAll(this, 'render', 'renderPreview', 'useSurvey');
-      console.log("Init form view");
+      console.log('Init form view');
       console.log(this.options);
 
       this.forms = options.forms;
@@ -106,25 +115,25 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
       this.$el = $(options.elId);
 
       // Set if we want the preview to appear as a popup or not.
-      this.popup = "";
+      this.popup = '';
       if (options.popup !== undefined) {
-        this.popup = "popup";
+        this.popup = 'popup';
       }
 
       this.render();
     },
 
     useSurvey: function(event) {
-      console.log("Using the survey");
+      console.log('Using the survey');
       api.createForm(this.form, function() {
-        console.log("Form added!");
+        console.log('Form added!');
       });
     },
 
     renderPreview: function() {
-      console.log("Rendering form preview");
+      console.log('Rendering form preview');
 
-      // Get the templates ready to go 
+      // Get the templates ready to go
       var boxTemplate = _.template($('#t-preview-questions-container').html());
       var questionTemplate = _.template($('#t-preview-question').html());
       var titleTemplate = _.template($('#t-preview-title').html());
@@ -181,14 +190,14 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
       }
 
       var $dimmer;
-      if (this.popup === "popup") {
+      if (this.popup === 'popup') {
         // Dim the screen behind the preview
-        $dimmer = $("#preview-dimmer");
+        $dimmer = $('#preview-dimmer');
         $dimmer.fadeIn(100);
       }
 
       // Actually render the preview
-      var $preview = $("#preview");
+      var $preview = $('#preview');
       $preview.hide();
       $preview.empty();
       $preview.append(titleTemplate());
@@ -207,9 +216,9 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
         $dimmer.fadeOut(150);
       };
 
-      if (this.popup === "popup") {
+      if (this.popup === 'popup') {
         $dimmer.click(closePreview);
-        $("#preview-close").click(closePreview);
+        $('#preview-close').click(closePreview);
       }
 
     },

@@ -5,6 +5,7 @@ define([
   'jquery',
   'lib/lodash',
   'backbone',
+  'lib/kissmetrics',
 
   // LocalData
   'settings',
@@ -20,7 +21,7 @@ define([
   'views/design'
 ],
 
-function($, _, Backbone, settings, IndexRouter, HomeView, DashboardView, UserViews, SurveyViews, DesignViews) {
+function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, UserViews, SurveyViews, DesignViews) {
   'use strict'; 
 
   var AllViews = {};
@@ -90,7 +91,7 @@ function($, _, Backbone, settings, IndexRouter, HomeView, DashboardView, UserVie
     
     // Survey dashboard routes .................................................
     goto_survey: function(tab) {
-      // _kmq.push(['record', "SurveyView"]);
+      _kmq.push(['record', "SurveyView"]);
 
       // Get or create a view for the survey
       var surveyViewName = "Survey" + settings.surveyId;
@@ -116,7 +117,7 @@ function($, _, Backbone, settings, IndexRouter, HomeView, DashboardView, UserVie
     },
     
     goto_settings: function() {
-      // _kmq.push(['record', "SettingsView"]);
+      _kmq.push(['record', "SettingsView"]);
       this._router.navigate("surveys/" + settings.slug + "/settings");
       this.goto_survey("settings");
     },
@@ -127,7 +128,7 @@ function($, _, Backbone, settings, IndexRouter, HomeView, DashboardView, UserVie
     },
 
     goto_export: function() {
-      // _kmq.push(['record', "ExportView"]);
+      _kmq.push(['record', "ExportView"]);
       this._router.navigate("surveys/" + settings.slug + "/export");
       this.goto_survey("export");
     },
