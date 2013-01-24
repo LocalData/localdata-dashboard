@@ -51,6 +51,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     filtered: false,
     selectedObject: {},
     markers: {},  
+    filter: null,
     
     initialize: function(options) {
       console.log("Init map view");
@@ -59,8 +60,8 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       this.responses = options.responses;
       // TODO: if we add the filter logic to the responses collection, we can
       // more cleanly trigger off its events.
-      //this.listenTo(this.responses, 'reset', this.render);
-      this.listenTo(this.responses, 'addSet', this.renderSet);
+      this.listenTo(this.responses, 'reset', this.render);
+      this.listenTo(this.responses, 'addSet', this.render);
 
       // We track the results on the map using these two groups
       this.parcelIdsOnTheMap = {};
@@ -87,13 +88,14 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     // Debounced version of fitBounds. Created in the initialize method.
     delayFitBounds: null,
     
-    render: function() {  
+    render: function (arg) {  
       // Don't draw a map if there are no responses.
       if (this.responses === null || this.responses.length === 0) {
         return;
       }
 
       if (this.map === null) {
+        // Create the map.
         this.$el.html(_.template($('#map-view').html(), {}));
 
         // Initialize the map
@@ -112,44 +114,51 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
       // TODO: better message passing
       events.publish('loading', [true]);
-      this.plotResponses();
+
+      if (this.responses.filters === null) {
+        this.filter = null;
+      }
+
+      if (_.isArray(arg)) {
+        // We got an array of models. Let's plot them.
+        this.plotResponses(arg);
+      } else {
+        // Plot all of the responses from the responses collection.
+        this.plotResponses();
+      }
       events.publish('loading', [false]);
       return this;
     },
 
-    renderSet: function (set) {
-      if (this.map === null) {
-        return this.render();
-      }
-
-      this.plotResponses(set);
-    },
-
-    // Map all the responses on the map
-    // Optional paramemters: "question", [answers] 
-    // If given, the each result on the map will be styled by answers to
-    // question.
-    plotAllResponses: function(question, answers) {
-      // Clear out all the old results
-      this.objectsOnTheMap.clearLayers();
-      this.parcelIdsOnTheMap = {};
-
-      this.plotResponses(this.responses.models, question, answers);
+    // Set filter parameters for displaying results on the map
+    setFilter: function (question, answers) {
+      this.filter = {
+        question: question,
+        answers: answers
+      };
+      this.plotResponses();
     },
 
     // Incrementally plot a set of responses on the map.
     // Optional parameters: "question", [answers] 
     // If given, each result on the map will be styled by answers to
     // question.
-    plotResponses: function (responses, question, answers) {
+    plotResponses: function (responses) {
       var indexOfColorToUse;
       var color;
 
-      if(question !== undefined) {
-        this.filtered = true;
+      if (responses === undefined) {
+        // Plot all of the responses from the collection.
+        // Clear out the old results first
+        this.objectsOnTheMap.clearLayers();
+        this.parcelIdsOnTheMap = {};
+
+        // TODO: not great form to reassign one of the arguments
+        responses = this.responses.models;
       }
 
       var tracker = this.parcelIdsOnTheMap;
+      var filter = this.filter;
 
       // Create GeoJSON FeatureCollection objects to pass to Leaflet for
       // rendering.
@@ -180,14 +189,14 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         };
 
         // Color the results if necessary
-        if (question !== undefined) {
+        if (filter !== null) {
           var questions = response.get('responses');
-          var answerToQuestion = questions[question];
+          var answerToQuestion = questions[filter.question];
 
           // Figure out what color to use
           // TODO: memoize the index lookup?
           feature.properties = {
-            color: indexToColor(_.indexOf(answers, answerToQuestion))
+            color: indexToColor(_.indexOf(filter.answers, answerToQuestion))
           };
         }
         return feature;
@@ -214,7 +223,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       // them to Leaflet.
       if (featureCollection.features.length > 0) {
         var style = this.defaultStyle;
-        if (this.filtered) {
+        if (filter !== null) {
           style = getFeatureStyle;
         }
 
@@ -294,7 +303,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       console.log("Map style update triggered");
 
       // Don't update the styles if there's a filter in place
-      if(this.filtered) {
+      if (this.filter !== null) {
         return;
       }
 

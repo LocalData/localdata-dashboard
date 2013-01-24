@@ -28,7 +28,6 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
     responses: null,
     firstRun: true,
     surveyId: null,
-    paginationView: null,
     filters: {},
     mapView: null,
     listView: null,
@@ -40,7 +39,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'goToPage', 'humanizeDates', 'filter', 'subFilter', 'setupPagination', 'doesQuestionHaveTheRightAnswer', 'remove', 'updateFilterView');
+      _.bindAll(this, 'render', 'filter', 'subFilter', 'remove', 'updateFilterView');
       this.template = _.template($('#response-view').html());
       
       this.responses = options.responses;
@@ -51,12 +50,11 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       this.forms = options.forms;
     },
     
+    // TODO: merge update and render
     render: function() { 
       console.log("Rendering response view");
 
-      // The first time we render, we want to save a copy of the original responses
       if (this.firstRun) {
-        this.allResponses = new Responses.Collection(this.responses.models);
         this.firstRun = false;
       } else {
         // If this is not the first time, then we need to remove the current
@@ -107,10 +105,13 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       // If the data has been filtered, show that on the page. 
       // TODO: This should be done in a view. 
       if (_.has(this.filters, "answerValue")) {
+        // Indicate the filter selection.
         $("#current-filter").html("<h4>Current filter:</h4> <h3>" + this.filters.questionValue + ": " + this.filters.answerValue + "</h3>   <a id=\"reset\" class=\"button\">Clear filter</a>");
         $('#subfilter').html('');
       } else {
+        // Clear the filter selections.
         $("#current-filter").html("");
+        $('#filter').val('');
       }
     },
 
@@ -125,11 +126,8 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
 
     reset: function(e) {
       this.filters = {};
-      this.responses.reset(this.allResponses.models);
-      // render should be triggered by an event...
-      // this.render();
 
-      this.mapView.plotAllResponses();
+      this.responses.clearFilter();
       this.updateFilterView();
     },
 
@@ -143,7 +141,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       $("#subfilter").html(_.template($('#filter-results').html(), { choices: answers }));
 
       // Distinguish the responses visually on the map
-      this.mapView.plotAllResponses(question, answers);
+      this.mapView.setFilter(question, answers);
     },
 
     subFilter: function(e) {
@@ -153,28 +151,15 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       // Notify the user we're working on it.
       events.publish('loading', [true]);
 
-      // Reset the collection 
-      //this.responses.reset(this.allResponses.models);
-
       // Filter the responses
       this.filters.answerValue = $answer.text();
       this.filters.questionValue = $("#filter").val();
 
-      var filteredResponses = this.responses.filter(this.doesQuestionHaveTheRightAnswer);
+      this.responses.setFilter(this.filters.questionValue, this.filters.answerValue);
 
-      this.responses.reset(filteredResponses);
-      this.mapView.plotAllResponses();
-      this.updateFilterView();
-
-      // Let the user know we're done
       events.publish('loading', [false]);
-    },
 
-    doesQuestionHaveTheRightAnswer: function(resp) {
-      //if (_.has(resp.attributes, 'responses')) {
-      return resp.attributes.responses !== undefined && resp.attributes.responses[this.filters.questionValue] === this.filters.answerValue;
-      //}
-      // return false;
+      this.updateFilterView();
     },
 
     remove: function () {
@@ -196,10 +181,6 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
 
   ResponseViews.ListView = Backbone.View.extend({
     responses: null,
-    firstRun: true,
-    surveyId: null,
-    paginationView: null,
-    filters: {},
     parentView: null,
     visibleItemCount: 20,
     page: -1,
@@ -211,7 +192,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'updateResponses', 'render', 'goToPage', 'humanizeDates', 'filter', 'subFilter', 'setupPagination', 'doesQuestionHaveTheRightAnswer', 'pagePrev', 'pageNext');
+      _.bindAll(this, 'updateResponses', 'render', 'goToPage', 'humanizeDates', 'setupPagination', 'pagePrev', 'pageNext');
       this.template = _.template($('#responses-table').html());
       
       this.responses = options.responses;
@@ -226,8 +207,6 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
     },
 
     render: function() { 
-      console.log('Rendering response list');
-
       if (this.pageCount === null) {
         this.setupPagination();
       }
@@ -242,25 +221,14 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       // Humanize the dates so people who aren't robots can read them
       this.humanizeDates(thisPage);
 
-      // Set up for filtering
-      var flattenedForm = this.parentView.forms.getFlattenedForm();
-
       // Actually render the page
       var context = { 
         responses: thisPage,
-        flattenedForm: flattenedForm,
         startIndex: start
       };    
 
       // Render the responses table
       this.$el.html(this.template(context));
-
-      // If the data has been filtered, show that on the page. 
-      // TODO: This should be done in a view. 
-      if (_.has(this.filters, "answerValue")) {
-        $("#current-filter").html("<h4>Current filter:</h4> <h3>" + this.filters.questionValue + ": " + this.filters.answerValue + "</h3>   <a id=\"reset\" class=\"button\">Clear filter</a>");
-      }
-
     },
 
     updateResponses: function () {
@@ -274,7 +242,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       if (this.page === -1) {
         this.page = 0;
       }
-      this.pageCount = Math.floor(this.responses.length / this.visibleItemCount);  
+      this.pageCount = Math.ceil(this.responses.length / this.visibleItemCount);  
     },
 
     goToPage: function(pageStr) {
