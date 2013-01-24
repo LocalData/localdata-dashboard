@@ -147,6 +147,10 @@ function($, _, Backbone, settings, api, FormViews) {
           question.type = "checkbox";
         }
 
+        // Update the styling
+        var $pills = $(event.target).parent().find('.question-type');
+        $pills.toggleClass('selected');
+
         this.updatePreview();
       };
     },
@@ -259,7 +263,7 @@ function($, _, Backbone, settings, api, FormViews) {
 
       // Listen for a request to add a question
       var createQuestionProxy = $.proxy(this.createQuestion(parent, questionIndex), this);
-      $question.find('> .add-question').click(createQuestionProxy);
+      $question.find('.add-question').click(createQuestionProxy);
 
       // Listen for a request to add an answer
       var createAnswerProxy = $.proxy(this.createAnswer(question), this);

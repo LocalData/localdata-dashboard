@@ -242,7 +242,6 @@
     <script type="text/template" id="survey-list-item-view">
       <div class="survey">
         <h2><a href='#surveys/<%= survey.attributes.slug %>'><%= survey.attributes.name %></a></h2>
-        <%= survey.attributes.id %>
       </div>
     </script>
 
@@ -495,14 +494,14 @@
     <script type="text/template" id="form-editor-template">
       <div id="form-editor">
         <div class="actionbar">
-          <a class="button save">Save form</a>
-          <a class="button done">Done editing</a>
+          <a class="button save">Save your edits</a>
+          <a class="button done">Close editor</a>
           <div class="saved">Form saved</div>
         </div>
 
         <form>
           <h3>Questions</h3>
-          <div id="editor"></div>
+          <div id="editor" class="editor"></div>
 
           <div>
           </div>
@@ -517,13 +516,16 @@
 
             <a class="action remove">&nbsp;</a>
 
-            <a class="<% if(!question.type) { %>selected<% } %> action question-type" data-role="radio-question">Select one</a>
-            <a class="<% if(question.type === 'checkbox') { %>selected<% } %> action question-type" data-role="checkbox-question">Multiple choice</a>
+            <div class="question-type-container">
+              <a class="<% if(question.type === 'checkbox') { %>selected<% } %> action question-type" data-role="checkbox-question">Multiple choice</a><a class="<% if(!question.type) { %>selected<% } %> action question-type" data-role="radio-question">Select one</a>
+            </div>
 
-            <h2>Answers</h2>
+            <h2 class="title">Answers</h2>
             <div class="answers"></div>
-            <a class="action add-answer"><i class="icon-plus-sign icon-white"></i> Add answer</a>
-            <a class="action add-question"><i class="icon-plus-sign icon-white"></i> Add question after <strong><%= question.name %></strong></a>
+            <div class="question-tools-container">
+              <a class="action add-answer"><i class="icon-plus-sign icon-white"></i> Add answer</a>
+              <a class="action add-question"><i class="icon-plus-sign icon-white"></i> Insert another question</strong></a>
+            </div>
 
         </div>
     </script>

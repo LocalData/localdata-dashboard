@@ -45,7 +45,7 @@ function($, _, Backbone, settings, api) {
     renderPreview: function() {
       console.log("Rendering form preview");
 
-      // Get the templates ready to go 
+      // Get the templates ready to go
       var boxTemplate = _.template($('#t-preview-questions-container').html());
       var questionTemplate = _.template($('#t-preview-question').html());
       var titleTemplate = _.template($('#t-preview-title').html());
@@ -110,12 +110,12 @@ function($, _, Backbone, settings, api) {
 
       // Actually render the preview
       var $preview = $("#preview");
-      $preview.hide();
-      $preview.empty();
+      //$preview.empty();
+      //$preview.hide();
       $preview.append(titleTemplate());
       $preview.append(nameTemplate({name: this.form.name}));
       $preview.append(walkActive(this.form.questions, 0));
-      $preview.fadeIn(250);
+      //$preview.fadeIn(250);
 
       // If the user wants to use the given survey...
       $('.use-survey').click(this.useSurvey);
