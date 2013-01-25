@@ -129,9 +129,6 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         } else {
 
           if(_.has(geoInfo, "centroid")) {
-
-            console.log("This parcel has a centroid");
-
             toRender = {
               parcelId: response.get("parcel_id"),
               geometry: {
@@ -268,13 +265,13 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     },
     
     getParcelsInBounds: function() {
-      // Don't add any parcels if the zoom is really far out. 
+      // Don't add any parcels if the zoom is really far out.
       var zoom = this.map.getZoom();
       if(zoom < 16) {
         return;
       }
       
-      // If there are a lot of objects, let's clear them out 
+      // If there are a lot of objects, let's clear them out
       // to improve performance
       if( _.size(this.parcelIdsOnTheMap) > 1250 ) {
         this.objectsOnTheMap.clearLayers();
@@ -282,14 +279,14 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       }
       
       // Get parcel data in the bounds
-      api.getObjectsInBounds(this.map.getBounds(), this.renderObjects); 
+      api.getObjectsInBounds(this.map.getBounds(), this.renderObjects);
     },
           
-    // Get all the responses in the current viewport 
-    getResponsesInBounds: function(){  
+    // Get all the responses in the current viewport
+    getResponsesInBounds: function(){
       console.log("Getting responses in the map");
       
-      // Don't add any markers if the zoom is really far out. 
+      // Don't add any markers if the zoom is really far out.
       var zoom = this.map.getZoom();
       if(zoom < 17) {
         return;

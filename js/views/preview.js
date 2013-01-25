@@ -12,34 +12,26 @@ define([
 ],
 
 function($, _, Backbone, settings, api) {
-  'use strict'; 
+  'use strict';
 
 
   var PreviewView = Backbone.View.extend({
 
     initialize: function(options) {
       _.bindAll(this, 'render', 'renderPreview', 'useSurvey');
-      console.log("Init form view");
-      console.log(this.options);
+      console.log("Init form preview");
 
       this.forms = options.forms;
       this.form = this.forms[0];
-      this.$el = $(options.elId);
+      this.el = options.el || '#preview-view-container';
 
       // Set if we want the preview to appear as a popup or not.
-      this.popup = "";
+      this.popup = false;
       if (options.popup !== undefined) {
-        this.popup = "popup";
+        this.popup = true;
       }
 
       this.render();
-    },
-
-    useSurvey: function(event) {
-      console.log("Using the survey");
-      api.createForm(this.form, function() {
-        console.log("Form added!");
-      });
     },
 
     renderPreview: function() {
@@ -102,7 +94,7 @@ function($, _, Backbone, settings, api) {
       }
 
       var $dimmer;
-      if (this.popup === "popup") {
+      if (this.popup) {
         // Dim the screen behind the preview
         $dimmer = $("#preview-dimmer");
         $dimmer.fadeIn(100);
@@ -128,17 +120,17 @@ function($, _, Backbone, settings, api) {
         $dimmer.fadeOut(150);
       };
 
-      if (this.popup === "popup") {
+      if (this.popup === true) {
         $dimmer.click(closePreview);
         $("#preview-close").click(closePreview);
       }
 
     },
 
-    render: function() {        
-      var context = { 
+    render: function() {
+      var context = {
         popup: this.popup
-      };    
+      };
 
       this.$el.html(_.template($('#preview-view').html(), context));
 

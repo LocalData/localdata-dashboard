@@ -68,7 +68,7 @@ function($, _, Backbone, settings, api, FormViews) {
     },
 
     // The blank question template.
-    BlankQuestion: function(){
+    makeBlankQuestion: function(){
       return {
         "text": "",
         "value": "",
@@ -101,7 +101,7 @@ function($, _, Backbone, settings, api, FormViews) {
       if (settings.formData === undefined) {
         settings.formData = {};
         settings.formData.questions = [];
-        settings.formData.questions.push(new this.BlankQuestion());
+        settings.formData.questions.push(this.makeBlankQuestion());
       }
 
       // Render form
@@ -124,6 +124,12 @@ function($, _, Backbone, settings, api, FormViews) {
     },
 
     editQuestion: function(question) {
+      // TODO:
+      // What if we do:
+      // view = this;
+      // return function(event) {
+      //  view.slugify(text)
+      //  ...
       return function(event) {
         console.log('Updating question');
         var text = $(event.target).val(); //$(this).val();
@@ -171,7 +177,7 @@ function($, _, Backbone, settings, api, FormViews) {
     createQuestion: function(parent, questionIndex) {
       return function(event) {
         console.log("Adding a new question");
-        var newQuestion = this.BlankQuestion();
+        var newQuestion = this.makeBlankQuestion();
         parent.splice(questionIndex + 1, 0, newQuestion);
 
         this.updatePreview();
@@ -195,9 +201,9 @@ function($, _, Backbone, settings, api, FormViews) {
         console.log("Adding sub-question");
 
         if (_.has(question.answers[index], 'questions')) {
-          question.answers[index].questions.unshift(this.BlankQuestion());
+          question.answers[index].questions.unshift(this.makeBlankQuestion());
         }else {
-          question.answers[index].questions = [this.BlankQuestion()];
+          question.answers[index].questions = [this.makeBlankQuestion()];
         }
 
         this.updatePreview();
@@ -228,6 +234,9 @@ function($, _, Backbone, settings, api, FormViews) {
     },
 
     renderQuestion: function(question, visible, parentID, triggerID, appendTo, questionIndex, parent) {
+      // TODO:
+      // This should pass around a well-document options object
+      // Instead of 30 different parameters
 
       // Set default values for questions
       if (visible === undefined) {
