@@ -84,13 +84,9 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
       this.listenTo(this.builderView, 'done', function () {
         $(this.builderView.el).html('');
         $('#survey-form-tools-container').show();
+        this.builderView.stopListening();
         this.builderView = null;
       });
-      // this.builderView.on('done', function() {
-      //
-      //   delete this.builderView;
-      // }, this);
-
     },
     
     render: function() {
