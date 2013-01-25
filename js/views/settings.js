@@ -8,20 +8,17 @@ define([
 
   // LocalData
   'settings',
-  'api',
-
-  // Views
-  'views/design'
+  'api'
 ],
 
-function($, _, Backbone, settings, api, DesignViews) {
-  'use strict'; 
+function($, _, Backbone, settings, api) {
+  'use strict';
 
   var SettingsView = Backbone.View.extend({
     
     elId: "#settings-view-container",
 
-    // TODO 
+    // TODO
     // Save survey settings
     // events: {
     //   "form input[type='submit'] click": this.save
@@ -42,11 +39,11 @@ function($, _, Backbone, settings, api, DesignViews) {
     //   console.log(event);
     // },
 
-    render: function() {        
-      var context = { 
+    render: function() {
+      var context = {
         survey: this.survey.toJSON(),
-        forms: this.forms.toJSON() 
-      };    
+        forms: this.forms.toJSON()
+      };
 
       $(this.elId).html(_.template($('#settings-view').html(), context));
 
