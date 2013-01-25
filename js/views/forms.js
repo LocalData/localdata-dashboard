@@ -28,8 +28,8 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
     initialize: function(options) {
       _.bindAll(this, 'render', 'showDesigner', 'showBuilder');
       console.log('Initializing forms view');
-
       this.el = options.el || '#form-view-container';
+
       this.survey = options.survey;
       this.forms = options.forms;
     },
@@ -65,6 +65,10 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
     },
 
     showBuilder: function() {
+      // Hide the toolbar when in editing mode. 
+      // Maybe we'll want to animate this?
+      $('#survey-form-tools-container').hide();
+
       this.builderView = new BuilderViews.BuilderView({
         forms: this.forms
       });
@@ -75,6 +79,14 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
         console.log(this.previewView);
         this.previewView.render();
       }, this);
+ 
+ 
+      this.listenTo(this.builderView, 'done', function () {
+        $(this.builderView.el).html('');
+        $('#survey-form-tools-container').show();
+        this.builderView.stopListening();
+        this.builderView = null;
+      });
     },
     
     render: function() {
@@ -85,7 +97,6 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
       this.$el.html(_.template($('#form-view').html(), context));
 
       // old: Make sure we have up-to-date form data before showing the design view
-      // ;
       api.getForm(this.showDesigner);
 
       // Show the editor
