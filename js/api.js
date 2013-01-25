@@ -11,7 +11,17 @@ define(function (require) {
 
   var api = {};
 
-  // Get the current user
+  // Return the current hostname.
+  // TODO: Should be in util
+  api.getBaseURL = function() {
+    if (window.location.protocol != "https:") {
+      return "https://" + window.location.host;
+    }
+
+    return "http://" + window.location.host;
+  };
+
+  // Check if the user is authenticated
   api.getUser = function(callback) {
     var url = settings.api.baseurl + "/user";
 
@@ -52,7 +62,7 @@ define(function (require) {
   // @param {Function} callback Parameters: (error, user)
   api.logIn = function(user, callback) {
 
-    var url = settings.api.baseurl + "/login"
+    var url = settings.api.baseurl + "/login";
 
     var request = $.ajax({
       url: url,
@@ -75,7 +85,7 @@ define(function (require) {
       callback(jqXHR.responseText, null);
     });
 
-  }
+  };
 
   // Create a new survey
   api.createSurvey = function(survey, callback) {
@@ -161,11 +171,17 @@ define(function (require) {
   // Add a form to a survey
   //
   // @param {Object} form
-  // @param {Function} callcack with possible error argument
-  // @param {Object} options optional
+  // @param {Function} callback Currently takes no parameters
+  // @param {Object} options Include a surveyId to save to a different survey
   api.createForm = function(form, callback, options) {
     console.log("API: creating a form");
     var key;
+
+    // Only save the fields we want
+    var newForm = {};
+    newForm.name = form.name;
+    newForm.type = form.type;
+    newForm.questions = form.questions;
 
     // Add the form to the current survey
     // Or, if a custom surveyId is defined in options, use that.
@@ -175,7 +191,7 @@ define(function (require) {
     }
 
     var url = settings.api.baseurl + '/surveys/' + surveyId + '/forms/';
-    var data = { forms: [ form ] };
+    var data = { forms: [ newForm ] };
 
     // Post the form data
     $.post(url, data, function() {}, 'text').error(function(error){

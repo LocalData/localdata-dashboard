@@ -19,7 +19,7 @@ define([
 ],
 
 function($, _, Backbone, L, moment, events, settings, api, Responses) {
-  'use strict'; 
+  'use strict';
   
   var MapView = Backbone.View.extend({
 
@@ -30,7 +30,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     selectedLayer: null,
     filtered: false,
     selectedObject: {},
-    markers: {},  
+    markers: {},
     
     initialize: function(options) {
       console.log("Init map view");
@@ -53,16 +53,16 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       
       // Set up the base map; add the parcels and done markers
       this.googleLayer = new L.Google("TERRAIN");
-      this.map.addLayer(this.googleLayer); 
+      this.map.addLayer(this.googleLayer);
       this.map.addLayer(this.objectsOnTheMap);
 
       this.map.setView([42.374891,-83.069504], 17); // default center
       this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
 
       this.render();
-    },  
+    },
     
-    render: function() {  
+    render: function() {
       // TODO: better message passing
       events.publish('loading', [true]);
       this.mapResponses();
@@ -70,7 +70,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     },
 
     // Map all the responses on the map
-    // Optional paramemters: "question", [answers] 
+    // Optional paramemters: "question", [answers]
     // If given, the each result on the map will be styled by answers to
     // question.
     mapResponses: function(question, answers) {
@@ -87,11 +87,10 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       this.parcelIdsOnTheMap = {};
 
       _.each(this.responses.models, function(response){
-
+        var geoInfo = response.get("geo_info");
+        var toRender;
 
         // Skip old records that don't have geo_info
-        var geoInfo = response.get("geo_info");
-
         if (geoInfo === undefined) {
           console.log("Skipping geo object");
           return;
@@ -100,13 +99,13 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         // Make sure were have the geometry for this parcel
         if(_.has(geoInfo, "geometry")) {
           console.log("This has geometry");
-          var toRender = {
+          toRender = {
             parcelId: response.get("parcel_id"),
-            geometry: response.get("geo_info").geometry 
+            geometry: response.get("geo_info").geometry
           };
 
           // Color the results if necessary
-          // TODO: lots of optimization possible here! 
+          // TODO: lots of optimization possible here!
           if (this.filtered) {
             var questions = response.get("responses");
             var answerToQuestion = questions[question];
@@ -130,7 +129,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         } else {
 
           if(_.has(geoInfo, "centroid")) {
-            var toRender = {
+            toRender = {
               parcelId: response.get("parcel_id"),
               geometry: {
                 "type": "Point",
@@ -181,15 +180,14 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         // AARGH.
         obj.geometry.coordinates = obj.geometry.coordinates.reverse();
 
-        // Create a new geojson layer and style it. 
+        // Create a new geojson layer and style it.
         var geojsonLayer = new L.geoJson(obj, {
             pointToLayer: function (feature, latlng) {
-              return new L.circleMarker(latlng, style); 
+              return new L.circleMarker(latlng, style);
             }
         });
         geojsonLayer.setStyle(style);
         geojsonLayer.on('click', this.selectObject);
-
 
         // Add the layer to the layergroup and the hashmap
         this.objectsOnTheMap.addLayer(geojsonLayer); // was (geojsonLayer);
@@ -198,9 +196,9 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     },
 
     renderObjects: function(results) {
-      _.each(results, function(elt) { 
-        this.renderObject(elt);   
-      }, this); 
+      _.each(results, function(elt) {
+        this.renderObject(elt);
+      }, this);
     },
 
     updateMapStyleBasedOnZoom: function(e) {
@@ -267,13 +265,13 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     },
     
     getParcelsInBounds: function() {
-      // Don't add any parcels if the zoom is really far out. 
+      // Don't add any parcels if the zoom is really far out.
       var zoom = this.map.getZoom();
       if(zoom < 16) {
         return;
       }
       
-      // If there are a lot of objects, let's clear them out 
+      // If there are a lot of objects, let's clear them out
       // to improve performance
       if( _.size(this.parcelIdsOnTheMap) > 1250 ) {
         this.objectsOnTheMap.clearLayers();
@@ -281,14 +279,14 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       }
       
       // Get parcel data in the bounds
-      api.getObjectsInBounds(this.map.getBounds(), this.renderObjects); 
+      api.getObjectsInBounds(this.map.getBounds(), this.renderObjects);
     },
           
-    // Get all the responses in the current viewport 
-    getResponsesInBounds: function(){  
+    // Get all the responses in the current viewport
+    getResponsesInBounds: function(){
       console.log("Getting responses in the map");
       
-      // Don't add any markers if the zoom is really far out. 
+      // Don't add any markers if the zoom is really far out.
       var zoom = this.map.getZoom();
       if(zoom < 17) {
         return;
@@ -314,7 +312,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       this.details(this.selectedLayer.feature.parcelId);
     },
 
-    // When a parcel is clicked, show details for just that parcel. 
+    // When a parcel is clicked, show details for just that parcel.
     details: function(parcelId) {
       console.log("Finding parcels " + parcelId);
       this.sel = new Responses.Collection(this.responses.where({'parcel_id': parcelId}));

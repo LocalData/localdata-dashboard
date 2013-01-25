@@ -36,7 +36,8 @@ form input, form label {
   display:block;
 }
 
-form input {
+form input,
+form textarea {
   font-family:"Open Sans", "Source Sans Pro", Helvetica, sans-serif;
   font-size:24px;
   text-indent:5px;
@@ -108,6 +109,11 @@ form .error {
       margin-right:10px;
     }
 
+.advanced {
+  display:none;
+}
+
+
 
 /* Structure ...............................................................*/
 
@@ -144,9 +150,8 @@ header a {
   border-bottom:0px  #a18464;
   padding:15px 30px 15px 40px;
   overflow:auto;
-  -webkit-box-shadow: 0 0 16px rgba(0, 124, 129, 1);
-  box-shadow: 0 0 16px rgba(0, 124, 129, 1);
-
+  x-webkit-box-shadow: 0 0 16px rgba(0, 124, 129, 1);
+  xbox-shadow: 0 0 16px rgba(0, 124, 129, 1);
 }
 
   #site-header h1 {
@@ -173,7 +178,7 @@ header a {
   color:#fefefe;
   font-size:35px;
   padding-bottom:0;
-  padding:14px 20px 0px 20px;
+  padding:14px 20px 0 20px;
 }
 
 #site-header .container,
@@ -184,7 +189,7 @@ header a {
 #survey-header h2 {
   font-size:36px;
   font-weight:600;
-  text-shadow: 0.05em 0.05em #00949b;
+  xtext-shadow: 0.05em 0.05em #00949b;
   letter-spacing:1px;
 }
 
@@ -436,6 +441,10 @@ header a {
     padding-right:5px; 
   }
 
+.leaflet-control-attribution {
+  display:none;
+}
+
 /*  Note that we can't combine these two rules because they're 
     browser-specific */
 #address-search::-webkit-input-placeholder {
@@ -505,7 +514,6 @@ header a {
 }
 
 
-
 /* Builder .................................................................*/
 #new-survey-form {
     width:400px;
@@ -530,6 +538,7 @@ header a {
 .survey-designer {
 
 }
+
   .survey-designer h2 {
     text-align:center;
     font-size:3em;
@@ -554,7 +563,7 @@ header a {
 
 .choice-boxes {
   text-align:center;
-  padding: 20px 0px;
+  padding: 20px 0;
 }
 
   .choice-box {
@@ -568,6 +577,7 @@ header a {
 
     -moz-box-shadow: inset 0 0 24px rgba(250, 246, 143, 0.5);
     -webkit-box-shadow: inset 0 0 24px rgba(250, 246, 143, 0.5);
+    box-shadow: inset 0 0 24px rgba(250, 246, 143, 0.5);
 
     text-align:center;
 
@@ -592,7 +602,7 @@ header a {
       color:#666;
     }
 
-    .choice-box a.preview.button {
+    .choice-box .button {
       font-size:14px;
       text-transform:uppercase;
       padding-top:10px;
@@ -604,48 +614,61 @@ header a {
   margin-right:5%;
   float:left;
 }
+  
+  #builder-view-container .done {
+    float:right;
+  }
 
-  #editor input {
+  .editor input {
     font-size:1em;
     color:#333;
     display:inline-block;
   }
 
-  #editor input.question-input {
+  .editor .question-input {
     font-weight:600;
   }
 
-  #editor .question {
-    padding:10px 0px 0px 20px;
-    background:#eee; 
-  }
-
-  #editor .question h2 {
-    text-transform: uppercase;
-    font-size:.9em;
-    color:#999;
-    margin-top:10px;
-    margin-bottom:0px;
-    padding:10px 0px 0px 25px;
-    border-top:1px dotted #ddd;
-  }
-
-  #editor.question,
-  #editor .answers {
+  .eeditor .question,
+  .eeditor .answers {
     border-bottom:1px dotted #ddd;
   }
+    .editor .question {
+      padding:10px 0 0 10px;
+      border-top:10px solid #ddd;
+    }
+
+      .editor .question .title {
+        text-transform: uppercase;
+        font-size:.9em;
+        color:#999;
+        margin-top:10px;
+        margin-bottom:0;
+        padding:10px 0 0 25px;
+        border-top:1px dotted #ddd;
+      }
 
     .question .question {
       margin-left:20px; 
     }
-  
-  #editor .answers {
-    padding:0px 20px 20px 20px;
+
+  .editor .answers {
+    padding:0 0 0 20px;
   }
+
+    .editor .question-tools-container {
+      padding:0 10px 10px 16px;
+    }
+
+    .editor .add-answer {
+      display:block;
+      margin-bottom:10px;
+      margin-left:10px;
+    }
 
   .action {
     text-decoration:none;
-    border:0px none;
+    border:0 none;
     padding-left:15px;
     cursor: pointer;
     font-size:12px;
@@ -656,24 +679,65 @@ header a {
       color:#138288;
     }
 
+    .add-answer {
+      background:transparent url(../img/icons/add-10.png) no-repeat center left;
+    }
+
     .add-sub-question {
       background:transparent url(../img/icons/branch.png) no-repeat center left;
     }
 
-    #editor .remove {
+    .editor .remove {
       background:transparent url(../img/icons/delete-10.png) no-repeat center left;
       color: #db6a6e;
-      text-indent:-1000!important;
+      text-indent:-1000;
       display:inline-block;
       padding-left:20px;
       padding-top:5px;
       margin-left:3px;
     }
 
-    #editor .action.selected {
-      background:#333;
+    .editor .question-type {
+      background:#aaa;
       color:#fff;
+      padding:2px 4px;
     }
+
+    .editor .question-type-container .question-type:first-child {
+      border-bottom-left-radius: 7px;
+      border-top-left-radius: 7px;
+      border-right:1px solid #fff;
+      padding-left:6px;
+    }
+
+    .editor .question-type-container .question-type:last-child {
+      border-bottom-right-radius: 7px;
+      border-top-right-radius: 7px;
+      padding-right:6px;
+    }
+
+    .editor .question-type-container .selected {
+      background:#999;
+      -moz-box-shadow: inset 0 0 20px rgba(0,0,0, 0.4);
+      -webkit-box-shadow: inset 0 0 20px rgba(0,0,0, 0.4);
+      box-shadow: inset 0 0 20px rgba(0,0,0, 0.4);
+
+    }
+
+/* Toolbar ...................................................................*/
+
+.actionbar {
+  
+}
+  .actionbar div {
+    display: inline-block;
+  }
+
+  .actionbar .saved {
+    color: #8db100;
+    display: none;
+  }
+
 
 /* Preview ...................................................................*/
 
@@ -695,14 +759,15 @@ header a {
 #preview {
   padding-bottom: 20px;
   background: #fff;
-
   width:44%;
-  float:right;
+  float:left;
 }
   
   #preview.popup {
+    flot:none;
+    background:#fff;
     display:block;
-    padding-top:20px;
+    padding:10px 0 20px 20px;
     width: 700px;
     position: absolute;
     left: 25%;
@@ -710,6 +775,7 @@ header a {
     border: 1px solid #eee;
     -moz-box-shadow: 0 0 20px rgba(0,0,0, 0.25);
     -webkit-box-shadow: 0 0 20px rgba(0,0,0, 0.25);
+    box-shadow: 0 0 20px rgba(0,0,0, 0.25);
   }
 
   #preview-close {

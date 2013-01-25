@@ -47,7 +47,9 @@ function($, _, Backbone, events, settings, api, SurveyModels, FormModels, Previe
 
     useSurvey: function(event) {
       console.log("Using the survey");
-      api.createForm(exampleForm, this.trigger('formAdded'));
+      api.createForm(exampleForm, $.proxy(function() {
+        this.trigger('formAdded');
+      },this));
     },
 
     render: function() {
