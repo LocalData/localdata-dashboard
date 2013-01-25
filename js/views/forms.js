@@ -79,12 +79,17 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
         console.log(this.previewView);
         this.previewView.render();
       }, this);
-
-      this.builderView.on('done', function() {
+ 
+ 
+      this.listenTo(this.builderView, 'done', function () {
         $(this.builderView.el).html('');
         $('#survey-form-tools-container').show();
-        delete this.builderView;
-      }, this);
+        this.builderView = null;
+      });
+      // this.builderView.on('done', function() {
+      //
+      //   delete this.builderView;
+      // }, this);
 
     },
     

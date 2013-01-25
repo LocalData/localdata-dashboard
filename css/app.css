@@ -538,6 +538,7 @@ header a {
 .survey-designer {
 
 }
+
   .survey-designer h2 {
     text-align:center;
     font-size:3em;
@@ -759,9 +760,11 @@ header a {
   padding-bottom: 20px;
   background: #fff;
   width:44%;
+  float:left;
 }
   
   #preview.popup {
+    flot:none;
     background:#fff;
     display:block;
     padding:10px 0 20px 20px;

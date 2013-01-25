@@ -14,6 +14,10 @@ define(function (require) {
   // Return the current hostname.
   // TODO: Should be in util
   api.getBaseURL = function() {
+    if (window.location.protocol != "https:") {
+      return "https://" + window.location.host;
+    }
+
     return "http://" + window.location.host;
   };
 
@@ -164,7 +168,7 @@ define(function (require) {
     });
   };
 
-  // Add a form form to a survey
+  // Add a form to a survey
   //
   // @param {Object} form
   // @param {Function} callback Currently takes no parameters
@@ -173,10 +177,11 @@ define(function (require) {
     console.log("API: creating a form");
     var key;
 
-    // Strip existing fields
-    delete form._id;
-    delete form.created;
-    delete form.id;
+    // Only save the fields we want
+    var newForm = {};
+    newForm.name = form.name;
+    newForm.type = form.type;
+    newForm.questions = form.questions;
 
     // Add the form to the current survey
     // Or, if a custom surveyId is defined in options, use that.
@@ -186,9 +191,7 @@ define(function (require) {
     }
 
     var url = settings.api.baseurl + '/surveys/' + surveyId + '/forms/';
-    var data = { forms: [ form ] };
-
-    console.log(url, data);
+    var data = { forms: [ newForm ] };
 
     // Post the form data
     $.post(url, data, function() {}, 'text').error(function(error){

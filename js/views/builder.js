@@ -40,10 +40,6 @@ function($, _, Backbone, settings, api, FormViews) {
         'save', 'done', 'slugify');
       
       this.forms = options.forms;
-
-      if(options.elId) {
-        this.el = options.elId;
-      }
     },
 
     render: function() {
