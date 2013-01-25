@@ -23,12 +23,14 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews) {
 
   var DashboardView = Backbone.View.extend({
   
-    $el: $('#container'),
+    el: '#container',
     
     initialize: function(options) {
       _.bindAll(this, 'render', 'appendSurvey');
 
-      this.el = options.el || '#container';
+      if (options) {
+        this.el = options.el || '#container';
+      }
 
       this.surveys = new Surveys.Collection();
       this.surveys.bind('reset', this.render);

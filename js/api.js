@@ -181,7 +181,7 @@ define(function (require) {
     $.post(url, data, function() {}, 'text').error(function(error){
         console.log("Error posting form:", error);
     }).success(function(){
-      callback(error);
+      callback();
     });
 
   };

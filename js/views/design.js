@@ -33,7 +33,8 @@ function($, _, Backbone, events, settings, api, SurveyModels, FormModels, Previe
     initialize: function(options) {
       _.bindAll(this, 'update', 'render', 'useSurvey');
 
-      this.$el = $(options.elId);
+      this.el = options.el;
+      this.$el = $(options.el);
 
       this.survey = options.survey;
       this.survey.on('change', this.render, this);
@@ -64,7 +65,7 @@ function($, _, Backbone, events, settings, api, SurveyModels, FormModels, Previe
         event.preventDefault();
 
         this.previewView = new PreviewView({
-          el: "#preview-view-container",
+          el: '#preview-view-container',
           popup: true,
           forms: [exampleForm]
         });

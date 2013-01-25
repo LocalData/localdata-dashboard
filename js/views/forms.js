@@ -17,7 +17,7 @@ define([
 ],
 
 function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) {
-  'use strict'; 
+  'use strict';
 
   var FormViews = {};
 
@@ -30,11 +30,8 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
       console.log('Initializing forms view');
 
       this.el = options.el || '#form-view-container';
-
       this.survey = options.survey;
       this.forms = options.forms;
-      // console.log(this.survey);
-      // console.log(this.forms);
     },
     
     showDesigner: function() {
@@ -60,7 +57,7 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
 
         // Preview the form if there already is one.
         this.previewView = new PreviewView({
-          elId: '#preview-view-container',
+          el: '#preview-view-container',
           forms: [settings.formData]
         });
 
@@ -85,7 +82,7 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
         survey: this.survey.toJSON(),
         forms: this.forms.toJSON()
       };
-      $(this.elId).html(_.template($('#form-view').html(), context));
+      this.$el.html(_.template($('#form-view').html(), context));
 
       // old: Make sure we have up-to-date form data before showing the design view
       // ;

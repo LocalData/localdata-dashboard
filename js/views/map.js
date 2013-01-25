@@ -130,20 +130,17 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         } else {
 
           if(_.has(geoInfo, "centroid")) {
-
-            console.log("This parcel has a centroid");
-
             var toRender = {
               parcelId: response.get("parcel_id"),
               geometry: {
                 "type": "Point",
-                "coordinates": response.get("geo_info").centroid 
+                "coordinates": response.get("geo_info").centroid
               }
             };
 
             this.renderObject(toRender, settings.circleMarker);
 
-          };
+          }
         }
       }, this);
 
@@ -192,9 +189,6 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         });
         geojsonLayer.setStyle(style);
         geojsonLayer.on('click', this.selectObject);
-        
-
-        console.log("RENDERING OBJECT");
 
 
         // Add the layer to the layergroup and the hashmap
