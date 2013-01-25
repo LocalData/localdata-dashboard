@@ -28,9 +28,6 @@ function($, _, Backbone, settings, api, Users, Surveys, SurveyViews) {
     
     initialize: function(options) {
       _.bindAll(this, 'render', 'update', 'checkUserView');
-
-      this.userModel = new Users.Model();
-      this.userModel.on("change", this.checkUserView)
     },
 
     update: function() {
@@ -38,16 +35,17 @@ function($, _, Backbone, settings, api, Users, Surveys, SurveyViews) {
     },
 
     checkUserView: function() {
-      console.log(this.userModel.isLoggedIn());
+      // TODO
+      // console.log(this.userModel.isLoggedIn());
     },
-    
-    render: function() {  
-      console.log("Rendering HomeView"); 
+  
+    render: function() {
+      console.log("Rendering HomeView");
       
 
       var self = this;
       var context = {};
-      this.$el.html(_.template($('#home').html(), context));  
+      this.$el.html(_.template($('#home').html(), context));
     }
     
   });

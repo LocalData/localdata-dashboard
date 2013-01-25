@@ -8,7 +8,7 @@ and geodata APIs in `js/settings.js`.
 Things get kicked off from `js/main.js`.
 
 Some coding standards:
-* Follow [Douglas Crawford's conventions](http://javascript.crockford.com/code.html)
+* Follow [Douglas Crockford's conventions](http://javascript.crockford.com/code.html)
 * Err on the side of long, descriptive variable names
 ** Name the target of the function -- for example, `renderForm` rather than `render`.
 ** `referencesToAnswersForQuestion` rather than `answerRefs` 

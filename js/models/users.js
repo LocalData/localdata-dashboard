@@ -9,10 +9,13 @@ define([
 ],
 
 function($, _, Backbone, settings) {
-  'use strict'; 
+  'use strict';
 
   var Users = {};
 
+
+  // TODO
+  // This is a stub
   Users.Model = Backbone.Model.extend({
     urlRoot: settings.api.baseurl + "/user/",
     
