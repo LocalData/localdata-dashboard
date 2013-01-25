@@ -11,7 +11,7 @@ define(function (require) {
 
   var api = {};
 
-  // Check if the user is authenticated
+  // Get the current user
   api.getUser = function(callback) {
     var url = settings.api.baseurl + "/user";
 
@@ -20,8 +20,8 @@ define(function (require) {
     });
   };
 
-  // Create a new user 
-  // 
+  // Create a new user
+  //
   // @param {Object} user Name, email, and password for the user
   // @param {Function} callback Parameters: (error, user)
   api.createUser = function(user, callback) {
@@ -135,7 +135,7 @@ define(function (require) {
   };
 
     
-  // Get the form for the urrent survey
+  // Get the form for the current survey
   api.getForm = function(callback) {
     console.log("API: getting form data");
     var url = api.getSurveyURL() + "/forms";
@@ -149,35 +149,37 @@ define(function (require) {
             return true;
           }
         }
-        return false; 
+        return false;
       });
       settings.formData = mobileForms[0];
-      
-      console.log("API: mobile forms: ", mobileForms);
       
       // Endpoint should give the most recent form first.
       callback();
     });
   };
 
-  // Add a form form to a survey
+  // Add a form to a survey
+  //
+  // @param {Object} form
+  // @param {Function} callcack with possible error argument
+  // @param {Object} options optional
   api.createForm = function(form, callback, options) {
     console.log("API: creating a form");
     var key;
 
     // Add the form to the current survey
-    // Or, if a custom surveyId is defined in options, use that. 
+    // Or, if a custom surveyId is defined in options, use that.
     var surveyId = settings.surveyId;
     if(_.has(options, "surveyId")) {
       surveyId = options.surveyId;
     }
 
     var url = settings.api.baseurl + '/surveys/' + surveyId + '/forms/';
-    var data = { "forms": [ form ] };
+    var data = { forms: [ form ] };
 
     // Post the form data
-    $.post(url, data, function() {}, "text").error(function(){ 
-        console.log("Error posting form:");
+    $.post(url, data, function() {}, 'text').error(function(error){
+        console.log("Error posting form:", error);
     }).success(function(){
       callback();
     });
@@ -185,12 +187,12 @@ define(function (require) {
   };
     
   // Deal with the formatting of the geodata API.
-  // In the future, this will be more genericized. 
+  // In the future, this will be more genericized.
   // parcel_id => object_id
   // address => object_location
   api.parseObjectData = function(data) {
     return {
-      parcelId: data.parcelId, 
+      parcelId: data.parcelId,
       address: data.address,
       polygon: data.polygon,
       centroid: data.centroid
@@ -199,6 +201,7 @@ define(function (require) {
 
 
   // Geodata stuff .............................................................
+  // Queries to the geodata API, geocoding, and more
   api.getGeoBoundsObjectsURL = function(southwest, northeast) {
     return settings.api.geo + '/parcels?bbox=' + southwest.lng + "," + southwest.lat + "," + northeast.lng + "," + northeast.lat;
   };
