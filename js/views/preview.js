@@ -24,12 +24,12 @@ function($, _, Backbone, settings, api) {
 
       this.forms = options.forms;
       this.form = this.forms[0];
-      this.$el = $(options.elId);
+      this.$el = $(options.el);
 
       // Set if we want the preview to appear as a popup or not.
-      this.popup = "";
+      this.popup = false;
       if (options.popup !== undefined) {
-        this.popup = "popup";
+        this.popup = true;
       }
 
       this.render();
@@ -128,17 +128,17 @@ function($, _, Backbone, settings, api) {
         $dimmer.fadeOut(150);
       };
 
-      if (this.popup === "popup") {
+      if (this.popup === true) {
         $dimmer.click(closePreview);
         $("#preview-close").click(closePreview);
       }
 
     },
 
-    render: function() {        
-      var context = { 
+    render: function() {
+      var context = {
         popup: this.popup
-      };    
+      };
 
       this.$el.html(_.template($('#preview-view').html(), context));
 

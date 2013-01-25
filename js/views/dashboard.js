@@ -19,14 +19,16 @@ define([
 ],
 
 function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews) {
-  'use strict'; 
+  'use strict';
 
   var DashboardView = Backbone.View.extend({
   
-    el: $("#container"),
+    $el: $('#container'),
     
     initialize: function(options) {
       _.bindAll(this, 'render', 'appendSurvey');
+
+      this.el = options.el || '#container';
 
       this.surveys = new Surveys.Collection();
       this.surveys.bind('reset', this.render);
@@ -36,12 +38,12 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews) {
       this.surveys.fetch();
     },
     
-    render: function() {  
-      console.log("Rendering DashboardView"); 
+    render: function() {
+      console.log("Rendering DashboardView");
       
       var self = this;
       var context = {};
-      this.$el.html(_.template($('#dashboard').html(), context));  
+      this.$el.html(_.template($('#dashboard').html(), context));
 
       this.surveys.each(function(survey) {
         self.appendSurvey(survey);
