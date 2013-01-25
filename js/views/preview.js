@@ -23,9 +23,8 @@ function($, _, Backbone, settings, api) {
 
       this.forms = options.forms;
       this.form = this.forms[0];
-      // this.el = options.el || '#preview-view-container';
+      this.el = options.el || '#preview-view-container';
 
-      console.log(this.$el);
       // Set if we want the preview to appear as a popup or not.
       this.popup = false;
       if (options.popup !== undefined) {
