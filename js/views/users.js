@@ -57,17 +57,15 @@ function($, _, Backbone, events, router, settings, api, UserModels) {
 
       api.logIn(user, function(error, user){
         if(error) {
-          console.log(error.message);
-          $('#login .error').html(error.message);
+          console.log(error);
+          $('#login .error').html(error);
           return;
         }
 
-        // Todo: use RedirectTo
         // TODO: use the router
-
         window.location.href = "/";
       });
-    },  
+    },
 
     createUser: function(event) {
       event.preventDefault();
@@ -82,9 +80,9 @@ function($, _, Backbone, events, router, settings, api, UserModels) {
           return;
         }
 
-        // Success! Go to the dashboard. 
+        // Success! Go to the dashboard.
         // TODO: use the router
-        window.location.href = "/";
+        //window.location.href = "/";
       });
     }
 

@@ -56,8 +56,8 @@ define(function (require) {
   };
 
 
-  // Log a user in 
-  // 
+  // Log a user in
+  //
   // @param {Object} user Email and password for the user
   // @param {Function} callback Parameters: (error, user)
   api.logIn = function(user, callback) {
@@ -81,7 +81,7 @@ define(function (require) {
     });
 
     request.fail(function(jqXHR, textStatus, errorThrown) {
-      console.log("Request failed: ", jqXHR.responseText);
+      console.log("Request failed: ", jqXHR);
       callback(jqXHR.responseText, null);
     });
 
@@ -222,11 +222,11 @@ define(function (require) {
     return settings.api.geo + '/parcels?bbox=' + southwest.lng + "," + southwest.lat + "," + northeast.lng + "," + northeast.lat;
   };
 
-  // Geocode an address  
-  // Take an address string. 
+  // Geocode an address
+  // Take an address string.
   // Add "Detroit" to the end.
   // Return the first result as a lat-lng for convenience.
-  // Or Null if Bing is being a jerk / we're dumb. 
+  // Or Null if Bing is being a jerk / we're dumb.
   api.codeAddress = function(address, callback) {
     console.log("Coding an address");
     console.log(address);
@@ -239,7 +239,7 @@ define(function (require) {
         var latlng = new L.LatLng(point.coordinates[0], point.coordinates[1]);
         callback(latlng);
       }
-    });    
+    });
   };
   
   // Get all the responses in a given bounding box
@@ -264,7 +264,7 @@ define(function (require) {
   
   // Add a 100% buffer to a bounds object.
   // Makes parcels render faster when the map is moved
-  var addBuffer = function(bounds) {    
+  var addBuffer = function(bounds) {
     var sw = bounds.getSouthWest();
     var ne = bounds.getNorthEast();
     
@@ -301,24 +301,5 @@ define(function (require) {
     });
   };
 
-
-  // TODO: Get a short URL for a survey from 
-  // api.getShortURL = function(long_url, login, api_key, func){ 
-  //   $.getJSON(
-  //     "http://api.bitly.com/v3/shorten?callback=?", 
-  //     { 
-  //         "format": "json",
-  //         "apiKey": api_key,
-  //         "login": login,
-  //         "longUrl": long_url
-  //     },
-  //     function(response)
-  //     {
-  //         func(response.data.url);
-  //     }
-  //   );
-  // };
-
-    
   return api;
 });
