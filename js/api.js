@@ -11,6 +11,16 @@ define(function (require) {
 
   var api = {};
 
+  // Return the current hostname.
+  // TODO: Should be in util
+  api.getBaseURL = function() {
+    if (window.location.protocol != "https:") {
+      return "https://" + window.location.host;
+    }
+
+    return "http://" + window.location.host;
+  };
+
   // Check if the user is authenticated
   api.getUser = function(callback) {
     var url = settings.api.baseurl + "/user";
@@ -20,8 +30,8 @@ define(function (require) {
     });
   };
 
-  // Create a new user 
-  // 
+  // Create a new user
+  //
   // @param {Object} user Name, email, and password for the user
   // @param {Function} callback Parameters: (error, user)
   api.createUser = function(user, callback) {
@@ -46,13 +56,13 @@ define(function (require) {
   };
 
 
-  // Log a user in 
-  // 
+  // Log a user in
+  //
   // @param {Object} user Email and password for the user
   // @param {Function} callback Parameters: (error, user)
   api.logIn = function(user, callback) {
 
-    var url = settings.api.baseurl + "/login"
+    var url = settings.api.baseurl + "/login";
 
     var request = $.ajax({
       url: url,
@@ -71,11 +81,11 @@ define(function (require) {
     });
 
     request.fail(function(jqXHR, textStatus, errorThrown) {
-      console.log("Request failed: ", jqXHR.responseText);
+      console.log("Request failed: ", jqXHR);
       callback(jqXHR.responseText, null);
     });
 
-  }
+  };
 
   // Create a new survey
   api.createSurvey = function(survey, callback) {
@@ -135,7 +145,7 @@ define(function (require) {
   };
 
     
-  // Get the form for the urrent survey
+  // Get the form for the current survey
   api.getForm = function(callback) {
     console.log("API: getting form data");
     var url = api.getSurveyURL() + "/forms";
@@ -149,7 +159,7 @@ define(function (require) {
             return true;
           }
         }
-        return false; 
+        return false;
       });
       settings.formData = mobileForms[0];
       
@@ -158,24 +168,34 @@ define(function (require) {
     });
   };
 
-  // Add a form form to a survey
+  // Add a form to a survey
+  //
+  // @param {Object} form
+  // @param {Function} callback Currently takes no parameters
+  // @param {Object} options Include a surveyId to save to a different survey
   api.createForm = function(form, callback, options) {
     console.log("API: creating a form");
     var key;
 
+    // Only save the fields we want
+    var newForm = {};
+    newForm.name = form.name;
+    newForm.type = form.type;
+    newForm.questions = form.questions;
+
     // Add the form to the current survey
-    // Or, if a custom surveyId is defined in options, use that. 
+    // Or, if a custom surveyId is defined in options, use that.
     var surveyId = settings.surveyId;
     if(_.has(options, "surveyId")) {
       surveyId = options.surveyId;
     }
 
     var url = settings.api.baseurl + '/surveys/' + surveyId + '/forms/';
-    var data = { "forms": [ form ] };
+    var data = { forms: [ newForm ] };
 
     // Post the form data
-    $.post(url, data, function() {}, "text").error(function(){ 
-        console.log("Error posting form:");
+    $.post(url, data, function() {}, 'text').error(function(error){
+        console.log("Error posting form:", error);
     }).success(function(){
       callback();
     });
@@ -183,12 +203,12 @@ define(function (require) {
   };
     
   // Deal with the formatting of the geodata API.
-  // In the future, this will be more genericized. 
+  // In the future, this will be more genericized.
   // parcel_id => object_id
   // address => object_location
   api.parseObjectData = function(data) {
     return {
-      parcelId: data.parcelId, 
+      parcelId: data.parcelId,
       address: data.address,
       polygon: data.polygon,
       centroid: data.centroid
@@ -197,15 +217,16 @@ define(function (require) {
 
 
   // Geodata stuff .............................................................
+  // Queries to the geodata API, geocoding, and more
   api.getGeoBoundsObjectsURL = function(southwest, northeast) {
     return settings.api.geo + '/parcels?bbox=' + southwest.lng + "," + southwest.lat + "," + northeast.lng + "," + northeast.lat;
   };
 
-  // Geocode an address  
-  // Take an address string. 
+  // Geocode an address
+  // Take an address string.
   // Add "Detroit" to the end.
   // Return the first result as a lat-lng for convenience.
-  // Or Null if Bing is being a jerk / we're dumb. 
+  // Or Null if Bing is being a jerk / we're dumb.
   api.codeAddress = function(address, callback) {
     console.log("Coding an address");
     console.log(address);
@@ -218,7 +239,7 @@ define(function (require) {
         var latlng = new L.LatLng(point.coordinates[0], point.coordinates[1]);
         callback(latlng);
       }
-    });    
+    });
   };
   
   // Get a chunk of responses.
@@ -266,7 +287,7 @@ define(function (require) {
   
   // Add a 100% buffer to a bounds object.
   // Makes parcels render faster when the map is moved
-  var addBuffer = function(bounds) {    
+  var addBuffer = function(bounds) {
     var sw = bounds.getSouthWest();
     var ne = bounds.getNorthEast();
     
@@ -303,24 +324,5 @@ define(function (require) {
     });
   };
 
-
-  // TODO: Get a short URL for a survey from 
-  // api.getShortURL = function(long_url, login, api_key, func){ 
-  //   $.getJSON(
-  //     "http://api.bitly.com/v3/shorten?callback=?", 
-  //     { 
-  //         "format": "json",
-  //         "apiKey": api_key,
-  //         "login": login,
-  //         "longUrl": long_url
-  //     },
-  //     function(response)
-  //     {
-  //         func(response.data.url);
-  //     }
-  //   );
-  // };
-
-    
   return api;
 });

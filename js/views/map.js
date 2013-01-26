@@ -55,7 +55,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     
     initialize: function(options) {
       console.log("Init map view");
-      _.bindAll(this, 'render', 'selectObject', 'renderObject', 'renderObjects', 'getResponsesInBounds', 'updateMapStyleBasedOnZoom', 'updateObjectStyles', 'fitBounds');
+      _.bindAll(this, 'render', 'selectObject', 'renderObject', 'renderObjects', 'getResponsesInBounds', 'updateMapStyleBasedOnZoom', 'updateObjectStyles');
       
       this.responses = options.responses;
       // TODO: if we add the filter logic to the responses collection, we can
@@ -286,7 +286,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
           style: style
         });
         geojsonLayer.on('click', this.selectObject);
-        
+
         // Add the layer to the layergroup and the hashmap
         this.objectsOnTheMap.addLayer(geojsonLayer); // was (geojsonLayer);
         this.parcelIdsOnTheMap[obj.parcelId] = geojsonLayer;
@@ -294,9 +294,9 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     },
 
     renderObjects: function(results) {
-      _.each(results, function(elt) { 
-        this.renderObject(elt);   
-      }, this); 
+      _.each(results, function(elt) {
+        this.renderObject(elt);
+      }, this);
     },
 
     updateMapStyleBasedOnZoom: function(e) {
@@ -363,13 +363,13 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     },
     
     getParcelsInBounds: function() {
-      // Don't add any parcels if the zoom is really far out. 
+      // Don't add any parcels if the zoom is really far out.
       var zoom = this.map.getZoom();
       if(zoom < 16) {
         return;
       }
       
-      // If there are a lot of objects, let's clear them out 
+      // If there are a lot of objects, let's clear them out
       // to improve performance
       if( _.size(this.parcelIdsOnTheMap) > 1250 ) {
         this.objectsOnTheMap.clearLayers();
@@ -377,14 +377,14 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       }
       
       // Get parcel data in the bounds
-      api.getObjectsInBounds(this.map.getBounds(), this.renderObjects); 
+      api.getObjectsInBounds(this.map.getBounds(), this.renderObjects);
     },
           
-    // Get all the responses in the current viewport 
-    getResponsesInBounds: function(){  
+    // Get all the responses in the current viewport
+    getResponsesInBounds: function(){
       console.log("Getting responses in the map");
       
-      // Don't add any markers if the zoom is really far out. 
+      // Don't add any markers if the zoom is really far out.
       var zoom = this.map.getZoom();
       if(zoom < 17) {
         return;
@@ -410,7 +410,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       this.details(this.selectedLayer.feature.parcelId);
     },
 
-    // When a parcel is clicked, show details for just that parcel. 
+    // When a parcel is clicked, show details for just that parcel.
     details: function(parcelId) {
       console.log("Finding parcels " + parcelId);
       this.sel = new Responses.Collection(this.responses.where({'parcel_id': parcelId}));

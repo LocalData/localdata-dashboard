@@ -10,7 +10,7 @@ function($, _) {
   'use strict'; 
 
 	return {
-			"name": "Standard neighborhood survey",
+		  "name": "Standard neighborhood survey",
 		  "type": "mobile",
 		  "questions": [
 		    {

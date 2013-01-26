@@ -23,17 +23,18 @@ define([
 ],
 
 function($, _, Backbone, events, settings, api, SurveyModels, FormModels, PreviewView, exampleForm) {
-  'use strict'; 
+  'use strict';
 
   var DesignViews = {};
 
-  DesignViews.DesignView = Backbone.View.extend({   
+  DesignViews.DesignView = Backbone.View.extend({
     survey: null,
     
     initialize: function(options) {
       _.bindAll(this, 'update', 'render', 'useSurvey');
 
-      this.$el = $(options.elId);
+      this.el = options.el;
+      this.$el = $(options.el);
 
       this.survey = options.survey;
       this.survey.on('change', this.render, this);
@@ -46,11 +47,9 @@ function($, _, Backbone, events, settings, api, SurveyModels, FormModels, Previe
 
     useSurvey: function(event) {
       console.log("Using the survey");
-      api.createForm(exampleForm, function() {
-        console.log("Form added!");
-      });
-
-      this.trigger('formAdded');
+      api.createForm(exampleForm, $.proxy(function() {
+        this.trigger('formAdded');
+      },this));
     },
 
     render: function() {
@@ -68,14 +67,14 @@ function($, _, Backbone, events, settings, api, SurveyModels, FormModels, Previe
         event.preventDefault();
 
         this.previewView = new PreviewView({
-          elId: "#preview-view-container",
-          popup: "popup",
+          el: '#preview-view-container',
+          popup: true,
           forms: [exampleForm]
-        });  
+        });
       });
 
       $('.use-survey').click(this.useSurvey);
-    }   
+    }
 
   });
 
