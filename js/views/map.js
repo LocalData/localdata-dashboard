@@ -55,7 +55,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     
     initialize: function(options) {
       console.log("Init map view");
-      _.bindAll(this, 'render', 'selectObject', 'renderObject', 'renderObjects', 'getResponsesInBounds', 'updateMapStyleBasedOnZoom', 'updateObjectStyles', 'FitBounds');
+      _.bindAll(this, 'render', 'selectObject', 'renderObject', 'renderObjects', 'getResponsesInBounds', 'updateMapStyleBasedOnZoom', 'updateObjectStyles', 'fitBounds');
       
       this.responses = options.responses;
       // TODO: if we add the filter logic to the responses collection, we can
