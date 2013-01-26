@@ -5,29 +5,15 @@
     <title>LocalData</title>
     
     <!-- Scripts I couldn't fit into Require yet -->
-    <script type="text/javascript" src="http://maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
+    <script type="text/javascript" src="//maps.google.com/maps/api/js?v=3.2&sensor=false"></script>
 
-    <script type="text/javascript">
-      var _kmq = _kmq || [];
-      var _kmk = _kmk || '1f57015c5e8f46bdc07701e1aa74c6cbdf565383';
-      function _kms(u){
-        setTimeout(function(){
-          var d = document, f = d.getElementsByTagName('script')[0],
-          s = d.createElement('script');
-          s.type = 'text/javascript'; s.async = true; s.src = u;
-          f.parentNode.insertBefore(s, f);
-        }, 1);
-      }
-      _kms('//i.kissmetrics.com/i.js');
-      _kms('//doug1izaerwt3.cloudfront.net/' + _kmk + '.1.js');
-    </script>
-    
     <!-- Styles -->
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,300|Pacifico' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,300|Pacifico' rel='stylesheet' type='text/css'>
     
     <style type="text/css" media="screen">
       @import url("css/lib/reset.css");
-      @import url("http://cdn.leafletjs.com/leaflet-0.4.4/leaflet.css");
+      @import url("css/lib/leaflet.css");
+      @import url("css/buttons.css");
       @import url("css/app.css");
     </style>
 </head>
@@ -52,7 +38,25 @@
     
       <div class="container">
         <header id="survey-header">
-            <h2>Surveys</h2>
+            <h2>Welcome to LocalData!</h2>
+        </header>
+      </div>
+    
+      <div class="container">
+      <div id="content">
+        <div id="body">
+        </div>   
+      </div>
+      </div>
+    </script>
+    
+
+    <!-- Dashboard ..........................................................-->
+    <script type="text/template" id="dashboard">
+      <div class="container">
+        <header id="survey-header">
+            <h2>My Surveys <a href="#/surveys/new" class="button flat" id="newsurvey">Create a new survey</a></h2>
+            
         </header>
       </div>
     
@@ -65,7 +69,115 @@
       </div>
       </div>
     </script>
+
+    <!-- New surveys ........................................................-->
+    <script type="text/template" id="new-survey-view">
+      <div class="container">
+        <header id="survey-header" class="new-survey">
+            <h2>Create a new survey</h2>
+        </header>
+      </div>
     
+      <div class="container">
+        <!--<div id="content">
+          <div id="body">-->
+            <form action="" id="new-survey-form">
+              <input type="text" placeholder="Survey name" class="survey-name">
+              <input type="text" placeholder="Survey city and state" class="survey-location">
+
+              <a class="action show-advanced">Advanced options</a>
+              <div class="advanced">
+                <input type="text" placeholder="Survey type" class="survey-type">
+                <textarea class="survey-geoObjectSource" placeholder="Geodata source options"></textarea>
+              </div>
+              <a class="button submit">Create new survey</a>
+            </form>
+        <!--  </div>   
+        </div>-->
+      </div>
+    </script>
+
+    <script type="text/template" id="survey-design-view">
+      <div class="survey-designer">
+        <h2 class="getting-started">Getting started</h2>
+        <h2>What kind of survey are you planning?</h2>
+        <h3>Pick from one of our pre-made survey templates</h3>
+
+        <div class="choice-boxes floatcontainer">
+          <div class="choice-box">
+            <img src="img/icons/builder-icon.png" alt="">
+            <h3>Standard neigbhorhood survey</h3>
+            <p>Asks basic questions about condition, vacancy and other factors. Quick and informative.</p>
+            <p class="time-estimate"><img src="img/icons/watch.png" alt=""> About 1 minute per property</p>
+            <a href="" class="preview button">Preview survey</a>
+            <a class="button use-survey">Use this survey</a>
+          </div>
+
+          <div class="choice-box">
+            <img src="img/icons/builder-icon.png" alt="">
+            <h3>Comprehensive neigbhorhood survey</h3>
+            <p>Collect detailed information about condition, use, vacancy, and more. Takes longer to complete.</p>
+            <p class="time-estimate"><img src="img/icons/watch.png" alt=""> About 4 minutes per property</p>
+            <a href="" class="preview button">Preview survey</a>
+            <a class="button use-survey">Use this survey</a>
+          </div>
+
+          <div class="choice-box">
+            <img src="img/icons/builder-icon.png" alt="">
+            <h3>Neighborhood<br> asset<br> survey</h3>
+            <p>Map parks, churches, stores, and more.<br><br></p>
+            <p class="time-estimate"><img src="img/icons/watch.png" alt=""> About 2 minutes per property</p>
+            <a href="" class="preview button">Preview survey</a>
+            <a class="button use-survey">Use this survey</a>
+          </div>
+        </div>
+
+              <div id="preview-survey-title">
+        <h3><%= name %></h3>
+      </div>
+
+
+        <p class="advanced">Or, <a href="">design your own custom survey</a>.
+
+        <div id="preview-view-container"></div>
+      </div>
+    </script>
+
+    <!-- Login ............................................................-->
+    <script type="text/template" id="login-view">
+      <div class="container">
+        <header id="survey-header">
+            <h2>Welcome to LocalData</h2>
+        </header>
+      </div>
+    
+      <div class="container">
+        <div id="content">
+          <div id="body" class="floatcontainer">
+            <form id="login">
+              <h2>Please Log In</h2>
+              <div class="error"></div>
+              
+              <input type="text" name="email" placeholder="Your email">
+              <input type="password" name="password" placeholder="Password">
+              <a class="button">Log in</a>
+            </form>
+
+            <form id="create-account">
+              <h2>Or, sign up for LocalData</h2>
+              <div class="error"></div>
+
+              <input type="text" name="name" placeholder="Your name">
+              <input type="text" name="email" placeholder="Your email">
+              <input type="password" name="password" placeholder="Password">
+              <a class="button">Sign up</a>
+            </form>
+          </div>   
+        </div>
+      </div>
+
+    </script>
+
     <script type="text/template" id="loading-view">
       <div class="loading">
         <img src="img/preloader.gif" alt="" />
@@ -73,6 +185,38 @@
       </div>
     </script>
 
+    <!-- Previews .........................................................-->
+    <script type="text/template" id="preview-view">
+      <div id="preview-dimmer"></div>
+      <div id="preview"</div>
+    </script>
+
+    <script type="text/template" id="t-preview-title">
+      <div id="preview-close"></div>
+    </script>
+
+    <script type="text/template" id="t-preview-name">
+      <h3>Survey Preview</h3>
+    </script>
+
+    <script type="text/template" id="t-preview-questions-container">
+      <div class="preview-q-box depth-<%= depth %>">
+      <% if (condition !== null) { %>
+        <div class="condition">
+          If they choose <%= condition %>:
+        </div>
+      <% } %>
+      </div>
+    </script>
+
+    <script type="text/template" id="t-preview-question">
+      <div class="preview-question">
+        <div class="question-prompt">
+          <b><%= prompt %></b>
+        </div>
+        <% _.each(answers, function (answer, i) { %> <div class="preview-answer"> <%= letters[i] %>: <%= answer %> </div> <% }); %>
+      </div>
+    </script>
 
     <!-- Survey ...........................................................-->    
     <script type="text/template" id="survey-view">
@@ -84,12 +228,12 @@
       
 
       <div id="body" class="container">
-        <div id="subnav" class="nav nav-tabs"></div>
+        <div id="nav" class="nav nav-tabs"></div>
 
-        <div id="content">
+        <div id="content" class="floatcontainer">
           <div id="loading-view-container"></div>
           <div id="response-view-container"></div>   
-          <div id="settings-view-container"></div>
+          <div id="form-view-container"></div>
           <div id="export-view-container"></div>
         </div>
       </div>   
@@ -98,13 +242,12 @@
     <script type="text/template" id="survey-list-item-view">
       <div class="survey">
         <h2><a href='#surveys/<%= survey.attributes.slug %>'><%= survey.attributes.name %></a></h2>
-        <%= survey.attributes.id %>
       </div>
     </script>
 
+    <!-- Settings .......................................................... -->
     <script type="text/template" id="settings-view">
-      <h2>Survey Settings</h2>
-
+      TODO
       <!--
       <form>
         <label>Survey Name</label>
@@ -116,10 +259,33 @@
         <input type="submit" value="Save">
       </form>
       -->
+
+    </script>
+
+    <!-- Form settings ..................................................... -->
+    <script type="text/template" id="form-view">
+
+      <div id="survey-form-tools-container">
+        <a class="button edit-form-button">Edit form</a>
+        <a href="http://localhost:3000/mobile/#<%= survey.slug %>">Go to the mobile app</a>
+        <label>
+          Copy link to app 
+          <input type="text" value="http://localhost:3000/mobile/#<%= survey.slug %>">
+        </label>
+
+        <!--
+        Text the app URL: <input type="text" placeholder="313 555 5555"> <input type="submit" value="Send text message">
+        -->
+      </div>
+
+      <div id="builder-view-container"></div>
+      <div id="preview-view-container"></div>
+      <div id="editor-view-container"></div>
+      <div id="survey-design-container"></div>
     </script>
     
 
-    <!-- Response ...........................................................-->
+    <!-- Responses & Filtering ..............................................-->
     <script type="text/template" id="filter-results">
     <h2>Select an answer to filter by:</h2>
     <ul>
@@ -300,13 +466,15 @@
       </ul>
     </script>
     
-    <!-- Subnav ...........................................................-->
-    <script type="text/template" id="subnav-view">
+    
+    <!-- Navigation ........................................................-->
+    <script type="text/template" id="nav-view">
     <% _.each(items, function(item) {  %>
       <li class="<%= item.active %>"><a href="#<%= item.fragment %>"><span class="<%= item.icon %>"></span><%= item.title %></a></li>
     <% }); %>
     </script>
     
+
     <!-- Pagination .......................................................-->
     <script type="text/template" id="pagination-view">
       <!--<div class="pagination">
@@ -318,6 +486,56 @@
           <li><a href="#">Next</a></li>
         </ul>
       </div>-->
+    </script>
+
+
+    <!-- Editor  ...........................................................-->
+    <!-- Editor: Base template ............................................ -->
+    <script type="text/template" id="form-editor-template">
+      <div id="form-editor">
+        <div class="actionbar">
+          <a class="button save">Save your edits</a>
+          <a class="button done">Close editor</a>
+          <div class="saved">Form saved</div>
+        </div>
+
+        <form>
+          <h3>Questions</h3>
+          <div id="editor" class="editor"></div>
+
+          <div>
+          </div>
+        </form>
+      </body>
+    </script>
+
+    <!-- Editor: Form templates ........................................... -->
+    <script type="text/template" id="question-edit-template">
+        <div class="question" data-type="yesno" data-name="<%= question.name %>">
+            <input type="text" placeholder="Question" value="<%= question.text %>" data-role="question" class="question-input" style="width:90%" />
+
+            <a class="action remove">&nbsp;</a>
+
+            <div class="question-type-container">
+              <a class="<% if(question.type === 'checkbox') { %>selected<% } %> action question-type" data-role="checkbox-question">Multiple choice</a><a class="<% if(!question.type) { %>selected<% } %> action question-type" data-role="radio-question">Select one</a>
+            </div>
+
+            <h2 class="title">Answers</h2>
+            <div class="answers"></div>
+            <div class="question-tools-container">
+              <a class="action add-answer"><i class="icon-plus-sign icon-white"></i> Add answer</a>
+              <a class="action add-question"><i class="icon-plus-sign icon-white"></i> Insert another question</strong></a>
+            </div>
+
+        </div>
+    </script>
+
+    <script type="text/template" id="answer-edit-template">
+        <div data-role="answer" class="iinputs-append">
+            <input type="text" value="<%= text %>" />
+            <a class="action remove">&nbsp;</a>
+            <a class="action add-sub-question"><i class="icon-share-alt "></i> Add sub-question</a>
+        </div>
     </script>
              
     <script data-main="js/main" src="js/require.js"></script>

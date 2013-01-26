@@ -5,6 +5,7 @@ define([
   'jquery',
   'lib/lodash',
   'backbone',
+  'lib/kissmetrics',
 
   // LocalData
   'settings',
@@ -14,17 +15,27 @@ define([
 
   // Views
   'views/home',
-  'views/surveys'
+  'views/dashboard',
+  'views/users',
+  'views/surveys',
+  'views/design'
 ],
 
-function($, _, Backbone, settings, IndexRouter, HomeView, SurveyViews) {
+function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, UserViews, SurveyViews, DesignViews) {
   'use strict'; 
 
   var AllViews = {};
   AllViews.HomeView = HomeView;
-  AllViews.SurveyView = SurveyViews.SurveyView;
+  AllViews.DashboardView = DashboardView;
 
-  // The singleton view which manages all others. Essentially, a "controller".
+  AllViews.SurveyView = SurveyViews.SurveyView;
+  AllViews.NewSurveyView= SurveyViews.NewSurveyView;
+  AllViews.DesignView = DesignViews.DesignView;
+
+  AllViews.LoginView = UserViews.LoginView;
+
+  // The singleton view which manages all others.
+  // Essentially, a "controller".
   var RootView = Backbone.View.extend({
     
     el: $("body"),
@@ -54,11 +65,11 @@ function($, _, Backbone, settings, IndexRouter, HomeView, SurveyViews) {
       
       // If the view already exists, use it.
       // If it doesn't exist, create it.
-      if (viewName in this.views) {
+      if (_.has(this.views, viewName)) {
         console.log("Going to " + viewName);
 
       } else {
-        console.log("Creating " + viewName);
+        console.log("Creating view " + viewName);
         this.views[viewName] = new AllViews[viewClass](options);
       }
 
@@ -69,12 +80,18 @@ function($, _, Backbone, settings, IndexRouter, HomeView, SurveyViews) {
     // Handle routes (they're in routers/index.js) .............................
     // Home
     goto_home: function() {
-      this.currentContentView = this.getOrCreateView("HomeView", "HomeView");
+      // this.currentContentView = this.getOrCreateView("HomeView", "HomeView");
+      this.currentContentView = this.getOrCreateView("DashboardView", "DashboardView");
+
+    },
+
+    goto_login: function(redirectTo) {
+      this.currentContentView = this.getOrCreateView("LoginView", "LoginView", {redirectTo: redirectTo});
     },
     
     // Survey dashboard routes .................................................
     goto_survey: function(tab) {
-      // _kmq.push(['record', "SurveyView"]);
+      _kmq.push(['record', "SurveyView"]);
 
       // Get or create a view for the survey
       var surveyViewName = "Survey" + settings.surveyId;
@@ -82,27 +99,45 @@ function($, _, Backbone, settings, IndexRouter, HomeView, SurveyViews) {
 
       // Show the correct tab
       switch(tab) {
-        case "export": 
+        case undefined:
+          this.currentContentView.showResponses();
+          break;
+        case "export":
           this.currentContentView.showExport();
           break;
-        case "settings":
-          this.currentContentView.showSettings();
+        case "form":
+          this.currentContentView.showForm();
           break;
-        default: 
-          this.currentContentView.showResponses();
       }
+    },
+
+    goto_new: function() {
+      console.log("Going to new");
+      this.currentContentView = this.getOrCreateView("NewSurveyView", "NewSurveyView");
     },
     
     goto_settings: function() {
-      // _kmq.push(['record', "SettingsView"]);
+      _kmq.push(['record', "SettingsView"]);
       this._router.navigate("surveys/" + settings.slug + "/settings");
       this.goto_survey("settings");
     },
     
+    goto_form: function() {
+      this._router.navigate("surveys/" + settings.slug + "/form");
+      this.goto_survey("form");
+    },
+
     goto_export: function() {
-      // _kmq.push(['record', "ExportView"]);
+      _kmq.push(['record', "ExportView"]);
       this._router.navigate("surveys/" + settings.slug + "/export");
       this.goto_survey("export");
+    },
+
+    goto_design: function() {
+      console.log("Going to design");
+      this.currentContentView = this.getOrCreateView("DesignView", "DesignView", {id: settings.surveyId});
+
+      // this.currentContentView = this.getOrCreateView("DesignView", "DesignView");
     }
     
   });
