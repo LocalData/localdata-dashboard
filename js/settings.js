@@ -11,8 +11,8 @@ function(L) {
   var settings = {};
 
   settings.api = {
-    baseurl: '/api', // http://localhost:3000/api', 
-    geo: '/api' 
+    baseurl: '/api', // http://localhost:3000/api',
+    geo: '/api'
   };
 
   // Colors for option maps

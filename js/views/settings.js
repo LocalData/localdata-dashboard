@@ -5,46 +5,51 @@ define([
   'jquery',
   'lib/lodash',
   'backbone',
+
+  // LocalData
   'settings',
   'api'
 ],
 
 function($, _, Backbone, settings, api) {
-  'use strict'; 
+  'use strict';
 
   var SettingsView = Backbone.View.extend({
     
     elId: "#settings-view-container",
 
-    // TODO 
+    // TODO
     // Save survey settings
     // events: {
     //   "form input[type='submit'] click": this.save
     // },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'save');
+      _.bindAll(this, 'render', 'showEditor');
       this.survey = options.survey;
       this.forms = options.forms;
       console.log(this.survey);
+      console.log(this.forms);
     },
     
     // TODO
-    save: function(event) {
-      event.preventDefault();
-      console.log("SUBMITTED!");
-      console.log(event);
-    },
-    
-    render: function() {        
-      var context = { 
+    // save: function(event) {
+    //   event.preventDefault();
+    //   console.log("Submitting settings. Not yet implemented.");
+    //   console.log(event);
+    // },
+
+    render: function() {
+      var context = {
         survey: this.survey.toJSON(),
-        forms: this.forms.toJSON() 
-      };    
+        forms: this.forms.toJSON()
+      };
 
       $(this.elId).html(_.template($('#settings-view').html(), context));
+
+      api.getForm(this.showEditor);
+
     }
-    
   });
 
   return SettingsView;

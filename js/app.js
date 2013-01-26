@@ -1,9 +1,11 @@
 /*jslint nomen: true */
 /*globals define: true */
 
+
 define([
   'jquery',
   'lib/lodash',
+  'backbone',
   'lib/tinypubsub',
 
   'settings',
@@ -14,25 +16,34 @@ define([
   'views/loading'
 ],
 
-function($, _, events, settings, api, RootView, LoadingView) {
+function($, _, Backbone, events, settings, api, RootView, LoadingView) {
   'use strict';
 
   // Here's the dashboard app:
   // So fancy!
   var LD = {};
 
-  // TODO
-  // LD.collections = {};
-  // LD.routers = {};
-  // LD.templates = {};
-
   // Kick off the LocalData app
   LD.initialize = function() {
-    console.log("Initalize dashboard");
+    console.log("Initalizing app");
     LD.router = new RootView();
     LD.router.startRouting();
 
-    // Listen for loading events
+    // Handle authentication .....................................................
+    // If any request is returned with a 401, we want to redirect users to the
+    // login page
+    var redirectToLogin = function () {
+      LD.router._router.navigate("/login/?redirectTo=" + Backbone.history.fragment, {trigger: true});
+    };
+
+    $(document).ajaxError(function (event, xhr) {
+      console.log("Ajax error: " + xhr.status);
+        if (xhr.status === 401) {
+          redirectToLogin();
+        }    
+    });
+
+    // Listen for loading events ...............................................
     events.subscribe('loading', LD.setLoading);
   };
 
@@ -51,14 +62,14 @@ function($, _, events, settings, api, RootView, LoadingView) {
     }
   };
 
-  // Return true if the page is in the loading state,
-  // false if not 
+  // Return true if the page is in the loading state, false if not 
   LD.getLoading = function() {
     if(LD.loading === undefined){
       return false;
     }
     return LD.loading;
   };
+ 
  
   return LD;
 });
