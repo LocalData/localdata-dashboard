@@ -1,30 +1,55 @@
-NSB.views.Home = Backbone.View.extend({
-  
-  el: $("#container"),
-  
-  initialize: function(options) {
-    _.bindAll(this, 'render', 'appendSurvey');
+/*jslint nomen: true */
+/*globals define: true */
 
-    this.surveys = new NSB.collections.Surveys();
-    this.surveys.bind('reset', this.render);
-    this.surveys.fetch();
-  },
-  
-  render: function() {  
-    var self = this;
-    var context = {};
-    this.$el.html(_.template($('#home').html(), context));  
+define([
+  'jquery',
+  'lib/lodash',
+  'backbone',
 
-    this.surveys.each(function(survey) {
-      self.appendSurvey(survey);
-    });
-  },
+  // LocalData
+  'settings',
+  'api',
 
-  appendSurvey: function(survey) {
-    var surveyListItemView = new NSB.views.SurveyListItemView({
-      model: survey
-    });
-    $('.survey-list', this.el).append(surveyListItemView.render().el);
-  }
+  // Models
+  'models/users',
+  'models/surveys',
+
+  // Views
+  'views/surveys'
   
-});
+],
+
+function($, _, Backbone, settings, api, Users, Surveys, SurveyViews) {
+  'use strict'; 
+
+  var HomeView = Backbone.View.extend({
+  
+    el: $("#container"),
+    
+    initialize: function(options) {
+      _.bindAll(this, 'render', 'update', 'checkUserView');
+    },
+
+    update: function() {
+      this.render();
+    },
+
+    checkUserView: function() {
+      // TODO
+      // console.log(this.userModel.isLoggedIn());
+    },
+  
+    render: function() {
+      console.log("Rendering HomeView");
+      
+
+      var self = this;
+      var context = {};
+      this.$el.html(_.template($('#home').html(), context));
+    }
+    
+  });
+
+  return HomeView;
+
+}); // End HomeView
