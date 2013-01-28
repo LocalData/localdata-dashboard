@@ -33,11 +33,10 @@ function($, _, Backbone, settings, api, FormViews) {
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'renderForm', 'updatePreview', 'suffix',
-        'renderQuestion', 'editQuestionType', 'deleteQuestion',
-        'createQuestion', 'editQuestion', 'addSubQuestion',
-        'createAnswer', 'editAnswer', 'deleteAnswer',
-        'save', 'done', 'slugify');
+      _.bindAll(this, 'render', 'save', 'done', 'makeBlankQuestion', 'renderForm',
+        'suffix', 'editQuestion', 'editQuestionType', 'deleteQuestion',
+        'createQuestion', 'createAnswer', 'addSubQuestion', 'renderQuestion',
+         'editAnswer', 'deleteAnswer', 'slugify', 'updatePreview');
       
       this.forms = options.forms;
     },
