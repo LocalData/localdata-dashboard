@@ -102,8 +102,11 @@ function(
       $("#new-survey-form").submit(function(event){
         event.preventDefault();
 
+        // Hide the submit button so it doesn't get over-clicked
+        $("#new-survey-form .submit").hide();
+
         // Get the name and other basic details
-        // TODO: this should probably be a new Survey model? 
+        // TODO: this should probably be a new Survey model?
         var survey = {
           "name": $("input.survey-name").val(),
           "location": $("input.survey-location").val()
@@ -117,7 +120,7 @@ function(
         }
 
         // Custom survey type
-        // (Right now, only "point" is a real option) 
+        // (Right now, only "point" is a real option)
         var type = $("input.survey-type").val();
         if(type) {
           survey.type = type;

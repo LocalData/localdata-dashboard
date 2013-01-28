@@ -35,6 +35,13 @@ function($, _, Backbone, settings, api) {
       this.render();
     },
 
+    useSurvey: function(event) {
+      console.log("Using the survey");
+      api.createForm(this.form, function() {
+        console.log("Form added!");
+      });
+    },
+
     renderPreview: function() {
       console.log("Rendering form preview");
 
