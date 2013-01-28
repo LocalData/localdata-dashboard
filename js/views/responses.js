@@ -48,6 +48,10 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       this.responses.on('addSet', this.update, this);
 
       this.forms = options.forms;
+
+      if (this.responses.length > 0) {
+        this.render();
+      }
     },
     
     // TODO: merge update and render
@@ -185,6 +189,8 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
     visibleItemCount: 20,
     page: -1,
     pageCount: null,
+    nextButton: null,
+    prevButton: null,
 
     events: { 
       "click #next": "pageNext",
@@ -204,6 +210,9 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       if (options.visibleItemCount) {
         this.visibleItemCount = options.visibleItemCount;
       }
+
+      this.nextButton = this.$('#next');
+      this.prevButton = this.$('#prev');
     },
 
     render: function() { 
@@ -224,7 +233,9 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       // Actually render the page
       var context = { 
         responses: thisPage,
-        startIndex: start
+        startIndex: start,
+        page: this.page,
+        pageCount: this.pageCount
       };    
 
       // Render the responses table
@@ -232,7 +243,11 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
     },
 
     updateResponses: function () {
+      // We got more responses, so let's recalculate the pagination parameters.
       this.setupPagination();
+
+      // We only need to rerender if we're on the last page. Otherwise, those
+      // new items don't affect the view yet.
       if (this.page === this.pageCount - 1) {
         this.render();
       }

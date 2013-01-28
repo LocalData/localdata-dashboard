@@ -296,8 +296,6 @@
     </script>
     
     <script type="text/template" id="responses-table">
-      <button id="prev" class="btn">Previous</button>
-      <button id="next" class="btn">Next</button>
       <table>
         <thead>
           <tr>
@@ -342,6 +340,23 @@
         <% }); %>
         </tbody>
       </table>
+      <button id="prev" class="btn" <% if (page === 0) { %>style="visibility:hidden;"<% } %>>Previous</button>
+      <% if (pageCount < 11) {
+        var i;
+        for (i = 0; i < pageCount; i += 1) { %>
+          <button class="btn pageNum"><%= i + 1 %></button>
+        <% }
+      } else {
+        var i;
+        for (i = 0; i < 7; i += 1) {%>
+          <button class="btn pageNum"><%= i + 1 %></button>
+        <% } %>
+        <div>...</div>
+        <% for (i = pageCount - 2; i < pageCount; i += 1) { %>
+          <button class="btn pageNum"><%= i + 1 %></button>
+        <% }
+      } %>
+      <button id="next" class="btn" <% if (page === pageCount - 1) { %>style="visibility:hidden;"<% } %>>Next</button>
     </script>
 
     <script type="text/template" id="response-view">
