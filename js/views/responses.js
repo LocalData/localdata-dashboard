@@ -191,15 +191,18 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
     pageCount: null,
     nextButton: null,
     prevButton: null,
+    responsesPagination: null,
 
     events: { 
-      "click #next": "pageNext",
-      "click #prev": "pagePrev"
+      'click #next': 'pageNext',
+      'click #prev': 'pagePrev',
+      'click .pageNum': 'goToPage'
     },
 
     initialize: function(options) {
       _.bindAll(this, 'updateResponses', 'render', 'goToPage', 'humanizeDates', 'setupPagination', 'pagePrev', 'pageNext');
       this.template = _.template($('#responses-table').html());
+      this.paginationTemplate = _.template($('#t-responses-pagination').html());
       
       this.responses = options.responses;
       this.listenTo(this.responses, 'reset', this.updateResponses);
@@ -233,13 +236,18 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       // Actually render the page
       var context = { 
         responses: thisPage,
-        startIndex: start,
-        page: this.page,
-        pageCount: this.pageCount
+        startIndex: start
       };    
 
       // Render the responses table
       this.$el.html(this.template(context));
+
+      // Render the pagination elements
+      this.responsesPagination = this.$('#responses-pagination');
+      this.responsesPagination.html(this.paginationTemplate({
+        page: this.page,
+        pageCount: this.pageCount
+      }));
     },
 
     updateResponses: function () {
@@ -250,6 +258,12 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       // new items don't affect the view yet.
       if (this.page === this.pageCount - 1) {
         this.render();
+      } else {
+        var context = {
+          page: this.page,
+          pageCount: this.pageCount
+        };
+        this.responsesPagination.html(this.paginationTemplate(context));
       }
     },
 
@@ -260,14 +274,15 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       this.pageCount = Math.ceil(this.responses.length / this.visibleItemCount);  
     },
 
-    goToPage: function(pageStr) {
-      var page = parseInt(pageStr, 10); 
+    goToPage: function(e) {
+      e.preventDefault();
+      var page = parseInt($(e.target).attr('data-page'), 10); 
       this.page = page;
-      
       this.render();
     },
 
-    pageNext: function () {
+    pageNext: function (e) {
+      e.preventDefault();
       if (this.page === this.pageCount - 1) {
         return;
       }
@@ -276,7 +291,8 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       this.render();
     },
 
-    pagePrev: function () {
+    pagePrev: function (e) {
+      e.preventDefault();
       if (this.page === 0) {
         return;
       }
