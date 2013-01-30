@@ -17,7 +17,7 @@ define([
 ],
 
 function($, _, Backbone, events, router, settings, api, UserModels) {
-  'use strict'; 
+  'use strict';
 
   var UserViews = {};
 
@@ -34,14 +34,15 @@ function($, _, Backbone, events, router, settings, api, UserModels) {
       this.redirectTo = options.redirectTo || "/";
       this.redirectTo = this.redirectTo.replace("?redirectTo=", "");
       console.log("Creating login view");
-      _.bindAll(this, 'render', 'update', 'createUser', 'logIn');
+      console.log(this.redirectTo);
+      _.bindAll(this, 'render', 'update', 'createUser', 'logIn', 'logInCallback');
     },
 
     render: function() {
       var context = {
         redirectTo: this.redirectTo
       };
-      this.$el.html(_.template($('#login-view').html(), context));  
+      this.$el.html(_.template($('#login-view').html(), context));
       return this;
     },
 
@@ -49,22 +50,22 @@ function($, _, Backbone, events, router, settings, api, UserModels) {
       this.render();
     },
 
+    logInCallback: function(error, user) {
+      if(error) {
+        console.log(error);
+        $('#login .error').html(error);
+        return;
+      }
+
+      console.log(this.redirectTo);
+      events.publish('navigate', [this.redirectTo]);
+    },
+
     logIn: function(event) {
       console.log("Logging in");
       event.preventDefault();
       var user = $(event.target).parent().serializeArray();
-      console.log(user);
-
-      api.logIn(user, function(error, user){
-        if(error) {
-          console.log(error);
-          $('#login .error').html(error);
-          return;
-        }
-
-        // TODO: use the router
-        window.location.href = "/";
-      });
+      api.logIn(user, this.logInCallback);
     },
 
     createUser: function(event) {
@@ -81,8 +82,7 @@ function($, _, Backbone, events, router, settings, api, UserModels) {
         }
 
         // Success! Go to the dashboard.
-        // TODO: use the router
-        //window.location.href = "/";
+        events.publish('navigate', ['/']);
       });
     }
 
@@ -90,4 +90,4 @@ function($, _, Backbone, events, router, settings, api, UserModels) {
 
   return UserViews;
 
-}); // End UserViews 
+}); // End UserViews
