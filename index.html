@@ -372,8 +372,9 @@
           for (i = page - buffer; i < page + buffer + 1 && i < pageCount; i += 1) { %>
             <li class="pageNum <% if (i === page) { %>active<% } %>"><a href="#" data-page="<%= i %>"><%= i + 1 %></a></li>
           <% }
-        } else { %>
+        } else {
           // We're in the middle
+          %>
           <li class="pageNum"><a href="#" data-page="<%= 0 %>">First</a></li>
           <li class="disabled"><a>...</a></li>
           <% var i;
