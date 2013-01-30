@@ -5,7 +5,7 @@ define([
   'lib/leaflet/leaflet.google'
 ],
 
-function (L) {
+function(L) {
   'use strict';
 
   var settings = {};
@@ -52,7 +52,7 @@ function (L) {
   settings.styleTemplate = {
     'opacity': 1,
     'weight': 2,
-    'fillOpacity': 0.5,
+    'fillOpacity': 0.5
   };
 
   settings.closeZoomStyle = {
@@ -64,17 +64,17 @@ function (L) {
   };
 
   settings.midZoomStyle = {
-    'color': '#df455d', 
+    'color': '#df455d',
     'opacity': 0,
     'weight': 1,
     'fillOpacity': 0.5,
-    'fillColor': '#df455d',
+    'fillColor': '#df455d'
   };
 
   settings.farZoomStyle = {
-    'color': '#df455d', 
+    'color': '#df455d',
     'opacity': 1,
-    'fillOpacity': .9,
+    'fillOpacity': 0.9,
     'fillColor': '#df455d',
     'weight': 8
   };
