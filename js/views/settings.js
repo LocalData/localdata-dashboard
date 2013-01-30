@@ -37,7 +37,7 @@ function($, _, Backbone, settings, api) {
       // Get the fields from the form
       var form = $(event.target).parent().serializeArray();
 
-      // Transform them so that we can save them
+      // Convert the fields into a format that can be saved
       var fields = _.reduce(form, function(memo, field) {
         memo[field.name] = field.value;
         return memo;
