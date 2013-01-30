@@ -222,7 +222,7 @@
     <script type="text/template" id="survey-view">
       <header id="survey-header">
         <div class="container">
-          <h2><%= survey.name %> </h2>
+          <h2 id="survey-name"><%= survey.name %> </h2>
         </div>
       </header>
       
@@ -295,34 +295,11 @@
     </ul>
     </script>
     
-    <script type="text/template" id="response-view">
-
-      <div id="filters">
-        <div id="current-filter" class="floatcontainer"></div>
-        <div id="subfilter">
-        </div>
-      </div>
-      
-      <div class="response-list">  
-      <h3>Filter results by:</h3>
-
-      <select id="filter">
-        <option value="">Select a question to filter by</option>
-      <% _.each(flattenedForm, function(filter) {%>
-        <option value="<%- filter.name %>"><%- filter.text %></option>
-      <% }); %>
-      </select>
-
-
-      <h2><%= _.size(responses) %> Response<% if(_.size(responses) != 1) { %>s<% } %></h2>
-
-      <div id="map-view-container"></div> 
-
-      <div id="individual-result-container"></div>  
-
+    <script type="text/template" id="responses-table">
       <table>
         <thead>
           <tr>
+            <th></th>
             <th>Time</th>
             <th>Location</th>
             <th>By</th>
@@ -331,13 +308,13 @@
         </thead>
             
         <tbody>
-        <% _.each(responses, function(r) { %>
+        <% _.each(responses, function(r, i) { %>
           <tr class="response">
+            <td class="index"><%- startIndex + i + 1 %></td>
             <td class="created"><%- r.createdHumanized %></td>
             <td class="address icon-map-marker">
               <% if(r.geo_info != undefined) { %>
                 <%- r.geo_info.humanReadableName %><br />
-                (Id: <%- r.parcel_id %>)
               <% }else { %>
                 <%- r.parcel_id %>
               <% }; %>
@@ -363,6 +340,81 @@
         <% }); %>
         </tbody>
       </table>
+      <div id="responses-pagination" class="pagination"></div>
+    </script>
+
+    <script type="text/template" id="t-responses-pagination">
+      <% var buffer = 1; %>
+      <ul>
+        <li <% if (page === 0) { %>class="disabled"<% } %>><a href="#" id="prev">Prev</a></li>
+        <% if (pageCount < 2*buffer + 1) {
+          // There are not many pages
+          var i;
+          for (i = Math.max(page - buffer, 0); i < page + buffer + 1 && i < pageCount; i += 1) { %>
+            <li class="pageNum <% if (i === page) { %>active<% } %>"><a href="#" data-page="<%= i %>"><%= i + 1 %></a></li>
+          <% }
+        } else if (page < buffer + 1) {
+          // We're close to the beginning
+          var i;
+          for (i = 0; i < (2*buffer + 1) && i < pageCount - 1; i += 1) { %>
+            <li class="pageNum <% if (i === page) { %>active<% } %>"><a href="#" data-page="<%= i %>"><%= i + 1 %></a></li>
+          <% }
+          if (i < pageCount - 1) { %>
+            <li class="disabled"><a>...</a></li>
+            <li class="pageNum"><a href="#" data-page="<%= pageCount - 1 %>">Last</a></li>
+          <% }
+        } else if (page >= pageCount - buffer - 1) {
+          // We're close to the end
+          %>
+          <li class="pageNum"><a href="#" data-page="<%= 0 %>">First</a></li>
+          <li class="disabled"><a>...</a></li>
+          <% var i;
+          for (i = page - buffer; i < page + buffer + 1 && i < pageCount; i += 1) { %>
+            <li class="pageNum <% if (i === page) { %>active<% } %>"><a href="#" data-page="<%= i %>"><%= i + 1 %></a></li>
+          <% }
+        } else {
+          // We're in the middle
+          %>
+          <li class="pageNum"><a href="#" data-page="<%= 0 %>">First</a></li>
+          <li class="disabled"><a>...</a></li>
+          <% var i;
+          for (i = page - buffer; i < page + buffer + 1; i += 1) { %>
+            <li class="pageNum <% if (i === page) { %>active<% } %>"><a href="#" data-page="<%= i %>"><%= i + 1 %></a></li>
+          <% } %>
+          <li class="disabled"><a>...</a></li>
+          <li class="pageNum"><a href="#" data-page="<%= pageCount - 1 %>">Last</a></li>
+        <% } %>
+        <li <% if (page === pageCount - 1) { %>class="disabled"<% } %>><a href="#" id="next">Next</a></li>
+      </ul>
+    </script>
+
+    <script type="text/template" id="response-view">
+
+      <div id="filters">
+        <div id="current-filter" class="floatcontainer"></div>
+        <div id="subfilter">
+        </div>
+      </div>
+      
+      <div class="response-list">  
+      <h3>Filter results by:</h3>
+
+      <select id="filter">
+        <option value="">Select a question to filter by</option>
+      <% _.each(flattenedForm, function(filter) {%>
+        <option value="<%- filter.name %>"><%- filter.text %></option>
+      <% }); %>
+      </select>
+
+
+      <h2 id="count"><%= _.size(responses) %> Response<% if(_.size(responses) != 1) { %>s<% } %></h2>
+
+      <div id="map-view-container"></div> 
+
+      <div id="individual-result-container"></div>  
+
+      <div id="responses-list">
+      </div>
       
       </div>
       
