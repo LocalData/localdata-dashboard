@@ -16,7 +16,7 @@ function($, _, Backbone, settings, api) {
 
   var SettingsView = Backbone.View.extend({
     
-    elId: "#settings-view-container",
+    el: "#settings-view-container",
 
     // TODO
     // Save survey settings
@@ -26,10 +26,15 @@ function($, _, Backbone, settings, api) {
 
     initialize: function(options) {
       _.bindAll(this, 'render', 'showEditor');
+
+      console.log("Init settings");
+
       this.survey = options.survey;
       this.forms = options.forms;
       console.log(this.survey);
       console.log(this.forms);
+
+      this.render();
     },
     
     // TODO
@@ -40,12 +45,14 @@ function($, _, Backbone, settings, api) {
     // },
 
     render: function() {
+      console.log('---------------------Rendering settings');
+      console.log(this.$el.html());
       var context = {
         survey: this.survey.toJSON(),
         forms: this.forms.toJSON()
       };
 
-      $(this.elId).html(_.template($('#settings-view').html(), context));
+      this.$el.html(_.template($('#settings-view').html(), context));
 
       api.getForm(this.showEditor);
 

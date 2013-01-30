@@ -29,31 +29,31 @@ define([
 ],
 
 function(
-  $, 
-  _, 
-  Backbone, 
-  events, 
+  $,
+  _,
+  Backbone,
+  events,
 
   // LocalData
-  settings, 
-  api, 
+  settings,
+  api,
 
   // Models
-  SurveyModels, 
-  ResponseModels, 
-  FormModels, 
+  SurveyModels,
+  ResponseModels,
+  FormModels,
 
   // Views
-  NavView, 
-  ExportView, 
-  SettingsView, 
-  ResponseViews, 
-  FormViews, 
+  NavView,
+  ExportView,
+  SettingsView,
+  ResponseViews,
+  FormViews,
 
   // Misc
-  exampleForm 
+  exampleForm
 ){
-  'use strict'; 
+  'use strict';
 
   var SurveyViews = {};
 
@@ -65,7 +65,7 @@ function(
     },
 
     render: function() {
-      this.$el.html(_.template($('#survey-list-item-view').html(), {survey: this.model }));  
+      this.$el.html(_.template($('#survey-list-item-view').html(), {survey: this.model }));
       return this;
     }
   });
@@ -154,14 +154,14 @@ function(
     bodyView: null,
     
     initialize: function(options) {
-      _.bindAll(this, 'update', 'render', 'show', 'showResponses', 'showUpload', 'showForm');
+      _.bindAll(this, 'update', 'render', 'show', 'showResponses', 'showUpload', 'showForm', 'showSettings');
 
       // Set up the page and show the given survey
       this.surveyId = options.id;
       this.survey = new SurveyModels.Model({id: this.surveyId});
       this.survey.on('change', this.render, this);
       
-      // Get the relevant responses    
+      // Get the relevant responses
       this.responses = new ResponseModels.Collection([], {surveyId: this.surveyId}); 
 
       // Get the forms
@@ -182,7 +182,7 @@ function(
       };
       this.$el.html(_.template($('#survey-view').html(), context));
       
-      // Show the loading state 
+      // Show the loading state
       events.publish('loading', [true]);
 
       // Render the sub components
@@ -202,14 +202,19 @@ function(
         forms: this.forms
       });
 
-      // Nav & Export views   
-      this.navView = new NavView({slug: settings.slug});  
-      this.exportView = new ExportView({surveyId: this.surveyId});  
+      // Nav, Export, Settings views
+      this.navView = new NavView({slug: settings.slug});
+      this.exportView = new ExportView({surveyId: this.surveyId});
+      this.settingsView = new SettingsView({
+        survey: this.survey,
+        forms: this.forms
+      });
 
       // Render navigation, export, and settings views
       this.navView.render();
-      this.exportView.render(); 
+      this.exportView.render();
       this.formView.render();
+      this.settingsView.render();
 
       // By default, we show the first tab
       this.show(this.toshow[0], this.toshow[1]);
@@ -236,7 +241,11 @@ function(
     showForm: function() {
       this.show('#form-view-container', 2);
     },
-        
+
+    showSettings: function() {
+      this.show('#settings-view-container', 3);
+    },
+
     // Not yet implemented
     showUpload: function() {
       console.log("[not] Using upload view");

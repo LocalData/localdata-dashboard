@@ -21,10 +21,10 @@ function($, _, Backbone, settings) {
       this.fetch();
     },
     
-    parse: function(response) {    
+    parse: function(response) {
       if (_.has(response, "survey")) {
-        // Individual surveys are returned a little differently from 
-        // lists of surveys. Oh well. 
+        // Individual surveys are returned a little differently from
+        // lists of surveys. Oh well.
         return response.survey;
       }
       
@@ -36,7 +36,7 @@ function($, _, Backbone, settings) {
 
   Surveys.Collection = Backbone.Collection.extend({
     model: Surveys.Model,
-    url: settings.api.baseurl + "/surveys", 
+    url: settings.api.baseurl + "/surveys",
     
     initialize: function(options) {
       _.bindAll(this, 'parse');

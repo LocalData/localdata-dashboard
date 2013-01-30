@@ -10,13 +10,13 @@ define([
 ],
 
 function($, _, Backbone, settings, api) {
-  'use strict'; 
+  'use strict';
 
   var IndexRouter = Backbone.Router.extend({
     routes: {
       "": "home",
 
-      "surveys/new": "new_survey",      
+      "surveys/new": "new_survey",
       "surveys/:slug/map": "map",
       "surveys/:slug/export": "survey_export",
       "surveys/:slug/design": "design",
@@ -24,7 +24,9 @@ function($, _, Backbone, settings, api) {
 
       "surveys/:slug/form/edit": "form_edit",
       "surveys/:slug/form": "form",
-      
+
+      "surveys/:slug/settings": "settings",
+
       "*actions": "default_route"
     },
   
@@ -60,6 +62,7 @@ function($, _, Backbone, settings, api) {
     },
     
     settings: function(slug) {
+      console.log('------------------ settings');
       api.setSurveyIdFromSlug(slug, this.controller.goto_settings);
     },
 

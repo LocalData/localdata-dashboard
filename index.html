@@ -182,7 +182,7 @@
 
     <script type="text/template" id="loading-view">
       <div class="loading">
-        <img src="img/preloader.gif" alt="" />
+        <img src="img/preloader.gif" alt="">
         <h2>Loading</h2>
       </div>
     </script>
@@ -237,6 +237,7 @@
           <div id="response-view-container"></div>   
           <div id="form-view-container"></div>
           <div id="export-view-container"></div>
+          <div id="settings-view-container"></div>
         </div>
       </div>   
     </script>
@@ -249,19 +250,30 @@
 
     <!-- Settings .......................................................... -->
     <script type="text/template" id="settings-view">
-      TODO
-      <!--
       <form>
         <label>Survey Name</label>
-        <input type="text" value="<%= survey.name %>" />
+        <input type="text" value="<%= survey.name %>">
 
+        <label>Survey</label>
+        <input type="text" value="<%= survey.name %>">
+
+        <h3>Advanced</h3>
+
+        <label>I'll be adding points directly to the map</label>
+        <input type="text" value="<%= survey.name %>" name="">
+
+        <label>I'm working off of geodata, like parcels or building footprints</label>
+        <input type="text" value="<%= survey.name %>" name="">
+
+
+
+        <!--
         <label>Passcode</label>
-        <input type="text" value="<%= survey.passcode %>" id="survey-password" />
+        <input type="text" value="<%= survey.passcode %>" id="survey-password">
+        -->
 
-        <input type="submit" value="Save">
+        <a class="button">Save</a>
       </form>
-      -->
-
     </script>
 
     <!-- Form settings ..................................................... -->
@@ -338,7 +350,7 @@
             <td class="created"><%- r.createdHumanized %></td>
             <td class="address icon-map-marker">
               <% if(r.geo_info != undefined) { %>
-                <%- r.geo_info.humanReadableName %><br />
+                <%- r.geo_info.humanReadableName %><br>
                 (Id: <%- r.parcel_id %>)
               <% }else { %>
                 <%- r.parcel_id %>
@@ -514,7 +526,7 @@
     <!-- Editor: Form templates ........................................... -->
     <script type="text/template" id="question-edit-template">
         <div class="question" data-type="yesno" data-name="<%= question.name %>">
-            <input type="text" placeholder="Question" value="<%= question.text %>" data-role="question" class="question-input" style="width:90%" />
+            <input type="text" placeholder="Question" value="<%= question.text %>" data-role="question" class="question-input" style="width:90%">
 
             <a class="action remove">&nbsp;</a>
 
@@ -534,7 +546,7 @@
 
     <script type="text/template" id="answer-edit-template">
         <div data-role="answer" class="iinputs-append">
-            <input type="text" value="<%= text %>" />
+            <input type="text" value="<%= text %>">
             <a class="action remove">&nbsp;</a>
             <a class="action add-sub-question"><i class="icon-share-alt "></i> Add sub-question</a>
         </div>

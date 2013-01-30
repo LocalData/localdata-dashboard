@@ -18,11 +18,12 @@ define([
   'views/dashboard',
   'views/users',
   'views/surveys',
-  'views/design'
+  'views/design',
+  'views/settings'
 ],
 
 function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, UserViews, SurveyViews, DesignViews) {
-  'use strict'; 
+  'use strict';
 
   var AllViews = {};
   AllViews.HomeView = HomeView;
@@ -108,6 +109,10 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
         case "form":
           this.currentContentView.showForm();
           break;
+        case "settings":
+          this.currentContentView.showSettings();
+          break;
+          
       }
     },
 
@@ -117,6 +122,7 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
     },
     
     goto_settings: function() {
+      console.log("-----------------------Going to settings");
       _kmq.push(['record', "SettingsView"]);
       this._router.navigate("surveys/" + settings.slug + "/settings");
       this.goto_survey("settings");

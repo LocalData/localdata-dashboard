@@ -5,7 +5,7 @@ define([
   'lib/leaflet/leaflet.google'
 ],
 
-function(L) {
+function (L) {
   'use strict';
 
   var settings = {};
