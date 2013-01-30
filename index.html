@@ -348,13 +348,13 @@
       <ul>
         <li <% if (page === 0) { %>class="disabled"<% } %>><a href="#" id="prev">Prev</a></li>
         <% if (pageCount < 2*buffer + 1) {
-          // We're close to the beginning
+          // There are not many pages
           var i;
-          for (i = page - buffer; i < page + buffer + 1 && i < pageCount; i += 1) { %>
+          for (i = Math.max(page - buffer, 0); i < page + buffer + 1 && i < pageCount; i += 1) { %>
             <li class="pageNum <% if (i === page) { %>active<% } %>"><a href="#" data-page="<%= i %>"><%= i + 1 %></a></li>
           <% }
         } else if (page < buffer + 1) {
-          // We're close to the end
+          // We're close to the beginning
           var i;
           for (i = 0; i < (2*buffer + 1) && i < pageCount - 1; i += 1) { %>
             <li class="pageNum <% if (i === page) { %>active<% } %>"><a href="#" data-page="<%= i %>"><%= i + 1 %></a></li>
@@ -364,7 +364,7 @@
             <li class="pageNum"><a href="#" data-page="<%= pageCount - 1 %>">Last</a></li>
           <% }
         } else if (page >= pageCount - buffer - 1) {
-          // We're in the middle
+          // We're close to the end
           %>
           <li class="pageNum"><a href="#" data-page="<%= 0 %>">First</a></li>
           <li class="disabled"><a>...</a></li>
@@ -373,6 +373,7 @@
             <li class="pageNum <% if (i === page) { %>active<% } %>"><a href="#" data-page="<%= i %>"><%= i + 1 %></a></li>
           <% }
         } else { %>
+          // We're in the middle
           <li class="pageNum"><a href="#" data-page="<%= 0 %>">First</a></li>
           <li class="disabled"><a>...</a></li>
           <% var i;
