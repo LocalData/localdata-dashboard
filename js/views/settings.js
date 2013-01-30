@@ -16,39 +16,41 @@ function($, _, Backbone, settings, api) {
 
   var SettingsView = Backbone.View.extend({
     
-    el: "#settings-view-container",
+    el: '#settings-view-container',
 
-    // TODO
-    // Save survey settings
-    // events: {
-    //   "form input[type='submit'] click": this.save
-    // },
+    events: {
+      'click .save': 'save'
+    },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'showEditor');
-
-      console.log("Init settings");
+      _.bindAll(this, 'render', 'save', 'showEditor');
 
       this.survey = options.survey;
       this.forms = options.forms;
-      console.log(this.survey);
-      console.log(this.forms);
 
       this.render();
     },
     
-    // TODO
-    // save: function(event) {
-    //   event.preventDefault();
-    //   console.log("Submitting settings. Not yet implemented.");
-    //   console.log(event);
-    // },
+    save: function(event) {
+      event.preventDefault();
+
+      // Get the fields from the form
+      var form = $(event.target).parent().serializeArray();
+
+      // Transform them so that we can save them
+      var fields = _.reduce(form, function(memo, field) {
+        memo[field.name] = field.value;
+        return memo;
+      }, {});
+
+      console.log(fields);
+      this.survey.set(fields);
+      this.survey.save();
+    },
 
     render: function() {
-      console.log('---------------------Rendering settings');
-      console.log(this.$el.html());
       var context = {
-        survey: this.survey.toJSON(),
+        survey: this.survey.toJSON({namespace: false}),
         forms: this.forms.toJSON()
       };
 
