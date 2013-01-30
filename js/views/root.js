@@ -124,7 +124,6 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
     },
     
     goto_settings: function() {
-      console.log("-----------------------Going to settings");
       _kmq.push(['record', "SettingsView"]);
       this._router.navigate("surveys/" + settings.slug + "/settings");
       this.goto_survey("settings");
