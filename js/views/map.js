@@ -157,7 +157,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         responses = this.responses.models;
       }
 
-      var tracker = this.parcelIdsOnTheMap;
+      var renderedParcelTracker = this.parcelIdsOnTheMap;
       var filter = this.filter;
 
       // Create GeoJSON FeatureCollection objects to pass to Leaflet for
@@ -177,10 +177,10 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       featureCollection.features = _.map(_.filter(responses, function (response) {
         // Get items with geometry that we haven't seen yet
         return (_.has(response.get('geo_info'), 'geometry')
-                && !_.has(tracker, response.get('parcel_id')));
+                && !_.has(renderedParcelTracker, response.get('parcel_id')));
       }), function (response) {
         var id = response.get('parcel_id');
-        tracker[id] = true;
+        renderedParcelTracker[id] = true;
 
         var feature = {
           type: 'Feature',
@@ -205,10 +205,10 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       // Populate the FeatureCollection for responses with only a centroid.
       pointCollection.features = _.map(_.filter(responses, function (response) {
         return (_.has(response.get('geo_info'), 'geometry')
-                && !_.has(tracker, response.get('parcel_id')));
+                && !_.has(renderedParcelTracker, response.get('parcel_id')));
       }), function (response) {
         var id = response.get('parcel_id');
-        tracker[id] = true;
+        renderedParcelTracker[id] = true;
         return {
           type: 'Feature',
           parcelId: id,
