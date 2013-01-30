@@ -20,7 +20,7 @@ define([
 ],
 
 function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
-  'use strict'; 
+  'use strict';
 
   var ResponseViews = {};
 
@@ -133,7 +133,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       // Notify the user we're working on it.
       events.publish('loading', [true]);
 
-      // Reset the collection 
+      // Reset the collection
       // this.responses.reset(this.allResponses.models);
 
       // Filter the responses
