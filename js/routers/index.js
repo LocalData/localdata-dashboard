@@ -6,7 +6,9 @@ define([
   'lib/lodash',
   'backbone',
   'settings',
-  'api'
+  'api',
+
+  ''
 ],
 
 function($, _, Backbone, settings, api) {
@@ -49,7 +51,9 @@ function($, _, Backbone, settings, api) {
     },
 
     new_survey: function() {
-      this.controller.goto_new();
+      api.getUser(function(user) {
+        this.controller.goto_new();
+      }.bind(this));
     },
     
     survey: function(slug) {
@@ -62,29 +66,30 @@ function($, _, Backbone, settings, api) {
     },
     
     settings: function(slug) {
-      console.log('------------------ settings');
-      api.setSurveyIdFromSlug(slug, this.controller.goto_settings);
+      api.getUser(function(user) {
+        api.setSurveyIdFromSlug(slug, this.controller.goto_settings);
+      }.bind(this));
     },
 
     form: function(slug) {
-      api.setSurveyIdFromSlug(slug, this.controller.goto_form);
+      api.getUser(function(user) {
+        api.setSurveyIdFromSlug(slug, this.controller.goto_form);
+      }.bind(this));
     },
     
     survey_export: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_export);
     },
     
-    scans: function(slug) {
-      api.setSurveyIdFromSlug(slug, this.controller.goto_scans);
-    },
-
     design: function(slug) {
-      api.setSurveyIdFromSlug(slug, this.controller.goto_design);
+      api.getUser(function(user) {
+        api.setSurveyIdFromSlug(slug, this.controller.goto_design);
+      }.bind(this));
     },
 
     default_route: function(actions) {
-      console.log(actions);
-    }  
+      // console.log(actions);
+    }
   });
 
   return IndexRouter;
