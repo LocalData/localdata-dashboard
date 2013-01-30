@@ -18,6 +18,23 @@ define([
 
 function($, _, Backbone, events, settings, api, RootView, LoadingView) {
   'use strict';
+  
+  // Patch Backbone to support saving namespaced models
+  // via:
+  // https://github.com/documentcloud/backbone/issues/1777#issuecomment-9836406
+  // TODO:
+  // Should this go in a different location?
+  var sync = Backbone.sync;
+  Backbone.sync = function(method, model, options) {
+    if (!options.data && model.namespace && (method === 'create' || method === 'update')) {
+      var data = {};
+      data[model.namespace] = model;
+      options.data = JSON.stringify(data);
+      options.contentType = 'application/json';
+    }
+    return sync.apply(this, arguments);
+  };
+
 
   // Here's the dashboard app:
   // So fancy!
