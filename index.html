@@ -252,11 +252,12 @@
     <script type="text/template" id="settings-view">
       <form>
         <label>Survey Name</label>
-        <input type="text" value="<%= survey.name %>">
+        <input type="text" name="name" value="<%= survey.name %>">
 
-        <label>Survey</label>
-        <input type="text" value="<%= survey.name %>">
+        <label>Location</label>
+        <input type="text" name="location" value="<%= survey.location %>">
 
+        <!--
         <h3>Advanced</h3>
 
         <label>I'll be adding points directly to the map</label>
@@ -266,13 +267,11 @@
         <input type="text" value="<%= survey.name %>" name="">
 
 
-
-        <!--
         <label>Passcode</label>
         <input type="text" value="<%= survey.passcode %>" id="survey-password">
         -->
 
-        <a class="button">Save</a>
+        <a class="button save">Save</a>
       </form>
     </script>
 
