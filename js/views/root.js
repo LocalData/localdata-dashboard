@@ -87,7 +87,9 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
     },
 
     goto_login: function(redirectTo) {
-      this.currentContentView = this.getOrCreateView("LoginView", "LoginView", {redirectTo: redirectTo});
+      // We want to create this view from scratch every time
+      this.currentContentView = this.views['LoginView'] = new AllViews['LoginView']({redirectTo: redirectTo});
+      // this.getOrCreateView("LoginView", "LoginView", {redirectTo: redirectTo});
     },
     
     // Survey dashboard routes .................................................
