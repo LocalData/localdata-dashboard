@@ -6,9 +6,7 @@ define([
   'lib/lodash',
   'backbone',
   'settings',
-  'api',
-
-  ''
+  'api'
 ],
 
 function($, _, Backbone, settings, api) {
