@@ -31,7 +31,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
     paginationView: null,
     filters: {},
 
-    events: { 
+    events: {
       "change #filter":  "filter",
       "click #subfilter a": "subFilter",
       "click #reset": "reset"
@@ -61,26 +61,26 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       var thisPage = this.responses.toJSON().slice(this.pageStart, this.pageEnd);
 
       // Humanize the dates so people who aren't robots can read them
-      this.humanizeDates(thisPage);  
+      this.humanizeDates(thisPage);
 
       // Set up for filtering
       var flattenedForm = this.forms.getFlattenedForm();
 
       // Actually render the page
-      var context = { 
+      var context = {
         responses: thisPage,
         flattenedForm: flattenedForm
-      };    
+      };
       this.$el.html(this.template(context));
 
-      // Set up the map view _after_ the results have arrived. 
+      // Set up the map view _after_ the results have arrived.
       this.mapView = new MapView({
         el: $("#map-view-container"),
-        responses: this.responses 
+        responses: this.responses
       });
 
-      // If the data has been filtered, show that on the page. 
-      // TODO: This should be done in a view. 
+      // If the data has been filtered, show that on the page.
+      // TODO: This should be done in a view.
       if (_.has(this.filters, "answerValue")) {
         $("#current-filter").html("<h4>Current filter:</h4> <h3>" + this.filters.questionValue + ": " + this.filters.answerValue + "</h3>   <a id=\"reset\" class=\"button\">Clear filter</a>");
       }
