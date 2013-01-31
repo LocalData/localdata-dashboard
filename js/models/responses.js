@@ -5,10 +5,11 @@ define([
   'jquery',
   'lib/lodash',
   'backbone',
-  'settings'
+  'settings',
+  'api'
 ],
 
-function($, _, Backbone, settings) {
+function($, _, Backbone, settings, api) {
   'use strict'; 
 
   var Responses = {};
@@ -19,6 +20,8 @@ function($, _, Backbone, settings) {
 
   Responses.Collection = Backbone.Collection.extend({
     model: Responses.Model,
+    filters: null,
+    unfilteredModels: null,
     
     initialize: function(models, options) {
       // Ugly -- we'll need to find a nicer way to init this thing.s
@@ -30,12 +33,40 @@ function($, _, Backbone, settings) {
       if(options !== undefined) {
         console.log("Getting responses");
         this.surveyId = options.surveyId;
-        this.fetch();
+        this.fetchChunks();
       }
     },
     
     url: function() {
       return settings.api.baseurl + '/surveys/' + this.surveyId + '/responses';
+    },
+
+    fetchChunks: function() {
+      // TODO: If we've set a filter but are still receiving data chunks, we
+      // need to separately deal with filtered and unfiltered data.
+      var self = this;
+      function getChunk(start, count) {
+        api.getResponses(start, count, function (error, responses) {
+          if (error) {
+            console.log(error);
+            return;
+          }
+
+          // If we got as many entries as we requested, then request another
+          // chunk of data.
+          if (responses.length === count) {
+            getChunk(start + count, count);
+          }
+
+          // Turn the entries into models and add them to the collection.
+          var models = _.map(responses, function (item) { return new self.model(item); });
+          self.add(models, { silent: true });
+          self.trigger('addSet', models);
+        });
+      }
+
+      // Get the first chunk.
+      getChunk(0, 500);
     },
           
     parse: function(response) {
@@ -71,6 +102,36 @@ function($, _, Backbone, settings) {
       var idxOfUndefinedToReplace = _.indexOf(uniqueAnswers, undefined);
       uniqueAnswers[idxOfUndefinedToReplace] = "[empty]";
       return uniqueAnswers;
+    },
+
+    // Filter the items in the collection
+    setFilter: function (question, answer) {
+      // TODO: if someone calls reset or update, we need to toss out the
+      // unfilteredModels array. That should happen before anyone else gets the
+      // reset, add, etc. events.
+      if (this.unfilteredModels === null) {
+        // Make a shallow clone of the unfiltered models array.
+        this.unfilteredModels = _.clone(this.models);
+      }
+
+      this.filters = {
+        question: question,
+        answer: answer
+      };
+
+      this.reset(this.filter(function (item) {
+        var resps = item.get('responses');
+        return resps !== undefined && (resps[question] === answer);
+      }));
+    },
+
+    clearFilter: function () {
+      this.filters = null;
+      if (this.unfilteredModels === null) {
+        this.reset();
+      } else {
+        this.reset(this.unfilteredModels);
+      }
     }
     
   });
