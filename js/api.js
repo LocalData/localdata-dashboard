@@ -112,7 +112,7 @@ define(function (require) {
 
   // Find a survey by slug
   // Given a slug (eg 'just-a-surey') Sets settings.surveyId
-  api.setSurveyIdFromSlug = function(slug, callback) {    
+  api.setSurveyIdFromSlug = function(slug, callback) {
     var url = settings.api.baseurl +  "/slugs/" + slug;
     console.log("Survey slug: " + url);
     
@@ -161,9 +161,11 @@ define(function (require) {
         }
         return false;
       });
-      settings.formData = mobileForms[0];
       
       // Endpoint should give the most recent form first.
+      // And that's what we'll use
+      settings.formData = mobileForms[0];
+
       callback();
     });
   };

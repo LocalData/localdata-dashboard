@@ -94,6 +94,7 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
     
     // Survey dashboard routes .................................................
     goto_survey: function(tab) {
+
       _kmq.push(['record', "SurveyView"]);
 
       // Get or create a view for the survey

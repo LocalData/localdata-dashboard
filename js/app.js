@@ -20,8 +20,7 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
   'use strict';
   
   // Patch Backbone to support saving namespaced models
-  // via:
-  // https://github.com/documentcloud/backbone/issues/1777#issuecomment-9836406
+  // via https://github.com/documentcloud/backbone/issues/1777#issuecomment-9836406
   // TODO:
   // Should this go in a different location?
   var sync = Backbone.sync;
@@ -46,7 +45,9 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
     LD.router = new RootView();
     LD.router.startRouting();
 
-
+    // Some high-level events we want to handle: 
+    events.subscribe('loading', LD.setLoading);
+    events.subscribe('navigate', LD.navigateTo);
 
     // Handle authentication .....................................................
     // If any request is returned with a 401, we want to redirect users to the
@@ -61,11 +62,6 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
         redirectToLogin();
       }
     });
-
-    // Listen for loading events ...............................................
-    events.subscribe('loading', LD.setLoading);
-
-    events.subscribe('navigate', LD.navigateTo);
   };
 
   /**
@@ -76,9 +72,10 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
     LD.router._router.navigate(path, { trigger: true });
   };
 
-  // Loading ...................................................................
-  // Is the app currently loading data?
-  // These functions help keep track of that.
+  /**
+   * Set the loading state of the application
+   * @param {boolean} state true if loading, false if not
+   */
   LD.setLoading = function(state) {
     LD.loading = state;
 
@@ -91,7 +88,10 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
     }
   };
 
-  // Return true if the page is in the loading state, false if not
+  /**
+   * Get the loading state of the application
+   * @return {boolean}
+   */
   LD.getLoading = function() {
     if(LD.loading === undefined){
       return false;

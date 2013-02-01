@@ -31,6 +31,8 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
     paginationView: null,
     filters: {},
 
+    el: '#response-view-container',
+
     events: {
       "change #filter":  "filter",
       "click #subfilter a": "subFilter",
@@ -39,6 +41,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
 
     initialize: function(options) {
       _.bindAll(this, 'render', 'goToPage', 'humanizeDates', 'filter', 'subFilter', 'setupPagination', 'doesQuestionHaveTheRightAnswer');
+
       this.template = _.template($('#response-view').html());
       
       this.responses = options.responses;
@@ -47,7 +50,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       this.forms = options.forms;
     },
     
-    render: function() { 
+    render: function() {
       console.log("Rendering response view");
 
       // The first time we render, we want to save a copy of the original responses
