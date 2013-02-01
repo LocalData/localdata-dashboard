@@ -56,7 +56,6 @@ function($, _, Backbone, settings, api) {
     
     survey: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_survey);
-      //this.controller.goto_survey(NSB.API.setSurveyIdFromSlug(slug));
     },
     
     map: function(slug) {
@@ -64,15 +63,11 @@ function($, _, Backbone, settings, api) {
     },
     
     settings: function(slug) {
-      api.getUser(function(user) {
-        api.setSurveyIdFromSlug(slug, this.controller.goto_settings);
-      }.bind(this));
+      api.setSurveyIdFromSlug(slug, this.controller.goto_settings);
     },
 
     form: function(slug) {
-      api.getUser(function(user) {
-        api.setSurveyIdFromSlug(slug, this.controller.goto_form);
-      }.bind(this));
+      api.setSurveyIdFromSlug(slug, this.controller.goto_form);
     },
     
     survey_export: function(slug) {
@@ -80,9 +75,7 @@ function($, _, Backbone, settings, api) {
     },
     
     design: function(slug) {
-      api.getUser(function(user) {
-        api.setSurveyIdFromSlug(slug, this.controller.goto_design);
-      }.bind(this));
+      api.setSurveyIdFromSlug(slug, this.controller.goto_design);
     },
 
     default_route: function(actions) {

@@ -160,17 +160,16 @@ function(
       this.surveyId = options.id;
       this.survey = new SurveyModels.Model({id: this.surveyId});
       this.survey.on('change', this.render, this);
-      
+
       // Get the relevant responses
-      this.responses = new ResponseModels.Collection([], {surveyId: this.surveyId}); 
+      this.responses = new ResponseModels.Collection([], {surveyId: this.surveyId});
 
       // Get the forms
       this.forms = new FormModels.Collection({surveyId: this.surveyId});
     },
 
-    update: function() {
-      //console.log("Updating survey");
-      // this.render();
+    update: function () {
+      return this.render();
     },
 
     render: function() {

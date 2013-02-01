@@ -34,8 +34,9 @@ function($, _, Backbone, events, router, settings, api, UserModels) {
       this.redirectTo = options.redirectTo || "/";
       this.redirectTo = this.redirectTo.replace("?redirectTo=", "");
       console.log("Creating login view");
-      console.log(this.redirectTo);
       _.bindAll(this, 'render', 'update', 'createUser', 'logIn', 'logInCallback');
+
+      this.render();
     },
 
     render: function() {

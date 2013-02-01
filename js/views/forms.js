@@ -97,7 +97,7 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
       this.$el.html(_.template($('#form-view').html(), context));
 
       // old: Make sure we have up-to-date form data before showing the design view
-      api.getForm(this.showDesigner);
+      //api.getForm(this.showDesigner);
 
       // Show the editor
       $('.edit-form-button').click(this.showBuilder);
