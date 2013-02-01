@@ -204,11 +204,12 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
       // Populate the FeatureCollection for responses with only a centroid.
       pointCollection.features = _.map(_.filter(responses, function (response) {
-        return (_.has(response.get('geo_info'), 'geometry')
-                && !_.has(renderedParcelTracker, response.get('parcel_id')));
+        return (!_.has(response.get('geo_info'), 'geometry') && _.has(response.get('geo_info'), 'centroid'));
+                // && !_.has(renderedParcelTracker, response.get('parcel_id')));
       }), function (response) {
         var id = response.get('parcel_id');
         renderedParcelTracker[id] = true;
+
         return {
           type: 'Feature',
           parcelId: id,
@@ -280,7 +281,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         // Make sure the format fits Leaflet's geoJSON expectations
         obj.type = "Feature";
 
-        // Create a new geojson layer and style it. 
+        // Create a new geojson layer and style it.
         var geojsonLayer = new L.geoJson(obj, {
           pointToLayer: pointToLayer,
           style: style
@@ -310,7 +311,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       // _kmq.push(['record', "Map zoomed"]);
       var zoom = this.map.getZoom();
 
-      // Objects should be more detailed close up (zoom 10+) 
+      // Objects should be more detailed close up (zoom 10+)
       if(zoom > 10) {
 
         // If we're in pretty close, show the satellite view

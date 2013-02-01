@@ -45,7 +45,7 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
     LD.router = new RootView();
     LD.router.startRouting();
 
-    // Some high-level events we want to handle: 
+    // Some high-level events we want to handle:
     events.subscribe('loading', LD.setLoading);
     events.subscribe('navigate', LD.navigateTo);
 
