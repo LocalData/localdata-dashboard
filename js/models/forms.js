@@ -42,10 +42,8 @@ function($, _, Backbone, settings) {
     },
     
     parse: function(response) {
-      console.log(response);
       
       if (response.forms.length === 0) {
-        console.log("No forms yet");
         var newForm = new Forms.Model({ 'questions': [] });
         return [ newForm ];
       }

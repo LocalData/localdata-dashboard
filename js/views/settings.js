@@ -23,12 +23,16 @@ function($, _, Backbone, settings, api) {
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'save', 'showEditor');
+      _.bindAll(this, 'render', 'save', 'success');
 
       this.survey = options.survey;
       this.forms = options.forms;
 
-      this.render();
+      this.survey.on('change', this.render);
+    },
+
+    success: function() {
+      $(".saved").fadeIn().css("display","inline-block").delay(2000).fadeOut();
     },
     
     save: function(event) {
@@ -43,9 +47,10 @@ function($, _, Backbone, settings, api) {
         return memo;
       }, {});
 
-      console.log(fields);
       this.survey.set(fields);
-      this.survey.save();
+      this.survey.save({}, {
+        success: this.success
+      });
     },
 
     render: function() {
@@ -55,9 +60,6 @@ function($, _, Backbone, settings, api) {
       };
 
       this.$el.html(_.template($('#settings-view').html(), context));
-
-      api.getForm(this.showEditor);
-
     }
   });
 

@@ -250,6 +250,7 @@
 
     <!-- Settings .......................................................... -->
     <script type="text/template" id="settings-view">
+      <h3>Survey settings</h3>
       <form>
         <label>Survey Name</label>
         <input type="text" name="name" value="<%= survey.name %>">
@@ -271,7 +272,7 @@
         <input type="text" value="<%= survey.passcode %>" id="survey-password">
         -->
 
-        <a class="button save">Save</a>
+        <a class="button save">Save</a> <div class="saved">Form saved</div>
       </form>
     </script>
 

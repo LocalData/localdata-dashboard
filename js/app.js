@@ -80,10 +80,8 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
     LD.loading = state;
 
     if (LD.loading) {
-      console.log("Show the loading view");
       LD.loadingView = new LoadingView();
     }else {
-      console.log("Hide the loading view");
       LD.loadingView.remove();
     }
   };
