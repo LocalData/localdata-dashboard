@@ -85,11 +85,21 @@
               <input type="text" placeholder="Survey name" class="survey-name">
               <input type="text" placeholder="Survey city and state" class="survey-location">
 
+              <h3>Survey type</h3>
+
+              <label><input type="radio" value="point" name="type">We're collecting points on a map (for example, potholes, trees, data that doesn't correspond to an address)
+              </label>
+
+              <label><input type="radio" value="parcel" name="type">We're collecting data using a parcel map (for example, property, homes, businesses with an address)
+              </label>
+
+              <!-- 
               <a class="action show-advanced">Advanced options</a>
               <div class="advanced">
                 <input type="text" placeholder="Survey type" class="survey-type">
                 <textarea class="survey-geoObjectSource" placeholder="Geodata source options"></textarea>
               </div>
+              -->
               <a class="button submit">Create new survey</a>
             </form>
         <!--  </div>   
@@ -258,19 +268,13 @@
         <label>Location</label>
         <input type="text" name="location" value="<%= survey.location %>">
 
-        <!--
-        <h3>Advanced</h3>
+        <h3>What are you surveying?</h3>
 
-        <label>I'll be adding points directly to the map</label>
-        <input type="text" value="<%= survey.name %>" name="">
+        <label><input type="radio" value="point" name="type" <% if(survey.type === 'point') { %>checked <% } %>>We're collecting points on a map (for example, potholes, trees, data that doesn't correspond to an address)
+        </label>
 
-        <label>I'm working off of geodata, like parcels or building footprints</label>
-        <input type="text" value="<%= survey.name %>" name="">
-
-
-        <label>Passcode</label>
-        <input type="text" value="<%= survey.passcode %>" id="survey-password">
-        -->
+        <label><input type="radio" value="parcel" name="type" <% if(survey.type !== 'point') { %>checked <% } %>>We're collecting data using a parcel map (for example, property, homes, businesses with an address)
+        </label>
 
         <a class="button save">Save</a> <div class="saved">Form saved</div>
       </form>

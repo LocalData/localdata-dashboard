@@ -32,8 +32,18 @@ h3 {
 }
 
 /* Forms....................................................................*/
+form h3 {
+  margin-top:1em;
+}
+
 form input, form label {
   display:block;
+}
+
+form input[type='radio'],
+form input[type='checkbox'] {
+  display:inline-block; 
+  margin-right:10px;
 }
 
 form input,
@@ -54,8 +64,10 @@ form textarea {
 }
 
 form label {
-  font-weight:bold; 
+  font-weight:600; 
   margin-top:1em;
+  cursor:pointer; 
+  line-height:1.7;  
 }
 
 form .error {
