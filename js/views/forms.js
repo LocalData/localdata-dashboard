@@ -90,9 +90,11 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
     },
     
     render: function() {
+      var surveyJSON = this.survey.toJSON();
       var context = {
-        survey: this.survey.toJSON(),
-        forms: this.forms.toJSON()
+        survey: surveyJSON,
+        forms: this.forms.toJSON(),
+        mobile: 'http://' + window.location.host + '/mobile/#' + surveyJSON.slug
       };
       this.$el.html(_.template($('#form-view').html(), context));
 
