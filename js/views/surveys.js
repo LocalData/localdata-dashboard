@@ -108,8 +108,9 @@ function(
         // Get the name and other basic details
         // TODO: this should probably be a new Survey model?
         var survey = {
-          "name": $("input.survey-name").val(),
-          "location": $("input.survey-location").val()
+          "type": $('input[name=type]:checked', '#new-survey-form').val(),
+          "name": $("#new-survey-form input.survey-name").val(),
+          "location": $("#new-survey-form input.survey-location").val()
         };
 
         // Get some of the optional parameters

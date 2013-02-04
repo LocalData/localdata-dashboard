@@ -54,6 +54,9 @@ function($, _, Backbone, settings, api) {
     },
 
     render: function() {
+
+      console.log(this.survey);
+
       var context = {
         survey: this.survey.toJSON(),
         forms: this.forms.toJSON()
