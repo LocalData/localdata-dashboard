@@ -204,8 +204,8 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
       // Populate the FeatureCollection for responses with only a centroid.
       pointCollection.features = _.map(_.filter(responses, function (response) {
-        return (_.has(response.get('geo_info'), 'geometry')
-                && !_.has(renderedParcelTracker, response.get('parcel_id')));
+        return (!_.has(response.get('geo_info'), 'geometry')
+                && _.has(response.get('geo_info'), 'centroid'));
       }), function (response) {
         var id = response.get('parcel_id');
         renderedParcelTracker[id] = true;
