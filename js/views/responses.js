@@ -49,9 +49,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
 
       this.forms = options.forms;
 
-      if (this.responses.length > 0) {
-        this.render();
-      }
+      this.render();
     },
     
     // TODO: merge update and render
