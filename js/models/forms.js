@@ -42,8 +42,6 @@ function($, _, Backbone, settings) {
     },
     
     parse: function(response) {
-      console.log(response);
-      
       if (response.forms.length === 0) {
         console.log("No forms yet");
         var newForm = new Forms.Model({ 'questions': [] });
@@ -84,7 +82,7 @@ function($, _, Backbone, settings) {
             // Recusively call flattenForm to process those questions.
             return this.flattenForm(question, flattenedForm);
 
-          }, this);        
+          }, this);
         }
       }, this);
 
@@ -95,6 +93,7 @@ function($, _, Backbone, settings) {
     // Objects have name (functions as id), text (label of the question)
     getFlattenedForm: function() {
       var mostRecentForm = this.getMostRecentForm();
+
       var flattenedForm = [];
       var distinctQuestions = [];
 

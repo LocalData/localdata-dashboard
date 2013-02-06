@@ -20,9 +20,10 @@ define([
 ],
 
 function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
-  'use strict'; 
+  'use strict';
 
   var ResponseViews = {};
+
 
   ResponseViews.MapAndListView = Backbone.View.extend({
     responses: null,
@@ -32,14 +33,14 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
     mapView: null,
     listView: null,
 
-    events: { 
+    events: {
       "change #filter":  "filter",
       "click #subfilter a": "subFilter",
       "click #reset": "reset"
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'filter', 'subFilter', 'remove', 'updateFilterView');
+      _.bindAll(this, 'render', 'filter', 'subFilter', 'remove', 'updateFilterView', 'updateFilterChoices');
       this.template = _.template($('#response-view').html());
       
       this.responses = options.responses;
@@ -48,14 +49,15 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       this.responses.on('addSet', this.update, this);
 
       this.forms = options.forms;
+      this.forms.on('reset', this.updateFilterChoices, this);
 
+      // Make sure we have forms available
       this.render();
     },
-    
-    // TODO: merge update and render
-    render: function() { 
-      console.log("Rendering response view");
 
+    // TODO: merge update and render
+    render: function() {
+      console.log("Rendering response view");
       if (this.firstRun) {
         this.firstRun = false;
       } else {
@@ -67,14 +69,10 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
         this.listView = null;
       }
 
-      // Set up for filtering
-      var flattenedForm = this.forms.getFlattenedForm();
-
       // Actually render the page
-      var context = { 
-        responses: this.responses,
-        flattenedForm: flattenedForm
-      };    
+      var context = {
+        responses: this.responses
+      };
       this.$el.html(this.template(context));
 
       // Set up the map view, now that the root exists.
@@ -87,7 +85,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
 
       // Set up the list view, now that the root exists.
       if (this.listView === null) {
-        this.listView = new ResponseViews.ListView({ 
+        this.listView = new ResponseViews.ListView({
           el: $('#responses-list'),
           responses: this.responses,
           parentView: this
@@ -103,9 +101,31 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       this.updateFilterView();
     },
 
+    update: function () {
+      if (this.firstRun) {
+        this.render();
+      }
+
+      // Update the count
+      // TODO: Use a template
+      this.$('#count').html(_.template('<%= _.size(responses) %> Response<% if(_.size(responses) != 1) { %>s<% } %>', {responses: this.responses}));
+
+      // TODO:
+      // Update the filters
+    },
+
+    /**
+     * Update the first-level choices for filtering responses
+     */
+    updateFilterChoices: function() {
+      var flattenedForm = this.forms.getFlattenedForm();
+      $("#filter-view-container").html(_.template($('#filter-results').html(), { flattenedForm: flattenedForm }));
+    },
+
+    /**
+     * If the data has already been filtered, show that on the page
+     */
     updateFilterView: function () {
-      // If the data has been filtered, show that on the page. 
-      // TODO: This should be done in a view. 
       if (_.has(this.filters, "answerValue")) {
         // Indicate the filter selection.
         $("#current-filter").html("<h4>Current filter:</h4> <h3>" + this.filters.questionValue + ": " + this.filters.answerValue + "</h3>   <a id=\"reset\" class=\"button\">Clear filter</a>");
@@ -117,16 +137,10 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       }
     },
 
-    update: function () {
-      if (this.firstRun) {
-        this.render();
-      }
-      // Update the responses area
-      // TODO: Use a template
-      this.$('#count').html(_.template('<%= _.size(responses) %> Response<% if(_.size(responses) != 1) { %>s<% } %>', {responses: this.responses}));
-    },
-
-    reset: function(e) {
+    /**
+     * Reset any filters
+     */
+    reset: function(event) {
       this.filters = {};
 
       this.responses.clearFilter();
@@ -140,7 +154,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
 
       // Get the list of distinct options
       var answers = this.responses.getUniqueAnswersForQuestion(question);
-      $("#subfilter").html(_.template($('#filter-results').html(), { choices: answers }));
+      $("#subfilter").html(_.template($('#filter-results-answer').html(), { choices: answers }));
 
       // Distinguish the responses visually on the map
       this.mapView.setFilter(question, answers);
@@ -216,7 +230,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       this.prevButton = this.$('#prev');
     },
 
-    render: function() { 
+    render: function() {
       if (this.pageCount === null) {
         this.setupPagination();
       }
@@ -232,10 +246,10 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       this.humanizeDates(thisPage);
 
       // Actually render the page
-      var context = { 
+      var context = {
         responses: thisPage,
         startIndex: start
-      };    
+      };
 
       // Render the responses table
       this.$el.html(this.template(context));
