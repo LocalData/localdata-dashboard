@@ -23,7 +23,7 @@ function($, _, Backbone, settings, api) {
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'save', 'success');
+      _.bindAll(this, 'render', 'save', 'success', 'error');
 
       this.survey = options.survey;
       this.forms = options.forms;
@@ -31,7 +31,13 @@ function($, _, Backbone, settings, api) {
       this.survey.on('change', this.render);
     },
 
+    error: function(model, xhr, options) {
+      console.log(model, xhr, options);
+      $(".error").fadeIn().css("display","inline-block").delay(2000).fadeOut();
+    },
+
     success: function() {
+      console.log("Success!");
       $(".saved").fadeIn().css("display","inline-block").delay(2000).fadeOut();
     },
     
@@ -49,7 +55,8 @@ function($, _, Backbone, settings, api) {
 
       this.survey.set(fields);
       this.survey.save({}, {
-        success: this.success
+        success: this.success,
+        error: this.error
       });
     },
 

@@ -87,10 +87,10 @@
 
               <h3>Survey type</h3>
 
-              <label><input type="radio" value="point" name="type">We're collecting points on a map (for example, potholes, trees, data that doesn't correspond to an address)
+              <label><input type="radio" value="point" name="type">We&apos;re collecting points on a map (for example, potholes, trees, data that doesn&apos;t correspond to an address)
               </label>
 
-              <label><input type="radio" value="parcel" name="type">We're collecting data using a parcel map (for example, property, homes, businesses with an address)
+              <label><input type="radio" value="parcel" name="type">We&apos;re collecting data using a parcel map (for example, property, homes, businesses with an address)
               </label>
 
               <!-- 
@@ -270,13 +270,15 @@
 
         <h3>What are you surveying?</h3>
 
-        <label><input type="radio" value="point" name="type" <% if(survey.type === 'point') { %>checked <% } %>>We're collecting points on a map (for example, potholes, trees, data that doesn't correspond to an address)
+        <label><input type="radio" value="point" name="type" <% if(survey.type === 'point') { %>checked <% } %>>We&apos;re collecting points on a map (for example, potholes, trees, data that doesn&apos;t correspond to an address)
         </label>
 
-        <label><input type="radio" value="parcel" name="type" <% if(survey.type !== 'point') { %>checked <% } %>>We're collecting data using a parcel map (for example, property, homes, businesses with an address)
+        <label><input type="radio" value="parcel" name="type" <% if(survey.type !== 'point') { %>checked <% } %>>We&apos;re collecting data using a parcel map (for example, property, homes, businesses with an address)
         </label>
 
-        <a class="button save">Save</a> <div class="saved">Form saved</div>
+        <a class="button save">Save</a> 
+        <div class="saved">Form saved</div>
+        <div class="error">Error saving the form &mdash; did you complete all fields?</div>
       </form>
     </script>
 

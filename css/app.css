@@ -746,6 +746,11 @@ header a {
     display: none;
 }
 
+.error {
+    color: #df455d;
+    display: none;
+}
+
 .actionbar {
   
 }
