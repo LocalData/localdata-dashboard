@@ -29,7 +29,7 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
     LD.router = new RootView();
     LD.router.startRouting();
 
-    // Handle authentication .....................................................
+    // Handle authentication ...................................................
     // If any request is returned with a 401, we want to redirect users to the
     // login page
     var redirectToLogin = function () {
@@ -40,16 +40,28 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
       console.log("Ajax error: " + xhr.status);
         if (xhr.status === 401) {
           redirectToLogin();
-        }    
+        }
     });
 
     // Listen for loading events ...............................................
     events.subscribe('loading', LD.setLoading);
+    events.subscribe('navigate', LD.navigateTo);
+
+  };
+
+
+  /**
+   * Navigate to a given fragement using Backbone's routing
+   * @param  {String} path the fragment we want to navigate to, eg '/surveys'
+   */
+  LD.navigateTo = function(path) {
+    console.log("Navigate to...");
+    LD.router._router.navigate(path, { trigger: true });
   };
 
   // Loading ...................................................................
   // Is the app currently loading data?
-  // These functions help keep track of that. 
+  // These functions help keep track of that.
   LD.setLoading = function(state) {
     LD.loading = state;
 
@@ -62,7 +74,7 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
     }
   };
 
-  // Return true if the page is in the loading state, false if not 
+  // Return true if the page is in the loading state, false if not
   LD.getLoading = function() {
     if(LD.loading === undefined){
       return false;
