@@ -197,9 +197,12 @@ function(
       };
       this.$el.html(_.template($('#survey-view').html(), context));
       
+<<<<<<< HEAD
       // Show the loading state
       events.publish('loading', [true]);
 
+=======
+>>>>>>> master
       // Render the sub components
       $('#form-view-container').hide();
       $('#export-view-container').hide();

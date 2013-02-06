@@ -101,7 +101,7 @@ function($, _, Backbone, settings, api, FormViews) {
 
       // Render form
       _.each(settings.formData.questions, function (question, questionIndex) {
-        this.renderQuestion(question, undefined, undefined, undefined, undefined, questionIndex, undefined);
+        this.renderQuestion(question, undefined, undefined, undefined, undefined, questionIndex, settings.formData.questions);
 
         // last param was settings.formData.questions
       }, this);

@@ -52,9 +52,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
 
       this.forms = options.forms;
 
-      if (this.responses.length > 0) {
-        this.render();
-      }
+      this.render();
     },
     
     // TODO: merge update and render
@@ -263,12 +261,17 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
     },
 
     updateResponses: function () {
+      var rerender = false;
+      if (this.page === this.pageCount - 1 || this.pageCount === 0) {
+        rerender = true;
+      }
+
       // We got more responses, so let's recalculate the pagination parameters.
       this.setupPagination();
 
       // We only need to rerender if we're on the last page. Otherwise, those
       // new items don't affect the view yet.
-      if (this.page === this.pageCount - 1) {
+      if (rerender) {
         this.render();
       } else {
         var context = {

@@ -140,7 +140,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     },
 
     // Incrementally plot a set of responses on the map.
-    // Optional parameters: "question", [answers] 
+    // Optional parameters: "question", [answers]
     // If given, each result on the map will be styled by answers to
     // question.
     plotResponses: function (responses) {
@@ -179,12 +179,13 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         return (_.has(response.get('geo_info'), 'geometry')
                 && !_.has(renderedParcelTracker, response.get('parcel_id')));
       }), function (response) {
-        var id = response.get('parcel_id');
-        renderedParcelTracker[id] = true;
+        var parcelId = response.get('parcel_id');
+        renderedParcelTracker[parcelId] = true;
 
         var feature = {
           type: 'Feature',
-          parcelId: id,
+          id: response.get('id'),
+          parcelId: parcelId,
           geometry: response.get('geo_info').geometry
         };
 
@@ -204,15 +205,15 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
       // Populate the FeatureCollection for responses with only a centroid.
       pointCollection.features = _.map(_.filter(responses, function (response) {
-        return (!_.has(response.get('geo_info'), 'geometry') && _.has(response.get('geo_info'), 'centroid'));
-                // && !_.has(renderedParcelTracker, response.get('parcel_id')));
+        return (!_.has(response.get('geo_info'), 'geometry')
+                && _.has(response.get('geo_info'), 'centroid'));
       }), function (response) {
-        var id = response.get('parcel_id');
+        var id = response.get('id');
         renderedParcelTracker[id] = true;
 
         return {
           type: 'Feature',
-          parcelId: id,
+          id: id,
           geometry: {
             type: 'Point',
             coordinates: response.get('geo_info').centroid
@@ -408,17 +409,36 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       this.selectedLayer.setStyle(settings.selectedStyle);
       
       // Let's show some info about this object.
-      this.details(this.selectedLayer.feature.parcelId);
+      this.details(this.selectedLayer.feature);
+        
     },
 
-    // When a parcel is clicked, show details for just that parcel.
-    details: function(parcelId) {
-      console.log("Finding parcels " + parcelId);
-      this.sel = new Responses.Collection(this.responses.where({'parcel_id': parcelId}));
+    /**
+     * When a parcel is clicked, show details for just that parcel.
+     *
+     * @param  {Object} options An object with a parcelId or id property
+     */
+    details: function(feature) {
+      console.log(feature);
 
+      // Find out if we're looking up a set of parcels, or one point
+      if(feature.parcelId !== undefined && feature.parcelId !== '') {
+        console.log("Finding parcels ", feature.parcelId);
+        this.sel = new Responses.Collection(this.responses.where({'parcel_id': feature.parcelId}));
+      }else {
+        console.log("Finding point", feature.id);
+        this.sel = new Responses.Collection(this.responses.where({'id': feature.id}));
+      }
+
+      // Only show the most recent result for that parcel / point
+      // TODO
+      // Show previous results for the clicked parcel if that happens
       var selectedSingleObject = this.sel.toJSON()[0];
+
+      // Humanize the date
       selectedSingleObject.createdHumanized = moment(selectedSingleObject.created, "YYYY-MM-DDThh:mm:ss.SSSZ").format("MMM Do h:mma");
 
+      // Render the object
       $("#individual-result-container").html(_.template($('#indivdual-result').html(), {r: selectedSingleObject}));
 
       // Button to close the details view
