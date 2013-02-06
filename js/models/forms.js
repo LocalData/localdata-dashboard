@@ -5,11 +5,10 @@ define([
   'jquery',
   'lib/lodash',
   'backbone',
-  'settings',
-  'api'
+  'settings'
 ],
 
-function($, _, Backbone, settings, api) {
+function($, _, Backbone, settings) {
   'use strict';
 
   var Forms = {};
