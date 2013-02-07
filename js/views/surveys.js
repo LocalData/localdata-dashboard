@@ -205,7 +205,8 @@ function(
       this.responseListView = new ResponseViews.MapAndListView({
         el: $("#response-view-container"),
         responses: this.responses,
-        forms: this.forms
+        forms: this.forms,
+        survey: this.survey
       });
 
       // Form view
