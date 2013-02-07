@@ -28,7 +28,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
   ResponseViews.MapAndListView = Backbone.View.extend({
     responses: null,
     firstRun: true,
-    surveyId: null,
+    survey: null,
     filters: {},
     mapView: null,
     listView: null,
@@ -53,6 +53,8 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
 
       this.forms = options.forms;
       this.forms.on('reset', this.updateFilterChoices, this);
+
+      this.survey = options.survey;
 
       // Make sure we have forms available
       this.render();
@@ -84,7 +86,8 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       if (this.mapView === null) {
         this.mapView = new MapView({
           el: $('#map-view-container'),
-          responses: this.responses
+          responses: this.responses,
+          survey: this.survey
         });
       }
 
