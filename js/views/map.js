@@ -210,6 +210,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       }), function (response) {
         var id = response.get('id');
         renderedParcelTracker[id] = true;
+
         return {
           type: 'Feature',
           id: id,
@@ -281,7 +282,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         // Make sure the format fits Leaflet's geoJSON expectations
         obj.type = "Feature";
 
-        // Create a new geojson layer and style it. 
+        // Create a new geojson layer and style it.
         var geojsonLayer = new L.geoJson(obj, {
           pointToLayer: pointToLayer,
           style: style
@@ -311,7 +312,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       // _kmq.push(['record', "Map zoomed"]);
       var zoom = this.map.getZoom();
 
-      // Objects should be more detailed close up (zoom 10+) 
+      // Objects should be more detailed close up (zoom 10+)
       if(zoom > 10) {
 
         // If we're in pretty close, show the satellite view

@@ -18,11 +18,12 @@ define([
   'views/dashboard',
   'views/users',
   'views/surveys',
-  'views/design'
+  'views/design',
+  'views/settings'
 ],
 
 function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, UserViews, SurveyViews, DesignViews) {
-  'use strict'; 
+  'use strict';
 
   var AllViews = {};
   AllViews.HomeView = HomeView;
@@ -86,11 +87,14 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
     },
 
     goto_login: function(redirectTo) {
-      this.currentContentView = this.getOrCreateView("LoginView", "LoginView", {redirectTo: redirectTo});
+      // We want to create this view from scratch every time
+      this.currentContentView = this.views['LoginView'] = new AllViews['LoginView']({redirectTo: redirectTo});
+      // this.getOrCreateView("LoginView", "LoginView", {redirectTo: redirectTo});
     },
     
     // Survey dashboard routes .................................................
     goto_survey: function(tab) {
+
       _kmq.push(['record', "SurveyView"]);
 
       // Get or create a view for the survey
@@ -108,6 +112,10 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
         case "form":
           this.currentContentView.showForm();
           break;
+        case "settings":
+          this.currentContentView.showSettings();
+          break;
+          
       }
     },
 
