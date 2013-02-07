@@ -7,6 +7,7 @@ define([
   'backbone',
   'moment',
   'lib/tinypubsub',
+  'lib/kissmetrics',
 
   // LocalData
   'settings',
@@ -19,7 +20,7 @@ define([
   'views/map'
 ],
 
-function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
+function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView) {
   'use strict';
 
   var ResponseViews = {};
@@ -156,7 +157,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
     },
 
     filter: function(e) {
-      // _kmq.push(['record', "Question filter selected"]);
+      _kmq.push(['record', "Question filter selected"]);
       var $question = $(e.target);
       var question = $question.val();
 
@@ -169,7 +170,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
     },
 
     subFilter: function(e) {
-      // _kmq.push(['record', "Answer filter selected"]);
+      _kmq.push(['record', "Answer filter selected"]);
       var $answer = $(e.target);
 
       // Notify the user we're working on it.
@@ -213,7 +214,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
     prevButton: null,
     responsesPagination: null,
 
-    events: { 
+    events: {
       'click #next': 'pageNext',
       'click #prev': 'pagePrev',
       'click .pageNum': 'goToPage'
@@ -301,13 +302,17 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
 
     goToPage: function(e) {
       e.preventDefault();
-      var page = parseInt($(e.target).attr('data-page'), 10); 
+
+      _kmq.push(['record', "Specfic result page selected"]);
+      var page = parseInt($(e.target).attr('data-page'), 10);
       this.page = page;
       this.render();
     },
 
     pageNext: function (e) {
       e.preventDefault();
+
+      _kmq.push(['record', "Next page of results selected"]);
       if (this.page === this.pageCount - 1) {
         return;
       }
@@ -318,6 +323,8 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
 
     pagePrev: function (e) {
       e.preventDefault();
+
+      _kmq.push(['record', "Previous page of results selected"]);
       if (this.page === 0) {
         return;
       }

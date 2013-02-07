@@ -9,6 +9,7 @@ define([
   'lib/leaflet/leaflet.google',
   'moment',
   'lib/tinypubsub',
+  'lib/kissmetrics',
 
   // LocalData
   'settings',
@@ -18,8 +19,8 @@ define([
   'models/responses'
 ],
 
-function($, _, Backbone, L, moment, events, settings, api, Responses) {
-  'use strict'; 
+function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
+  'use strict';
 
   function indexToColor(index) {
     if (index >= 0) {
@@ -60,7 +61,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     selectedLayer: null,
     filtered: false,
     selectedObject: {},
-    markers: {},  
+    markers: {},
     filter: null,
     
     initialize: function(options) {
@@ -88,7 +89,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       this.delayFitBounds = _.debounce(this.fitBounds, 250);
 
       this.render();
-    },  
+    },
 
     fitBounds: function () {
       if (this.responses !== null && this.responses.length > 0) {
@@ -123,12 +124,10 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
         // Initialize the map
         this.map = new L.map('map');
-
-        // Don't think this is needed: this.markers = {};
         
         // Set up the base map; add the parcels and done markers
         this.googleLayer = new L.Google("TERRAIN");
-        this.map.addLayer(this.googleLayer); 
+        this.map.addLayer(this.googleLayer);
         this.map.addLayer(this.zoneLayer);
         this.map.addLayer(this.objectsOnTheMap);
 
@@ -366,7 +365,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         return;
       }
 
-      // _kmq.push(['record', "Map zoomed"]);
+      _kmq.push(['record', "Map zoomed"]);
       var zoom = this.map.getZoom();
 
       // Objects should be more detailed close up (zoom 10+)
@@ -455,7 +454,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     },
     
     selectObject: function(event) {
-      // _kmq.push(['record', "Map object selected"]);
+      _kmq.push(['record', "Map object selected"]);
       
       if (this.selectedLayer !== null) {
         this.selectedLayer.setStyle(this.defaultStyle);
