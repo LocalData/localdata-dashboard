@@ -27,7 +27,7 @@ function($, _, Backbone, settings, api) {
         this.makeNavItem('nav-export', 'surveys/' + this.slug + '/export', 'Export', 'icon-download'),
         this.makeNavItem('nav-form', 'surveys/' + this.slug + '/form', 'Survey Questions', 'icon-cog'),
 
-        this.makeNavItem('nav-form', 'surveys/' + this.slug + '/settings', 'Settings', 'icon-cog tab-settings')
+        // this.makeNavItem('nav-form', 'surveys/' + this.slug + '/settings', 'Settings', 'icon-cog tab-settings')
       ];
       this.current = this.items[0];
     },

@@ -42,7 +42,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'goToPage', 'humanizeDates', 'filter', 'subFilter', 'setupPagination', 'doesQuestionHaveTheRightAnswer', 'updateFilterView', 'updateFilterChoices');
+      _.bindAll(this, 'render', 'filter', 'subFilter', 'updateFilterView', 'updateFilterChoices');
 
       this.template = _.template($('#response-view').html());
       
