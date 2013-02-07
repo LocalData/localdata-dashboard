@@ -54,7 +54,7 @@ function($, _, Backbone, events, router, settings, api, UserModels) {
     logInCallback: function(error, user) {
       if(error) {
         console.log(error);
-        $('#login .error').html(error);
+        $('#login .error').html(error).fadeIn(500);
         return;
       }
 
@@ -63,22 +63,22 @@ function($, _, Backbone, events, router, settings, api, UserModels) {
     },
 
     logIn: function(event) {
-      console.log("Logging in");
       event.preventDefault();
+
+      $("#login .error").fadeOut();
       var user = $(event.target).parent().serializeArray();
       api.logIn(user, this.logInCallback);
     },
 
     createUser: function(event) {
       event.preventDefault();
+
+      $("#create-account .error").fadeOut();
       var user = $(event.target).parent().serializeArray();
-      console.log(user);
-      console.log("Create a user");
 
       api.createUser(user, function(error, user) {
         if(error) {
-          console.log(error);
-          $("#create-account .error").html(error);
+          $("#create-account .error").html(error).fadeIn(500);
           return;
         }
 
