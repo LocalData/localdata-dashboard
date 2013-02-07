@@ -6,6 +6,7 @@ define([
   'jquery',
   'lib/lodash',
   'backbone',
+  'lib/kissmetrics',
 
   // LocalData
   'settings',
@@ -14,7 +15,7 @@ define([
   'views/forms'
 ],
 
-function($, _, Backbone, settings, api, FormViews) {
+function($, _, Backbone, _kmq, settings, api, FormViews) {
   'use strict';
 
   var Builder = {};
@@ -49,6 +50,7 @@ function($, _, Backbone, settings, api, FormViews) {
     save: function(event) {
       event.preventDefault();
       console.log('Save clicked');
+      _kmq.push(['record', 'Survey questions saved']);
 
       api.createForm(settings.formData, function(){
         console.log('Form successfully saved');
@@ -59,6 +61,7 @@ function($, _, Backbone, settings, api, FormViews) {
     done: function(event) {
       event.preventDefault();
       console.log('Done editing');
+      _kmq.push(['record', 'Done editing survey questions']);
       this.trigger("done");
     },
 
@@ -127,6 +130,7 @@ function($, _, Backbone, settings, api, FormViews) {
       //  ...
       return function(event) {
         console.log('Updating question');
+        _kmq.push(['record', 'Question edited']);
         var text = $(event.target).val(); //$(this).val();
         var name = this.slugify(text);
 
@@ -139,6 +143,8 @@ function($, _, Backbone, settings, api, FormViews) {
 
     editQuestionType: function(question) {
       return function(event) {
+        _kmq.push(['record', 'Question type changed']);
+
         var dataRole = $(event.target).attr('data-role');
         console.log(dataRole);
         if (dataRole === 'radio-question') {
@@ -159,6 +165,7 @@ function($, _, Backbone, settings, api, FormViews) {
     deleteQuestion: function($question, parent, questionIndex) {
       return function(event) {
         console.log("removing question");
+        _kmq.push(['record', 'Question deleted']);
 
         // Remove it from the DON.
         $question.remove();
@@ -172,6 +179,8 @@ function($, _, Backbone, settings, api, FormViews) {
     createQuestion: function(parent, questionIndex) {
       return function(event) {
         console.log("Adding a new question");
+        _kmq.push(['record', 'Question added']);
+
         var newQuestion = this.makeBlankQuestion();
         parent.splice(questionIndex + 1, 0, newQuestion);
 
@@ -182,6 +191,7 @@ function($, _, Backbone, settings, api, FormViews) {
 
     createAnswer: function(question) {
       return function(event) {
+        _kmq.push(['record', 'Answer added']);
         question.answers.push({
           'text': '',
           'value': ''
@@ -194,6 +204,7 @@ function($, _, Backbone, settings, api, FormViews) {
     addSubQuestion: function(question, index) {
       return function(event) {
         console.log("Adding sub-question");
+        _kmq.push(['record', 'Sub-question added']);
 
         if (_.has(question.answers[index], 'questions')) {
           question.answers[index].questions.unshift(this.makeBlankQuestion());
@@ -208,6 +219,7 @@ function($, _, Backbone, settings, api, FormViews) {
 
     editAnswer: function(question, index) {
       return function(event){
+        _kmq.push(['record', 'Answer edited']);
         var text = $(event.target).val();
         question.answers[index].text = text;
         question.answers[index].value = this.slugify(text);
@@ -218,6 +230,7 @@ function($, _, Backbone, settings, api, FormViews) {
     deleteAnswer: function(question, index, $answer) {
       return function(event) {
         console.log("removing answer");
+        _kmq.push(['record', 'Answer deleted']);
 
         // Remove it from the json
         question.answers.splice(index, 1);

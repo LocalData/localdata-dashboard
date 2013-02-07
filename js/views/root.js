@@ -62,7 +62,7 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
       
     // Register each view as it is created and never create more than one.
     getOrCreateView: function(viewClass, viewName, options) {
-      // _kmq.push(['record', name]);
+      _kmq.push(['record', name]);
       
       // If the view already exists, use it.
       // If it doesn't exist, create it.

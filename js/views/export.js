@@ -20,7 +20,6 @@ function($, _, Backbone, settings, api) {
       
       // Show a given survey
       this.surveyId = options.surveyId;
-          
     },
       
     render: function() {
