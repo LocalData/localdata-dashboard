@@ -10,7 +10,7 @@ define([
 ],
 
 function($, _, Backbone, settings, api) {
-  'use strict'; 
+  'use strict';
 
   var ExportView = Backbone.View.extend({
     elId: "#export-view-container",
@@ -31,7 +31,6 @@ function($, _, Backbone, settings, api) {
       };
       $(this.elId).html(_.template($('#export-view').html(), context));
     }
-
   });
 
   return ExportView;

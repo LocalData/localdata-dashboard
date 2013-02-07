@@ -33,6 +33,8 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
     mapView: null,
     listView: null,
 
+    el: '#response-view-container',
+
     events: {
       "change #filter":  "filter",
       "click #subfilter a": "subFilter",
@@ -40,7 +42,8 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'filter', 'subFilter', 'remove', 'updateFilterView', 'updateFilterChoices');
+      _.bindAll(this, 'render', 'goToPage', 'humanizeDates', 'filter', 'subFilter', 'setupPagination', 'doesQuestionHaveTheRightAnswer', 'updateFilterView', 'updateFilterChoices');
+
       this.template = _.template($('#response-view').html());
       
       this.responses = options.responses;
@@ -75,6 +78,8 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       };
       this.$el.html(this.template(context));
 
+      // If the data has been filtered, show that on the page.
+      // TODO: This should be done in a view.
       // Set up the map view, now that the root exists.
       if (this.mapView === null) {
         this.mapView = new MapView({

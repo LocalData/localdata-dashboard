@@ -85,11 +85,21 @@
               <input type="text" placeholder="Survey name" class="survey-name">
               <input type="text" placeholder="Survey city and state" class="survey-location">
 
+              <h3>Survey type</h3>
+
+              <label><input type="radio" value="point" name="type">We&apos;re collecting points on a map (for example, potholes, trees, data that doesn&apos;t correspond to an address)
+              </label>
+
+              <label><input type="radio" value="parcel" name="type">We&apos;re collecting data using a parcel map (for example, property, homes, businesses with an address)
+              </label>
+
+              <!-- 
               <a class="action show-advanced">Advanced options</a>
               <div class="advanced">
                 <input type="text" placeholder="Survey type" class="survey-type">
                 <textarea class="survey-geoObjectSource" placeholder="Geodata source options"></textarea>
               </div>
+              -->
               <a class="button submit">Create new survey</a>
             </form>
         <!--  </div>   
@@ -118,8 +128,9 @@
             <h3>Comprehensive neigbhorhood survey</h3>
             <p>Collect detailed information about condition, use, vacancy, and more. Takes longer to complete.</p>
             <p class="time-estimate"><img src="img/icons/watch.png" alt=""> About 4 minutes per property</p>
-            <a href="" class="preview button">Preview survey</a>
-            <a class="button use-survey">Use this survey</a>
+              <p>Coming soon</p>
+            <!--<a href="" class="preview button">Preview survey</a>
+            <a class="button use-survey">Use this survey</a>-->
           </div>
 
           <div class="choice-box">
@@ -127,8 +138,9 @@
             <h3>Neighborhood<br> asset<br> survey</h3>
             <p>Map parks, churches, stores, and more.<br><br></p>
             <p class="time-estimate"><img src="img/icons/watch.png" alt=""> About 2 minutes per property</p>
-            <a href="" class="preview button">Preview survey</a>
-            <a class="button use-survey">Use this survey</a>
+            <p>Coming soon</p>
+            <!--<a href="" class="preview button">Preview survey</a>
+            <a class="button use-survey">Use this survey</a>-->
           </div>
         </div>
 
@@ -180,7 +192,7 @@
 
     <script type="text/template" id="loading-view">
       <div class="loading">
-        <img src="img/preloader.gif" alt="" />
+        <img src="img/preloader.gif" alt="">
         <h2>Loading</h2>
       </div>
     </script>
@@ -235,6 +247,7 @@
           <div id="response-view-container"></div>   
           <div id="form-view-container"></div>
           <div id="export-view-container"></div>
+          <div id="settings-view-container"></div>
         </div>
       </div>   
     </script>
@@ -247,19 +260,26 @@
 
     <!-- Settings .......................................................... -->
     <script type="text/template" id="settings-view">
-      TODO
-      <!--
+      <h3>Survey settings</h3>
       <form>
         <label>Survey Name</label>
-        <input type="text" value="<%= survey.name %>" />
+        <input type="text" name="name" value="<%= survey.name %>">
 
-        <label>Passcode</label>
-        <input type="text" value="<%= survey.passcode %>" id="survey-password" />
+        <label>Location</label>
+        <input type="text" name="location" value="<%= survey.location %>">
 
-        <input type="submit" value="Save">
+        <h3>What are you surveying?</h3>
+
+        <label><input type="radio" value="point" name="type" <% if(survey.type === 'point') { %>checked <% } %>>We&apos;re collecting points on a map (for example, potholes, trees, data that doesn&apos;t correspond to an address)
+        </label>
+
+        <label><input type="radio" value="parcel" name="type" <% if(survey.type !== 'point') { %>checked <% } %>>We&apos;re collecting data using a parcel map (for example, property, homes, businesses with an address)
+        </label>
+
+        <a class="button save">Save</a> 
+        <div class="saved">Form saved</div>
+        <div class="error">Error saving the form &mdash; did you complete all fields?</div>
       </form>
-      -->
-
     </script>
 
     <!-- Form settings ..................................................... -->
@@ -570,7 +590,7 @@
     <!-- Editor: Form templates ........................................... -->
     <script type="text/template" id="question-edit-template">
         <div class="question" data-type="yesno" data-name="<%= question.name %>">
-            <input type="text" placeholder="Question" value="<%= question.text %>" data-role="question" class="question-input" style="width:90%" />
+            <input type="text" placeholder="Question" value="<%= question.text %>" data-role="question" class="question-input" style="width:90%">
 
             <a class="action remove">&nbsp;</a>
 
@@ -590,7 +610,7 @@
 
     <script type="text/template" id="answer-edit-template">
         <div data-role="answer" class="iinputs-append">
-            <input type="text" value="<%= text %>" />
+            <input type="text" value="<%= text %>">
             <a class="action remove">&nbsp;</a>
             <a class="action add-sub-question"><i class="icon-share-alt "></i> Add sub-question</a>
         </div>
