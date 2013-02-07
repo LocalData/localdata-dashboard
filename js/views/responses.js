@@ -78,12 +78,6 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       };
       this.$el.html(this.template(context));
 
-      // Set up the map view _after_ the results have arrived.
-      this.mapView = new MapView({
-        el: $("#map-view-container"),
-        responses: this.responses
-      });
-
       // If the data has been filtered, show that on the page.
       // TODO: This should be done in a view.
       // Set up the map view, now that the root exists.
