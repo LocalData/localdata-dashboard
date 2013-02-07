@@ -49,7 +49,7 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
     events.subscribe('loading', LD.setLoading);
     events.subscribe('navigate', LD.navigateTo);
 
-    // Handle authentication .....................................................
+    // Handle authentication ...................................................
     // If any request is returned with a 401, we want to redirect users to the
     // login page
     var redirectToLogin = function () {
@@ -64,6 +64,7 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
     });
   };
 
+
   /**
    * Navigate to a given fragement using Backbone's routing
    * @param  {String} path the fragment we want to navigate to, eg '/surveys'
@@ -71,6 +72,7 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
   LD.navigateTo = function(path) {
     LD.router._router.navigate(path, { trigger: true });
   };
+
 
   /**
    * Set the loading state of the application
