@@ -21,6 +21,34 @@ function($, _, Backbone, events, router, settings, api, UserModels) {
 
   var UserViews = {};
 
+  UserViews.UserBarView = Backbone.View.extend({
+    el: "#userbar-container",
+
+    initialize: function(options) {
+      _.bindAll(this, 'render');
+
+      if(_.has(options, 'user')) {
+        this.user = options.user;
+        this.user.on('change', this.render);
+      }
+    },
+
+    render: function() {
+      console.log("rendering");
+      var context = {
+        user: this.user.toJSON()
+      };
+      this.$el.html(_.template($('#userbar-view').html(), context));
+      this.$el.fadeIn(400).css("display","inline-block");
+      return this;
+    }
+  });
+
+
+  UserViews.UserView = Backbone.View.extend({
+
+  });
+
 
   UserViews.LoginView = Backbone.View.extend({
     el: "#container",
@@ -31,10 +59,13 @@ function($, _, Backbone, events, router, settings, api, UserModels) {
     },
 
     initialize: function(options) {
+      console.log("Creating login view");
+      _.bindAll(this, 'set', 'render', 'update', 'createUser', 'createUserCallback', 'logIn', 'logInCallback');
+
       this.redirectTo = options.redirectTo || "/";
       this.redirectTo = this.redirectTo.replace("?redirectTo=", "");
-      console.log("Creating login view");
-      _.bindAll(this, 'render', 'update', 'createUser', 'logIn', 'logInCallback');
+
+      this.user = options.user;
 
       this.render();
     },
@@ -58,7 +89,7 @@ function($, _, Backbone, events, router, settings, api, UserModels) {
         return;
       }
 
-      console.log(this.redirectTo);
+      this.user.fetch();
       events.publish('navigate', [this.redirectTo]);
     },
 
@@ -69,24 +100,28 @@ function($, _, Backbone, events, router, settings, api, UserModels) {
       api.logIn(user, this.logInCallback);
     },
 
+    createUserCallback: function(error, user) {
+      if(error) {
+        console.log(error);
+        $("#create-account .error").html(error);
+        return;
+      }
+
+      // Get the current user model
+      this.user.fetch();
+
+      // Success! Go to the dashboard.
+      events.publish('navigate', ['/']);
+    },
+
     createUser: function(event) {
       event.preventDefault();
       var user = $(event.target).parent().serializeArray();
       console.log(user);
       console.log("Create a user");
 
-      api.createUser(user, function(error, user) {
-        if(error) {
-          console.log(error);
-          $("#create-account .error").html(error);
-          return;
-        }
-
-        // Success! Go to the dashboard.
-        events.publish('navigate', ['/']);
-      });
+      api.createUser(user, this.createUserCallback);
     }
-
   });
 
   return UserViews;
