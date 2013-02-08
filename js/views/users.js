@@ -59,7 +59,7 @@ function($, _, Backbone, events, router, settings, api, UserModels) {
     },
 
     initialize: function(options) {
-      console.log("Creating login view");
+      console.log("Initialize login view");
       _.bindAll(this, 'set', 'render', 'update', 'createUser', 'createUserCallback', 'logIn', 'logInCallback');
 
       this.redirectTo = options.redirectTo || "/";
