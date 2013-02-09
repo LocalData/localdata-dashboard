@@ -31,6 +31,11 @@ require.config({
       exports: 'L'
     },
 
+    'lib/leaflet.tilejson': {
+      deps: ['lib/leaflet/leaflet', 'lib/leaflet/leaflet.google'],
+      exports: 'L'
+    },
+
     'lib/kmq': {
       exports: '_kmq'
     },
@@ -39,6 +44,7 @@ require.config({
       deps: ['lib/kmq'],
       exports: '_kmq'
     }
+
   }
 
 });

@@ -6,7 +6,7 @@ define([
   'jquery',
   'lib/lodash',
   'backbone',
-  'lib/leaflet/leaflet.google',
+  'lib/leaflet.tilejson',
   'moment',
   'lib/tinypubsub',
 
@@ -60,12 +60,12 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     selectedLayer: null,
     filtered: false,
     selectedObject: {},
-    markers: {},  
+    markers: {},
     filter: null,
     
     initialize: function(options) {
       console.log("Init map view");
-      _.bindAll(this, 'render', 'selectObject', 'renderObject', 'renderObjects', 'getResponsesInBounds', 'updateMapStyleBasedOnZoom', 'updateObjectStyles');
+      _.bindAll(this, 'render', 'addTileLayer', 'selectObject', 'renderObject', 'renderObjects', 'getResponsesInBounds', 'updateMapStyleBasedOnZoom', 'updateObjectStyles');
       
       this.responses = options.responses;
       // TODO: if we add the filter logic to the responses collection, we can
@@ -79,7 +79,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       this.parcelIdsOnTheMap = {};
       this.objectsOnTheMap = new L.FeatureGroup();
       this.zoneLayer = new L.FeatureGroup();
-
+      
       this.defaultStyle = settings.farZoomStyle;
       this.defaultPointToLayer = function (feature, latlng) {
         return new L.circleMarker(latlng, settings.farZoomStyle);
@@ -107,6 +107,12 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     // Debounced version of fitBounds. Created in the initialize method.
     delayFitBounds: null,
     
+    addTileLayer: function(tilejson) {
+      console.log(tilejson);
+      this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
+      this.map.addLayer(this.tileLayer);
+    },
+
     render: function (arg) {
       var hasResponses = this.responses !== null && this.responses.length > 0;
       var hasZones = this.survey.has('zones');
@@ -128,11 +134,20 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         
         // Set up the base map; add the parcels and done markers
         this.googleLayer = new L.Google("TERRAIN");
-        this.map.addLayer(this.googleLayer); 
+        this.map.addLayer(this.googleLayer);
         this.map.addLayer(this.zoneLayer);
         this.map.addLayer(this.objectsOnTheMap);
 
-        this.map.setView([42.374891,-83.069504], 17); // default center
+        // Get tilejson
+        var request = $.ajax({
+          url: 'http://matth-nt.herokuapp.com/' + this.survey.get('id') + '/tile.json',
+          type: "GET",
+          dataType: "jsonp"
+        });
+
+        request.done(this.addTileLayer);
+
+        this.map.setView([42.374891,-83.069504], 11); // default center
         this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
       }
 
@@ -160,10 +175,10 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
       if (_.isArray(arg)) {
         // We got an array of models. Let's plot them.
-        this.plotResponses(arg);
+        // this.plotResponses(arg);
       } else {
         // Plot all of the responses from the responses collection.
-        this.plotResponses();
+        // this.plotResponses();
       }
       events.publish('loading', [false]);
       return this;
