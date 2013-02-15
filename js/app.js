@@ -53,6 +53,10 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
     // If any request is returned with a 401, we want to redirect users to the
     // login page
     var redirectToLogin = function () {
+      // Don't keep redirecting to login
+      if (Backbone.history.fragment.indexOf("login") !== -1 ) {
+        return;
+      }
       LD.router._router.navigate("/login/?redirectTo=" + Backbone.history.fragment, {trigger: true});
     };
 

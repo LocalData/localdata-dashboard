@@ -19,10 +19,13 @@ define([
   'views/users',
   'views/surveys',
   'views/design',
-  'views/settings'
+  'views/settings',
+
+  // Models
+  'models/users'
 ],
 
-function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, UserViews, SurveyViews, DesignViews) {
+function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, UserViews, SurveyViews, DesignViews, SettingsViews, Users) {
   'use strict';
 
   var AllViews = {};
@@ -34,6 +37,7 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
   AllViews.DesignView = DesignViews.DesignView;
 
   AllViews.LoginView = UserViews.LoginView;
+  AllViews.UserBarView = UserViews.UserBarView;
 
   // The singleton view which manages all others.
   // Essentially, a "controller".
@@ -47,13 +51,19 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
     initialize: function() {
       // Bind local methods
       _.bindAll(this);
-      
+
+      // Keep track of the user.
+      this.user = new Users.Model();
+      this.userView = new AllViews.UserBarView({
+        user: this.user
+      });
+
       // Set up global router
       this._router = new IndexRouter({ controller: this });
       
       return this;
     },
-    
+
     // Start Backbone routing. Separated from initialize() so that the
     // global controller is available for any preset routes (direct links).
     startRouting: function() {
@@ -87,9 +97,10 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
     },
 
     goto_login: function(redirectTo) {
-      // We want to create this view from scratch every time
-      this.currentContentView = this.views['LoginView'] = new AllViews['LoginView']({redirectTo: redirectTo});
-      // this.getOrCreateView("LoginView", "LoginView", {redirectTo: redirectTo});
+      this.currentContentView = this.getOrCreateView("LoginView", "LoginView", {
+        'redirectTo': redirectTo,
+        'user': this.user
+      });
     },
     
     // Survey dashboard routes .................................................
