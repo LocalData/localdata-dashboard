@@ -140,7 +140,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
         // Get tilejson
         var request = $.ajax({
-          url: 'http://matth-nt.herokuapp.com/' + this.survey.get('id') + '/tile.json',
+          url: 'http://localhost:3001/' + this.survey.get('id') + '/tile.json',
           type: "GET",
           dataType: "jsonp"
         });
