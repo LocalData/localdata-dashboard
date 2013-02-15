@@ -6,6 +6,7 @@ define([
   'lib/lodash',
   'backbone',
   'lib/tinypubsub',
+  'lib/kissmetrics',
 
   // LocalData
   'routers/index',
@@ -16,7 +17,7 @@ define([
   'models/users'
 ],
 
-function($, _, Backbone, events, router, settings, api, UserModels) {
+function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
   'use strict';
 
   var UserViews = {};
@@ -84,6 +85,7 @@ function($, _, Backbone, events, router, settings, api, UserModels) {
 
     logInCallback: function(error, user) {
       if(error) {
+        _kmq.push(['record', error]);
         console.log(error);
         $('#login .error').html(error);
         return;
@@ -94,8 +96,11 @@ function($, _, Backbone, events, router, settings, api, UserModels) {
     },
 
     logIn: function(event) {
-      console.log("Logging in");
       event.preventDefault();
+
+      _kmq.push(['record', 'User logging in']);
+      console.log("Logging in");
+
       var user = $(event.target).parent().serializeArray();
       api.logIn(user, this.logInCallback);
     },
@@ -116,6 +121,8 @@ function($, _, Backbone, events, router, settings, api, UserModels) {
 
     createUser: function(event) {
       event.preventDefault();
+
+      _kmq.push(['record', 'Creating user account']);
       var user = $(event.target).parent().serializeArray();
       console.log(user);
       console.log("Create a user");
