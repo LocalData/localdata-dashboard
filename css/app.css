@@ -175,16 +175,32 @@ header a {
   #topnav {
     font-size:14px;
     float:right;
-    padding-top:5px;
   }
 
-  .mysurveys {
-    background:#f39379;
-    color:#fff;
-    padding:4px 8px;
-    border-radius:15px;
-    margin-right:10px;
-  }
+    .mysurveys {
+      display:inline-block;
+      background:#f39379;
+      color:#fff;
+      padding:4px 12px 4px 12px;
+      border-radius:15px;
+      margin-right:10px;
+      line-height:20px;
+    }
+
+    #userbar-container {
+      display:none;
+    }
+
+      .userbar {
+        display:inline-block;
+        color:#fff;
+        padding:4px 12px 4px 30px;
+        border-radius:15px;
+        margin-right:10px;
+        background:#666 url(../img/icons/user-white.png) no-repeat 12px center;
+        line-height:20px;
+      }
+
 
 #survey-header {
   color:#fefefe;
@@ -740,7 +756,6 @@ header a {
     }
 
 /* Toolbar ...................................................................*/
-
 .saved {
     color: #8db100;
     display: none;

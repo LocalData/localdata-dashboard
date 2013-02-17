@@ -24,7 +24,9 @@
         <h1><small><a href="index.html">localdata</a></small></h1>
         <div id="topnav">
           <a href="/" class="mysurveys">All Surveys</a>
-          <a href="/logout">Log out</a>
+          <div id="userbar-container"></div>
+
+
         </div>
     </header>
 
@@ -33,6 +35,15 @@
     </div>
     
     <!-- Templates ========================================================-->
+
+    <script type="text/template" id="userbar-view">
+      <div class="userbar">
+        <%= user.name %>
+      </div>
+      <a href="/logout" class="logout">Log out</a>
+    </script>
+
+
     <!-- Home .............................................................-->
     <script type="text/template" id="home">
     
