@@ -570,6 +570,10 @@ header a {
 
 }
 
+  .survey-designer p {
+    text-align: center;
+  }
+
   .survey-designer h2 {
     text-align:center;
     font-size:3em;

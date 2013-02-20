@@ -19,10 +19,11 @@ define([
   'views/preview',
 
   // Misc
-  'misc/exampleform'
+  'misc/exampleform',
+  'misc/blankform'
 ],
 
-function($, _, Backbone, events, settings, api, SurveyModels, FormModels, PreviewView, exampleForm) {
+function($, _, Backbone, events, settings, api, SurveyModels, FormModels, PreviewView, exampleForm, blankForm) {
   'use strict';
 
   var DesignViews = {};
@@ -31,7 +32,7 @@ function($, _, Backbone, events, settings, api, SurveyModels, FormModels, Previe
     survey: null,
     
     initialize: function(options) {
-      _.bindAll(this, 'update', 'render', 'useSurvey');
+      _.bindAll(this, 'update', 'render', 'useSurvey', 'useBlankSurvey');
 
       this.el = options.el;
       this.$el = $(options.el);
@@ -48,6 +49,13 @@ function($, _, Backbone, events, settings, api, SurveyModels, FormModels, Previe
     useSurvey: function(event) {
       console.log("Using the survey");
       api.createForm(exampleForm, $.proxy(function() {
+        this.trigger('formAdded');
+      },this));
+    },
+
+    useBlankSurvey: function(event) {
+      console.log("Using the survey");
+      api.createForm(blankForm, $.proxy(function() {
         this.trigger('formAdded');
       },this));
     },
@@ -74,6 +82,7 @@ function($, _, Backbone, events, settings, api, SurveyModels, FormModels, Previe
       });
 
       $('.use-survey').click(this.useSurvey);
+      $('.use-blank-survey').click(this.useBlankSurvey);
     }
 
   });
