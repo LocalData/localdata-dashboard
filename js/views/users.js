@@ -61,7 +61,7 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
 
     initialize: function(options) {
       console.log("Initialize login view");
-      _.bindAll(this, 'set', 'render', 'update', 'createUser', 'createUserCallback', 'logIn', 'logInCallback');
+      _.bindAll(this, 'render', 'update', 'createUser', 'createUserCallback', 'logIn', 'logInCallback');
 
       this.redirectTo = options.redirectTo || "/";
       this.redirectTo = this.redirectTo.replace("?redirectTo=", "");
