@@ -104,6 +104,9 @@
               <label><input type="radio" value="parcel" name="type">We&apos;re collecting data using a parcel map (for example, property, homes, businesses with an address)
               </label>
 
+              <label><input type="radio" value="pointandparcel" name="type">We need to collect information about points and parcels (experimental)
+              </label>
+
               <!-- 
               <a class="action show-advanced">Advanced options</a>
               <div class="advanced">
@@ -285,7 +288,10 @@
         <label><input type="radio" value="point" name="type" <% if(survey.type === 'point') { %>checked <% } %>>We&apos;re collecting points on a map (for example, potholes, trees, data that doesn&apos;t correspond to an address)
         </label>
 
-        <label><input type="radio" value="parcel" name="type" <% if(survey.type !== 'point') { %>checked <% } %>>We&apos;re collecting data using a parcel map (for example, property, homes, businesses with an address)
+        <label><input type="radio" value="parcel" name="type" <% if(survey.type !== 'point' && survey.type !== 'pointandparcel') { %>checked <% } %>>We&apos;re collecting data using a parcel map (for example, property, homes, businesses with an address)
+        </label>
+
+        <label><input type="radio" value="pointandparcel" name="type" <% if(survey.type !== 'pointandparcel') { %>checked <% } %>>We need to collect information about points and parcels. 
         </label>
 
         <a class="button save">Save</a> 
