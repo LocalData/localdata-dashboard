@@ -97,9 +97,9 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
 
     logIn: function(event) {
       event.preventDefault();
-
       _kmq.push(['record', 'User logging in']);
       console.log("Logging in");
+      $('#login .error').fadeOut();
 
       var user = $(event.target).parent().serializeArray();
       api.logIn(user, this.logInCallback);
@@ -124,8 +124,7 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
 
       _kmq.push(['record', 'Creating user account']);
       var user = $(event.target).parent().serializeArray();
-      console.log(user);
-      console.log("Create a user");
+      $('#create-account .error').fadeOut();
 
       api.createUser(user, this.createUserCallback);
     }
