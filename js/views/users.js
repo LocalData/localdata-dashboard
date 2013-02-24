@@ -86,8 +86,8 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
     logInCallback: function(error, user) {
       if(error) {
         _kmq.push(['record', error]);
-        console.log(error);
-        $('#login .error').html(error);
+        console.log("Login error:", error);
+        $('#login .error').html(error).fadeIn();
         return;
       }
 
@@ -107,8 +107,8 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
 
     createUserCallback: function(error, user) {
       if(error) {
-        console.log(error);
-        $("#create-account .error").html(error);
+        console.log("Creation error:", error);
+        $("#create-account .error").html(error).fadeIn();
         return;
       }
 
