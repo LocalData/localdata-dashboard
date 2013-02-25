@@ -35,7 +35,6 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
     },
 
     render: function() {
-      console.log("rendering");
       var context = {
         user: this.user.toJSON()
       };
@@ -86,7 +85,6 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
     logInCallback: function(error, user) {
       if(error) {
         _kmq.push(['record', error]);
-        console.log("Login error:", error);
         $('#login .error').html(error).fadeIn();
         return;
       }
@@ -98,7 +96,6 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
     logIn: function(event) {
       event.preventDefault();
       _kmq.push(['record', 'User logging in']);
-      console.log("Logging in");
       $('#login .error').fadeOut();
 
       var user = $(event.target).parent().serializeArray();
@@ -107,7 +104,6 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
 
     createUserCallback: function(error, user) {
       if(error) {
-        console.log("Creation error:", error);
         $("#create-account .error").html(error).fadeIn();
         return;
       }
