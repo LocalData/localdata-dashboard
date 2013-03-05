@@ -29,15 +29,15 @@ function($, _, Backbone, settings, api) {
 
       "*actions": "default_route"
     },
-  
+
     initialize: function(options) {
       this.controller = options.controller;
-      
+
       this.route(/^login\/(.*)$/, "login", this.login);
 
       // "*actions": "default_route"
     },
-    
+
     home: function() {
       console.log("Index");
       this.controller.goto_home();
@@ -53,15 +53,15 @@ function($, _, Backbone, settings, api) {
         this.controller.goto_new();
       }.bind(this));
     },
-    
+
     survey: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_survey);
     },
-    
+
     map: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_map);
     },
-    
+
     settings: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_settings);
     },
@@ -69,11 +69,11 @@ function($, _, Backbone, settings, api) {
     form: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_form);
     },
-    
+
     survey_export: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_export);
     },
-    
+
     design: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_design);
     },

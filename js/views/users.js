@@ -54,13 +54,17 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
     el: "#container",
 
     events: {
-      "click #login .button": "logIn",
-      "click #create-account .button": "createUser"
+      'click #login .button': 'logIn',
+      'click #create-account .button': "createUser",
+      'click #login .forgot': 'forgot',
+      'click #forgot .button': 'reset'
     },
 
     initialize: function(options) {
       console.log("Initialize login view");
-      _.bindAll(this, 'render', 'update', 'createUser', 'createUserCallback', 'logIn', 'logInCallback');
+      _.bindAll(this, 'render', 'update', 'createUser', 'createUserCallback',
+        'logIn', 'logInCallback',
+        'forgot', 'reset', 'forgotCallback');
 
       this.redirectTo = options.redirectTo || "/";
       this.redirectTo = this.redirectTo.replace("?redirectTo=", "");
@@ -82,6 +86,43 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
       this.render();
     },
 
+    forgot: function() {
+      console.log("forgot password");
+      $('#login').fadeOut(200, function(){
+        $('#forgot').fadeIn(200);
+      });
+    },
+
+    reset: function(event) {
+      console.log("Resetting password");
+      $('#forgot .error').hide();
+      var data = $(event.target).parent().serializeArray();
+      var query = {'user': {'email': data[0].value}};
+      console.log(query);
+      api.forgot(query, this.forgotCallback);
+    },
+
+    forgotCallback: function(error) {
+      if(error) {
+        console.log("ERROR!!!", error);
+        _kmq.push(['record', error]);
+        $('#forgot .error').html(error.message).fadeIn();
+        return;
+      }
+
+      $('#forgot .success').fadeIn();
+    },
+
+    logIn: function(event) {
+      event.preventDefault();
+      _kmq.push(['record', 'User logging in']);
+      $('#login .error').fadeOut();
+
+      var user = $(event.target).parent().serializeArray();
+      console.log(user);
+      api.logIn(user, this.logInCallback);
+    },
+
     logInCallback: function(error, user) {
       if(error) {
         _kmq.push(['record', error]);
@@ -93,13 +134,14 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
       events.publish('navigate', [this.redirectTo]);
     },
 
-    logIn: function(event) {
+    createUser: function(event) {
       event.preventDefault();
-      _kmq.push(['record', 'User logging in']);
-      $('#login .error').fadeOut();
 
+      _kmq.push(['record', 'Creating user account']);
       var user = $(event.target).parent().serializeArray();
-      api.logIn(user, this.logInCallback);
+      $('#create-account .error').fadeOut();
+
+      api.createUser(user, this.createUserCallback);
     },
 
     createUserCallback: function(error, user) {
@@ -113,16 +155,6 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
 
       // Success! Go to the dashboard.
       events.publish('navigate', ['/']);
-    },
-
-    createUser: function(event) {
-      event.preventDefault();
-
-      _kmq.push(['record', 'Creating user account']);
-      var user = $(event.target).parent().serializeArray();
-      $('#create-account .error').fadeOut();
-
-      api.createUser(user, this.createUserCallback);
     }
   });
 

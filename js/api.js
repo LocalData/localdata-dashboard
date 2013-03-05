@@ -23,17 +23,18 @@ define(function (require) {
 
   // Check if the user is authenticated
   api.getUser = function(callback) {
-    var url = settings.api.baseurl + "/user";
+    var url = settings.api.baseurl + "/user/forgot";
 
     $.getJSON(url, function(data) {
       callback(data);
     });
   };
 
-  // Create a new user
-  //
-  // @param {Object} user Name, email, and password for the user
-  // @param {Function} callback Parameters: (error, user)
+  /**
+   * Create a new user
+   * @param {Object} user Name, email, and password for the user
+   * @param {Function} callback Parameters: (error, user)   
+   */
   api.createUser = function(user, callback) {
 
     var url = settings.api.baseurl + "/user";
@@ -81,10 +82,37 @@ define(function (require) {
     });
 
     request.fail(function(jqXHR, textStatus, errorThrown) {
-      console.log("Request failed: ", jqXHR);
       callback(jqXHR.responseText, null);
     });
+  };
 
+  /**
+   * Reset a user's password
+   * @param  {user}     suser     With param email
+   * @param  {Function} callback Params (error)
+   */
+  api.forgot = function(user, callback) {
+    var url = settings.api.baseurl + '/user/forgot';
+
+    var request = $.ajax({
+      url: url,
+      type: "POST",
+      data: user
+    });
+
+    request.done(function(response) {
+      console.log(response);
+      if(response.name === "BadRequestError") {
+        callback(response);
+        return;
+      }
+      callback();
+    });
+
+    request.fail(function(jqXHR, textStatus, errorThrown) {
+      console.log(errorThrown, jqXHR);
+      callback($.parseJSON(jqXHR.responseText));
+    });
   };
 
   // Create a new survey
