@@ -23,7 +23,7 @@ define(function (require) {
 
   // Check if the user is authenticated
   api.getUser = function(callback) {
-    var url = settings.api.baseurl + "/user/forgot";
+    var url = settings.api.baseurl + "/user";
 
     $.getJSON(url, function(data) {
       callback(data);
@@ -86,34 +86,41 @@ define(function (require) {
     });
   };
 
+
   /**
-   * Reset a user's password
-   * @param  {user}     suser     With param email
-   * @param  {Function} callback Params (error)
+   * Create an API transaction function for a given path
+   * @param  {String}   pathFragment Path in the api, eg 'login'
+   * @param  {Object}   data         Data to be submitted
+   * @param  {Function} callback     To accept parameter `error`
+   * @return {Function}              
    */
-  api.forgot = function(user, callback) {
-    var url = settings.api.baseurl + '/user/forgot';
+  api.transaction = function(pathFragment) {
+    return function(data, callback) {
+      var url = settings.api.baseurl + '/' + pathFragment;
 
-    var request = $.ajax({
-      url: url,
-      type: "POST",
-      data: user
-    });
+      var request = $.ajax({
+        url: url,
+        type: "POST",
+        data: data
+      });
 
-    request.done(function(response) {
-      console.log(response);
-      if(response.name === "BadRequestError") {
-        callback(response);
-        return;
-      }
-      callback();
-    });
+      request.done(function(response) {
+        console.log(response);
+        if(response.name === "BadRequestError") {
+          callback(response, null);
+          return;
+        }
+        callback(null, response);
+      });
 
-    request.fail(function(jqXHR, textStatus, errorThrown) {
-      console.log(errorThrown, jqXHR);
-      callback($.parseJSON(jqXHR.responseText));
-    });
+      request.fail(function(jqXHR, textStatus, errorThrown) {
+        return callback($.parseJSON(jqXHR.responseText), null);
+      });
+    };
   };
+
+  api.forgot = new api.transaction('user/forgot');
+  api.reset  = new api.transaction('user/reset');
 
   // Create a new survey
   api.createSurvey = function(survey, callback) {

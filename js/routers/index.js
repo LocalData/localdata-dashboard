@@ -27,6 +27,8 @@ function($, _, Backbone, settings, api) {
 
       "surveys/:slug/settings": "settings",
 
+      "reset/:token": "reset",
+
       "*actions": "default_route"
     },
 
@@ -76,6 +78,10 @@ function($, _, Backbone, settings, api) {
 
     design: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_design);
+    },
+
+    reset: function(token) {
+      this.controller.goto_reset(token);
     },
 
     default_route: function(actions) {

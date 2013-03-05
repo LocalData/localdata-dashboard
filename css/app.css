@@ -294,6 +294,7 @@ header a {
 /* Login ................................................................... */
 #login h2, 
 #forgot h2,
+#reset h2,
 #create-account h2 {
   font-size:24px;
   margin-bottom:12px;
@@ -769,7 +770,8 @@ header a {
     }
 
 /* Toolbar ...................................................................*/
-.saved {
+.saved,
+.success {
     color: #8db100;
     display: none;
 }

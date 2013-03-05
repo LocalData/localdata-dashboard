@@ -50,6 +50,68 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
   });
 
 
+  UserViews.ResetView = Backbone.View.extend({
+    el: "#container",
+
+    events: {
+      'click .button': 'reset'
+    },
+
+    initialize: function(options) {
+      console.log('init reset view');
+      _.bindAll(this, 'render', 'update', 'reset', 'resetCallback');
+
+      this.token = options.token;
+    },
+
+    update: function() {
+      this.render();
+    },
+
+    render: function() {
+      var context = {
+        token: this.token
+      };
+      this.$el.html(_.template($('#reset-view').html(), context));
+      return this;
+    },
+
+    reset: function() {
+      // Get the data from the form. Ew. 
+      var data = $(event.target).parent().serializeArray();
+      var token = data[0].value;
+      var email = data[1].value;
+      var password1 = data[2].value;
+      var password2 = data[3].value;
+
+      console.log(token);
+      if(password1 !== password2) {
+        $('#reset .error').html('The passwords should match').fadeIn();
+        return;
+      }
+
+      var query = {
+        'reset': {
+          'email': email,
+          'password': password1,
+          'token': token
+        }
+      };
+      api.reset(query, this.resetCallback);
+    },
+
+    resetCallback: function(error) {
+      if(error) {
+        _kmq.push(['record', error]);
+        $('#reset .error').html(error.message).fadeIn();
+        return;
+      }
+
+      events.publish('navigate', ['/']);
+    }
+  });
+
+
   UserViews.LoginView = Backbone.View.extend({
     el: "#container",
 
@@ -98,7 +160,6 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
       $('#forgot .error').hide();
       var data = $(event.target).parent().serializeArray();
       var query = {'user': {'email': data[0].value}};
-      console.log(query);
       api.forgot(query, this.forgotCallback);
     },
 

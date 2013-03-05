@@ -54,7 +54,8 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
     // login page
     var redirectToLogin = function () {
       // Don't keep redirecting to login
-      if (Backbone.history.fragment.indexOf("login") !== -1 ) {
+      if (Backbone.history.fragment.indexOf("login") !== -1 ||
+          Backbone.history.fragment.indexOf("reset") !== -1 ) {
         return;
       }
       LD.router._router.navigate("/login/?redirectTo=" + Backbone.history.fragment, {trigger: true});
@@ -63,6 +64,7 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
     $(document).ajaxError(function (event, xhr) {
       console.log("Ajax error: " + xhr.status);
       if (xhr.status === 401) {
+        console.log(event, xhr);
         redirectToLogin();
       }
     });
@@ -102,8 +104,8 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
     }
     return LD.loading;
   };
- 
- 
+
+
   return LD;
 });
 

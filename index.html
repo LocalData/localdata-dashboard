@@ -214,6 +214,32 @@
 
     </script>
 
+    <script type="text/template" id="reset-view">
+      <div class="container">
+        <header id="survey-header">
+            <h2>Welcome to LocalData</h2>
+        </header>
+      </div>
+    
+      <div class="container">
+        <div id="content">
+          <div id="body" class="floatcontainer">
+            <form id="reset">
+              <h2>Reset your password</h2>
+              <input type="hidden" name="token" value="<%= token %>">
+              <input type="text" name="email" placeholder="Your email">
+              <input type="password" name="password" placeholder="New password">
+              <input type="password" name="confirmPassword" placeholder="Confirm password">
+
+              <a class="button">Reset password</a><span class="error"></span>
+            </form>
+
+          </div>   
+        </div>
+      </div>
+    </script>
+
+
     <script type="text/template" id="loading-view">
       <div class="loading">
         <img src="img/preloader.gif" alt="">
