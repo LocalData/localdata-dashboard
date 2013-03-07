@@ -19,7 +19,7 @@ define([
 ],
 
 function($, _, Backbone, L, moment, events, settings, api, Responses) {
-  'use strict'; 
+  'use strict';
 
   function indexToColor(index) {
     if (index >= 0) {
@@ -28,19 +28,25 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     return settings.colorRange[0];
   }
 
-  function getFeatureStyle(feature) {
-    if (feature.properties === undefined || feature.properties.color === undefined) {
-      return settings.styleTemplate;
-    }
+  /**
+   * Apply default styles to a feature
+   * Preserves colors for filtering
+   * @param  {[type]} feature [description]
+   * @return {[type]}         [description]
+   */
+  // function getFeatureStyle(feature) {
+  //   if (feature.properties === undefined || feature.properties.color === undefined) {
+  //     return settings.styleTemplate;
+  //   }
+// 
+  //   var style = {};
+  //   _.extend(style, settings.styleTemplate, {
+  //     color: feature.properties.color,
+  //     fillColor: feature.properties.color
+  //   });
+  //   return style;
+  // }
 
-    var style = {};
-    _.extend(style, settings.styleTemplate, {
-      color: feature.properties.color,
-      fillColor: feature.properties.color
-    });
-    return style;
-  }
-  
   var MapView = Backbone.View.extend({
 
     map: null,
@@ -50,13 +56,14 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     selectedLayer: null,
     filtered: false,
     selectedObject: {},
-    markers: {},  
+    markers: {},
     filter: null,
-    
+
     initialize: function(options) {
       console.log("Init map view");
-      _.bindAll(this, 'render', 'selectObject', 'renderObject', 'renderObjects', 'getResponsesInBounds', 'updateMapStyleBasedOnZoom', 'updateObjectStyles');
-      
+      _.bindAll(this, 'render', 'selectObject', 'renderObject', 'renderObjects', 'getResponsesInBounds', 'updateMapStyleBasedOnZoom', 'updateObjectStyles',
+        'styleFeature', 'setupPolygon');
+
       this.responses = options.responses;
       // TODO: if we add the filter logic to the responses collection, we can
       // more cleanly trigger off its events.
@@ -76,7 +83,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       this.delayFitBounds = _.debounce(this.fitBounds, 250);
 
       this.render();
-    },  
+    },
 
     fitBounds: function () {
       try {
@@ -87,8 +94,8 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
     // Debounced version of fitBounds. Created in the initialize method.
     delayFitBounds: null,
-    
-    render: function (arg) {  
+
+    render: function (arg) {
       // Don't draw a map if there are no responses.
       if (this.responses === null || this.responses.length === 0) {
         return;
@@ -102,10 +109,11 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         this.map = new L.map('map');
 
         // Don't think this is needed: this.markers = {};
-        
+
         // Set up the base map; add the parcels and done markers
-        this.googleLayer = new L.Google("TERRAIN");
-        this.map.addLayer(this.googleLayer); 
+        // TODO: Reenable for online
+        // this.googleLayer = new L.Google("TERRAIN");
+        // this.map.addLayer(this.googleLayer); 
         this.map.addLayer(this.objectsOnTheMap);
 
         this.map.setView([42.374891,-83.069504], 17); // default center
@@ -130,7 +138,14 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       return this;
     },
 
+
     // Set filter parameters for displaying results on the map
+    /**
+     * Set filter parameters for displaying results on the map
+     * The response collection will activate this if we have an active filter
+     * @param {String} question Name of the question, eg 'vacant'
+     * @param {Object} answers  Possible answers to the qu
+     */
     setFilter: function (question, answers) {
       this.filter = {
         question: question,
@@ -139,10 +154,86 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       this.plotResponses();
     },
 
-    // Incrementally plot a set of responses on the map.
-    // Optional parameters: "question", [answers]
-    // If given, each result on the map will be styled by answers to
-    // question.
+
+    /**
+     * Style a feature
+     * @param  {Object} feature
+     * @return {Object}         feature with style attributes
+     */
+    getStyleForFilter: function(data) {
+
+      // Old function:
+      // function getFeatureStyle(feature) {
+      //   if (feature.properties === undefined || feature.properties.color === undefined) {
+      //     return settings.styleTemplate;
+      //   }
+// 
+      //   var style = {};
+      //   _.extend(style, settings.styleTemplate, {
+      //     color: feature.properties.color,
+      //     fillColor: feature.properties.color
+      //   });
+      //   return style;
+      // }
+
+      var style = {
+        color: settings.colorRange[0]
+      };
+
+      // If there's no data, style this as blank
+      if(data === undefined) {
+        return style;
+      }
+
+      // Get the answer to the question
+      var answer = data[this.filter.question];
+
+      // If there's no answer, style this as a blank answer
+      if (answer === undefined) {
+        return style;
+      }
+
+      // Figure out what color to use
+      style.color = this.filter.answers[answer].color;
+      return style;
+    },
+
+
+    /**
+     * Given a response object, set up a geojson feature. 
+     * @param  {Object} response [description]
+     * @return {Object}          GeoJSON feature
+     */
+    setupPolygon: function(response) {
+      // Record the objects as rendered so we don't render it twice. 
+      var parcelId = response.get('parcel_id');
+      this.parcelIdsOnTheMap[parcelId] = true;
+
+      // Set up the style
+      var style = this.defaultStyle;
+
+      if (this.filter !== null) {
+        style = this.styleFeature(response.get('responses'));
+      }
+
+      // Set up a feature
+      var feature = {
+        type: 'Feature',
+        id: response.get('id'),
+        parcelId: parcelId,
+        geometry: response.get('geo_info').geometry,
+        style: style
+      };
+
+      // Return the feature for rendering
+      return feature;
+    },
+
+
+    /**
+     * Plot responses on the map
+     * @param  {Array} responses 
+     */
     plotResponses: function (responses) {
       var indexOfColorToUse;
       var color;
@@ -158,7 +249,6 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       }
 
       var renderedParcelTracker = this.parcelIdsOnTheMap;
-      var filter = this.filter;
 
       // Create GeoJSON FeatureCollection objects to pass to Leaflet for
       // rendering.
@@ -174,42 +264,27 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       };
 
       // Populate the FeatureCollection for responses with full geometry.
-      featureCollection.features = _.map(_.filter(responses, function (response) {
-        // Get items with geometry that we haven't seen yet
-        return (_.has(response.get('geo_info'), 'geometry')
-                && !_.has(renderedParcelTracker, response.get('parcel_id')));
-      }), function (response) {
-        var parcelId = response.get('parcel_id');
-        renderedParcelTracker[parcelId] = true;
+      featureCollection.features = _.map(
+        _.filter(responses, function (response) {
 
-        var feature = {
-          type: 'Feature',
-          id: response.get('id'),
-          parcelId: parcelId,
-          geometry: response.get('geo_info').geometry
-        };
-
-        // Color the results if necessary
-        if (filter !== null) {
-          var questions = response.get('responses');
-          var answerToQuestion = questions[filter.question];
-
-          // Figure out what color to use
-          // TODO: memoize the index lookup?
-          feature.properties = {
-            color: indexToColor(_.indexOf(filter.answers, answerToQuestion))
-          };
-        }
-        return feature;
-      });
+          // Get items that have geometry 
+          // AND aren't already on the map 
+          return (_.has(response.get('geo_info'), 'geometry') &&
+                 !_.has(renderedParcelTracker, response.get('parcel_id'))
+          );
+      }), this.setupPolygon);
 
       // Populate the FeatureCollection for responses with only a centroid.
       pointCollection.features = _.map(_.filter(responses, function (response) {
-        return (!_.has(response.get('geo_info'), 'geometry')
-                && _.has(response.get('geo_info'), 'centroid'));
+        return (!_.has(response.get('geo_info'), 'geometry') &&
+                _.has(response.get('geo_info'), 'centroid'));
       }), function (response) {
+
+        // Record the objects as rendered so we don't render it twice. 
         var id = response.get('id');
         renderedParcelTracker[id] = true;
+
+        // Set up the feature
         return {
           type: 'Feature',
           id: id,
@@ -223,14 +298,9 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       // If we found some full-geometry responses, set up the style and pass
       // them to Leaflet.
       if (featureCollection.features.length > 0) {
-        var style = this.defaultStyle;
-        if (filter !== null) {
-          style = getFeatureStyle;
-        }
-
+        // TODO: re-add style...
         var featureLayer = new L.geoJson(featureCollection, {
-          pointToLayer: this.defaultPointToLayer,
-          style: style
+          pointToLayer: this.defaultPointToLayer
         });
         featureLayer.on('click', this.selectObject);
 
@@ -260,7 +330,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       console.log("Changing style");
       this.objectsOnTheMap.setStyle(style);
     },
-    
+
     // Expects an object with properties
     // obj.parcelId: ID of the given object
     // obj.geometry: GeoJSON geometry object
@@ -316,11 +386,12 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
         // If we're in pretty close, show the satellite view
         if(zoom > 14) {
-          if(this.googleLayer._type !== "HYBRID") {
-            this.map.removeLayer(this.googleLayer);
-            this.googleLayer = new L.Google("HYBRID");
-            this.map.addLayer(this.googleLayer);
-          }
+          // TODO: disabled for offline
+          // if(this.googleLayer._type !== "HYBRID") {
+          //   this.map.removeLayer(this.googleLayer);
+          //   this.googleLayer = new L.Google("HYBRID");
+          //   this.map.addLayer(this.googleLayer);
+          // }
 
           if(this.defaultStyle !== settings.closeZoomStyle) {
             this.defaultStyle = settings.closeZoomStyle;
@@ -336,25 +407,27 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
           }
 
           // And use the terrain map
-          if (this.googleLayer._type !== "TERRAIN") {
-            // Show a more abstract map when zoomed out
-            this.map.removeLayer(this.googleLayer);
-            this.googleLayer = new L.Google("TERRAIN");
-            this.map.addLayer(this.googleLayer);
-          }
+          // TODO: disabled for offline
+          // if (this.googleLayer._type !== "TERRAIN") {
+          //   // Show a more abstract map when zoomed out
+          //   this.map.removeLayer(this.googleLayer);
+          //   this.googleLayer = new L.Google("TERRAIN");
+          //   this.map.addLayer(this.googleLayer);
+          // }
         }
 
       }else {
         // Far zoom (>14)
         // Show a more abstract map when zoomed out
-        if (this.googleLayer._type !== "TERRAIN") {
-          this.map.removeLayer(this.googleLayer);
-          this.googleLayer = new L.Google("TERRAIN");
-          this.map.addLayer(this.googleLayer);
-
-          this.defaultStyle = settings.farZoomStyle;
-          this.updateObjectStyles(settings.farZoomStyle);
-        }
+        // TODO: disabled for offline
+        // if (this.googleLayer._type !== "TERRAIN") {
+        //   this.map.removeLayer(this.googleLayer);
+        //   this.googleLayer = new L.Google("TERRAIN");
+        //   this.map.addLayer(this.googleLayer);
+// 
+        //   this.defaultStyle = settings.farZoomStyle;
+        //   this.updateObjectStyles(settings.farZoomStyle);
+        // }
       }
 
       // If a parcel is selected, make sure it says visually selected

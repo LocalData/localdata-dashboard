@@ -17,7 +17,7 @@ function(L) {
 
   // Colors for option maps
   settings.colorRange = [
-    "#df455d",
+    "#df455d", // First color used for blank entries
     "#ce40bf",
     "#404ecd",
     "#40cd98",

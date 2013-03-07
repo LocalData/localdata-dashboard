@@ -68,40 +68,75 @@ function($, _, Backbone, settings, api) {
       // Get the first chunk.
       getChunk(0, 500);
     },
-          
+
     parse: function(response) {
       console.log(response);
       return response.responses;
     },
 
-    // Returns a list of strings of all answer keys that have been submitted so far
+    /**
+     * Returns a list of strings of all questions that have been recorded
+     * so far.
+     * @return {Array} Array of alphabetically sorted response keys.
+     */
     getResponseKeys: function() {
       this.responseKeys = [];
+
+      // Look at every submitted response
       _.each(this.models, function(response) {
         var responseJSON = response.toJSON();
+
+        // Some responses don't have a responses key (legacy)
         if (_.has(responseJSON, 'responses')) {
           this.responseKeys = _.union(this.responseKeys, _.keys(responseJSON.responses));
         }
       }, this);
 
       return this.responseKeys.sort();
-
     },
 
+    /**
+     * Gets
+     * @param  {String} question The key of the question
+     * @return {Array}           A list of answers as strings
+     */
     getUniqueAnswersForQuestion: function(question) {
       var answers = _.map(this.models, function(response){
+
+        // Make sure the model has data (some don't)
         if(_.has(response.attributes, 'responses')) {
+
+          // Check if it has a response for the given question
           if (_.has(response.attributes.responses, question)) {
+
+            // Return that answer
             return response.attributes.responses[question];
           }
         }
       });
+
+      // Count each answer
+      var counts = _.countBy(answers);
+
+      // Make sure we have unique answers
       var uniqueAnswers = _.unique(answers).sort();
 
-      // Replace undefined with a string for nice rendering
-      var idxOfUndefinedToReplace = _.indexOf(uniqueAnswers, undefined);
-      uniqueAnswers[idxOfUndefinedToReplace] = "[empty]";
-      return uniqueAnswers;
+      // Build the response object
+      var breakdown = {};
+      _.each(uniqueAnswers, function(answer, index) {
+        var details = {
+          name: answer,
+          count: counts[answer],
+          color: settings.colorRange[index]
+        };
+        breakdown[answer] = details;
+      });
+
+      // Replace `undefined` answers with a string for nice rendering
+      //var idxOfUndefinedToReplace = _.indexOf(uniqueAnswers, undefined);
+      //uniqueAnswers[idxOfUndefinedToReplace] = '[empty]';
+
+      return breakdown;
     },
 
     // Filter the items in the collection

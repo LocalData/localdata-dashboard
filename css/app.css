@@ -322,13 +322,12 @@ header a {
 
 #subfilter li {
   line-height:2;
+  border-bottom: 1px solid #ddd;
 }
 
   #subfilter li a {
     text-decoration:none;
-    color:#fff; 
-    background:#3f5b88;
-    border-radius:10px;
+    border:0px none;
     font-size:.9em;
     cursor:pointer;
     padding:4px;

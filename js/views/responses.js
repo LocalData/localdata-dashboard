@@ -42,7 +42,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
     initialize: function(options) {
       _.bindAll(this, 'render', 'filter', 'subFilter', 'remove', 'updateFilterView', 'updateFilterChoices');
       this.template = _.template($('#response-view').html());
-      
+
       this.responses = options.responses;
       this.responses.on('reset', this.update, this);
       this.responses.on('add', this.update, this);
@@ -147,8 +147,12 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       this.updateFilterView();
     },
 
+
+    /**
+     * Show possible responses to a given question
+     */
     filter: function(e) {
-      // _kmq.push(['record', "Question filter selected"]);
+      _kmq.push(['record', "Question filter selected"]);
       var $question = $(e.target);
       var question = $question.val();
 
@@ -160,11 +164,16 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       this.mapView.setFilter(question, answers);
     },
 
+
+    /**
+     * Show only responses with a specific answer
+     */
     subFilter: function(e) {
-      // _kmq.push(['record', "Answer filter selected"]);
+      _kmq.push(['record', "Answer filter selected"]);
       var $answer = $(e.target);
 
-      // Notify the user we're working on it.
+      // Notify the user we're working on it
+      // (it can take a while to filter a lot of items)
       events.publish('loading', [true]);
 
       // Filter the responses
