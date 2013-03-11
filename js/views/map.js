@@ -112,8 +112,8 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
         // Set up the base map; add the parcels and done markers
         // TODO: Reenable for online
-        // this.googleLayer = new L.Google("TERRAIN");
-        // this.map.addLayer(this.googleLayer); 
+        this.googleLayer = new L.Google("TERRAIN");
+        this.map.addLayer(this.googleLayer); 
         this.map.addLayer(this.objectsOnTheMap);
 
         this.map.setView([42.374891,-83.069504], 17); // default center
@@ -160,32 +160,20 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
      * @param  {Object} feature
      * @return {Object}         feature with style attributes
      */
-    getStyleForFilter: function(data) {
-
-      // Old function:
-      // function getFeatureStyle(feature) {
-      //   if (feature.properties === undefined || feature.properties.color === undefined) {
-      //     return settings.styleTemplate;
-      //   }
-// 
-      //   var style = {};
-      //   _.extend(style, settings.styleTemplate, {
-      //     color: feature.properties.color,
-      //     fillColor: feature.properties.color
-      //   });
-      //   return style;
-      // }
-
-      var style = {
+    styleFeature: function(data) {
+      console.log(data);
+      // Set a default style
+      var style = _.extend({
         color: settings.colorRange[0]
-      };
+      }, settings.styleTemplate);
+
 
       // If there's no data, style this as blank
-      if(data === undefined) {
+      if(data === undefined || this.filter === null) {
         return style;
       }
 
-      // Get the answer to the question
+      // Get the answer to the currently filtered question
       var answer = data[this.filter.question];
 
       // If there's no answer, style this as a blank answer
@@ -200,8 +188,8 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
 
     /**
-     * Given a response object, set up a geojson feature. 
-     * @param  {Object} response [description]
+     * Set up a geojson feature for a response object with a polygon
+     * @param  {Object} response a response object with a polygon
      * @return {Object}          GeoJSON feature
      */
     setupPolygon: function(response) {
@@ -209,14 +197,15 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       var parcelId = response.get('parcel_id');
       this.parcelIdsOnTheMap[parcelId] = true;
 
-      // Set up the style
+      // Set up the default style
       var style = this.defaultStyle;
 
-      if (this.filter !== null) {
-        style = this.styleFeature(response.get('responses'));
-      }
+      // Get a different style if there is an active filter
+      // if (this.filter !== null) {
+      //   style = this.styleFeature(response.get('responses'));
+      // }
 
-      // Set up a feature
+      // Set up the feature
       var feature = {
         type: 'Feature',
         id: response.get('id'),
@@ -224,6 +213,10 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         geometry: response.get('geo_info').geometry,
         style: style
       };
+
+      if (this.filter !== null) {
+        feature[this.filter.question] = response.get('responses')[this.filter.question];
+      }
 
       // Return the feature for rendering
       return feature;
@@ -235,11 +228,10 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
      * @param  {Array} responses 
      */
     plotResponses: function (responses) {
-      var indexOfColorToUse;
-      var color;
-
+      // If we aren't given an  explicit set of responses to plot, 
+      // we'll plot all of the responses from the collection.
       if (responses === undefined) {
-        // Plot all of the responses from the collection.
+
         // Clear out the old results first
         this.objectsOnTheMap.clearLayers();
         this.parcelIdsOnTheMap = {};
@@ -250,9 +242,8 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
       var renderedParcelTracker = this.parcelIdsOnTheMap;
 
-      // Create GeoJSON FeatureCollection objects to pass to Leaflet for
-      // rendering.
-
+      // We'll need to create GeoJSON FeatureCollection objects to pass 
+      // to Leaflet for rendering.
       var featureCollection = {
         type: 'FeatureCollection',
         features: []
@@ -275,7 +266,9 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       }), this.setupPolygon);
 
       // Populate the FeatureCollection for responses with only a centroid.
-      pointCollection.features = _.map(_.filter(responses, function (response) {
+      pointCollection.features = _.map(
+        _.filter(responses, function (response) {
+
         return (!_.has(response.get('geo_info'), 'geometry') &&
                 _.has(response.get('geo_info'), 'centroid'));
       }), function (response) {
@@ -285,7 +278,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         renderedParcelTracker[id] = true;
 
         // Set up the feature
-        return {
+        var feature = {
           type: 'Feature',
           id: id,
           geometry: {
@@ -293,14 +286,17 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
             coordinates: response.get('geo_info').centroid
           }
         };
+
+        return feature;
       });
 
       // If we found some full-geometry responses, set up the style and pass
       // them to Leaflet.
       if (featureCollection.features.length > 0) {
-        // TODO: re-add style...
+        // TODO: THE DATA IS GONE so the STYLE IS GONE.
         var featureLayer = new L.geoJson(featureCollection, {
-          pointToLayer: this.defaultPointToLayer
+          pointToLayer: this.defaultPointToLayer,
+          style: this.styleFeature
         });
         featureLayer.on('click', this.selectObject);
 
@@ -387,11 +383,11 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         // If we're in pretty close, show the satellite view
         if(zoom > 14) {
           // TODO: disabled for offline
-          // if(this.googleLayer._type !== "HYBRID") {
-          //   this.map.removeLayer(this.googleLayer);
-          //   this.googleLayer = new L.Google("HYBRID");
-          //   this.map.addLayer(this.googleLayer);
-          // }
+          if(this.googleLayer._type !== "HYBRID") {
+            this.map.removeLayer(this.googleLayer);
+            this.googleLayer = new L.Google("HYBRID");
+            this.map.addLayer(this.googleLayer);
+          }
 
           if(this.defaultStyle !== settings.closeZoomStyle) {
             this.defaultStyle = settings.closeZoomStyle;
@@ -408,26 +404,26 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
           // And use the terrain map
           // TODO: disabled for offline
-          // if (this.googleLayer._type !== "TERRAIN") {
-          //   // Show a more abstract map when zoomed out
-          //   this.map.removeLayer(this.googleLayer);
-          //   this.googleLayer = new L.Google("TERRAIN");
-          //   this.map.addLayer(this.googleLayer);
-          // }
+          if (this.googleLayer._type !== "TERRAIN") {
+            // Show a more abstract map when zoomed out
+            this.map.removeLayer(this.googleLayer);
+            this.googleLayer = new L.Google("TERRAIN");
+            this.map.addLayer(this.googleLayer);
+          }
         }
 
       }else {
         // Far zoom (>14)
         // Show a more abstract map when zoomed out
         // TODO: disabled for offline
-        // if (this.googleLayer._type !== "TERRAIN") {
-        //   this.map.removeLayer(this.googleLayer);
-        //   this.googleLayer = new L.Google("TERRAIN");
-        //   this.map.addLayer(this.googleLayer);
-// 
-        //   this.defaultStyle = settings.farZoomStyle;
-        //   this.updateObjectStyles(settings.farZoomStyle);
-        // }
+        if (this.googleLayer._type !== "TERRAIN") {
+          this.map.removeLayer(this.googleLayer);
+          this.googleLayer = new L.Google("TERRAIN");
+          this.map.addLayer(this.googleLayer);
+
+          this.defaultStyle = settings.farZoomStyle;
+          this.updateObjectStyles(settings.farZoomStyle);
+        }
       }
 
       // If a parcel is selected, make sure it says visually selected

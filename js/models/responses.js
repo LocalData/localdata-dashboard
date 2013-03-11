@@ -10,11 +10,11 @@ define([
 ],
 
 function($, _, Backbone, settings, api) {
-  'use strict'; 
+  'use strict';
 
   var Responses = {};
 
-  Responses.Model = Backbone.Model.extend({ 
+  Responses.Model = Backbone.Model.extend({
   
   });
 
@@ -22,9 +22,9 @@ function($, _, Backbone, settings, api) {
     model: Responses.Model,
     filters: null,
     unfilteredModels: null,
-    
+
     initialize: function(models, options) {
-      // Ugly -- we'll need to find a nicer way to init this thing.s
+      // Ugly -- we'll need to find a nicer way to init this thing
       // Maybe: function(models, options)
       if(! _.isEmpty(models)) {
         this.models = models;
@@ -36,7 +36,7 @@ function($, _, Backbone, settings, api) {
         this.fetchChunks();
       }
     },
-    
+
     url: function() {
       return settings.api.baseurl + '/surveys/' + this.surveyId + '/responses';
     },
