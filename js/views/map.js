@@ -113,7 +113,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         // Set up the base map; add the parcels and done markers
         // TODO: Reenable for online
         this.googleLayer = new L.Google("TERRAIN");
-        this.map.addLayer(this.googleLayer); 
+        this.map.addLayer(this.googleLayer);
         this.map.addLayer(this.objectsOnTheMap);
 
         this.map.setView([42.374891,-83.069504], 17); // default center
@@ -161,7 +161,6 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
      * @return {Object}         feature with style attributes
      */
     styleFeature: function(data) {
-      console.log(data);
       // Set a default style
       var style = _.extend({
         color: settings.colorRange[0]
@@ -181,8 +180,9 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         return style;
       }
 
-      // Figure out what color to use
+      // Set the line and fill colors, then return the style
       style.color = this.filter.answers[answer].color;
+      style.fillColor = style.color;
       return style;
     },
 
@@ -200,11 +200,6 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       // Set up the default style
       var style = this.defaultStyle;
 
-      // Get a different style if there is an active filter
-      // if (this.filter !== null) {
-      //   style = this.styleFeature(response.get('responses'));
-      // }
-
       // Set up the feature
       var feature = {
         type: 'Feature',
@@ -214,8 +209,20 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         style: style
       };
 
+      // If there is a filter, attach the filtered question to the feature
+      // This is used later to style the feature
+      // We don't attach all the data to keep size down 
+      // (large collections can have 20+ mb of data)
       if (this.filter !== null) {
-        feature[this.filter.question] = response.get('responses')[this.filter.question];
+
+        // Some responses don't have associated data. It's still important that
+        // they appear in the filter, since the user may be looking for empty
+        // result sets.
+        if(response.get('responses') === undefined) {
+          feature[this.filter.question] = undefined;
+        }else {
+          feature[this.filter.question] = response.get('responses')[this.filter.question];
+        }
       }
 
       // Return the feature for rendering
@@ -228,7 +235,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
      * @param  {Array} responses 
      */
     plotResponses: function (responses) {
-      // If we aren't given an  explicit set of responses to plot, 
+      // If we aren't given an explicit set of responses to plot, 
       // we'll plot all of the responses from the collection.
       if (responses === undefined) {
 
@@ -431,29 +438,14 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         this.selectedLayer.setStyle(settings.selectedStyle);
       }
     },
-    
-    getParcelsInBounds: function() {
-      // Don't add any parcels if the zoom is really far out.
-      var zoom = this.map.getZoom();
-      if(zoom < 16) {
-        return;
-      }
-      
-      // If there are a lot of objects, let's clear them out
-      // to improve performance
-      if( _.size(this.parcelIdsOnTheMap) > 1250 ) {
-        this.objectsOnTheMap.clearLayers();
-        this.parcelIdsOnTheMap = {};
-      }
-      
-      // Get parcel data in the bounds
-      api.getObjectsInBounds(this.map.getBounds(), this.renderObjects);
-    },
-          
-    // Get all the responses in the current viewport
+
+
+    /**
+     * Get all the responses in the current viewport
+     */
     getResponsesInBounds: function(){
       console.log("Getting responses in the map");
-      
+
       // Don't add any markers if the zoom is really far out.
       var zoom = this.map.getZoom();
       if(zoom < 17) {
@@ -464,37 +456,40 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       // And add them to the map
       api.getResponsesInBounds(this.map.getBounds(), this.addResultsToMap);
     },
-    
+
+
+    /**
+     * Highlight a selected objects; un-hilight any previously selected objects
+     * @param  {Object} event 
+     */
     selectObject: function(event) {
       // _kmq.push(['record', "Map object selected"]);
-      
+
+      // Visually deselect the previous style
       if (this.selectedLayer !== null) {
-        this.selectedLayer.setStyle(this.defaultStyle);
+        var originalStyle = this.styleFeature(this.selectedLayer.feature);
+        this.selectedLayer.setStyle(originalStyle);
       }
-      
+
       // Select the current layer
       this.selectedLayer = event.layer;
       this.selectedLayer.setStyle(settings.selectedStyle);
-      
+
       // Let's show some info about this object.
       this.details(this.selectedLayer.feature);
-        
     },
 
+
     /**
-     * When a parcel is clicked, show details for just that parcel.
+     * Show details for a particular feature.
      *
      * @param  {Object} options An object with a parcelId or id property
      */
     details: function(feature) {
-      console.log(feature);
-
       // Find out if we're looking up a set of parcels, or one point
       if(feature.parcelId !== undefined && feature.parcelId !== '') {
-        console.log("Finding parcels ", feature.parcelId);
         this.sel = new Responses.Collection(this.responses.where({'parcel_id': feature.parcelId}));
       }else {
-        console.log("Finding point", feature.id);
         this.sel = new Responses.Collection(this.responses.where({'id': feature.id}));
       }
 

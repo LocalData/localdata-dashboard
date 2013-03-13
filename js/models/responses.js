@@ -15,7 +15,7 @@ function($, _, Backbone, settings, api) {
   var Responses = {};
 
   Responses.Model = Backbone.Model.extend({
-  
+
   });
 
   Responses.Collection = Backbone.Collection.extend({
@@ -127,8 +127,16 @@ function($, _, Backbone, settings, api) {
         var details = {
           name: answer,
           count: counts[answer],
-          color: settings.colorRange[index]
+          color: settings.colorRange[index + 1]
         };
+
+        // Handle empty answers
+        if(!answer) {
+          details.name = 'no answer';
+          details.color = settings.colorRange[0];
+        }
+
+        // Add the details for this answer to the breakdown
         breakdown[answer] = details;
       });
 

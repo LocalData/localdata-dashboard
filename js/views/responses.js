@@ -187,6 +187,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       this.updateFilterView();
     },
 
+
     remove: function () {
       this.$el.remove();
       this.stopListening();

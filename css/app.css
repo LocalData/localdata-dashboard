@@ -338,6 +338,14 @@ header a {
   padding:10px;
 }
 
+.count {
+  line-height:1.2;
+  display:inline-block;
+  color: #fff;
+  border-radius: 50%;
+  padding:0 10px;
+}
+
 /* Responses .................................................................*/
 
 .response-list {

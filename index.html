@@ -301,7 +301,7 @@
       <h2>Select an answer to filter by:</h2>
       <ul>
         <% _.each(choices, function(choice) { %>
-          <li><a><%- choice.name %></a> <span class="<%- choice.color %>"><%- choice.count %></span></li>
+          <li><a><%- choice.name %> <span class="count" style="background-color: <%- choice.color %>"><%- choice.count %></span></a></li>
         <% }); %>
       </ul>
     </script>
