@@ -131,7 +131,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         this.map = new L.map('map');
 
         // Don't think this is needed: this.markers = {};
-        
+
         // Set up the base map; add the parcels and done markers
         this.googleLayer = new L.Google("TERRAIN");
         this.map.addLayer(this.googleLayer);
@@ -145,9 +145,10 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
           dataType: "jsonp"
         });
 
+        console.log("REQUESTING TILE LAYER");
         request.done(this.addTileLayer);
 
-        this.map.setView([42.374891,-83.069504], 11); // default center
+        this.map.setView([37.7750,-122.4183], 11); // default center
         this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
       }
 
