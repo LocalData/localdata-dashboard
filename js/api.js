@@ -94,7 +94,7 @@ define(function (require) {
    * @param  {Function} callback     To accept parameter `error`
    * @return {Function}              
    */
-  api.transaction = function(pathFragment) {
+  var makeTransaction = function (pathFragment) {
     return function(data, callback) {
       var url = settings.api.baseurl + '/' + pathFragment;
 
@@ -105,9 +105,8 @@ define(function (require) {
       });
 
       request.done(function(response) {
-        console.log(response);
         if(response.name === "BadRequestError") {
-          callback(response, null);
+          callback(response);
           return;
         }
         callback(null, response);
@@ -119,8 +118,8 @@ define(function (require) {
     };
   };
 
-  api.forgot = new api.transaction('user/forgot');
-  api.reset  = new api.transaction('user/reset');
+  api.forgot = makeTransaction('user/forgot');
+  api.reset  = makeTransaction('user/reset');
 
   // Create a new survey
   api.createSurvey = function(survey, callback) {
