@@ -211,8 +211,7 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
         return;
       }
 
-      // Get the current user model
-      this.user.fetch();
+      this.user = user;
 
       // Success! Go to the dashboard.
       events.publish('navigate', ['/']);
