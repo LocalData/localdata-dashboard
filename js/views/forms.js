@@ -32,6 +32,8 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
 
       this.survey = options.survey;
       this.forms = options.forms;
+
+      this.survey.on('change', this.render, this);
     },
     
     showDesigner: function() {
@@ -90,11 +92,10 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
     },
     
     render: function() {
-      var surveyJSON = this.survey.toJSON();
       var context = {
-        survey: surveyJSON,
+        survey: this.survey.toJSON(),
         forms: this.forms.toJSON(),
-        mobile: 'http://' + window.location.host + '/mobile/#' + surveyJSON.slug
+        mobile: 'http://' + window.location.host + '/mobile/#' + this.survey.get('slug')
       };
       this.$el.html(_.template($('#form-view').html(), context));
 
