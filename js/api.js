@@ -248,6 +248,7 @@ define(function (require) {
   // If startIndex or count are not provided, get all of the responses.
   // callback(error, responses)
   api.getResponses = function (startIndex, count, callback) {
+    
     var url;
     if (startIndex === undefined || count === undefined) {
       url = api.getSurveyURL() + '/responses';

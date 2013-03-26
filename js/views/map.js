@@ -148,7 +148,8 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         console.log("REQUESTING TILE LAYER");
         request.done(this.addTileLayer);
 
-        this.map.setView([37.7750,-122.4183], 11); // default center
+        // this.map.setView([37.7750,-122.4183], 11); // default center
+        this.map.setView([42.3314,-83.0458], 11);
         this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
       }
 
