@@ -128,7 +128,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
         this.map = new L.map('map');
 
         // Set up the base map; add the parcels and done markers
-        // TODO: Reenable for online
         this.googleLayer = new L.Google("TERRAIN");
         this.map.addLayer(this.googleLayer);
         this.map.addLayer(this.zoneLayer);
@@ -442,7 +441,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
 
         // If we're in pretty close, show the satellite view
         if(zoom > 14) {
-          // TODO: disabled for offline
           if(this.googleLayer._type !== "HYBRID") {
             this.map.removeLayer(this.googleLayer);
             this.googleLayer = new L.Google("HYBRID");
@@ -463,7 +461,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
           }
 
           // And use the terrain map
-          // TODO: disabled for offline
           if (this.googleLayer._type !== "TERRAIN") {
             // Show a more abstract map when zoomed out
             this.map.removeLayer(this.googleLayer);
@@ -475,7 +472,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
       }else {
         // Far zoom (>14)
         // Show a more abstract map when zoomed out
-        // TODO: disabled for offline
         if (this.googleLayer._type !== "TERRAIN") {
           this.map.removeLayer(this.googleLayer);
           this.googleLayer = new L.Google("TERRAIN");
