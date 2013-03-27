@@ -353,13 +353,12 @@ header a {
 
 #subfilter li {
   line-height:2;
+  border-bottom: 1px solid #ddd;
 }
 
   #subfilter li a {
     text-decoration:none;
-    color:#fff; 
-    background:#3f5b88;
-    border-radius:10px;
+    border:0px none;
     font-size:.9em;
     cursor:pointer;
     padding:4px;
@@ -368,6 +367,14 @@ header a {
 #indiv-in {
   border:10px solid #ddd;
   padding:10px;
+}
+
+.count {
+  line-height:1.2;
+  display:inline-block;
+  color: #fff;
+  border-radius: 50%;
+  padding:0 10px;
 }
 
 /* Responses .................................................................*/
