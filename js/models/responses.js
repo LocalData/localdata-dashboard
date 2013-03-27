@@ -157,11 +157,18 @@ function($, _, Backbone, settings, api) {
         this.unfilteredModels = _.clone(this.models);
       }
 
+
+      // Record the filter for future use
       this.filters = {
         question: question,
         answer: answer
       };
 
+      if(answer === 'no answer') {
+        answer = undefined;
+      }
+
+      // Select the right responses
       this.reset(this.filter(function (item) {
         var resps = item.get('responses');
         return resps !== undefined && (resps[question] === answer);

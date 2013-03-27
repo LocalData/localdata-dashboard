@@ -114,6 +114,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       // Update the filters
     },
 
+
     /**
      * Update the first-level choices for filtering responses
      */
@@ -122,14 +123,17 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       $("#filter-view-container").html(_.template($('#filter-results').html(), { flattenedForm: flattenedForm }));
     },
 
+
     /**
      * If the data has already been filtered, show that on the page
      */
     updateFilterView: function () {
-      if (_.has(this.filters, "answerValue")) {
+      if (_.has(this.filter, "answer")) {
+
         // Indicate the filter selection.
-        $("#current-filter").html("<h4>Current filter:</h4> <h3>" + this.filters.questionValue + ": " + this.filters.answerValue + "</h3>   <a id=\"reset\" class=\"button\">Clear filter</a>");
+        $("#current-filter").html("<h4>Current filter:</h4> <h3>" + this.filter.question + ": " + this.filter.answer + "</h3>   <a id=\"reset\" class=\"button\">Clear filter</a>");
         $('#subfilter').html('');
+
       } else {
         // Clear the filter selections.
         $("#current-filter").html("");
@@ -141,7 +145,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
      * Reset any filters
      */
     reset: function(event) {
-      this.filters = {};
+      this.filter = {};
 
       this.responses.clearFilter();
       this.updateFilterView();
@@ -149,7 +153,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
 
 
     /**
-     * Show possible responses to a given question
+     * Show possible answers to a given question
      */
     filter: function(e) {
       _kmq.push(['record', "Question filter selected"]);
@@ -168,19 +172,19 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
     /**
      * Show only responses with a specific answer
      */
-    subFilter: function(e) {
+    subFilter: function(event) {
       _kmq.push(['record', "Answer filter selected"]);
-      var $answer = $(e.target);
+      var $answer = $(event.target);
 
       // Notify the user we're working on it
       // (it can take a while to filter a lot of items)
       events.publish('loading', [true]);
 
       // Filter the responses
-      this.filters.answerValue = $answer.text();
-      this.filters.questionValue = $("#filter").val();
+      this.filter.answer = $answer.text();
+      this.filter.question = $("#filter").val();
 
-      this.responses.setFilter(this.filters.questionValue, this.filters.answerValue);
+      this.responses.setFilter(this.filter.question, this.filter.answer);
 
       events.publish('loading', [false]);
 

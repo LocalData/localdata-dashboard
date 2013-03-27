@@ -28,24 +28,6 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     return settings.colorRange[0];
   }
 
-  /**
-   * Apply default styles to a feature
-   * Preserves colors for filtering
-   * @param  {[type]} feature [description]
-   * @return {[type]}         [description]
-   */
-  // function getFeatureStyle(feature) {
-  //   if (feature.properties === undefined || feature.properties.color === undefined) {
-  //     return settings.styleTemplate;
-  //   }
-// 
-  //   var style = {};
-  //   _.extend(style, settings.styleTemplate, {
-  //     color: feature.properties.color,
-  //     fillColor: feature.properties.color
-  //   });
-  //   return style;
-  // }
 
   var MapView = Backbone.View.extend({
 
@@ -139,7 +121,6 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     },
 
 
-    // Set filter parameters for displaying results on the map
     /**
      * Set filter parameters for displaying results on the map
      * The response collection will activate this if we have an active filter
@@ -162,15 +143,18 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
      */
     styleFeature: function(data) {
       // Set a default style
-      var style = _.extend({
-        color: settings.colorRange[0]
-      }, settings.styleTemplate);
-
+      var style = this.defaultStyle;
 
       // If there's no data, style this as blank
       if(data === undefined || this.filter === null) {
         return style;
       }
+
+      // Set the default filter style
+      style = _.extend({
+        color: settings.colorRange[0],
+        fillColor: settings.colorRange[0]
+      }, settings.styleTemplate);
 
       // Get the answer to the currently filtered question
       var answer = data[this.filter.question];
@@ -459,11 +443,11 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
 
     /**
-     * Highlight a selected objects; un-hilight any previously selected objects
+     * Highlight a selected object; un-hilight any previously selected object
      * @param  {Object} event 
      */
     selectObject: function(event) {
-      // _kmq.push(['record', "Map object selected"]);
+      _kmq.push(['record', "Map object selected"]);
 
       // Visually deselect the previous style
       if (this.selectedLayer !== null) {
