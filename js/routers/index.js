@@ -10,13 +10,13 @@ define([
 ],
 
 function($, _, Backbone, settings, api) {
-  'use strict'; 
+  'use strict';
 
   var IndexRouter = Backbone.Router.extend({
     routes: {
       "": "home",
 
-      "surveys/new": "new_survey",      
+      "surveys/new": "new_survey",
       "surveys/:slug/map": "map",
       "surveys/:slug/export": "survey_export",
       "surveys/:slug/design": "design",
@@ -24,7 +24,9 @@ function($, _, Backbone, settings, api) {
 
       "surveys/:slug/form/edit": "form_edit",
       "surveys/:slug/form": "form",
-      
+
+      "surveys/:slug/settings": "settings",
+
       "*actions": "default_route"
     },
   
@@ -47,12 +49,13 @@ function($, _, Backbone, settings, api) {
     },
 
     new_survey: function() {
-      this.controller.goto_new();
+      api.getUser(function(user) {
+        this.controller.goto_new();
+      }.bind(this));
     },
     
     survey: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_survey);
-      //this.controller.goto_survey(NSB.API.setSurveyIdFromSlug(slug));
     },
     
     map: function(slug) {
@@ -71,17 +74,13 @@ function($, _, Backbone, settings, api) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_export);
     },
     
-    scans: function(slug) {
-      api.setSurveyIdFromSlug(slug, this.controller.goto_scans);
-    },
-
     design: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_design);
     },
 
     default_route: function(actions) {
-      console.log(actions);
-    }  
+      // console.log(actions);
+    }
   });
 
   return IndexRouter;

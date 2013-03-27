@@ -14,8 +14,10 @@ function($, _, Backbone, settings, api) {
 
   var Responses = {};
 
-  Responses.Model = Backbone.Model.extend({
-
+  Responses.Model = Backbone.Model.extend({ 
+    defaults: {
+      responses: {}
+    }
   });
 
   Responses.Collection = Backbone.Collection.extend({

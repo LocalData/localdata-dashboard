@@ -9,6 +9,7 @@ define([
   'lib/leaflet/leaflet.google',
   'moment',
   'lib/tinypubsub',
+  'lib/kissmetrics',
 
   // LocalData
   'settings',
@@ -18,7 +19,7 @@ define([
   'models/responses'
 ],
 
-function($, _, Backbone, L, moment, events, settings, api, Responses) {
+function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
   'use strict';
 
   function indexToColor(index) {
@@ -28,12 +29,34 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     return settings.colorRange[0];
   }
 
+  function getFeatureStyle(feature) {
+    if (feature.properties === undefined || feature.properties.color === undefined) {
+      return settings.styleTemplate;
+    }
+
+    var style = {};
+    _.extend(style, settings.styleTemplate, {
+      color: feature.properties.color,
+      fillColor: feature.properties.color
+    });
+    return style;
+  }
+
+  function zoneStyle(feature) {
+    return {
+      color: feature.properties.color,
+      opacity: 0.3,
+      fillColor: feature.properties.color,
+      fillOpacity: 0.15,
+      weight: 2
+    };
+  }
 
   var MapView = Backbone.View.extend({
 
     map: null,
     responses: null,
-    surveyId: null,
+    survey: null,
     paginationView: null,
     selectedLayer: null,
     filtered: false,
@@ -52,10 +75,12 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       this.listenTo(this.responses, 'reset', this.render);
       this.listenTo(this.responses, 'addSet', this.render);
 
+      this.survey = options.survey;
+
       // We track the results on the map using these two groups
       this.parcelIdsOnTheMap = {};
       this.objectsOnTheMap = new L.FeatureGroup();
-      this.doneMarkersLayerGroup = new L.FeatureGroup();
+      this.zoneLayer = new L.FeatureGroup();
 
       this.defaultStyle = settings.farZoomStyle;
       this.defaultPointToLayer = function (feature, latlng) {
@@ -68,18 +93,30 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     },
 
     fitBounds: function () {
-      try {
-        this.map.fitBounds(this.objectsOnTheMap.getBounds());
-      } catch (e) {
+      if (this.responses !== null && this.responses.length > 0) {
+        try {
+          this.map.fitBounds(this.objectsOnTheMap.getBounds());
+        } catch (e) {
+        }
+      } else if (this.survey.has('zones')) {
+        try {
+          this.map.fitBounds(this.zoneLayer.getBounds());
+        } catch (e) {
+        }
       }
     },
 
     // Debounced version of fitBounds. Created in the initialize method.
     delayFitBounds: null,
 
+    
     render: function (arg) {
-      // Don't draw a map if there are no responses.
-      if (this.responses === null || this.responses.length === 0) {
+      var hasResponses = this.responses !== null && this.responses.length > 0;
+      var hasZones = this.survey.has('zones');
+
+      // Don't draw a map if there are no responses and no survey zones to
+      // plot.
+      if (!hasResponses && !hasZones) {
         return;
       }
 
@@ -90,16 +127,30 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         // Initialize the map
         this.map = new L.map('map');
 
-        // Don't think this is needed: this.markers = {};
-
         // Set up the base map; add the parcels and done markers
         // TODO: Reenable for online
         this.googleLayer = new L.Google("TERRAIN");
         this.map.addLayer(this.googleLayer);
+        this.map.addLayer(this.zoneLayer);
         this.map.addLayer(this.objectsOnTheMap);
 
         this.map.setView([42.374891,-83.069504], 17); // default center
         this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
+      }
+
+      if (hasZones) {
+        // Plot the survey zones.
+        this.plotZones();
+      } else {
+        // We don't start listening in initialize because we might get the
+        // change event before we even have a map.
+        this.listenTo(this.survey, 'change', this.plotZones);
+      }
+
+      // If there are no responses, don't bother trying to plot responses or
+      // deal with filters.
+      if (!hasResponses) {
+        return;
       }
 
       // TODO: better message passing
@@ -313,6 +364,24 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       }
     },
 
+    // Plot the zones of a survey
+    plotZones: function () {
+      if (this.survey.has('zones')) {
+        var zones = this.survey.get('zones');
+
+        // Clear the old layer
+        this.zoneLayer.clearLayers();
+
+        // Create and add the new layer
+        this.zoneLayer.addLayer(new L.geoJson(zones, {
+          style: zoneStyle
+        }));
+
+        // Fit the map to the zones, if appropriate.
+        this.delayFitBounds();
+      }
+    },
+
     updateObjectStyles: function(style) {
       console.log("Changing style");
       this.objectsOnTheMap.setStyle(style);
@@ -338,7 +407,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         // Make sure the format fits Leaflet's geoJSON expectations
         obj.type = "Feature";
 
-        // Create a new geojson layer and style it. 
+        // Create a new geojson layer and style it.
         var geojsonLayer = new L.geoJson(obj, {
           pointToLayer: pointToLayer,
           style: style
@@ -365,10 +434,10 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         return;
       }
 
-      // _kmq.push(['record', "Map zoomed"]);
+      _kmq.push(['record', "Map zoomed"]);
       var zoom = this.map.getZoom();
 
-      // Objects should be more detailed close up (zoom 10+) 
+      // Objects should be more detailed close up (zoom 10+)
       if(zoom > 10) {
 
         // If we're in pretty close, show the satellite view

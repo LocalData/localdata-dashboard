@@ -9,34 +9,36 @@ define([
 ],
 
 function($, _, Backbone, settings) {
-  'use strict'; 
+  'use strict';
 
   var Surveys = {};
 
   Surveys.Model = Backbone.Model.extend({
     urlRoot: settings.api.baseurl + "/surveys/",
+
+    namespace: 'survey',
     
     initialize: function(options) {
       _.bindAll(this, 'parse');
       this.fetch();
     },
     
-    parse: function(response) {    
-      if (_.has(response, "survey")) {
-        // Individual surveys are returned a little differently from 
-        // lists of surveys. Oh well. 
+    parse: function(response) {
+      if (_.has(response, 'survey')) {
+        // Individual surveys are returned a little differently from
+        // lists of surveys. Oh well.
         return response.survey;
       }
       
       return response;
     }
-    
+
   });
 
 
   Surveys.Collection = Backbone.Collection.extend({
     model: Surveys.Model,
-    url: settings.api.baseurl + "/surveys", 
+    url: settings.api.baseurl + "/surveys",
     
     initialize: function(options) {
       _.bindAll(this, 'parse');

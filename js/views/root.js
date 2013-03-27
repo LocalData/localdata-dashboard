@@ -18,11 +18,15 @@ define([
   'views/dashboard',
   'views/users',
   'views/surveys',
-  'views/design'
+  'views/design',
+  'views/settings',
+
+  // Models
+  'models/users'
 ],
 
-function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, UserViews, SurveyViews, DesignViews) {
-  'use strict'; 
+function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, UserViews, SurveyViews, DesignViews, SettingsViews, Users) {
+  'use strict';
 
   var AllViews = {};
   AllViews.HomeView = HomeView;
@@ -33,6 +37,7 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
   AllViews.DesignView = DesignViews.DesignView;
 
   AllViews.LoginView = UserViews.LoginView;
+  AllViews.UserBarView = UserViews.UserBarView;
 
   // The singleton view which manages all others.
   // Essentially, a "controller".
@@ -46,13 +51,19 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
     initialize: function() {
       // Bind local methods
       _.bindAll(this);
-      
+
+      // Keep track of the user.
+      this.user = new Users.Model();
+      this.userView = new AllViews.UserBarView({
+        user: this.user
+      });
+
       // Set up global router
       this._router = new IndexRouter({ controller: this });
       
       return this;
     },
-    
+
     // Start Backbone routing. Separated from initialize() so that the
     // global controller is available for any preset routes (direct links).
     startRouting: function() {
@@ -61,7 +72,7 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
       
     // Register each view as it is created and never create more than one.
     getOrCreateView: function(viewClass, viewName, options) {
-      // _kmq.push(['record', name]);
+      _kmq.push(['record', name]);
       
       // If the view already exists, use it.
       // If it doesn't exist, create it.
@@ -86,11 +97,15 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
     },
 
     goto_login: function(redirectTo) {
-      this.currentContentView = this.getOrCreateView("LoginView", "LoginView", {redirectTo: redirectTo});
+      this.currentContentView = this.getOrCreateView("LoginView", "LoginView", {
+        'redirectTo': redirectTo,
+        'user': this.user
+      });
     },
     
     // Survey dashboard routes .................................................
     goto_survey: function(tab) {
+
       _kmq.push(['record', "SurveyView"]);
 
       // Get or create a view for the survey
@@ -108,6 +123,10 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
         case "form":
           this.currentContentView.showForm();
           break;
+        case "settings":
+          this.currentContentView.showSettings();
+          break;
+          
       }
     },
 

@@ -20,12 +20,14 @@ function($, _, Backbone, settings, api) {
       _.bindAll(this, 'render', 'makeNavItem', 'makeNavItem');
       this.slug = options.slug;
       
-      // Set up the navigation elements. 
+      // Set up the navigation elements.
       // Each has an ID, a route, and text that displays in the tab
       this.items = [
         this.makeNavItem('nav-responses', 'surveys/' + this.slug, 'Results', 'icon-home'),
         this.makeNavItem('nav-export', 'surveys/' + this.slug + '/export', 'Export', 'icon-download'),
-        this.makeNavItem('nav-form', 'surveys/' + this.slug + '/form', 'Form', 'icon-cog'),
+        this.makeNavItem('nav-form', 'surveys/' + this.slug + '/form', 'Survey Questions', 'icon-cog'),
+
+        // this.makeNavItem('nav-form', 'surveys/' + this.slug + '/settings', 'Settings', 'icon-cog tab-settings')
       ];
       this.current = this.items[0];
     },

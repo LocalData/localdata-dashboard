@@ -7,6 +7,7 @@ define([
   'backbone',
   'moment',
   'lib/tinypubsub',
+  'lib/kissmetrics',
 
   // LocalData
   'settings',
@@ -19,7 +20,7 @@ define([
   'views/map'
 ],
 
-function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
+function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView) {
   'use strict';
 
   var ResponseViews = {};
@@ -28,10 +29,12 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
   ResponseViews.MapAndListView = Backbone.View.extend({
     responses: null,
     firstRun: true,
-    surveyId: null,
+    survey: null,
     filters: {},
     mapView: null,
     listView: null,
+
+    el: '#response-view-container',
 
     events: {
       "change #filter":  "filter",
@@ -40,7 +43,8 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'filter', 'subFilter', 'remove', 'updateFilterView', 'updateFilterChoices');
+      _.bindAll(this, 'render', 'filter', 'subFilter', 'updateFilterView', 'updateFilterChoices');
+
       this.template = _.template($('#response-view').html());
 
       this.responses = options.responses;
@@ -50,6 +54,8 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
 
       this.forms = options.forms;
       this.forms.on('reset', this.updateFilterChoices, this);
+
+      this.survey = options.survey;
 
       // Make sure we have forms available
       this.render();
@@ -75,11 +81,14 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
       };
       this.$el.html(this.template(context));
 
+      // If the data has been filtered, show that on the page.
+      // TODO: This should be done in a view.
       // Set up the map view, now that the root exists.
       if (this.mapView === null) {
         this.mapView = new MapView({
           el: $('#map-view-container'),
-          responses: this.responses
+          responses: this.responses,
+          survey: this.survey
         });
       }
 
@@ -219,7 +228,7 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
     prevButton: null,
     responsesPagination: null,
 
-    events: { 
+    events: {
       'click #next': 'pageNext',
       'click #prev': 'pagePrev',
       'click .pageNum': 'goToPage'
@@ -307,13 +316,17 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
 
     goToPage: function(e) {
       e.preventDefault();
-      var page = parseInt($(e.target).attr('data-page'), 10); 
+
+      _kmq.push(['record', "Specfic result page selected"]);
+      var page = parseInt($(e.target).attr('data-page'), 10);
       this.page = page;
       this.render();
     },
 
     pageNext: function (e) {
       e.preventDefault();
+
+      _kmq.push(['record', "Next page of results selected"]);
       if (this.page === this.pageCount - 1) {
         return;
       }
@@ -324,6 +337,8 @@ function($, _, Backbone, moment, events, settings, api, Responses, MapView) {
 
     pagePrev: function (e) {
       e.preventDefault();
+
+      _kmq.push(['record', "Previous page of results selected"]);
       if (this.page === 0) {
         return;
       }

@@ -32,8 +32,18 @@ h3 {
 }
 
 /* Forms....................................................................*/
+form h3 {
+  margin-top:1em;
+}
+
 form input, form label {
   display:block;
+}
+
+form input[type='radio'],
+form input[type='checkbox'] {
+  display:inline-block; 
+  margin-right:10px;
 }
 
 form input,
@@ -54,8 +64,10 @@ form textarea {
 }
 
 form label {
-  font-weight:bold; 
+  font-weight:600; 
   margin-top:1em;
+  cursor:pointer; 
+  line-height:1.7;  
 }
 
 form .error {
@@ -163,16 +175,32 @@ header a {
   #topnav {
     font-size:14px;
     float:right;
-    padding-top:5px;
   }
 
-  .mysurveys {
-    background:#f39379;
-    color:#fff;
-    padding:4px 8px;
-    border-radius:15px;
-    margin-right:10px;
-  }
+    .mysurveys {
+      display:inline-block;
+      background:#f39379;
+      color:#fff;
+      padding:4px 12px 4px 12px;
+      border-radius:15px;
+      margin-right:10px;
+      line-height:20px;
+    }
+
+    #userbar-container {
+      display:none;
+    }
+
+      .userbar {
+        display:inline-block;
+        color:#fff;
+        padding:4px 12px 4px 30px;
+        border-radius:15px;
+        margin-right:10px;
+        background:#666 url(../img/icons/user-white.png) no-repeat 12px center;
+        line-height:20px;
+      }
+
 
 #survey-header {
   color:#fefefe;
@@ -199,9 +227,10 @@ header a {
   background:#eee;
   overflow:auto;
   border:1px solid #fff;
-  border-width: 1px 1px 0px 1px;
+  border-width: 1px 1px 0 1px;
 
   -webkit-box-shadow: 0 0 16px rgba(0, 124, 129, 1);
+  -moz-box-shadow: 0 0 16px rgba(0, 124, 129, 1);
   box-shadow: 0 0 16px rgba(0, 124, 129, 1);
 }
 
@@ -220,7 +249,9 @@ header a {
 
     .nav-tabs li.active {
       background:#fff;
+
       -webkit-box-shadow: 0 0 7px rgba(0, 124, 129, 0.4);
+      -mozbox-shadow: 0 0 7px rgba(0, 124, 129, 0.4);
       box-shadow: 0 0 7px rgba(0, 124, 129, 0.4);
     }
 
@@ -546,6 +577,10 @@ header a {
 
 }
 
+  .survey-designer p {
+    text-align: center;
+  }
+
   .survey-designer h2 {
     text-align:center;
     font-size:3em;
@@ -732,6 +767,15 @@ header a {
     }
 
 /* Toolbar ...................................................................*/
+.saved {
+    color: #8db100;
+    display: none;
+}
+
+.error {
+    color: #df455d;
+    display: none;
+}
 
 .actionbar {
   
