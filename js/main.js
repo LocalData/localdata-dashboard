@@ -4,7 +4,7 @@
 // TODO: Tinypubsub
 
 require.config({
-  paths: { 
+  paths: {
     jquery: 'lib/jquery-1.7.1',
     backbone: 'lib/backbone',
     moment: 'lib/moment.min',
