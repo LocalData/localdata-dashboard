@@ -53,7 +53,7 @@ function($, _) {
                   "type": "checkbox",
                   "answers": [
                     {
-                      "name": "vacanct",
+                      "name": "vacant",
                       "value": "yes",
                       "text": "Vacant"
                     },
