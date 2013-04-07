@@ -50,17 +50,83 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
   });
 
 
+  UserViews.ResetView = Backbone.View.extend({
+    el: "#container",
+
+    events: {
+      'click .button': 'reset'
+    },
+
+    initialize: function(options) {
+      console.log('init reset view');
+      _.bindAll(this, 'render', 'update', 'reset', 'resetCallback');
+
+      this.token = options.token;
+    },
+
+    update: function() {
+      this.render();
+    },
+
+    render: function() {
+      var context = {
+        token: this.token
+      };
+      this.$el.html(_.template($('#reset-view').html(), context));
+      return this;
+    },
+
+    reset: function() {
+      // Get the data from the form. Ew. 
+      var data = $(event.target).parent().serializeArray();
+      var token = data[0].value;
+      var email = data[1].value;
+      var password1 = data[2].value;
+      var password2 = data[3].value;
+
+      console.log(token);
+      if(password1 !== password2) {
+        $('#reset .error').html('The passwords should match').fadeIn();
+        return;
+      }
+
+      var query = {
+        'reset': {
+          'email': email,
+          'password': password1,
+          'token': token
+        }
+      };
+      api.reset(query, this.resetCallback);
+    },
+
+    resetCallback: function(error) {
+      if(error) {
+        _kmq.push(['record', error]);
+        $('#reset .error').html(error.message).fadeIn();
+        return;
+      }
+
+      events.publish('navigate', ['/']);
+    }
+  });
+
+
   UserViews.LoginView = Backbone.View.extend({
     el: "#container",
 
     events: {
-      "click #login .button": "logIn",
-      "click #create-account .button": "createUser"
+      'click #login .button': 'logIn',
+      'click #create-account .button': "createUser",
+      'click #login .forgot': 'forgot',
+      'click #forgot .button': 'reset'
     },
 
     initialize: function(options) {
       console.log("Initialize login view");
-      _.bindAll(this, 'render', 'update', 'createUser', 'createUserCallback', 'logIn', 'logInCallback');
+      _.bindAll(this, 'render', 'update', 'createUser', 'createUserCallback',
+        'logIn', 'logInCallback',
+        'forgot', 'reset', 'forgotCallback');
 
       this.redirectTo = options.redirectTo || "/";
       this.redirectTo = this.redirectTo.replace("?redirectTo=", "");
@@ -82,6 +148,42 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
       this.render();
     },
 
+    forgot: function() {
+      console.log("forgot password");
+      $('#login').fadeOut(200, function(){
+        $('#forgot').fadeIn(200);
+      });
+    },
+
+    reset: function(event) {
+      console.log("Resetting password");
+      $('#forgot .error').hide();
+      var data = $(event.target).parent().serializeArray();
+      var query = {'user': {'email': data[0].value}};
+      api.forgot(query, this.forgotCallback);
+    },
+
+    forgotCallback: function(error) {
+      if(error) {
+        console.log("ERROR!!!", error);
+        _kmq.push(['record', error]);
+        $('#forgot .error').html(error.message).fadeIn();
+        return;
+      }
+
+      $('#forgot .success').fadeIn();
+    },
+
+    logIn: function(event) {
+      event.preventDefault();
+      _kmq.push(['record', 'User logging in']);
+      $('#login .error').fadeOut();
+
+      var user = $(event.target).parent().serializeArray();
+      console.log(user);
+      api.logIn(user, this.logInCallback);
+    },
+
     logInCallback: function(error, user) {
       if(error) {
         _kmq.push(['record', error]);
@@ -93,28 +195,6 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
       events.publish('navigate', [this.redirectTo]);
     },
 
-    logIn: function(event) {
-      event.preventDefault();
-      _kmq.push(['record', 'User logging in']);
-      $('#login .error').fadeOut();
-
-      var user = $(event.target).parent().serializeArray();
-      api.logIn(user, this.logInCallback);
-    },
-
-    createUserCallback: function(error, user) {
-      if(error) {
-        $("#create-account .error").html(error).fadeIn();
-        return;
-      }
-
-      // Get the current user model
-      this.user.fetch();
-
-      // Success! Go to the dashboard.
-      events.publish('navigate', ['/']);
-    },
-
     createUser: function(event) {
       event.preventDefault();
 
@@ -123,6 +203,18 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
       $('#create-account .error').fadeOut();
 
       api.createUser(user, this.createUserCallback);
+    },
+
+    createUserCallback: function(error, user) {
+      if(error) {
+        $("#create-account .error").html(error).fadeIn();
+        return;
+      }
+
+      this.user = user;
+
+      // Success! Go to the dashboard.
+      events.publish('navigate', ['/']);
     }
   });
 

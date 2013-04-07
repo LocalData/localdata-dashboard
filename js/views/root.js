@@ -38,6 +38,7 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
 
   AllViews.LoginView = UserViews.LoginView;
   AllViews.UserBarView = UserViews.UserBarView;
+  AllViews.ResetView = UserViews.ResetView;
 
   // The singleton view which manages all others.
   // Essentially, a "controller".
@@ -87,7 +88,7 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
       this.views[viewName].update();
       return this.views[viewName];
     },
-        
+
     // Handle routes (they're in routers/index.js) .............................
     // Home
     goto_home: function() {
@@ -102,7 +103,13 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
         'user': this.user
       });
     },
-    
+
+    goto_reset: function(token) {
+      this.currentContentView = this.getOrCreateView("ResetView", "ResetView", {
+        'token': token
+      });
+    },
+
     // Survey dashboard routes .................................................
     goto_survey: function(tab) {
 

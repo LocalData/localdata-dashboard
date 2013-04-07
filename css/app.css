@@ -92,6 +92,7 @@ form .error {
     border-color:#00949b;
     -moz-box-shadow: inset 0 0 16px rgba(47, 68, 101, 0.5);
     -webkit-box-shadow: inset 0 0 16px rgba(47, 68, 101, 0.5);
+    cursor: pointer;
   }
 
   .button-container {
@@ -292,20 +293,29 @@ header a {
 
 /* Login ................................................................... */
 #login h2, 
+#forgot h2,
+#reset h2,
 #create-account h2 {
   font-size:24px;
   margin-bottom:12px;
 }
 
+#forgot,
 #login,
 #create-account { 
   width:45%;
   float:left;
 }
 
+#forgot,
 #login {
   margin-right:5%;
   border-right: 1px dotted #ddd;
+}
+
+#forgot,
+.success {
+  display:none;
 }
 
 /* Surveys ................................................................. */
@@ -767,7 +777,8 @@ header a {
     }
 
 /* Toolbar ...................................................................*/
-.saved {
+.saved,
+.success {
     color: #8db100;
     display: none;
 }

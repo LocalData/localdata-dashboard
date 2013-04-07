@@ -30,10 +30,11 @@ define(function (require) {
     });
   };
 
-  // Create a new user
-  //
-  // @param {Object} user Name, email, and password for the user
-  // @param {Function} callback Parameters: (error, user)
+  /**
+   * Create a new user
+   * @param {Object} user Name, email, and password for the user
+   * @param {Function} callback Parameters: (error, user)   
+   */
   api.createUser = function(user, callback) {
 
     var url = settings.api.baseurl + "/user";
@@ -81,11 +82,44 @@ define(function (require) {
     });
 
     request.fail(function(jqXHR, textStatus, errorThrown) {
-      console.log("Request failed: ", jqXHR);
       callback(jqXHR.responseText, null);
     });
-
   };
+
+
+  /**
+   * Create an API transaction function for a given path
+   * @param  {String}   pathFragment Path in the api, eg 'login'
+   * @param  {Object}   data         Data to be submitted
+   * @param  {Function} callback     To accept parameter `error`
+   * @return {Function}              
+   */
+  var makeTransaction = function (pathFragment) {
+    return function(data, callback) {
+      var url = settings.api.baseurl + '/' + pathFragment;
+
+      var request = $.ajax({
+        url: url,
+        type: "POST",
+        data: data
+      });
+
+      request.done(function(response) {
+        if(response.name === "BadRequestError") {
+          callback(response);
+          return;
+        }
+        callback(null, response);
+      });
+
+      request.fail(function(jqXHR, textStatus, errorThrown) {
+        return callback($.parseJSON(jqXHR.responseText), null);
+      });
+    };
+  };
+
+  api.forgot = makeTransaction('user/forgot');
+  api.reset  = makeTransaction('user/reset');
 
   // Create a new survey
   api.createSurvey = function(survey, callback) {
