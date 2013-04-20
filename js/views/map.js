@@ -19,7 +19,7 @@ define([
 ],
 
 function($, _, Backbone, L, moment, events, settings, api, Responses) {
-  'use strict'; 
+  'use strict';
 
   function indexToColor(index) {
     if (index >= 0) {
@@ -50,7 +50,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       weight: 2
     };
   }
-  
+
   var MapView = Backbone.View.extend({
 
     map: null,
@@ -62,11 +62,11 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
     selectedObject: {},
     markers: {},
     filter: null,
-    
+
     initialize: function(options) {
       console.log("Init map view");
       _.bindAll(this, 'render', 'addTileLayer', 'selectObject', 'renderObject', 'renderObjects', 'getResponsesInBounds', 'updateMapStyleBasedOnZoom', 'updateObjectStyles');
-      
+
       this.responses = options.responses;
       // TODO: if we add the filter logic to the responses collection, we can
       // more cleanly trigger off its events.
@@ -79,7 +79,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       this.parcelIdsOnTheMap = {};
       this.objectsOnTheMap = new L.FeatureGroup();
       this.zoneLayer = new L.FeatureGroup();
-      
+
       this.defaultStyle = settings.farZoomStyle;
       this.defaultPointToLayer = function (feature, latlng) {
         return new L.circleMarker(latlng, settings.farZoomStyle);
@@ -88,7 +88,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       this.delayFitBounds = _.debounce(this.fitBounds, 250);
 
       this.render();
-    },  
+    },
 
     fitBounds: function () {
       if (this.responses !== null && this.responses.length > 0) {
@@ -106,7 +106,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
     // Debounced version of fitBounds. Created in the initialize method.
     delayFitBounds: null,
-    
+
     addTileLayer: function(tilejson) {
       console.log(tilejson);
       this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
@@ -128,29 +128,38 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         this.$el.html(_.template($('#map-view').html(), {}));
 
         // Initialize the map
-        this.map = new L.map('map');
+        this.map = new L.map('map', {
+          zoom: 17,
+          maxZoom: 18,
+          center: [42.370805,-83.079728]
+        });
+
+        // SF overview: [37.7750,-122.4183]
+        // this.map.setView([42.3314,-83.0458], 11); // Detroit overview
+        // this.map.setView([42.370805,-83.079728], 17);  // Bethune
+
 
         // Don't think this is needed: this.markers = {};
 
+        this.baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/matth.map-zmpggdzn/{z}/{x}/{y}.png');
+        this.map.addLayer(this.baseLayer);
+        this.satelliteLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/matth.map-yyr7jb6r/{z}/{x}/{y}.png');
+        this.activeLayer = 'streets';
+
         // Set up the base map; add the parcels and done markers
-        this.googleLayer = new L.Google("TERRAIN");
-        this.map.addLayer(this.googleLayer);
         this.map.addLayer(this.zoneLayer);
         this.map.addLayer(this.objectsOnTheMap);
 
         // Get tilejson
         var request = $.ajax({
-          url: 'http://localhost:3001/' + this.survey.get('id') + '/tile.json',
+          url: 'http://localhost:3001/' + this.survey.get('id') + '/filter/condition/tile.json',
           type: "GET",
           dataType: "jsonp"
         });
 
         console.log("REQUESTING TILE LAYER");
-        request.done(this.addTileLayer);
+        request.done(this.addTileLayer, {zIndex: 100});
 
-        // this.map.setView([37.7750,-122.4183], 11); // default center
-        // this.map.setView([42.3314,-83.0458], 11); // SF overview
-        this.map.setView([42.370805,-83.079728], 17);  // Bethune
         this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
       }
 
@@ -336,7 +345,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       console.log("Changing style");
       this.objectsOnTheMap.setStyle(style);
     },
-    
+
     // Expects an object with properties
     // obj.parcelId: ID of the given object
     // obj.geometry: GeoJSON geometry object
@@ -392,10 +401,11 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
         // If we're in pretty close, show the satellite view
         if(zoom > 14) {
-          if(this.googleLayer._type !== "HYBRID") {
-            this.map.removeLayer(this.googleLayer);
-            this.googleLayer = new L.Google("HYBRID");
-            this.map.addLayer(this.googleLayer);
+
+          if(this.activeLayer !== 'satellite') {
+            this.map.removeLayer(this.baseLayer);
+            this.map.addLayer(this.satelliteLayer, true);
+            this.activeLayer = 'satellite';
           }
 
           if(this.defaultStyle !== settings.closeZoomStyle) {
@@ -411,25 +421,20 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
             this.updateObjectStyles(settings.closeZoomStyle);
           }
 
-          // And use the terrain map
-          if (this.googleLayer._type !== "TERRAIN") {
-            // Show a more abstract map when zoomed out
-            this.map.removeLayer(this.googleLayer);
-            this.googleLayer = new L.Google("TERRAIN");
-            this.map.addLayer(this.googleLayer);
+          if(this.activeLayer !== 'streets') {
+            this.map.removeLayer(this.satelliteLayer);
+            this.map.addLayer(this.baseLayer, true);
+            this.activeLayer = 'streets';
           }
         }
 
       }else {
         // Far zoom (>14)
         // Show a more abstract map when zoomed out
-        if (this.googleLayer._type !== "TERRAIN") {
-          this.map.removeLayer(this.googleLayer);
-          this.googleLayer = new L.Google("TERRAIN");
-          this.map.addLayer(this.googleLayer);
-
-          this.defaultStyle = settings.farZoomStyle;
-          this.updateObjectStyles(settings.farZoomStyle);
+        if(this.activeLayer !== 'streets') {
+          this.map.removeLayer(this.satelliteLayer);
+          this.map.addLayer(this.baseLayer, true);
+          this.activeLayer = 'streets';
         }
       }
 
@@ -438,29 +443,29 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         this.selectedLayer.setStyle(settings.selectedStyle);
       }
     },
-    
+
     getParcelsInBounds: function() {
       // Don't add any parcels if the zoom is really far out.
       var zoom = this.map.getZoom();
       if(zoom < 16) {
         return;
       }
-      
+
       // If there are a lot of objects, let's clear them out
       // to improve performance
       if( _.size(this.parcelIdsOnTheMap) > 1250 ) {
         this.objectsOnTheMap.clearLayers();
         this.parcelIdsOnTheMap = {};
       }
-      
+
       // Get parcel data in the bounds
       api.getObjectsInBounds(this.map.getBounds(), this.renderObjects);
     },
-          
+
     // Get all the responses in the current viewport
     getResponsesInBounds: function(){
       console.log("Getting responses in the map");
-      
+
       // Don't add any markers if the zoom is really far out.
       var zoom = this.map.getZoom();
       if(zoom < 17) {
@@ -471,26 +476,24 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       // And add them to the map
       api.getResponsesInBounds(this.map.getBounds(), this.addResultsToMap);
     },
-    
+
     selectObject: function(event) {
       // _kmq.push(['record', "Map object selected"]);
-      
+
       if (this.selectedLayer !== null) {
         this.selectedLayer.setStyle(this.defaultStyle);
       }
-      
+
       // Select the current layer
       this.selectedLayer = event.layer;
       this.selectedLayer.setStyle(settings.selectedStyle);
-      
+
       // Let's show some info about this object.
       this.details(this.selectedLayer.feature);
-        
     },
 
     /**
      * When a parcel is clicked, show details for just that parcel.
-     *
      * @param  {Object} options An object with a parcelId or id property
      */
     details: function(feature) {
