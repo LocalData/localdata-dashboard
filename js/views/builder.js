@@ -38,7 +38,7 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
         'suffix', 'editQuestion', 'editQuestionType', 'deleteQuestion',
         'createQuestion', 'createAnswer', 'addSubQuestion', 'renderQuestion',
          'editAnswer', 'deleteAnswer', 'slugify', 'updatePreview');
-      
+
       this.forms = options.forms;
     },
 
@@ -49,7 +49,7 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
 
     save: function(event) {
       event.preventDefault();
-      console.log('Save clicked');
+      console.log('Saving form', settings.formData);
       _kmq.push(['record', 'Survey questions saved']);
 
       api.createForm(settings.formData, function(){
@@ -196,6 +196,8 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
           'text': '',
           'value': ''
         });
+        this.setQuestionLayout(question);
+
         this.updatePreview();
         this.renderForm();
       };
@@ -223,6 +225,9 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
         var text = $(event.target).val();
         question.answers[index].text = text;
         question.answers[index].value = this.slugify(text);
+
+        this.setQuestionLayout(question);
+
         this.updatePreview();
       };
     },
@@ -236,9 +241,23 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
         question.answers.splice(index, 1);
         this.updatePreview();
 
+        this.setQuestionLayout(question);
+
         // Remove it from the DON.
         $answer.remove();
       };
+    },
+
+    // Display a question horizontally if it doesn't have many answers.
+    setQuestionLayout: function(question) {
+      if (question.answers.length !== 2) {
+        delete question.layout;
+      }else {
+        if (question.type !== 'checkbox') {
+          question.layout = 'horizontal';
+        }
+      }
+      console.log(question.layout);
     },
 
     renderQuestion: function(question, visible, parentID, triggerID, appendTo, questionIndex, parent) {
@@ -391,7 +410,7 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
     }
 
   }); // end BuilderView{}
-  
+
   return Builder;
 
 });
