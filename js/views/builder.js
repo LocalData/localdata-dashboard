@@ -257,7 +257,6 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
           question.layout = 'horizontal';
         }
       }
-      console.log(question.layout);
     },
 
     renderQuestion: function(question, visible, parentID, triggerID, appendTo, questionIndex, parent) {
