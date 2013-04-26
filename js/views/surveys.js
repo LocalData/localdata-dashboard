@@ -126,7 +126,6 @@ function(
         if(type) {
           survey.type = type;
         }
-        alert(survey.type);
 
         console.log("Survey form submitted");
         console.log(survey);
