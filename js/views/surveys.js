@@ -122,10 +122,11 @@ function(
 
         // Custom survey type
         // (Right now, only "point" is a real option)
-        var type = $("input.survey-type").val();
+        var type = $("input[name=type]:checked").val();
         if(type) {
           survey.type = type;
         }
+        alert(survey.type);
 
         console.log("Survey form submitted");
         console.log(survey);
@@ -149,11 +150,11 @@ function(
 
   SurveyViews.SurveyView = Backbone.View.extend({
     el: $("#container"),
-    
+
     toshow: ['', 0],
     survey: null,
     bodyView: null,
-    
+
     initialize: function(options) {
       _.bindAll(this, 'update', 'render', 'show', 'showResponses', 'showUpload', 'showForm', 'showSettings');
 
@@ -190,13 +191,13 @@ function(
       if (this.responseListView !== undefined) {
         this.responseListView.remove();
       }
-      
+
       // Set the context & render the page
       var context = {
         'survey': this.survey.toJSON()
       };
       this.$el.html(_.template($('#survey-view').html(), context));
-      
+
       // Render the sub components
       $('#form-view-container').hide();
       $('#export-view-container').hide();
@@ -232,7 +233,7 @@ function(
       // By default, we show the first tab
       this.show(this.toshow[0], this.toshow[1]);
     },
-    
+
     show: function(id, tab) {
       // This is a really bad way to show the right tab
       this.toshow = [id, tab];
@@ -242,15 +243,15 @@ function(
       $(id).show();
       this.navView.setActiveTab(tab);
     },
-    
+
     showResponses: function() {
       this.show('#response-view-container', 0);
     },
-    
+
     showExport: function() {
       this.show('#export-view-container', 1);
     },
-    
+
     showForm: function() {
       this.show('#form-view-container', 2);
     },
@@ -263,13 +264,13 @@ function(
     showUpload: function() {
       console.log("[not] Using upload view");
     },
-    
+
     showScans: function() {
       console.log("[not] Using scans view");
     }
-    
+
   });
 
   return SurveyViews;
 
-}); // End SurveyViews 
+}); // End SurveyViews
