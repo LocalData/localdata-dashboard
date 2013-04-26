@@ -111,6 +111,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       console.log(tilejson);
       this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
       this.map.addLayer(this.tileLayer);
+      this.tileLayer.bringToFront();
     },
 
     render: function (arg) {
@@ -129,9 +130,9 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
         // Initialize the map
         this.map = new L.map('map', {
-          zoom: 11,
+          zoom: 12,
           maxZoom: 18,
-          center: [42.370805,-83.079728]
+          center: [42.439167,-83.083420]
         });
 
         // SF overview: [37.7750,-122.4183]
@@ -150,6 +151,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         this.map.addLayer(this.zoneLayer);
         this.map.addLayer(this.objectsOnTheMap);
 
+        //  http://matth-nt.herokuapp.com/
         // Get tilejson
         var request = $.ajax({
           url: 'http://localhost:3001/' + this.survey.get('id') + '/filter/condition/tile.json',
@@ -158,7 +160,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         });
 
         console.log("REQUESTING TILE LAYER");
-        request.done(this.addTileLayer, {zIndex: 100});
+        request.done(this.addTileLayer);
 
         this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
       }
@@ -399,29 +401,27 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       // Objects should be more detailed close up (zoom 10+)
       if(zoom > 10) {
 
+        this.tileLayer.bringToFront();
+
+        console.log("Greater than 10");
+
         // If we're in pretty close, show the satellite view
         if(zoom > 14) {
 
           if(this.activeLayer !== 'satellite') {
+            console.log("Active layer begin", this.activeLayer);
             this.map.removeLayer(this.baseLayer);
             this.map.addLayer(this.satelliteLayer, true);
+            this.satelliteLayer.bringToBack();
             this.activeLayer = 'satellite';
-          }
-
-          if(this.defaultStyle !== settings.closeZoomStyle) {
-            this.defaultStyle = settings.closeZoomStyle;
-            this.updateObjectStyles(settings.closeZoomStyle);
+            console.log("Active layer end", this.activeLayer);
           }
 
         } else {
           // Mid zoom (11-14)
           // We're not that close, show the mid zoom styles
-          if(this.defaultStyle !== settings.midZoomStyle) {
-            this.defaultStyle = settings.closeZoomStyle;
-            this.updateObjectStyles(settings.closeZoomStyle);
-          }
-
           if(this.activeLayer !== 'streets') {
+            console.log("MID ZOOM LEVELS");
             this.map.removeLayer(this.satelliteLayer);
             this.map.addLayer(this.baseLayer, true);
             this.activeLayer = 'streets';
@@ -429,9 +429,10 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         }
 
       }else {
-        // Far zoom (>14)
+        // Far zoom (< 10)
         // Show a more abstract map when zoomed out
         if(this.activeLayer !== 'streets') {
+          console.log("STREETS LEVEL");
           this.map.removeLayer(this.satelliteLayer);
           this.map.addLayer(this.baseLayer, true);
           this.activeLayer = 'streets';

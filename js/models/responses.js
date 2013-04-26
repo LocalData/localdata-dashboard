@@ -10,11 +10,11 @@ define([
 ],
 
 function($, _, Backbone, settings, api) {
-  'use strict'; 
+  'use strict';
 
   var Responses = {};
 
-  Responses.Model = Backbone.Model.extend({ 
+  Responses.Model = Backbone.Model.extend({
     defaults: {
       responses: {}
     }
@@ -24,7 +24,7 @@ function($, _, Backbone, settings, api) {
     model: Responses.Model,
     filters: null,
     unfilteredModels: null,
-    
+
     initialize: function(models, options) {
       // Ugly -- we'll need to find a nicer way to init this thing.s
       // Maybe: function(models, options)
@@ -38,7 +38,7 @@ function($, _, Backbone, settings, api) {
         this.fetchChunks();
       }
     },
-    
+
     url: function() {
       return settings.api.baseurl + '/surveys/' + this.surveyId + '/responses';
     },
@@ -57,7 +57,10 @@ function($, _, Backbone, settings, api) {
           // If we got as many entries as we requested, then request another
           // chunk of data.
           if (responses.length === count) {
-            getChunk(start + count, count);
+            if(count < 500) {
+              getChunk(start + count, count);
+            }
+
           }
 
           // Turn the entries into models and add them to the collection.
@@ -70,7 +73,7 @@ function($, _, Backbone, settings, api) {
       // Get the first chunk.
       getChunk(0, 500);
     },
-          
+
     parse: function(response) {
       console.log(response);
       return response.responses;
@@ -135,7 +138,7 @@ function($, _, Backbone, settings, api) {
         this.reset(this.unfilteredModels);
       }
     }
-    
+
   });
 
   return Responses;
