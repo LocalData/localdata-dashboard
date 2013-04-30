@@ -54,8 +54,8 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
     el: "#container",
 
     events: {
-      "click #login .button": "logIn",
-      "click #create-account .button": "createUser"
+      "click #login button": "logIn",
+      "click #create-account button": "createUser"
     },
 
     initialize: function(options) {
