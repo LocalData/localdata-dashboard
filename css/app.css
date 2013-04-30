@@ -41,96 +41,19 @@ form h3 {
   margin-top:1em;
 }
 
-/*
-form input, form label {
-  display:block;
-}
-
-form input[type='radio'],
-form input[type='checkbox'] {
-  display:inline-block;
-  margin-right:10px;
-}
-
-
-form input,
-form textarea {
-  font-family:"Open Sans", "Source Sans Pro", Helvetica, sans-serif;
-  font-size:24px;
-}
-
-form label {
-  font-weight:600;
-  margin-top:1em;
-  cursor:pointer;
-  line-height:1.7;
-}
-*/
 form .error {
   color:#ef6d4a;
 }
-
-.button {
-  display:inline-block;
-  width:auto;
-  padding:10px;
-  border:1px solid #ccc;
-  border-radius:10px;
-  -moz-box-shadow: 0 0 6px rgba(0,0,0, 0.15);
-  -webkit-box-shadow: 0 0 6px rgba(0,0,0, 0.15);
-  margin:10px 4px;
-  cursor:pointer;
-}
-
-  .button:hover {
-    background:#00949b;
-    color:#ffe;
-    border-color:#00949b;
-    -moz-box-shadow: inset 0 0 16px rgba(47, 68, 101, 0.5);
-    -webkit-box-shadow: inset 0 0 16px rgba(47, 68, 101, 0.5);
-  }
-
-  .button-container {
-    overflow:auto;
-  }
-
-  .button.flat {
-    -moz-box-shadow:none;
-    -webkit-box-shadow:none;
-    box-shadow:none;
-    margin:9px;
-    background:#f39379;
-    color:#fff;
-    padding:4px 8px;
-    border-radius:15px;
-    margin-right:10px;
-  }
-
-    .button.flat:hover {
-      -moz-box-shadow:none;
-      -webkit-box-shadow:none;
-      box-shadow:none;
-      background:#f39379;
-      color:#fff;
-      padding:4px 8px;
-      border-radius:15px;
-      margin-right:10px;
-    }
 
 .advanced {
   display:none;
 }
 
 
-
 /* Structure ...............................................................*/
 
 .container {
-  ppadding:20px 30px 20px 30px;
-}
 
-.floatcontainer {
-  overflow:auto;
 }
 
 #content,
@@ -141,6 +64,9 @@ form .error {
   box-shadow: 0 6px 16px rgba(0, 124, 129, 1);
 }
 
+.tab {
+  display:none;
+}
 
 /* Header ..................................................................*/
 header {
@@ -156,7 +82,7 @@ header a {
 .navbar#site-header {
   font-size:24px;
   background:#fff;
-  border-bottom:0px #a18464;
+  border-bottom:1px #a18464;
   padding:15px 30px 15px 40px;
   overflow:auto;
   x-webkit-box-shadow: 0 0 16px rgba(0, 124, 129, 1);
@@ -210,27 +136,15 @@ header a {
 
 /* Nav .....................................................................*/
 #nav {
-  background:#eee;
-  overflow:auto;
-  border:1px solid #fff;
+  background:#fff;
   border-width: 1px 1px 0 1px;
-
-  -webkit-box-shadow: 0 0 16px rgba(0, 124, 129, 1);
-  -moz-box-shadow: 0 0 16px rgba(0, 124, 129, 1);
-  box-shadow: 0 0 16px rgba(0, 124, 129, 1);
 }
 
   .nav-tabs li {
     color: #666;
     font-size:16px;
     text-align:center;
-
-    list-style:none;
-    display:block;
-    float:left;
-    margin-top:5px;
-    padding:18px 35px 20px 35px;
-    border:0;
+    border:0px none;
   }
 
     .nav-tabs li.active {
@@ -241,13 +155,16 @@ header a {
       box-shadow: 0 0 7px rgba(0, 124, 129, 0.4);
     }
 
-    .nav-tabs li a {
-      border: 0;
+    .nav-tabs li a,
+    .nav-tabs li a:hover {
+      border: 0px none;
       color: #666;
     }
 
-    .nav-tabs li.active a {
+    .nav-tabs li.active a,
+    .nav-tabs li.active a:hover {
       color: #ef6d4a;
+      border:0px none;
     }
 
 /* Subnav .................................................................. */
