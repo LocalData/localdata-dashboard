@@ -1,5 +1,5 @@
 /* LocalData Styles .........................................................*/
-/* 
+/*
   Colors
   Link: #00949b
   Link hover: #138288
@@ -23,6 +23,11 @@ a {
   border-bottom:1px solid #00949b;
 }
 
+a:hover {
+  text-decoration:none;
+  color:#00949b;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-weight: normal;
 }
@@ -36,40 +41,31 @@ form h3 {
   margin-top:1em;
 }
 
+/*
 form input, form label {
   display:block;
 }
 
 form input[type='radio'],
 form input[type='checkbox'] {
-  display:inline-block; 
+  display:inline-block;
   margin-right:10px;
 }
+
 
 form input,
 form textarea {
   font-family:"Open Sans", "Source Sans Pro", Helvetica, sans-serif;
   font-size:24px;
-  text-indent:5px;
-  
-  margin:5px 0px 8px;
-  border:1px solid #ddd;
-
-  -webkit-box-shadow: 
-    inset 0 0 8px  rgba(0,0,0,0.1); 
-  -moz-box-shadow: 
-    inset 0 0 8px  rgba(0,0,0,0.1); 
-  box-shadow: 
-    inset 0 0 8px  rgba(0,0,0,0.1); 
 }
 
 form label {
-  font-weight:600; 
+  font-weight:600;
   margin-top:1em;
-  cursor:pointer; 
-  line-height:1.7;  
+  cursor:pointer;
+  line-height:1.7;
 }
-
+*/
 form .error {
   color:#ef6d4a;
 }
@@ -130,14 +126,15 @@ form .error {
 /* Structure ...............................................................*/
 
 .container {
-  padding:20px 30px 20px 30px; 
+  ppadding:20px 30px 20px 30px;
 }
 
 .floatcontainer {
   overflow:auto;
 }
 
-#content {
+#content,
+.main {
   background:#fff;
   padding:30px;
   -webkit-box-shadow: 0 16px 16px rgba(0, 124, 129, 1);
@@ -156,10 +153,10 @@ header a {
   border:0;
 }
 
-#site-header {
+.navbar#site-header {
   font-size:24px;
   background:#fff;
-  border-bottom:0px  #a18464;
+  border-bottom:0px #a18464;
   padding:15px 30px 15px 40px;
   overflow:auto;
   x-webkit-box-shadow: 0 0 16px rgba(0, 124, 129, 1);
@@ -202,23 +199,12 @@ header a {
       }
 
 
-#survey-header {
+.survey-header h2 {
   color:#fefefe;
-  font-size:35px;
-  padding-bottom:0;
-  padding:14px 20px 0 20px;
-}
-
-#site-header .container,
-#survey-header .container {
-  padding-left:20px;
-}
-
-#survey-header h2 {
   font-size:36px;
   font-weight:600;
-  xtext-shadow: 0.05em 0.05em #00949b;
   letter-spacing:1px;
+  padding:20px;
 }
 
 
@@ -291,20 +277,7 @@ header a {
 
 
 /* Login ................................................................... */
-#login h2, 
-#create-account h2 {
-  font-size:24px;
-  margin-bottom:12px;
-}
-
-#login,
-#create-account { 
-  width:45%;
-  float:left;
-}
-
 #login {
-  margin-right:5%;
   border-right: 1px dotted #ddd;
 }
 
@@ -324,7 +297,7 @@ header a {
 }
 
 .survey-list h2 a {
-  border:0; 
+  border:0;
   display:block;
 }
 
@@ -476,14 +449,14 @@ header a {
   }
 
   #map-controls .icon-search:before {
-    padding-right:5px; 
+    padding-right:5px;
   }
 
 .leaflet-control-attribution {
   display:none;
 }
 
-/*  Note that we can't combine these two rules because they're 
+/*  Note that we can't combine these two rules because they're
     browser-specific */
 #address-search::-webkit-input-placeholder {
     color: #93a9cd;
@@ -568,7 +541,7 @@ header a {
     background:#fff;
 }
 
-  #new-survey-form input[type='text'] { 
+  #new-survey-form input[type='text'] {
     margin-bottom:10px;
     width:350px;
   }
@@ -609,7 +582,7 @@ header a {
 }
 
   .choice-box {
-    display: inline-block; 
+    display: inline-block;
 
     width:250px;
     border: 1px solid #faf6ad;
@@ -624,7 +597,7 @@ header a {
     text-align:center;
 
   }
-    .choice-box h3 { 
+    .choice-box h3 {
       padding-top:10px;
       font-weight:bold;
       font-size:24px;
@@ -656,7 +629,7 @@ header a {
   margin-right:5%;
   float:left;
 }
-  
+
   #builder-view-container .done {
     float:right;
   }
@@ -691,7 +664,7 @@ header a {
       }
 
     .question .question {
-      margin-left:20px; 
+      margin-left:20px;
     }
 
   .editor .answers {
@@ -778,7 +751,7 @@ header a {
 }
 
 .actionbar {
-  
+
 }
   .actionbar div {
     display: inline-block;
@@ -813,7 +786,7 @@ header a {
   width:44%;
   float:left;
 }
-  
+
   #preview.popup {
     flot:none;
     background:#fff;
@@ -843,7 +816,7 @@ header a {
   }
 
   #preview.popup #preview-close {
-    display:inline; 
+    display:inline;
   }
 
   #preview-survey-title {
