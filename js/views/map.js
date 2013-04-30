@@ -112,6 +112,10 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
       this.map.addLayer(this.tileLayer);
       this.tileLayer.bringToFront();
+
+      this.gridLayer = new L.UtfGrid(tilejson.grids[0]);
+      this.map.addLayer(this.gridLayer);
+      // this.gridLayer.bringToFront();
     },
 
     render: function (arg) {
@@ -142,10 +146,13 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
         // Don't think this is needed: this.markers = {};
 
+
+
         this.baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/matth.map-zmpggdzn/{z}/{x}/{y}.png');
         this.map.addLayer(this.baseLayer);
         this.satelliteLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/matth.map-yyr7jb6r/{z}/{x}/{y}.png');
         this.activeLayer = 'streets';
+
 
         // Set up the base map; add the parcels and done markers
         this.map.addLayer(this.zoneLayer);

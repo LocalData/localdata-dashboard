@@ -4,7 +4,7 @@
 // TODO: Tinypubsub
 
 require.config({
-  paths: { 
+  paths: {
     jquery: 'lib/jquery-1.7.1',
     backbone: 'lib/backbone',
     moment: 'lib/moment.min',
@@ -26,13 +26,13 @@ require.config({
       exports: 'L'
     },
 
-    'lib/leaflet/leaflet.google': {
+    'lib/leaflet/leaflet.utfgrid': {
       deps: ['lib/leaflet/leaflet'],
       exports: 'L'
     },
 
     'lib/leaflet.tilejson': {
-      deps: ['lib/leaflet/leaflet', 'lib/leaflet/leaflet.google'],
+      deps: ['lib/leaflet/leaflet', 'lib/leaflet/leaflet.utfgrid'],
       exports: 'L'
     },
 
