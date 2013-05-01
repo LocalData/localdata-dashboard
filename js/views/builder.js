@@ -38,7 +38,7 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
         'suffix', 'editQuestion', 'editQuestionType', 'deleteQuestion',
         'createQuestion', 'createAnswer', 'addSubQuestion', 'renderQuestion',
          'editAnswer', 'deleteAnswer', 'slugify', 'updatePreview');
-      
+
       this.forms = options.forms;
     },
 
@@ -381,8 +381,8 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
     // Used to generate the name attribute of forms
     slugify: function(text) {
       text = text.replace(/[^-a-zA-Z0-9,&\s]+/ig, '');
-      text = text.replace(/-/gi, "_");
       text = text.replace(/\s/gi, "-");
+      text = text.replace(/,/gi, '');
       return text;
     },
 
@@ -391,7 +391,7 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
     }
 
   }); // end BuilderView{}
-  
+
   return Builder;
 
 });
