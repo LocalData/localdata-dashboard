@@ -14,7 +14,7 @@ function($, _, Backbone, settings, api) {
 
   var Responses = {};
 
-  Responses.Model = Backbone.Model.extend({ 
+  Responses.Model = Backbone.Model.extend({
     defaults: {
       responses: {}
     }
@@ -72,7 +72,6 @@ function($, _, Backbone, settings, api) {
     },
 
     parse: function(response) {
-      console.log(response);
       return response.responses;
     },
 
@@ -185,7 +184,7 @@ function($, _, Backbone, settings, api) {
         this.reset(this.unfilteredModels);
       }
     }
-    
+
   });
 
   return Responses;

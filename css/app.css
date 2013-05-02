@@ -285,41 +285,31 @@ header a {
     padding-bottom:10px;
   }
 
-  .response-list table {
+  .response {
+    border-bottom:1px dotted #86bba6;
+    margin-bottom:10px;
+    padding-bottom:10px;
+  }
+
+  .response h2 {
+    font-size:16px;
+    font-weight:600;
+    line-height:1;
+  }
+
+  .response .created,
+  .response .collector  {
+    color: #589c81;
+  }
+
+  .response i {
+    color:#999;
+  }
+
+  .response img {
+    display:block;
+    margin:10px 0;
     width:100%;
-  }
-
-    .response-list thead {
-      color: #333;
-      border-bottom: 8px solid #b7d6ca;
-      padding-top:20px;
-    }
-
-    .response-list th {
-      font-weight:bold;
-      font-size:16px;
-      text-align:left;
-      padding:20px 10px 10px 10px;
-    }
-
-    .response-list .response td {
-      padding:7px 15px 15px 10px;
-      border-bottom:1px dotted #86bba6;
-    }
-
-  .response-list .response .created  {
-
-  }
-
-  .response-list .response h3:before {
-    padding-right:10px;
-    color:#96c4b2;
-  }
-
-  .response-list .address:before,
-  .response-list .collector:before {
-    color:#bbb;
-    padding-right:2px;
   }
 
 .answers {
@@ -535,17 +525,8 @@ header a {
       color:#666;
     }
 
-    .choice-box .button {
-      font-size:14px;
-      text-transform:uppercase;
-      padding-top:10px;
-    }
-
 /* Editor ....................................................................*/
 #builder-view-container {
-  width:50%;
-  margin-right:5%;
-  float:left;
 }
 
   #builder-view-container .done {

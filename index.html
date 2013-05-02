@@ -333,16 +333,16 @@
         -->
       </div>
 
-      <div id="builder-view-container"></div>
-
       <div class="row-fluid">
+        <div class="span6">
+         <div id="builder-view-container"></div>
+        </div>
         <div class="span6">
           <div id="preview-view-container"></div>
         </div>
-        <div class="span6">
-          <div id="editor-view-container"></div>
-        </div>
       </div>
+
+      <div id="editor-view-container"></div>
       <div id="survey-design-container"></div>
     </script>
 
@@ -370,20 +370,30 @@
 
     <script type="text/template" id="response-list">
         <% _.each(responses, function(r, i) { %>
-
           <div class="response">
-            <%- startIndex + i + 1 %>
-            <%- r.createdHumanized %>
-            <% if(r.geo_info != undefined) { %>
-              <%- r.geo_info.humanReadableName %><br />
-            <% }else { %>
-              <%- r.parcel_id %>
-            <% }; %>
+            <h2>
+              <% if(r.geo_info != undefined) { %>
+                <%- r.geo_info.humanReadableName %><br />
+              <% }else { %>
+                <%- r.parcel_id %>
+              <% }; %>
+            </h2>
 
-            <% if(r.geo_info != undefined) { %>
-              <%- r.source.collector %>
-            <% } else{ %>
-              <%- r.responses.collector %>
+            <div class="collector">
+              <i class="icon-user"></i>
+              <% if(r.geo_info != undefined) { %>
+                <%- r.source.collector %>
+              <% } else{ %>
+                <%- r.responses.collector %>
+              <% } %>
+              &nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-time"></i>
+              <%- r.createdHumanized %>
+            </div>
+
+            <% if(r.files != undefined) { %>
+              <% _.each(r.files, function(file){ %>
+                <img src="<%= file %>" alt="">
+              <% });%>
             <% } %>
 
             <% _.each(r.responses, function(resp, key) { %>
