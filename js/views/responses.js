@@ -221,7 +221,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
   ResponseViews.ListView = Backbone.View.extend({
     responses: null,
     parentView: null,
-    visibleItemCount: 10,
+    visibleItemCount: 1,
     page: -1,
     pageCount: null,
     nextButton: null,
