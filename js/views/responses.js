@@ -50,6 +50,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       this.responses = options.responses;
       this.responses.on('reset', this.update, this);
       this.responses.on('add', this.update, this);
+      this.responses.on('addSet', this.updateFilterChoices, this);
       this.responses.on('addSet', this.update, this);
 
       this.forms = options.forms;
@@ -93,19 +94,19 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       }
 
       // Set up the list view, now that the root exists.
-      if (this.listView === null) {
-        this.listView = new ResponseViews.ListView({
-          el: $('#responses-list-container'),
-          responses: this.responses,
-          parentView: this
-        });
-      }
+      // if (this.listView === null) {
+      //   this.listView = new ResponseViews.ListView({
+      //     el: $('#responses-list-container'),
+      //     responses: this.responses,
+      //     parentView: this
+      //   });
+      // }
 
       // Render the map
       this.mapView.render();
 
       // Render the responses list
-      this.listView.render();
+      // this.listView.render();
 
       this.updateFilterView();
     },
@@ -129,7 +130,10 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
      */
     updateFilterChoices: function() {
       var flattenedForm = this.forms.getFlattenedForm();
-      $("#filter-view-container").html(_.template($('#filter-results').html(), { flattenedForm: flattenedForm }));
+      $("#filter-view-container").html(_.template($('#filter-results').html(), {
+        responses: this.responses,
+        flattenedForm: flattenedForm
+      }));
     },
 
 
@@ -139,9 +143,9 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
     updateFilterView: function () {
       if (_.has(this.filter, "answer")) {
 
-        // Indicate the filter selection.
-        $("#current-filter").html("<h4>Current filter:</h4> <h3>" + this.filter.question + ": " + this.filter.answer + "</h3>   <a id=\"reset\" class=\"button\">Clear filter</a>");
         $('#subfilter').html('');
+        // Indicate the filter selection.
+        $("#current-filter").html(_.template($('#filter-current').html(), { filter: this.filter }));
 
       } else {
         // Clear the filter selections.
