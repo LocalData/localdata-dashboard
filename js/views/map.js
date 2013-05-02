@@ -128,8 +128,11 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
         this.map = new L.map('map');
 
         // Set up the base map; add the parcels and done markers
-        this.googleLayer = new L.Google("TERRAIN");
-        this.map.addLayer(this.googleLayer);
+        this.baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/matth.map-zmpggdzn/{z}/{x}/{y}.png');
+        this.map.addLayer(this.baseLayer);
+        this.satelliteLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/matth.map-yyr7jb6r/{z}/{x}/{y}.png');
+        this.activeLayer = 'streets';
+
         this.map.addLayer(this.zoneLayer);
         this.map.addLayer(this.objectsOnTheMap);
 
@@ -443,10 +446,11 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
 
         // If we're in pretty close, show the satellite view
         if(zoom > 14) {
-          if(this.googleLayer._type !== "HYBRID") {
-            this.map.removeLayer(this.googleLayer);
-            this.googleLayer = new L.Google("HYBRID");
-            this.map.addLayer(this.googleLayer);
+          if(this.activeLayer !== 'satellite') {
+            this.map.removeLayer(this.baseLayer);
+            this.map.addLayer(this.satelliteLayer, true);
+            this.satelliteLayer.bringToBack();
+            this.activeLayer = 'satellite';
           }
 
           if(this.defaultStyle !== settings.closeZoomStyle) {
@@ -463,21 +467,21 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
           }
 
           // And use the terrain map
-          if (this.googleLayer._type !== "TERRAIN") {
+          if (this.activeLayer !== 'streets') {
             // Show a more abstract map when zoomed out
-            this.map.removeLayer(this.googleLayer);
-            this.googleLayer = new L.Google("TERRAIN");
-            this.map.addLayer(this.googleLayer);
+            this.map.removeLayer(this.satelliteLayer);
+            this.map.addLayer(this.baseLayer, true);
+            this.activeLayer = 'streets';
           }
         }
 
       }else {
         // Far zoom (>14)
         // Show a more abstract map when zoomed out
-        if (this.googleLayer._type !== "TERRAIN") {
-          this.map.removeLayer(this.googleLayer);
-          this.googleLayer = new L.Google("TERRAIN");
-          this.map.addLayer(this.googleLayer);
+        if (this.activeLayer !== 'streets') {
+          this.map.removeLayer(this.satelliteLayer);
+          this.map.addLayer(this.baseLayer, true);
+          this.activeLayer = 'streets';
 
           this.defaultStyle = settings.farZoomStyle;
           this.updateObjectStyles(settings.farZoomStyle);
