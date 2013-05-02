@@ -22,7 +22,7 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
   var FormViews = {};
 
   FormViews.FormView = Backbone.View.extend({
-    
+
     el: '#form-view-container',
 
     initialize: function(options) {
@@ -35,7 +35,7 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
 
       this.survey.on('change', this.render, this);
     },
-    
+
     showDesigner: function() {
       $('#survey-design-container').empty();
 
@@ -67,7 +67,7 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
     },
 
     showBuilder: function() {
-      // Hide the toolbar when in editing mode. 
+      // Hide the toolbar when in editing mode.
       // Maybe we'll want to animate this?
       $('#survey-form-tools-container').hide();
 
@@ -81,8 +81,8 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
         console.log(this.previewView);
         this.previewView.render();
       }, this);
- 
- 
+
+
       this.listenTo(this.builderView, 'done', function () {
         $(this.builderView.el).html('');
         $('#survey-form-tools-container').show();
@@ -90,7 +90,7 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
         this.builderView = null;
       });
     },
-    
+
     render: function() {
       var context = {
         survey: this.survey.toJSON(),

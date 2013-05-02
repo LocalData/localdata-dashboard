@@ -334,8 +334,15 @@
       </div>
 
       <div id="builder-view-container"></div>
-      <div id="preview-view-container"></div>
-      <div id="editor-view-container"></div>
+
+      <div class="row-fluid">
+        <div class="span6">
+          <div id="preview-view-container"></div>
+        </div>
+        <div class="span6">
+          <div id="editor-view-container"></div>
+        </div>
+      </div>
       <div id="survey-design-container"></div>
     </script>
 
@@ -599,19 +606,25 @@
     <!-- Editor: Base template ............................................ -->
     <script type="text/template" id="form-editor-template">
       <div id="form-editor">
-        <div class="actionbar">
-          <a class="btn save">Save your edits</a>
-          <a class="btn done">Close editor</a>
-          <div class="saved">Form saved</div>
+        <div class="row-fluid">
+          <div class="span12">
+            <a class="btn save">Save your edits</a>
+            <a class="btn done">Close editor</a>
+            <div class="saved">Form saved</div>
+          </div>
         </div>
 
-        <form>
-          <h3>Questions</h3>
-          <div id="editor" class="editor"></div>
+        <div class="row-fluid">
+          <div class="span12">
+          <form>
+            <h3>Questions</h3>
+            <div id="editor" class="editor"></div>
 
-          <div>
+            <div>
+            </div>
+          </form>
           </div>
-        </form>
+        </div>
       </div>
     </script>
 
@@ -623,27 +636,28 @@
               <input type="text" placeholder="Question" value="<%= question.text %>" data-role="question" class="question-input input-xlarge">
               <button class="btn remove icon-trash" type="button"></button>
             </div>
-            <div class="">
+
             <div class="question-type-container btn-group">
-              <a class="btn <% if(question.type === 'checkbox') { %>selected<% } %> action question-type" data-role="checkbox-question">Multiple choice</a>
-              <a class="btn <% if(!question.type) { %>selected<% } %> action question-type" data-role="radio-question">Select one</a>
+              <a class="btn <% if(question.type === 'checkbox') { %>btn-info<% } %> question-type" data-role="checkbox-question">Multiple choice</a>
+              <a class="btn <% if(!question.type) { %>btn-info<% } %> question-type" data-role="radio-question">Select one</a>
+              <a class="btn <% if(question.type === 'file') { %>btn-info<% } %> question-type" data-role="file-question">Photo</a>
             </div>
 
-            <h2 class="title">Answers</h2>
             <div class="answers"></div>
+
             <div class="question-tools-container">
-              <a class="action add-answer"><i class="icon-plus-sign icon-white"></i> Add answer</a>
-              <a class="action add-question"><i class="icon-plus-sign icon-white"></i> Insert another question</strong></a>
+              <a class="btn add-answer"><i class="icon-plus icon-white"></i> Add answer</a>
+              <a class="btn add-question"><i class="icon-plus icon-white"></i> Insert another question</strong></a>
             </div>
 
         </div>
     </script>
 
     <script type="text/template" id="answer-edit-template">
-        <div data-role="answer" class="iinputs-append">
+        <div data-role="answer" class="input-append">
             <input type="text" value="<%= text %>">
-            <a class="action remove">&nbsp;</a>
-            <a class="action add-sub-question"><i class="icon-share-alt "></i> Add sub-question</a>
+            <a class="btn remove icon-trash"></a>
+            <a class="btn add-sub-question"><i class="icon-indent-right"></i> Add sub-question</a>
         </div>
     </script>
 

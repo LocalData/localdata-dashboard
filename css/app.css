@@ -562,7 +562,6 @@ header a {
   }
     .editor .question {
       padding:10px 0 0 10px;
-      border-top:10px solid #ddd;
     }
 
       .editor .question .title {
@@ -579,45 +578,18 @@ header a {
       margin-left:20px;
     }
 
-  .editor .answers {
+  .editor .answers,
+  .editor .question-tools-container {
     padding:0 0 0 20px;
   }
-
-    .editor .question-tools-container {
-      padding:0 10px 10px 16px;
-    }
-
-    .editor .add-answer {
-      display:block;
-      margin-bottom:10px;
-      margin-left:10px;
-    }
-
-  .action {
-    text-decoration:none;
-    border:0 none;
-    padding-left:15px;
-    cursor: pointer;
-    font-size:12px;
-    text-transform:uppercase;
-  }
-
-    .action:hover {
-      color:#138288;
-    }
-
-    .add-answer {
-      background:transparent url(../img/icons/add-10.png) no-repeat center left;
-    }
-
-    .add-sub-question {
-      background:transparent url(../img/icons/branch.png) no-repeat center left;
-    }
 
     .editor .remove {
       color: #db6a6e;
     }
 
+  .input-append {
+    display:block;
+  }
 
 /* Toolbar ...................................................................*/
 .saved {

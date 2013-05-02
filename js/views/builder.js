@@ -38,7 +38,7 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
         'suffix', 'editQuestion', 'editQuestionType', 'deleteQuestion',
         'createQuestion', 'createAnswer', 'addSubQuestion', 'renderQuestion',
          'editAnswer', 'deleteAnswer', 'slugify', 'updatePreview');
-      
+
       this.forms = options.forms;
     },
 
@@ -153,10 +153,14 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
         if (dataRole === 'checkbox-question') {
           question.type = "checkbox";
         }
+        if (dataRole === 'file-question') {
+          question.type = "file";
+        }
 
         // Update the styling
         var $pills = $(event.target).parent().find('.question-type');
-        $pills.toggleClass('selected');
+        $pills.removeClass('btn-info');
+        $(event.target).addClass('btn-info');
 
         this.updatePreview();
       };
@@ -276,7 +280,7 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
 
       // Listen for a request to remove a question
       var deleteQuestionProxy = $.proxy(this.deleteQuestion($question, parent, questionIndex), this);
-      $question.find('> .remove').click(deleteQuestionProxy);
+      $question.find('> div .remove').click(deleteQuestionProxy);
 
       // Listen for a request to add a question
       var createQuestionProxy = $.proxy(this.createQuestion(parent, questionIndex), this);
@@ -391,7 +395,7 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
     }
 
   }); // end BuilderView{}
-  
+
   return Builder;
 
 });

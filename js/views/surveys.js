@@ -213,15 +213,12 @@ function(
       this.settingsView.render();
 
       if(this.activeTab !== undefined) {
-        console.log("ACTIVE TAB", this.activeTab);
         //this.show.apply(this.activeTab);
         this.show(this.activeTab[0], this.activeTab[1]);
       }
     },
 
     show: function(id, tab) {
-      console.log("SHOWING", id, tab);
-      console.log(this.activeTab);
       // This is a really bad way to show the right tab
       this.activeTab = [id, tab];
 
@@ -241,7 +238,6 @@ function(
     },
 
     showForm: function() {
-      console.log("SHOW FORM-----");
       this.show('#form-view-container', '#tab-survey-form');
     },
 
