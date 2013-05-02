@@ -95,7 +95,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       // Set up the list view, now that the root exists.
       if (this.listView === null) {
         this.listView = new ResponseViews.ListView({
-          el: $('#responses-list'),
+          el: $('#responses-list-container'),
           responses: this.responses,
           parentView: this
         });
@@ -236,9 +236,9 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
 
     initialize: function(options) {
       _.bindAll(this, 'updateResponses', 'render', 'goToPage', 'humanizeDates', 'setupPagination', 'pagePrev', 'pageNext');
-      this.template = _.template($('#responses-table').html());
+      this.template = _.template($('#response-list').html());
       this.paginationTemplate = _.template($('#t-responses-pagination').html());
-      
+
       this.responses = options.responses;
       this.listenTo(this.responses, 'reset', this.updateResponses);
       this.listenTo(this.responses, 'addSet', this.updateResponses);
@@ -276,7 +276,6 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
 
       // Render the responses table
       this.$el.html(this.template(context));
-
       // Render the pagination elements
       this.responsesPagination = this.$('#responses-pagination');
       this.responsesPagination.html(this.paginationTemplate({
@@ -311,7 +310,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       if (this.page === -1) {
         this.page = 0;
       }
-      this.pageCount = Math.ceil(this.responses.length / this.visibleItemCount);  
+      this.pageCount = Math.ceil(this.responses.length / this.visibleItemCount);
     },
 
     goToPage: function(e) {
@@ -355,7 +354,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
         }
       });
     }
-  
+
   });
 
   return ResponseViews;

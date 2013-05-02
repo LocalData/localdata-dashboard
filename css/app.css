@@ -340,7 +340,7 @@ header a {
 /* Map .....................................................................*/
 
 #map {
-  height:300px;
+  height:800px;
   margin-bottom:20px;
 }
 
@@ -551,12 +551,6 @@ header a {
     float:right;
   }
 
-  .editor input {
-    font-size:1em;
-    color:#333;
-    display:inline-block;
-  }
-
   .editor .question-input {
     font-weight:600;
   }
@@ -620,41 +614,9 @@ header a {
     }
 
     .editor .remove {
-      background:transparent url(../img/icons/delete-10.png) no-repeat center left;
       color: #db6a6e;
-      text-indent:-1000;
-      display:inline-block;
-      padding-left:20px;
-      padding-top:5px;
-      margin-left:3px;
     }
 
-    .editor .question-type {
-      background:#aaa;
-      color:#fff;
-      padding:2px 4px;
-    }
-
-    .editor .question-type-container .question-type:first-child {
-      border-bottom-left-radius: 7px;
-      border-top-left-radius: 7px;
-      border-right:1px solid #fff;
-      padding-left:6px;
-    }
-
-    .editor .question-type-container .question-type:last-child {
-      border-bottom-right-radius: 7px;
-      border-top-right-radius: 7px;
-      padding-right:6px;
-    }
-
-    .editor .question-type-container .selected {
-      background:#999;
-      -moz-box-shadow: inset 0 0 20px rgba(0,0,0, 0.4);
-      -webkit-box-shadow: inset 0 0 20px rgba(0,0,0, 0.4);
-      box-shadow: inset 0 0 20px rgba(0,0,0, 0.4);
-
-    }
 
 /* Toolbar ...................................................................*/
 .saved {

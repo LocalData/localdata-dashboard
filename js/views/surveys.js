@@ -17,7 +17,6 @@ define([
   'models/forms',
 
   // Views
-  'views/nav',
   'views/export',
   'views/settings',
   'views/responses',
@@ -44,7 +43,6 @@ function(
   FormModels,
 
   // Views
-  NavView,
   ExportView,
   SettingsView,
   ResponseViews,
@@ -216,7 +214,6 @@ function(
       });
 
       // Nav, Export, Settings views
-      this.navView = new NavView({slug: settings.slug});
       this.exportView = new ExportView({surveyId: this.surveyId});
       this.settingsView = new SettingsView({
         survey: this.survey,
@@ -237,8 +234,10 @@ function(
       // This is a really bad way to show the right tab
       this.toshow = [id, tab];
 
-      $("#content > div").hide();
-      $("#content #loading-view-container").show();
+      console.log("SHowing", id, tab);
+
+      $("#survey-tabs .tab").hide();
+      // $("#content #loading-view-container").show();
       $(id).show();
       this.navView.setActiveTab(tab);
     },

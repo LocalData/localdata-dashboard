@@ -109,7 +109,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
     // Debounced version of fitBounds. Created in the initialize method.
     delayFitBounds: null,
 
-    
+
     render: function (arg) {
       var hasResponses = this.responses !== null && this.responses.length > 0;
       var hasZones = this.survey.has('zones');
@@ -160,12 +160,14 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
       }
 
       if (_.isArray(arg)) {
-        // We got an array of models. Let's plot them.
+        // We got an array of models. Let's plot just that set them.
         this.plotResponses(arg);
       } else {
         // Plot all of the responses from the responses collection.
         this.plotResponses();
       }
+
+
       events.publish('loading', [false]);
       return this;
     },
@@ -227,7 +229,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
      * @return {Object}          GeoJSON feature
      */
     setupPolygon: function(response) {
-      // Record the objects as rendered so we don't render it twice. 
+      // Record the objects as rendered so we don't render it twice.
       var parcelId = response.get('parcel_id');
       this.parcelIdsOnTheMap[parcelId] = true;
 
@@ -245,7 +247,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
 
       // If there is a filter, attach the filtered question to the feature
       // This is used later to style the feature
-      // We don't attach all the data to keep size down 
+      // We don't attach all the data to keep size down
       // (large collections can have 20+ mb of data)
       if (this.filter !== null) {
 
@@ -266,10 +268,10 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
 
     /**
      * Plot responses on the map
-     * @param  {Array} responses 
+     * @param  {Array} responses
      */
     plotResponses: function (responses) {
-      // If we aren't given an explicit set of responses to plot, 
+      // If we aren't given an explicit set of responses to plot,
       // we'll plot all of the responses from the collection.
       if (responses === undefined) {
 
@@ -283,7 +285,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
 
       var renderedParcelTracker = this.parcelIdsOnTheMap;
 
-      // We'll need to create GeoJSON FeatureCollection objects to pass 
+      // We'll need to create GeoJSON FeatureCollection objects to pass
       // to Leaflet for rendering.
       var featureCollection = {
         type: 'FeatureCollection',
@@ -299,8 +301,8 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
       featureCollection.features = _.map(
         _.filter(responses, function (response) {
 
-          // Get items that have geometry 
-          // AND aren't already on the map 
+          // Get items that have geometry
+          // AND aren't already on the map
           return (_.has(response.get('geo_info'), 'geometry') &&
                  !_.has(renderedParcelTracker, response.get('parcel_id'))
           );
@@ -314,7 +316,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
                 _.has(response.get('geo_info'), 'centroid'));
       }), function (response) {
 
-        // Record the objects as rendered so we don't render it twice. 
+        // Record the objects as rendered so we don't render it twice.
         var id = response.get('id');
         renderedParcelTracker[id] = true;
 
@@ -509,7 +511,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
 
     /**
      * Highlight a selected object; un-hilight any previously selected object
-     * @param  {Object} event 
+     * @param  {Object} event
      */
     selectObject: function(event) {
       _kmq.push(['record', "Map object selected"]);
@@ -551,12 +553,12 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
       selectedSingleObject.createdHumanized = moment(selectedSingleObject.created, "YYYY-MM-DDThh:mm:ss.SSSZ").format("MMM Do h:mma");
 
       // Render the object
-      $("#individual-result-container").html(_.template($('#indivdual-result').html(), {r: selectedSingleObject}));
+      $("#result-container").html(_.template($('#indivdual-result').html(), {r: selectedSingleObject}));
 
       // Button to close the details view
-      $("#individual-result-container .close").click(function(e) {
+      $("#result-container .close").click(function(e) {
         e.preventDefault();
-        $("#individual-result-container").html("");
+        $("#result-container").html("");
       });
     }
 
