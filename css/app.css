@@ -157,6 +157,7 @@ header a {
 
     .nav-tabs li a,
     .nav-tabs li a:hover {
+      cursor:pointer;
       border: 0px none;
       color: #666;
     }

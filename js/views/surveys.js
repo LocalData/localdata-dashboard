@@ -148,7 +148,7 @@ function(
   SurveyViews.SurveyView = Backbone.View.extend({
     el: $("#container"),
 
-    toshow: ['', 0],
+    activeTab: undefined,
     survey: null,
     bodyView: null,
 
@@ -168,21 +168,11 @@ function(
     },
 
     update: function () {
-      return this.render();
+      // return this.render();
     },
 
     render: function (model) {
       console.log("Rendering survey view");
-
-      if (model !== undefined) {
-        if (!_.has(model.changedAttributes, 'id')) {
-          // The survey has not changed, just attributes of the survey, like
-          // the name.
-          // TODO: use a separate template/view
-          this.$('#survey-name').html(model.get('name'));
-          return;
-        }
-      }
 
       // Remove old sub-views
       if (this.responseListView !== undefined) {
@@ -190,14 +180,11 @@ function(
       }
 
       // Set the context & render the page
+      console.log("SURVEY", this.survey.toJSON());
       var context = {
-        'survey': this.survey.toJSON()
+        survey: this.survey.toJSON()
       };
       this.$el.html(_.template($('#survey-view').html(), context));
-
-      // Render the sub components
-      $('#form-view-container').hide();
-      $('#export-view-container').hide();
 
       // List the responses
       this.responseListView = new ResponseViews.MapAndListView({
@@ -221,37 +208,41 @@ function(
       });
 
       // Render navigation, export, and settings views
-      this.navView.render();
       this.exportView.render();
       this.formView.render();
       this.settingsView.render();
 
-      // By default, we show the first tab
-      this.show(this.toshow[0], this.toshow[1]);
+      if(this.activeTab !== undefined) {
+        console.log("ACTIVE TAB", this.activeTab);
+        //this.show.apply(this.activeTab);
+        this.show(this.activeTab[0], this.activeTab[1]);
+      }
     },
 
     show: function(id, tab) {
+      console.log("SHOWING", id, tab);
+      console.log(this.activeTab);
       // This is a really bad way to show the right tab
-      this.toshow = [id, tab];
-
-      console.log("SHowing", id, tab);
+      this.activeTab = [id, tab];
 
       $("#survey-tabs .tab").hide();
-      // $("#content #loading-view-container").show();
       $(id).show();
-      this.navView.setActiveTab(tab);
+
+      $('#nav li').removeClass('active');
+      $(tab).addClass('active');
     },
 
     showResponses: function() {
-      this.show('#response-view-container', 0);
+      this.show('#response-view-container', '#tab-survey-home');
     },
 
     showExport: function() {
-      this.show('#export-view-container', 1);
+      this.show('#export-view-container', '#tab-survey-export');
     },
 
     showForm: function() {
-      this.show('#form-view-container', 2);
+      console.log("SHOW FORM-----");
+      this.show('#form-view-container', '#tab-survey-form');
     },
 
     showSettings: function() {

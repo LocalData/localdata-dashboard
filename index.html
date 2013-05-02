@@ -256,19 +256,17 @@
     <div class="container-fluid">
       <div class="row-fluid">
         <div class="span12 survey-header">
-          <h2 id="survey-name"><%= survey.name %> </h2>
+          <h2 id="survey-name"><%= survey.name %></h2>
         </div>
       </div>
 
       <div class="main">
         <div class="row-fluid">
-          <div class="span12 survey-list">
+          <div class="span12">
             <ul id="nav" class="nav nav-tabs">
-
-            <ul id="nav" class="nav nav-tabs">
-              <li class="active"><a href="#surveys/<%= survey.slug %>"><i class="icon-home"></i>Results</a></li>
-              <li class=""><a href="#surveys/<%= survey.slug %>/export"><i class="icon-download"></i>Export</a></li>
-              <li class=""><a href="#surveys/<%= survey.slug %>/form"><i class="icon-cog"></i>Survey Questions</a></li>
+              <li class="active" id="tab-survey-home"><a href="#surveys/<%= survey.slug %>"><i class="icon-home" data-show="response-view-container"></i>Results</a></li>
+              <li class="" id="tab-survey-export" data-show=""><a href="#surveys/<%= survey.slug %>/export" data-show="export-view-container"><i class="icon-download"></i>Export</a></li>
+              <li class="" id="tab-survey-form"><a href="#surveys/<%= survey.slug %>/form" data-show="form-view-container"><i class="icon-cog"></i>Survey Questions</a></li>
             </ul>
           </div>
         </div>

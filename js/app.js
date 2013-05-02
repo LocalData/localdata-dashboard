@@ -18,7 +18,7 @@ define([
 
 function($, _, Backbone, events, settings, api, RootView, LoadingView) {
   'use strict';
-  
+
   // Patch Backbone to support saving namespaced models
   // via https://github.com/documentcloud/backbone/issues/1777#issuecomment-9836406
   // TODO:
@@ -73,8 +73,11 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
    * Navigate to a given fragement using Backbone's routing
    * @param  {String} path the fragment we want to navigate to, eg '/surveys'
    */
-  LD.navigateTo = function(path) {
-    LD.router._router.navigate(path, { trigger: true });
+  LD.navigateTo = function(path, trigger) {
+    if(!trigger) {
+      trigger = { trigger: true };
+    }
+    LD.router._router.navigate(path, trigger);
   };
 
 
@@ -102,8 +105,8 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
     }
     return LD.loading;
   };
- 
- 
+
+
   return LD;
 });
 
