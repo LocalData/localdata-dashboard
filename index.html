@@ -23,11 +23,15 @@
     <!-- Header -->
   <div class="navbar" id="site-header">
       <div class="container-fluid">
-        <h1><small><a href="index.html">localdata</a></small></h1>
-        <ul class="nav-pills">
-          <a href="/" class="mysurveys">All Surveys</a>
-          <div id="userbar-container"></div>
-        </ul>
+        <div class="row-fluid">
+          <div class="span2">
+            <h1><a href="index.html">localdata</a></h1>
+          </div>
+          <div class="span10 tools">
+            <a href="/" class="mysurveys">All Surveys</a>
+            <div id="userbar-container"></div>
+          </div>
+        </div>
       </div>
   </div>
 
@@ -38,12 +42,10 @@
     <!-- Templates ========================================================-->
 
     <script type="text/template" id="userbar-view">
-      <li class="userbar">
-        <%= user.name %>
-      </li>
-      <li>
-        <a href="/logout" class="logout">Log out</a>
-      </li>
+      <span class="userbar">
+        <i class="icon-user"></i> <%= user.name %>
+      </span>
+      <a href="/logout" class="logout">Log out</a>
     </script>
 
 
@@ -72,7 +74,7 @@
       <div class="container-fluid">
         <div class="row-fluid">
           <div class="span12 survey-header">
-            <h2>My Surveys <a href="#/surveys/new" class="button flat" id="newsurvey">Create a new survey</a></h2>
+            <h2>My Surveys <a href="#/surveys/new" class="mysurveys" id="newsurvey">Create a new survey</a></h2>
           </div>
         </div>
 
@@ -365,18 +367,14 @@
     </script>
 
     <script type="text/template" id="filter-results-answer">
+      <a id="clear" class="btn close"><i class="icon-close"></i> Clear filter</a>
       <h2>Select an answer to filter by:</h2>
+      <div id="loadingsmg" style="display:none">hide</div>
       <ul>
         <% _.each(choices, function(choice) { %>
           <li><a><%- choice.name %></a> <span class="badge" style="background-color: <%- choice.color %>"><%- choice.count %></span></li>
         <% }); %>
       </ul>
-    </script>
-
-    <script type="text/template" id="filter-current">
-      <h4>Current filter:</h4>
-      <h3><%= filter.question %>: <%= filter.answer %></h3>
-      <a id="reset" class="btn"><i class="icon-close"></i> Clear filter</a>
     </script>
 
     <script type="text/template" id="response-list">

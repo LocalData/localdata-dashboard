@@ -39,7 +39,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
     events: {
       "change #filter":  "filter",
       "click #subfilter a": "subFilter",
-      "click #reset": "reset"
+      "click #clear": "reset"
     },
 
     initialize: function(options) {
@@ -141,15 +141,11 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
      * If the data has already been filtered, show that on the page
      */
     updateFilterView: function () {
-      if (_.has(this.filter, "answer")) {
-
-        $('#subfilter').html('');
-        // Indicate the filter selection.
-        $("#current-filter").html(_.template($('#filter-current').html(), { filter: this.filter }));
+      if (_.has(this.filter, 'answer')) {
 
       } else {
         // Clear the filter selections.
-        $("#current-filter").html("");
+        $('#current-filter').html('');
         $('#filter').val('');
       }
     },
@@ -189,17 +185,31 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       _kmq.push(['record', "Answer filter selected"]);
       var $answer = $(event.target);
 
+      // Clear the current filter, if there is one.
+      if(_.has(this.filter, 'answer')) {
+        this.responses.clearFilter({ silent: true });
+      }
+
+      // Mark the answer as selected
+      $('#subfilter a').removeClass('selected');
+      $answer.addClass('selected');
+
       // Notify the user we're working on it
       // (it can take a while to filter a lot of items)
-      events.publish('loading', [true]);
+      // events.publish('loading', [true]);
+      $('#loadingsmg').show();
+      console.log("Loading");
 
       // Filter the responses
       this.filter.answer = $answer.text();
       this.filter.question = $("#filter").val();
-
       this.responses.setFilter(this.filter.question, this.filter.answer);
 
+      // Note that we're done loading
       events.publish('loading', [false]);
+      $('#loadingsmg').hide();
+      console.log("Done loading");
+
 
       this.updateFilterView();
     },

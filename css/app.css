@@ -79,20 +79,32 @@ header a {
   border:0;
 }
 
-.navbar#site-header {
-  font-size:24px;
+#site-header {
   background:#fff;
   border-bottom:1px #a18464;
-  padding:15px 30px 15px 40px;
-  overflow:auto;
-  x-webkit-box-shadow: 0 0 16px rgba(0, 124, 129, 1);
-  xbox-shadow: 0 0 16px rgba(0, 124, 129, 1);
+  padding:0px 30px 0px 20px;
+  margin-bottom:0;
 }
 
   #site-header h1 {
+    font-size:24px;
     font-weight:400;
     display:inline;
     float:left;
+  }
+
+  #site-header .tools {
+    text-align:right;
+    margin-top:15px;
+  }
+
+  #site-header .tools a {
+    border: 0px none;
+  }
+
+  #site-header h1 a {
+    color:#333;
+    border:0px none;
   }
 
   #topnav {
@@ -101,12 +113,10 @@ header a {
   }
 
     .mysurveys {
-      display:inline-block;
       background:#f39379;
-      color:#fff;
       padding:4px 12px 4px 12px;
       border-radius:15px;
-      margin-right:10px;
+      color:#fff;
       line-height:20px;
     }
 
@@ -117,10 +127,10 @@ header a {
       .userbar {
         display:inline-block;
         color:#fff;
-        padding:4px 12px 4px 30px;
+        padding:4px 12px 4px 14px;
         border-radius:15px;
         margin-right:10px;
-        background:#666 url(../img/icons/user-white.png) no-repeat 12px center;
+        background:#666;
         line-height:20px;
       }
 
@@ -235,7 +245,16 @@ header a {
 }
 
 /* Filtering .................................................................*/
+#subfilter h2 {
+  font-size:16px;
+}
+
+#subfilter ul {
+  margin-left: 0;
+}
+
 #subfilter li {
+  list-style:none;
   line-height:2;
   border-bottom: 1px solid #ddd;
 }
@@ -246,6 +265,10 @@ header a {
     font-size:.9em;
     cursor:pointer;
     padding:4px;
+  }
+
+  #subfilter li a.selected {
+    color:red;
   }
 
 /* Responses .................................................................*/
