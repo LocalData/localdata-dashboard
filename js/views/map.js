@@ -93,6 +93,8 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
     },
 
     fitBounds: function () {
+      this.map.invalidateSize(false);
+
       if (this.responses !== null && this.responses.length > 0) {
         try {
           this.map.fitBounds(this.objectsOnTheMap.getBounds());
@@ -125,7 +127,9 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
         this.$el.html(_.template($('#map-view').html(), {}));
 
         // Initialize the map
-        this.map = new L.map('map');
+        this.map = new L.map('map', {
+          zoom: 15
+        });
 
         // Set up the base map; add the parcels and done markers
         this.baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/matth.map-zmpggdzn/{z}/{x}/{y}.png');
@@ -362,6 +366,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
         // Add the layer to the layergroup and the hashmap
         this.objectsOnTheMap.addLayer(pointLayer);
       }
+
 
       if (featureCollection.features.length > 0 || pointCollection.features.length > 0) {
         this.delayFitBounds();
