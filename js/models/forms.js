@@ -18,7 +18,7 @@ function($, _, Backbone, settings) {
     initialize: function(options) {
       this.surveyId = options.surveyId;
     },
-    
+
     url: function() {
       if (this.get("id") !== undefined) {
         return settings.api.baseurl + '/surveys/' + this.surveyId + '/forms';
@@ -31,22 +31,22 @@ function($, _, Backbone, settings) {
   // Forms collection
   Forms.Collection = Backbone.Collection.extend({
     model: Forms.Model,
-    
+
     initialize: function(options) {
       this.surveyId = options.surveyId;
       this.fetch();
     },
-    
+
     url: function() {
       return settings.api.baseurl + '/surveys/' + this.surveyId + '/forms';
     },
-    
+
     parse: function(response) {
       if (response.forms.length === 0) {
         var newForm = new Forms.Model({ 'questions': [] });
         return [ newForm ];
       }
-      
+
       return response.forms;
     },
 
@@ -102,7 +102,7 @@ function($, _, Backbone, settings) {
           flattenedForm = flattenedForm.concat(this.flattenForm(question, flattenedForm));
         }, this);
 
-        // Make sure there's only one question per ID. 
+        // Make sure there's only one question per ID.
         var questionNames = [];
         _.each(flattenedForm, function(question) {
           if (! _.contains(questionNames, question.name)) {

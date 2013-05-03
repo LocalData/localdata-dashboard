@@ -14,7 +14,7 @@ function($, _, Backbone, settings, api) {
 
   var Responses = {};
 
-  Responses.Model = Backbone.Model.extend({ 
+  Responses.Model = Backbone.Model.extend({
     defaults: {
       responses: {}
     }
@@ -72,7 +72,6 @@ function($, _, Backbone, settings, api) {
     },
 
     parse: function(response) {
-      console.log(response);
       return response.responses;
     },
 
@@ -151,14 +150,16 @@ function($, _, Backbone, settings, api) {
 
     // Filter the items in the collection
     setFilter: function (question, answer) {
+      console.log("Filtering the responses", question, answer);
+
+      // Make a shallow clone of the unfiltered models array.
+      //
       // TODO: if someone calls reset or update, we need to toss out the
       // unfilteredModels array. That should happen before anyone else gets the
       // reset, add, etc. events.
       if (this.unfilteredModels === null) {
-        // Make a shallow clone of the unfiltered models array.
         this.unfilteredModels = _.clone(this.models);
       }
-
 
       // Record the filter for future use
       this.filters = {
@@ -170,22 +171,23 @@ function($, _, Backbone, settings, api) {
         answer = undefined;
       }
 
-      // Select the right responses
+      // Select the correct responses
       this.reset(this.filter(function (item) {
         var resps = item.get('responses');
         return resps !== undefined && (resps[question] === answer);
       }));
     },
 
-    clearFilter: function () {
+    clearFilter: function (options) {
+      console.log("Clearing filter");
       this.filters = null;
       if (this.unfilteredModels === null) {
         this.reset();
       } else {
-        this.reset(this.unfilteredModels);
+        this.reset(this.unfilteredModels, options);
       }
     }
-    
+
   });
 
   return Responses;

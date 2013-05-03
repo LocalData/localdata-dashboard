@@ -17,7 +17,6 @@ define([
   'models/forms',
 
   // Views
-  'views/nav',
   'views/export',
   'views/settings',
   'views/responses',
@@ -44,7 +43,6 @@ function(
   FormModels,
 
   // Views
-  NavView,
   ExportView,
   SettingsView,
   ResponseViews,
@@ -150,7 +148,7 @@ function(
   SurveyViews.SurveyView = Backbone.View.extend({
     el: $("#container"),
 
-    toshow: ['', 0],
+    activeTab: undefined,
     survey: null,
     bodyView: null,
 
@@ -170,21 +168,11 @@ function(
     },
 
     update: function () {
-      return this.render();
+      // return this.render();
     },
 
     render: function (model) {
       console.log("Rendering survey view");
-
-      if (model !== undefined) {
-        if (!_.has(model.changedAttributes, 'id')) {
-          // The survey has not changed, just attributes of the survey, like
-          // the name.
-          // TODO: use a separate template/view
-          this.$('#survey-name').html(model.get('name'));
-          return;
-        }
-      }
 
       // Remove old sub-views
       if (this.responseListView !== undefined) {
@@ -192,14 +180,11 @@ function(
       }
 
       // Set the context & render the page
+      console.log("SURVEY", this.survey.toJSON());
       var context = {
-        'survey': this.survey.toJSON()
+        survey: this.survey.toJSON()
       };
       this.$el.html(_.template($('#survey-view').html(), context));
-
-      // Render the sub components
-      $('#form-view-container').hide();
-      $('#export-view-container').hide();
 
       // List the responses
       this.responseListView = new ResponseViews.MapAndListView({
@@ -216,7 +201,6 @@ function(
       });
 
       // Nav, Export, Settings views
-      this.navView = new NavView({slug: settings.slug});
       this.exportView = new ExportView({surveyId: this.surveyId});
       this.settingsView = new SettingsView({
         survey: this.survey,
@@ -224,35 +208,37 @@ function(
       });
 
       // Render navigation, export, and settings views
-      this.navView.render();
       this.exportView.render();
       this.formView.render();
       this.settingsView.render();
 
-      // By default, we show the first tab
-      this.show(this.toshow[0], this.toshow[1]);
+      if(this.activeTab !== undefined) {
+        //this.show.apply(this.activeTab);
+        this.show(this.activeTab[0], this.activeTab[1]);
+      }
     },
 
     show: function(id, tab) {
       // This is a really bad way to show the right tab
-      this.toshow = [id, tab];
+      this.activeTab = [id, tab];
 
-      $("#content > div").hide();
-      $("#content #loading-view-container").show();
+      $("#survey-tabs .tab").hide();
       $(id).show();
-      this.navView.setActiveTab(tab);
+
+      $('#nav li').removeClass('active');
+      $(tab).addClass('active');
     },
 
     showResponses: function() {
-      this.show('#response-view-container', 0);
+      this.show('#response-view-container', '#tab-survey-home');
     },
 
     showExport: function() {
-      this.show('#export-view-container', 1);
+      this.show('#export-view-container', '#tab-survey-export');
     },
 
     showForm: function() {
-      this.show('#form-view-container', 2);
+      this.show('#form-view-container', '#tab-survey-form');
     },
 
     showSettings: function() {
