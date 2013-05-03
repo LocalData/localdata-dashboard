@@ -142,10 +142,11 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
      */
     updateFilterView: function () {
       if (_.has(this.filter, 'answer')) {
-
+        return;
       } else {
+        console.log("Clear sub filter");
         // Clear the filter selections.
-        $('#current-filter').html('');
+        $('#subfilter').html('');
         $('#filter').val('');
       }
     },
@@ -154,6 +155,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
      * Reset any filters
      */
     reset: function(event) {
+      console.log("Clearing filter");
       this.filter = {};
 
       this.responses.clearFilter();
