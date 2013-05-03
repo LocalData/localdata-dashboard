@@ -388,9 +388,10 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
 
         // Fit the map to the zones, if appropriate.
         this.delayFitBounds();
-      }
 
-      this.objectsOnTheMap.bringToFront();
+        // Make sure objects are on top
+        this.objectsOnTheMap.bringToFront();
+      }
     },
 
     updateObjectStyles: function(style) {
