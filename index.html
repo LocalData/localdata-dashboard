@@ -354,16 +354,14 @@
       <div id="survey-design-container"></div>
     </script>
 
-    <!--
-    <%= _.size(responses) %>
-    <% if(_.size(responses) != 1) { %>s<% } %>
-  -->
+
     <!-- Responses & Filtering ..............................................-->
     <script type="text/template" id="filter-results">
       <h3>
         Filter
-        responses
-        by
+        <%= _.size(responses) %>
+        response<% if(_.size(responses) != 1) { %>s<% } %>
+        by:
       </h3>
 
       <select id="filter">
@@ -622,35 +620,46 @@
 
     <!-- Editor: Form templates ........................................... -->
     <script type="text/template" id="question-edit-template">
-        <div class="question" data-type="yesno" data-name="<%= question.name %>">
+      <div class="question" data-name="<%= question.name %>">
 
-            <div class="input-append">
-              <input type="text" placeholder="Question" value="<%= question.text %>" data-role="question" class="question-input input-xlarge">
-              <a class="btn remove"><i class="icon-trash"></i></a>
-            </div>
-
-            <div class="question-type-container btn-group">
-              <a class="btn btn-small <% if(question.type === 'checkbox') { %>btn-info<% } %> question-type" data-role="checkbox-question">Multiple choice</a>
-              <a class="btn btn-small  <% if(!question.type) { %>btn-info<% } %> question-type" data-role="radio-question">Select one</a>
-              <a class="btn btn-small  <% if(question.type === 'file') { %>btn-info<% } %> question-type" data-role="file-question">Photo</a>
-            </div>
-
-            <div class="answers"></div>
-
-            <div class="question-tools-container">
-              <a class="btn add-answer"><i class="icon-plus icon-white"></i> Add answer</a>
-              <a class="btn add-question"><i class="icon-plus icon-white"></i> Insert another question</strong></a>
-            </div>
-
+        <div class="input-append">
+          <input type="text" placeholder="Question" value="<%= question.text %>" data-role="question" class="question-input input-xlarge">
+          <a class="btn remove"><i class="icon-trash"></i></a>
         </div>
+
+        <div class="question-type-container btn-group">
+          <a class="btn btn-small <% if(question.type === 'checkbox') { %>btn-info<% } %> question-type" data-role="checkbox-question">Multiple choice</a>
+          <a class="btn btn-small  <% if(!question.type) { %>btn-info<% } %> question-type" data-role="radio-question">Select one</a>
+        </div>
+
+        <div class="answers"></div>
+
+        <div class="question-tools-container">
+          <a class="btn add-answer"><i class="icon-plus"></i> Add answer</a>
+          <a class="btn add-question"><i class="icon-plus"></i> Insert another question</strong></a>
+          <a class="btn add-photo-question"><i class="icon-camera"></i> Insert photo upload</strong></a>
+        </div>
+
+      </div>
+    </script>
+
+    <script type="text/template" id="photo-question-edit-template">
+      <div class="question" data-name="<%= question.name %>">
+        <div class="input-append input-prepend">
+          <span class="add-on"><i class="icon-camera"> </i></span>
+          <input type="text" placeholder="Photo upload question" value="<%= question.text %>" data-role="question" class="question-input input-xlarge">
+          <a class="btn remove"><i class="icon-trash"></i></a>
+        </div>
+      </div>
     </script>
 
     <script type="text/template" id="answer-edit-template">
-        <div data-role="answer" class="input-append">
-            <input type="text" value="<%= text %>">
-            <a class="btn add-sub-question"><i class="icon-sitemap"></i> Add sub-question</a>
-            <a class="btn remove"><i class="icon-trash"></i></a>
-        </div>
+      <div data-role="answer" class="input-append">
+        <input type="text" value="<%= text %>">
+        <a class="btn add-sub-question"><i class="icon-sitemap"></i> Add sub-question</a>
+        <a class="btn add-sub-photo-question">Add <i class="icon-camera"></i></strong></a>
+        <a class="btn remove"><i class="icon-trash"></i></a>
+      </div>
     </script>
 
     <script data-main="js/main" src="js/require.js"></script>

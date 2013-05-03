@@ -547,6 +547,7 @@ header a {
   }
     .editor .question {
       padding:10px 0 0 10px;
+      border-bottom:1px dotted #ddd;
     }
 
       .editor .question .title {
