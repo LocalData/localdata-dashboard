@@ -42,12 +42,12 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
   // The singleton view which manages all others.
   // Essentially, a "controller".
   var RootView = Backbone.View.extend({
-    
+
     el: $("body"),
     views: {},
     _router: null,
     survey: null,
-    
+
     initialize: function() {
       // Bind local methods
       _.bindAll(this);
@@ -60,7 +60,7 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
 
       // Set up global router
       this._router = new IndexRouter({ controller: this });
-      
+
       return this;
     },
 
@@ -69,11 +69,11 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
     startRouting: function() {
       Backbone.history.start();
     },
-      
+
     // Register each view as it is created and never create more than one.
     getOrCreateView: function(viewClass, viewName, options) {
       _kmq.push(['record', name]);
-      
+
       // If the view already exists, use it.
       // If it doesn't exist, create it.
       if (_.has(this.views, viewName)) {
@@ -87,7 +87,7 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
       this.views[viewName].update();
       return this.views[viewName];
     },
-        
+
     // Handle routes (they're in routers/index.js) .............................
     // Home
     goto_home: function() {
@@ -102,7 +102,7 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
         'user': this.user
       });
     },
-    
+
     // Survey dashboard routes .................................................
     goto_survey: function(tab) {
 
@@ -126,7 +126,6 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
         case "settings":
           this.currentContentView.showSettings();
           break;
-          
       }
     },
 
@@ -134,13 +133,13 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
       console.log("Going to new");
       this.currentContentView = this.getOrCreateView("NewSurveyView", "NewSurveyView");
     },
-    
+
     goto_settings: function() {
       _kmq.push(['record', "SettingsView"]);
       this._router.navigate("surveys/" + settings.slug + "/settings");
       this.goto_survey("settings");
     },
-    
+
     goto_form: function() {
       this._router.navigate("surveys/" + settings.slug + "/form");
       this.goto_survey("form");
@@ -158,7 +157,7 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
 
       // this.currentContentView = this.getOrCreateView("DesignView", "DesignView");
     }
-    
+
   });
 
   return RootView;

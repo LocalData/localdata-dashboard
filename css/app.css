@@ -1,5 +1,5 @@
 /* LocalData Styles .........................................................*/
-/* 
+/*
   Colors
   Link: #00949b
   Link hover: #138288
@@ -23,6 +23,11 @@ a {
   border-bottom:1px solid #00949b;
 }
 
+a:hover {
+  text-decoration:none;
+  color:#00949b;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-weight: normal;
 }
@@ -36,114 +41,32 @@ form h3 {
   margin-top:1em;
 }
 
-form input, form label {
-  display:block;
-}
-
-form input[type='radio'],
-form input[type='checkbox'] {
-  display:inline-block; 
-  margin-right:10px;
-}
-
-form input,
-form textarea {
-  font-family:"Open Sans", "Source Sans Pro", Helvetica, sans-serif;
-  font-size:24px;
-  text-indent:5px;
-  
-  margin:5px 0px 8px;
-  border:1px solid #ddd;
-
-  -webkit-box-shadow: 
-    inset 0 0 8px  rgba(0,0,0,0.1); 
-  -moz-box-shadow: 
-    inset 0 0 8px  rgba(0,0,0,0.1); 
-  box-shadow: 
-    inset 0 0 8px  rgba(0,0,0,0.1); 
-}
-
-form label {
-  font-weight:600; 
-  margin-top:1em;
-  cursor:pointer; 
-  line-height:1.7;  
-}
-
 form .error {
   color:#ef6d4a;
 }
-
-.button {
-  display:inline-block;
-  width:auto;
-  padding:10px;
-  border:1px solid #ccc;
-  border-radius:10px;
-  -moz-box-shadow: 0 0 6px rgba(0,0,0, 0.15);
-  -webkit-box-shadow: 0 0 6px rgba(0,0,0, 0.15);
-  margin:10px 4px;
-  cursor:pointer;
-}
-
-  .button:hover {
-    background:#00949b;
-    color:#ffe;
-    border-color:#00949b;
-    -moz-box-shadow: inset 0 0 16px rgba(47, 68, 101, 0.5);
-    -webkit-box-shadow: inset 0 0 16px rgba(47, 68, 101, 0.5);
-  }
-
-  .button-container {
-    overflow:auto;
-  }
-
-  .button.flat {
-    -moz-box-shadow:none;
-    -webkit-box-shadow:none;
-    box-shadow:none;
-    margin:9px;
-    background:#f39379;
-    color:#fff;
-    padding:4px 8px;
-    border-radius:15px;
-    margin-right:10px;
-  }
-
-    .button.flat:hover {
-      -moz-box-shadow:none;
-      -webkit-box-shadow:none;
-      box-shadow:none;
-      background:#f39379;
-      color:#fff;
-      padding:4px 8px;
-      border-radius:15px;
-      margin-right:10px;
-    }
 
 .advanced {
   display:none;
 }
 
 
-
 /* Structure ...............................................................*/
 
 .container {
-  padding:20px 30px 20px 30px; 
+
 }
 
-.floatcontainer {
-  overflow:auto;
-}
-
-#content {
+#content,
+.main {
   background:#fff;
   padding:30px;
   -webkit-box-shadow: 0 16px 16px rgba(0, 124, 129, 1);
   box-shadow: 0 6px 16px rgba(0, 124, 129, 1);
 }
 
+.tab {
+  display:none;
+}
 
 /* Header ..................................................................*/
 header {
@@ -157,19 +80,31 @@ header a {
 }
 
 #site-header {
-  font-size:24px;
   background:#fff;
-  border-bottom:0px  #a18464;
-  padding:15px 30px 15px 40px;
-  overflow:auto;
-  x-webkit-box-shadow: 0 0 16px rgba(0, 124, 129, 1);
-  xbox-shadow: 0 0 16px rgba(0, 124, 129, 1);
+  border-bottom:1px #a18464;
+  padding:0px 30px 0px 20px;
+  margin-bottom:0;
 }
 
   #site-header h1 {
+    font-size:24px;
     font-weight:400;
     display:inline;
     float:left;
+  }
+
+  #site-header .tools {
+    text-align:right;
+    margin-top:15px;
+  }
+
+  #site-header .tools a {
+    border: 0px none;
+  }
+
+  #site-header h1 a {
+    color:#333;
+    border:0px none;
   }
 
   #topnav {
@@ -178,12 +113,10 @@ header a {
   }
 
     .mysurveys {
-      display:inline-block;
       background:#f39379;
-      color:#fff;
       padding:4px 12px 4px 12px;
       border-radius:15px;
-      margin-right:10px;
+      color:#fff;
       line-height:20px;
     }
 
@@ -194,57 +127,34 @@ header a {
       .userbar {
         display:inline-block;
         color:#fff;
-        padding:4px 12px 4px 30px;
+        padding:4px 12px 4px 14px;
         border-radius:15px;
         margin-right:10px;
-        background:#666 url(../img/icons/user-white.png) no-repeat 12px center;
+        background:#666;
         line-height:20px;
       }
 
 
-#survey-header {
+.survey-header h2 {
   color:#fefefe;
-  font-size:35px;
-  padding-bottom:0;
-  padding:14px 20px 0 20px;
-}
-
-#site-header .container,
-#survey-header .container {
-  padding-left:20px;
-}
-
-#survey-header h2 {
   font-size:36px;
   font-weight:600;
-  xtext-shadow: 0.05em 0.05em #00949b;
   letter-spacing:1px;
+  padding:20px;
 }
 
 
 /* Nav .....................................................................*/
 #nav {
-  background:#eee;
-  overflow:auto;
-  border:1px solid #fff;
+  background:#fff;
   border-width: 1px 1px 0 1px;
-
-  -webkit-box-shadow: 0 0 16px rgba(0, 124, 129, 1);
-  -moz-box-shadow: 0 0 16px rgba(0, 124, 129, 1);
-  box-shadow: 0 0 16px rgba(0, 124, 129, 1);
 }
 
   .nav-tabs li {
     color: #666;
     font-size:16px;
     text-align:center;
-
-    list-style:none;
-    display:block;
-    float:left;
-    margin-top:5px;
-    padding:18px 35px 20px 35px;
-    border:0;
+    border:0px none;
   }
 
     .nav-tabs li.active {
@@ -255,13 +165,18 @@ header a {
       box-shadow: 0 0 7px rgba(0, 124, 129, 0.4);
     }
 
-    .nav-tabs li a {
-      border: 0;
+    .nav-tabs li a,
+    .nav-tabs li a:hover {
+      cursor:pointer;
+      border: 0px none;
       color: #666;
+      background:transparent;
     }
 
-    .nav-tabs li.active a {
+    .nav-tabs li.active a,
+    .nav-tabs li.active a:hover {
       color: #ef6d4a;
+      border:0px none;
     }
 
 /* Subnav .................................................................. */
@@ -291,20 +206,7 @@ header a {
 
 
 /* Login ................................................................... */
-#login h2, 
-#create-account h2 {
-  font-size:24px;
-  margin-bottom:12px;
-}
-
-#login,
-#create-account { 
-  width:45%;
-  float:left;
-}
-
 #login {
-  margin-right:5%;
   border-right: 1px dotted #ddd;
 }
 
@@ -324,7 +226,7 @@ header a {
 }
 
 .survey-list h2 a {
-  border:0; 
+  border:0;
   display:block;
 }
 
@@ -344,14 +246,16 @@ header a {
 }
 
 /* Filtering .................................................................*/
-#filters {
-  display:block;
-  float:left;
-  padding-right:40px;
-  max-width:250px;
+#subfilter h2 {
+  font-size:16px;
+}
+
+#subfilter ul {
+  margin-left: 0;
 }
 
 #subfilter li {
+  list-style:none;
   line-height:2;
   border-bottom: 1px solid #ddd;
 }
@@ -364,18 +268,9 @@ header a {
     padding:4px;
   }
 
-#indiv-in {
-  border:10px solid #ddd;
-  padding:10px;
-}
-
-.count {
-  line-height:1.2;
-  display:inline-block;
-  color: #fff;
-  border-radius: 50%;
-  padding:0 10px;
-}
+  #subfilter li a.selected {
+    color:red;
+  }
 
 /* Responses .................................................................*/
 
@@ -394,41 +289,31 @@ header a {
     padding-bottom:10px;
   }
 
-  .response-list table {
+  .response {
+    border-bottom:1px dotted #86bba6;
+    margin-bottom:10px;
+    padding-bottom:10px;
+  }
+
+  .response h2 {
+    font-size:16px;
+    font-weight:600;
+    line-height:1;
+  }
+
+  .response .created,
+  .response .collector  {
+    color: #589c81;
+  }
+
+  .response i {
+    color:#999;
+  }
+
+  .response img {
+    display:block;
+    margin:10px 0;
     width:100%;
-  }
-
-    .response-list thead {
-      color: #333;
-      border-bottom: 8px solid #b7d6ca;
-      padding-top:20px;
-    }
-
-    .response-list th {
-      font-weight:bold;
-      font-size:16px;
-      text-align:left;
-      padding:20px 10px 10px 10px;
-    }
-
-    .response-list .response td {
-      padding:7px 15px 15px 10px;
-      border-bottom:1px dotted #86bba6;
-    }
-
-  .response-list .response .created  {
-
-  }
-
-  .response-list .response h3:before {
-    padding-right:10px;
-    color:#96c4b2;
-  }
-
-  .response-list .address:before,
-  .response-list .collector:before {
-    color:#bbb;
-    padding-right:2px;
   }
 
 .answers {
@@ -450,7 +335,7 @@ header a {
 /* Map .....................................................................*/
 
 #map {
-  height:300px;
+  height:800px;
   margin-bottom:20px;
 }
 
@@ -476,14 +361,14 @@ header a {
   }
 
   #map-controls .icon-search:before {
-    padding-right:5px; 
+    padding-right:5px;
   }
 
 .leaflet-control-attribution {
   display:none;
 }
 
-/*  Note that we can't combine these two rules because they're 
+/*  Note that we can't combine these two rules because they're
     browser-specific */
 #address-search::-webkit-input-placeholder {
     color: #93a9cd;
@@ -547,7 +432,7 @@ header a {
   letter-spacing: 0;
 }
 
-#survey-header.new-survey h2 {
+.new-survey h2 {
   text-align:center;
 }
 
@@ -568,7 +453,7 @@ header a {
     background:#fff;
 }
 
-  #new-survey-form input[type='text'] { 
+  #new-survey-form input[type='text'] {
     margin-bottom:10px;
     width:350px;
   }
@@ -609,7 +494,7 @@ header a {
 }
 
   .choice-box {
-    display: inline-block; 
+    display: inline-block;
 
     width:250px;
     border: 1px solid #faf6ad;
@@ -624,7 +509,7 @@ header a {
     text-align:center;
 
   }
-    .choice-box h3 { 
+    .choice-box h3 {
       padding-top:10px;
       font-weight:bold;
       font-size:24px;
@@ -644,27 +529,12 @@ header a {
       color:#666;
     }
 
-    .choice-box .button {
-      font-size:14px;
-      text-transform:uppercase;
-      padding-top:10px;
-    }
-
 /* Editor ....................................................................*/
 #builder-view-container {
-  width:50%;
-  margin-right:5%;
-  float:left;
 }
-  
+
   #builder-view-container .done {
     float:right;
-  }
-
-  .editor input {
-    font-size:1em;
-    color:#333;
-    display:inline-block;
   }
 
   .editor .question-input {
@@ -677,7 +547,7 @@ header a {
   }
     .editor .question {
       padding:10px 0 0 10px;
-      border-top:10px solid #ddd;
+      border-bottom:1px dotted #ddd;
     }
 
       .editor .question .title {
@@ -691,80 +561,22 @@ header a {
       }
 
     .question .question {
-      margin-left:20px; 
+      margin-left:20px;
     }
 
-  .editor .answers {
+  .editor .answers,
+  .editor .question-tools-container {
     padding:0 0 0 20px;
+    margin-bottom:10px;
   }
-
-    .editor .question-tools-container {
-      padding:0 10px 10px 16px;
-    }
-
-    .editor .add-answer {
-      display:block;
-      margin-bottom:10px;
-      margin-left:10px;
-    }
-
-  .action {
-    text-decoration:none;
-    border:0 none;
-    padding-left:15px;
-    cursor: pointer;
-    font-size:12px;
-    text-transform:uppercase;
-  }
-
-    .action:hover {
-      color:#138288;
-    }
-
-    .add-answer {
-      background:transparent url(../img/icons/add-10.png) no-repeat center left;
-    }
-
-    .add-sub-question {
-      background:transparent url(../img/icons/branch.png) no-repeat center left;
-    }
 
     .editor .remove {
-      background:transparent url(../img/icons/delete-10.png) no-repeat center left;
       color: #db6a6e;
-      text-indent:-1000;
-      display:inline-block;
-      padding-left:20px;
-      padding-top:5px;
-      margin-left:3px;
     }
 
-    .editor .question-type {
-      background:#aaa;
-      color:#fff;
-      padding:2px 4px;
-    }
-
-    .editor .question-type-container .question-type:first-child {
-      border-bottom-left-radius: 7px;
-      border-top-left-radius: 7px;
-      border-right:1px solid #fff;
-      padding-left:6px;
-    }
-
-    .editor .question-type-container .question-type:last-child {
-      border-bottom-right-radius: 7px;
-      border-top-right-radius: 7px;
-      padding-right:6px;
-    }
-
-    .editor .question-type-container .selected {
-      background:#999;
-      -moz-box-shadow: inset 0 0 20px rgba(0,0,0, 0.4);
-      -webkit-box-shadow: inset 0 0 20px rgba(0,0,0, 0.4);
-      box-shadow: inset 0 0 20px rgba(0,0,0, 0.4);
-
-    }
+  .input-append {
+    display:block;
+  }
 
 /* Toolbar ...................................................................*/
 .saved {
@@ -778,7 +590,7 @@ header a {
 }
 
 .actionbar {
-  
+
 }
   .actionbar div {
     display: inline-block;
@@ -813,7 +625,7 @@ header a {
   width:44%;
   float:left;
 }
-  
+
   #preview.popup {
     flot:none;
     background:#fff;
@@ -827,6 +639,7 @@ header a {
     -moz-box-shadow: 0 0 20px rgba(0,0,0, 0.25);
     -webkit-box-shadow: 0 0 20px rgba(0,0,0, 0.25);
     box-shadow: 0 0 20px rgba(0,0,0, 0.25);
+    z-index:1000;
   }
 
   #preview-close {
@@ -843,7 +656,7 @@ header a {
   }
 
   #preview.popup #preview-close {
-    display:inline; 
+    display:inline;
   }
 
   #preview-survey-title {
