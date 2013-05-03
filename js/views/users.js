@@ -104,7 +104,7 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
 
     createUserCallback: function(error, user) {
       if(error) {
-        $("#create-account .error").html(error).fadeIn();
+        $("#create-account .error").html(error.message).fadeIn();
         return;
       }
 
