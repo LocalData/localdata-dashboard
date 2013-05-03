@@ -354,13 +354,15 @@
       <div id="survey-design-container"></div>
     </script>
 
-
+    <!--
+    <%= _.size(responses) %>
+    <% if(_.size(responses) != 1) { %>s<% } %>
+  -->
     <!-- Responses & Filtering ..............................................-->
     <script type="text/template" id="filter-results">
       <h3>
         Filter
-        <%= _.size(responses) %>
-        response<% if(_.size(responses) != 1) { %>s<% } %>
+        responses
         by
       </h3>
 
