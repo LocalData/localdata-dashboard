@@ -170,6 +170,7 @@ header a {
       cursor:pointer;
       border: 0px none;
       color: #666;
+      background:transparent;
     }
 
     .nav-tabs li.active a,
@@ -431,7 +432,7 @@ header a {
   letter-spacing: 0;
 }
 
-#survey-header.new-survey h2 {
+.new-survey h2 {
   text-align:center;
 }
 
@@ -565,6 +566,7 @@ header a {
   .editor .answers,
   .editor .question-tools-container {
     padding:0 0 0 20px;
+    margin-bottom:10px;
   }
 
     .editor .remove {
@@ -636,6 +638,7 @@ header a {
     -moz-box-shadow: 0 0 20px rgba(0,0,0, 0.25);
     -webkit-box-shadow: 0 0 20px rgba(0,0,0, 0.25);
     box-shadow: 0 0 20px rgba(0,0,0, 0.25);
+    z-index:1000;
   }
 
   #preview-close {

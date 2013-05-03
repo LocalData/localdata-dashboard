@@ -91,7 +91,7 @@
     <!-- New surveys ........................................................-->
     <script type="text/template" id="new-survey-view">
       <div class="container-fluid">
-        <header id="survey-header" class="new-survey">
+        <header id="" class="survey-header new-survey">
             <h2>Create a new survey</h2>
         </header>
       </div>
@@ -103,25 +103,25 @@
               <input type="text" placeholder="Survey name" class="survey-name">
               <input type="text" placeholder="Survey city and state" class="survey-location">
 
-              <h3>Survey type</h3>
+              <h3>What data are you collecting?</h3>
 
-              <label><input type="radio" value="point" name="type">We&apos;re collecting points on a map (for example, potholes, trees, data that doesn&apos;t correspond to an address)
+              <label class="radio">
+                <input type="radio" value="point" name="type">
+                Points on a map (for example, potholes, trees, data that doesn&apos;t correspond to an address)
               </label>
 
-              <label><input type="radio" value="parcel" name="type">We&apos;re collecting data using a parcel map (for example, property, homes, businesses with an address)
+              <label class="radio">
+                <input type="radio" value="parcel" name="type">
+                Data using a parcel map (for example, property, homes, businesses with an address)
               </label>
 
-              <label><input type="radio" value="pointandparcel" name="type">We need to collect information about points and parcels (experimental)
+              <label class="radio">
+                <input type="radio" value="pointandparcel" name="type">
+                We need to collect information about points and parcels
               </label>
 
-              <!--
-              <a class="action show-advanced">Advanced options</a>
-              <div class="advanced">
-                <input type="text" placeholder="Survey type" class="survey-type">
-                <textarea class="survey-geoObjectSource" placeholder="Geodata source options"></textarea>
-              </div>
-              -->
-              <a class="button submit">Create new survey</a>
+              <hr>
+              <a class="btn btn-info submit">Create new survey</a>
             </form>
         <!--  </div>
         </div>-->
@@ -140,27 +140,29 @@
             <img src="img/icons/builder-icon.png" alt="">
             <h3>Standard neigbhorhood survey</h3>
             <p>Asks basic questions about condition, vacancy and other factors. Quick and informative.</p>
-            <p class="time-estimate"><img src="img/icons/watch.png" alt=""> About 1 minute per property</p>
-            <a href="" class="preview button">Preview survey</a>
-            <a class="button use-survey">Use this survey</a>
+            <p class="time-estimate"><i class="icon-time"></i> About 1 minute per property</p>
+            <label><a href="" class="preview btn">Preview survey</a></label>
+            <label><a class="btn use-survey">Use this survey</a></label>
           </div>
 
           <div class="choice-box">
             <img src="img/icons/builder-icon.png" alt="">
             <h3>Comprehensive neigbhorhood survey</h3>
             <p>Collect detailed information about condition, use, vacancy, and more. Takes longer to complete.</p>
-            <p class="time-estimate"><img src="img/icons/watch.png" alt=""> About 4 minutes per property</p>
-              <p>Coming soon</p>
+            <p class="time-estimate"><i class="icon-time"></i> About 4 minutes per property</p>
+            <button class="btn disabled" disabled>Coming soon</button>
+
             <!--<a href="" class="preview button">Preview survey</a>
-            <a class="button use-survey">Use this survey</a>-->
+            < class="btn use-survey">Use this survey</a>-->
           </div>
 
           <div class="choice-box">
             <img src="img/icons/builder-icon.png" alt="">
             <h3>Neighborhood<br> asset<br> survey</h3>
             <p>Map parks, churches, stores, and more.<br><br></p>
-            <p class="time-estimate"><img src="img/icons/watch.png" alt=""> About 2 minutes per property</p>
-            <p>Coming soon</p>
+            <p class="time-estimate"><i class="icon-time"></i> About 2 minutes per property</p>
+            <button class="btn disabled" disabled>Coming soon</button>
+
             <!--<a href="" class="preview button">Preview survey</a>
             <a class="button use-survey">Use this survey</a>-->
           </div>
@@ -222,7 +224,7 @@
     <!-- Previews .........................................................-->
     <script type="text/template" id="preview-view">
       <div id="preview-dimmer"></div>
-      <div id="preview"</div>
+      <div id="preview"></div>
     </script>
 
     <script type="text/template" id="t-preview-title">
@@ -321,23 +323,27 @@
 
     <!-- Form settings ..................................................... -->
     <script type="text/template" id="form-view">
+    <div class="alert alert-info">
+      <a href="<%= mobile %>">Go to the mobile app</a>
+      <code><%= mobile %></code>
+    </div>
 
-      <div id="survey-form-tools-container">
-        <a class="btn edit-form-button">Edit form</a>
-        <a href="<%= mobile %>">Go to the mobile app</a>
-        <label>
-          Copy link to app
-          <input type="text" value="<%= mobile %>">
-        </label>
-
-        <!--
-        Text the app URL: <input type="text" placeholder="313 555 5555"> <input type="submit" value="Send text message">
-        -->
+      <div class="row-fluid">
+        <div id="survey-form-tools-container">
+          <div class="span6">
+            <a class="btn edit-form-button">Edit form</a>
+          </div>
+          <div class="span6">
+          </div>
+          <!--
+          Text the app URL: <input type="text" placeholder="313 555 5555"> <input type="submit" value="Send text message">
+          -->
+        </div>
       </div>
 
       <div class="row-fluid">
         <div class="span6">
-         <div id="builder-view-container"></div>
+          <div id="builder-view-container"></div>
         </div>
         <div class="span6">
           <div id="preview-view-container"></div>
@@ -369,7 +375,7 @@
     <script type="text/template" id="filter-results-answer">
       <a id="clear" class="btn close"><i class="icon-close"></i> Clear filter</a>
       <h2>Select an answer to filter by:</h2>
-      <div id="loadingsmg" style="display:none">hide</div>
+      <div id="loadingsmg" style="display:none"></div>
       <ul>
         <% _.each(choices, function(choice) { %>
           <li><a><%- choice.name %></a> <span class="badge" style="background-color: <%- choice.color %>"><%- choice.count %></span></li>
@@ -619,13 +625,13 @@
 
             <div class="input-append">
               <input type="text" placeholder="Question" value="<%= question.text %>" data-role="question" class="question-input input-xlarge">
-              <button class="btn remove icon-trash" type="button"></button>
+              <a class="btn remove"><i class="icon-trash"></i></a>
             </div>
 
             <div class="question-type-container btn-group">
-              <a class="btn <% if(question.type === 'checkbox') { %>btn-info<% } %> question-type" data-role="checkbox-question">Multiple choice</a>
-              <a class="btn <% if(!question.type) { %>btn-info<% } %> question-type" data-role="radio-question">Select one</a>
-              <a class="btn <% if(question.type === 'file') { %>btn-info<% } %> question-type" data-role="file-question">Photo</a>
+              <a class="btn btn-small <% if(question.type === 'checkbox') { %>btn-info<% } %> question-type" data-role="checkbox-question">Multiple choice</a>
+              <a class="btn btn-small  <% if(!question.type) { %>btn-info<% } %> question-type" data-role="radio-question">Select one</a>
+              <a class="btn btn-small  <% if(question.type === 'file') { %>btn-info<% } %> question-type" data-role="file-question">Photo</a>
             </div>
 
             <div class="answers"></div>
@@ -641,8 +647,8 @@
     <script type="text/template" id="answer-edit-template">
         <div data-role="answer" class="input-append">
             <input type="text" value="<%= text %>">
-            <a class="btn remove icon-trash"></a>
             <a class="btn add-sub-question"><i class="icon-indent-right"></i> Add sub-question</a>
+            <a class="btn remove"><i class="icon-trash"></i></a>
         </div>
     </script>
 

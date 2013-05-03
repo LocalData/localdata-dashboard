@@ -272,7 +272,7 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
 
       // Listen for changes to the question text
       var editQuestionProxy = $.proxy(this.editQuestion(question), this);
-      $question.find('> input').keyup(editQuestionProxy);
+      $question.find('> div input').keyup(editQuestionProxy);
 
       // Listen for changes of the question type
       var editQuestionTypeProxy = $.proxy(this.editQuestionType(question), this);
