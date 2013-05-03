@@ -223,6 +223,7 @@ header a {
 .survey-list h2 {
   font-weight:700;
   font-size:24px;
+  margin:0;
 }
 
 .survey-list h2 a {
