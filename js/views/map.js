@@ -549,8 +549,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
      * @param  {Object} options An object with a parcelId or id property
      */
     details: function(feature) {
-      console.log("Showing details...");
-
       // Find out if we're looking up a set of parcels, or one point
       if(feature.parcelId !== undefined && feature.parcelId !== '') {
         this.sel = new Responses.Collection(this.responses.where({'parcel_id': feature.parcelId}));
@@ -568,9 +566,8 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
         obj.createdHumanized = moment(obj.created, "YYYY-MM-DDThh:mm:ss.SSSZ").format("MMM Do h:mma");
       });
 
-      console.log(selectedObjects);
       // Render the object
-      $("#result-container").html(_.template($('#selected-results').html(), {responses: selectedObjects }));
+      $("#result-container").html(_.template($('#selected-results').html(), {responses: selectedObjects}));
 
       // Button to close the details view
       $("#result-container .close").click(function(e) {
