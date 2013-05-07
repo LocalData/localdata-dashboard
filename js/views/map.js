@@ -559,13 +559,15 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
       // Only show the most recent result for that parcel / point
       // TODO
       // Show previous results for the clicked parcel if that happens
-      var selectedSingleObject = this.sel.toJSON()[0];
+      var selectedObjects = this.sel.toJSON();
 
       // Humanize the date
-      selectedSingleObject.createdHumanized = moment(selectedSingleObject.created, "YYYY-MM-DDThh:mm:ss.SSSZ").format("MMM Do h:mma");
+      _.map(selectedObjects, function(obj){
+        obj.createdHumanized = moment(obj.created, "YYYY-MM-DDThh:mm:ss.SSSZ").format("MMM Do h:mma");
+      });
 
       // Render the object
-      $("#result-container").html(_.template($('#indivdual-result').html(), {r: selectedSingleObject}));
+      $("#result-container").html(_.template($('#selected-results').html(), {responses: selectedObjects}));
 
       // Button to close the details view
       $("#result-container .close").click(function(e) {
