@@ -155,7 +155,6 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
           question.type = "checkbox";
           // Make sure each answer has a name
           _.each(question.answers, function(answer){
-            console.log(answer);
             answer.name = this.slugify(answer.text);
           }.bind(this));
         }
