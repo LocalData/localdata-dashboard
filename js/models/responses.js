@@ -43,7 +43,8 @@ function($, _, Backbone, settings, api) {
       return settings.api.baseurl + '/surveys/' + this.surveyId + '/responses';
     },
 
-    fetchChunks: function() {
+    fetchChunks: function(start) {
+      console.log("Start", start);
       // TODO: If we've set a filter but are still receiving data chunks, we
       // need to separately deal with filtered and unfiltered data.
       var self = this;
@@ -53,6 +54,8 @@ function($, _, Backbone, settings, api) {
             console.log(error);
             return;
           }
+
+          console.log("Found responses", responses.length);
 
           // If we got as many entries as we requested, then request another
           // chunk of data.
@@ -64,15 +67,40 @@ function($, _, Backbone, settings, api) {
           var models = _.map(responses, function (item) { return new self.model(item); });
           self.add(models, { silent: true });
           self.trigger('addSet', models);
+
+          console.log(self.length, self.models);
+
+          // Trigger auto-updating after models have been registered.
+          if (responses.length < count) {
+            if(!self.updating) {
+              self.autoUpdate();
+            }
+          }
         });
       }
 
       // Get the first chunk.
-      getChunk(0, 500);
+      start = start || 0;
+      getChunk(start, 500);
     },
 
     parse: function(response) {
       return response.responses;
+    },
+
+    /**
+     * Check regularly for survey updates
+     */
+    autoUpdate: function() {
+      console.log("Updating...");
+      this.updating = true;
+      this.fetchChunks(this.models.length);
+
+      var debouncedAutoUpdate = _.debounce(function() {
+        console.log(this);
+        this.autoUpdate();
+      }.bind(this), 1000);
+      debouncedAutoUpdate();
     },
 
     /**
