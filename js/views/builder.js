@@ -153,6 +153,11 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
         }
         if (dataRole === 'checkbox-question') {
           question.type = "checkbox";
+          // Make sure each answer has a name
+          _.each(question.answers, function(answer){
+            console.log(answer);
+            answer.name = this.slugify(answer.text);
+          }.bind(this));
         }
         if (dataRole === 'file-question') {
           question.type = 'file';
@@ -262,6 +267,9 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
         var text = $(event.target).val();
         question.answers[index].text = text;
         question.answers[index].value = this.slugify(text);
+        if(question.type === 'checkbox') {
+          question.answers[index].name = this.slugify(text);
+        }
         this.updatePreview();
       };
     },
