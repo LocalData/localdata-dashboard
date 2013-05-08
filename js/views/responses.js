@@ -43,7 +43,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'filter', 'subFilter', 'updateFilterView', 'updateFilterChoices');
+      _.bindAll(this, 'render', 'filter', 'subFilter', 'updateFilterView', 'updateFilterChoices', 'lastUpdated');
 
       this.template = _.template($('#response-view').html());
 
@@ -52,6 +52,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       this.responses.on('add', this.update, this);
       this.responses.on('addSet', this.updateFilterChoices, this);
       this.responses.on('addSet', this.update, this);
+      this.responses.on('checked', this.lastUpdated, this);
 
       this.forms = options.forms;
       this.forms.on('reset', this.updateFilterChoices, this);
@@ -124,6 +125,14 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       // Update the filters
     },
 
+    lastUpdated: function () {
+      console.log(this.responses);
+      if(this.responses.lastUpdate !== undefined) {
+        var time = moment(this.responses.lastUpdate).format("Do h:mma");
+        console.log("TIME", time);
+        $('#last-updated').html('Last updated: ' + time);
+      }
+    },
 
     /**
      * Update the first-level choices for filtering responses

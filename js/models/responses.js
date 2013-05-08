@@ -49,13 +49,21 @@ function($, _, Backbone, settings, api) {
       // need to separately deal with filtered and unfiltered data.
       var self = this;
       function getChunk(start, count) {
-        api.getResponses(start, count, function (error, responses) {
+        api.getResponses({
+            startIndex: start,
+            count: count,
+            sort: 'asc'
+          }, function (error, responses) {
           if (error) {
             console.log(error);
             return;
           }
 
-          console.log("Found responses", responses.length);
+          // If we found 0 responses, start checking for updates
+          if(responses.length === 0) {
+            _.delay(_.bind(self.autoUpdate, self), 1000);
+            return;
+          }
 
           // If we got as many entries as we requested, then request another
           // chunk of data.
@@ -68,13 +76,8 @@ function($, _, Backbone, settings, api) {
           self.add(models, { silent: true });
           self.trigger('addSet', models);
 
-          console.log(self.length, self.models);
-
-          // Trigger auto-updating after models have been registered.
-          if (responses.length < count) {
-            if(!self.updating) {
-              self.autoUpdate();
-            }
+          if (responses.length < count){
+            _.delay(_.bind(self.autoUpdate, self), 1000);
           }
         });
       }
@@ -92,15 +95,10 @@ function($, _, Backbone, settings, api) {
      * Check regularly for survey updates
      */
     autoUpdate: function() {
-      console.log("Updating...");
       this.updating = true;
       this.fetchChunks(this.models.length);
-
-      var debouncedAutoUpdate = _.debounce(function() {
-        console.log(this);
-        this.autoUpdate();
-      }.bind(this), 1000);
-      debouncedAutoUpdate();
+      this.lastUpdate = new Date();
+      this.trigger('checked', this.lastUpdate);
     },
 
     /**

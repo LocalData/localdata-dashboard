@@ -247,13 +247,24 @@ define(function (require) {
   // Get a chunk of responses.
   // If startIndex or count are not provided, get all of the responses.
   // callback(error, responses)
-  api.getResponses = function (startIndex, count, callback) {
+  // Options as follows
+  // options: {
+  //  startIndex: int,
+  //  count: int,
+  //  sort: ('asc'|'desc') -- sort by date. defaults to 'asc'
+  // }
+  api.getResponses = function (options, callback) {
     var url;
-    if (startIndex === undefined || count === undefined) {
+    if (options.sort === undefined) {
+      options.sort = 'desc';
+    }
+    if (options.startIndex === undefined || options.count === undefined) {
       url = api.getSurveyURL() + '/responses';
     } else {
-      url = api.getSurveyURL() + '/responses?startIndex=' + startIndex + '&count=' + count;
+      url = api.getSurveyURL() + '/responses?startIndex=' + options.startIndex + '&count=' + options.count + '&sort=' + options.sort;
     }
+
+    console.log(url);
 
     $.getJSON(url, function (data) {
       if (_.isArray(data.responses)) {
