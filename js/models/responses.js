@@ -43,16 +43,26 @@ function($, _, Backbone, settings, api) {
       return settings.api.baseurl + '/surveys/' + this.surveyId + '/responses';
     },
 
-    fetchChunks: function() {
+    fetchChunks: function(start) {
       // TODO: If we've set a filter but are still receiving data chunks, we
       // need to separately deal with filtered and unfiltered data.
       var self = this;
       function getChunk(start, count) {
-        api.getResponses(start, count, function (error, responses) {
+        api.getResponses({
+            startIndex: start,
+            count: count,
+            sort: 'asc'
+          }, function (error, responses) {
           if (error) {
             console.log(error);
             return;
           }
+
+          // If we found 0 responses, start checking for updates
+          // if(responses.length === 0) {
+          //   _.delay(_.bind(self.autoUpdate, self), 1000);
+          //   return;
+          // }
 
           // If we got as many entries as we requested, then request another
           // chunk of data.
@@ -64,15 +74,31 @@ function($, _, Backbone, settings, api) {
           var models = _.map(responses, function (item) { return new self.model(item); });
           self.add(models, { silent: true });
           self.trigger('addSet', models);
+
+          // Start autoUpdate if we are at the end of the responses.
+          // if (responses.length < count){
+          //   _.delay(_.bind(self.autoUpdate, self), 1000);
+          // }
         });
       }
 
       // Get the first chunk.
-      getChunk(0, 500);
+      start = start || 0;
+      getChunk(start, 500);
     },
 
     parse: function(response) {
       return response.responses;
+    },
+
+    /**
+     * Check regularly for new results
+     */
+    update: function() {
+      this.updating = true;
+      this.fetchChunks(this.models.length);
+      this.lastUpdate = new Date();
+      this.trigger('updated', this.lastUpdate);
     },
 
     /**

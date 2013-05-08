@@ -270,7 +270,7 @@
             <ul id="nav" class="nav nav-tabs">
               <li class="active" id="tab-survey-home"><a href="#surveys/<%= survey.slug %>"><i class="icon-home" data-show="response-view-container"></i>Results</a></li>
               <li class="" id="tab-survey-export" data-show=""><a href="#surveys/<%= survey.slug %>/export" data-show="export-view-container"><i class="icon-download"></i>Export</a></li>
-              <li class="" id="tab-survey-form"><a href="#surveys/<%= survey.slug %>/form" data-show="form-view-container"><i class="icon-cog"></i>Survey Questions</a></li>
+              <li class="" id="tab-survey-form"><a href="#surveys/<%= survey.slug %>/form" data-show="form-view-container"><i class="icon-list-ul"></i>Survey Questions</a></li>
             </ul>
           </div>
         </div>
@@ -431,6 +431,7 @@
         <div class="span4">
 
           <div class="response-list">
+            <div id="last-updated"><a href="#" id="refresh" class="btn btn-small"><i class="icon-refresh"></i> Refresh</a></div>
             <div id="filter-view-container"></div>
             <div id="filters">
               <div id="subfilter"></div>

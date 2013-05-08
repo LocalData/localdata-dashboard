@@ -39,11 +39,12 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
     events: {
       "change #filter":  "filter",
       "click #subfilter a": "subFilter",
-      "click #clear": "reset"
+      "click #clear": "reset",
+      "click #refresh": "getNew"
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'filter', 'subFilter', 'updateFilterView', 'updateFilterChoices');
+      _.bindAll(this, 'render', 'update', 'getNew', 'filter', 'subFilter', 'updateFilterView', 'updateFilterChoices', 'lastUpdated');
 
       this.template = _.template($('#response-view').html());
 
@@ -52,6 +53,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       this.responses.on('add', this.update, this);
       this.responses.on('addSet', this.updateFilterChoices, this);
       this.responses.on('addSet', this.update, this);
+      // this.responses.on('updated', this.lastUpdated, this);
 
       this.forms = options.forms;
       this.forms.on('reset', this.updateFilterChoices, this);
@@ -93,25 +95,13 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
         });
       }
 
-      // Set up the list view, now that the root exists.
-      // if (this.listView === null) {
-      //   this.listView = new ResponseViews.ListView({
-      //     el: $('#responses-list-container'),
-      //     responses: this.responses,
-      //     parentView: this
-      //   });
-      // }
-
       // Render the map
       this.mapView.render();
-
-      // Render the responses list
-      // this.listView.render();
 
       this.updateFilterView();
     },
 
-    update: function () {
+    update: function (event) {
       if (this.firstRun) {
         this.render();
       }
@@ -124,6 +114,23 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       // Update the filters
     },
 
+    /**
+     * Get new responses
+     */
+    getNew: function(event) {
+      event.preventDefault();
+      this.responses.update();
+    },
+
+    /**
+     * Show the time of the last response collection update
+     */
+    lastUpdated: function () {
+      if(this.responses.lastUpdate !== undefined) {
+        var time = moment(this.responses.lastUpdate).format("Do h:mma");
+        $('#last-updated').html('Last updated: ' + time);
+      }
+    },
 
     /**
      * Update the first-level choices for filtering responses
