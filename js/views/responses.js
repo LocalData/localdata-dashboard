@@ -114,16 +114,20 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       // Update the filters
     },
 
+    /**
+     * Get new responses
+     */
     getNew: function(event) {
       event.preventDefault();
       this.responses.update();
     },
 
+    /**
+     * Show the time of the last response collection update
+     */
     lastUpdated: function () {
-      console.log(this.responses);
       if(this.responses.lastUpdate !== undefined) {
         var time = moment(this.responses.lastUpdate).format("Do h:mma");
-        console.log("TIME", time);
         $('#last-updated').html('Last updated: ' + time);
       }
     },
