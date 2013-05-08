@@ -15,7 +15,7 @@ function($, _, Backbone, settings, api) {
   'use strict';
 
   var SettingsView = Backbone.View.extend({
-    
+
     el: '#settings-view-container',
 
     events: {
@@ -40,7 +40,7 @@ function($, _, Backbone, settings, api) {
       console.log("Success!");
       $(".saved").fadeIn().css("display","inline-block").delay(2000).fadeOut();
     },
-    
+
     save: function(event) {
       event.preventDefault();
 
@@ -61,8 +61,6 @@ function($, _, Backbone, settings, api) {
     },
 
     render: function() {
-
-      console.log(this.survey);
 
       var context = {
         survey: this.survey.toJSON(),
