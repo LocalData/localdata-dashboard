@@ -92,7 +92,7 @@ function($, _, Backbone, settings, api) {
     },
 
     /**
-     * Check regularly for survey updates
+     * Check regularly for new results
      */
     update: function() {
       this.updating = true;
