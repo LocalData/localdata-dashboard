@@ -44,7 +44,6 @@ function($, _, Backbone, settings, api) {
     },
 
     fetchChunks: function(start) {
-      console.log("Start", start);
       // TODO: If we've set a filter but are still receiving data chunks, we
       // need to separately deal with filtered and unfiltered data.
       var self = this;

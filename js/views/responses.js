@@ -40,11 +40,11 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       "change #filter":  "filter",
       "click #subfilter a": "subFilter",
       "click #clear": "reset",
-      "click #refresh": "update"
+      "click #refresh": "getNew"
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'update', 'filter', 'subFilter', 'updateFilterView', 'updateFilterChoices', 'lastUpdated');
+      _.bindAll(this, 'render', 'update', 'getNew', 'filter', 'subFilter', 'updateFilterView', 'updateFilterChoices', 'lastUpdated');
 
       this.template = _.template($('#response-view').html());
 
@@ -101,7 +101,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       this.updateFilterView();
     },
 
-    update: function () {
+    update: function (event) {
       if (this.firstRun) {
         this.render();
       }
@@ -112,6 +112,11 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
 
       // TODO:
       // Update the filters
+    },
+
+    getNew: function(event) {
+      event.preventDefault();
+      this.responses.update();
     },
 
     lastUpdated: function () {

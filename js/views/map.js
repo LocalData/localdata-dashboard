@@ -140,7 +140,8 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
         this.map.addLayer(this.zoneLayer);
         this.map.addLayer(this.objectsOnTheMap);
 
-        this.map.setView([42.374891,-83.069504], 17); // default center
+        this.map.setView([0,0], 17); // default center
+        this.updateMapStyleBasedOnZoom();
         this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
       }
 
@@ -395,7 +396,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
     },
 
     updateObjectStyles: function(style) {
-      console.log("Changing style");
       this.objectsOnTheMap.setStyle(style);
     },
 
@@ -439,8 +439,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
     },
 
     updateMapStyleBasedOnZoom: function(e) {
-      console.log("Map style update triggered");
-
       // Don't update the styles if there's a filter in place
       if (this.filter !== null) {
         return;

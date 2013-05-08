@@ -264,8 +264,6 @@ define(function (require) {
       url = api.getSurveyURL() + '/responses?startIndex=' + options.startIndex + '&count=' + options.count + '&sort=' + options.sort;
     }
 
-    console.log(url);
-
     $.getJSON(url, function (data) {
       if (_.isArray(data.responses)) {
         callback(null, data.responses);
