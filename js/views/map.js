@@ -113,8 +113,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
 
 
     render: function (arg) {
-      console.log("RENDERING MAP");
-      console.log(this.responses);
       var hasResponses = this.responses !== null && this.responses.length > 0;
       var hasZones = this.survey.has('zones');
 

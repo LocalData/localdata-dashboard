@@ -39,11 +39,12 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
     events: {
       "change #filter":  "filter",
       "click #subfilter a": "subFilter",
-      "click #clear": "reset"
+      "click #clear": "reset",
+      "click #refresh": "update"
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'filter', 'subFilter', 'updateFilterView', 'updateFilterChoices', 'lastUpdated');
+      _.bindAll(this, 'render', 'update', 'filter', 'subFilter', 'updateFilterView', 'updateFilterChoices', 'lastUpdated');
 
       this.template = _.template($('#response-view').html());
 
@@ -52,7 +53,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       this.responses.on('add', this.update, this);
       this.responses.on('addSet', this.updateFilterChoices, this);
       this.responses.on('addSet', this.update, this);
-      this.responses.on('checked', this.lastUpdated, this);
+      // this.responses.on('updated', this.lastUpdated, this);
 
       this.forms = options.forms;
       this.forms.on('reset', this.updateFilterChoices, this);
@@ -94,20 +95,8 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
         });
       }
 
-      // Set up the list view, now that the root exists.
-      // if (this.listView === null) {
-      //   this.listView = new ResponseViews.ListView({
-      //     el: $('#responses-list-container'),
-      //     responses: this.responses,
-      //     parentView: this
-      //   });
-      // }
-
       // Render the map
       this.mapView.render();
-
-      // Render the responses list
-      // this.listView.render();
 
       this.updateFilterView();
     },

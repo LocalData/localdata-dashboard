@@ -60,10 +60,10 @@ function($, _, Backbone, settings, api) {
           }
 
           // If we found 0 responses, start checking for updates
-          if(responses.length === 0) {
-            _.delay(_.bind(self.autoUpdate, self), 1000);
-            return;
-          }
+          // if(responses.length === 0) {
+          //   _.delay(_.bind(self.autoUpdate, self), 1000);
+          //   return;
+          // }
 
           // If we got as many entries as we requested, then request another
           // chunk of data.
@@ -76,9 +76,10 @@ function($, _, Backbone, settings, api) {
           self.add(models, { silent: true });
           self.trigger('addSet', models);
 
-          if (responses.length < count){
-            _.delay(_.bind(self.autoUpdate, self), 1000);
-          }
+          // Start autoUpdate if we are at the end of the responses.
+          // if (responses.length < count){
+          //   _.delay(_.bind(self.autoUpdate, self), 1000);
+          // }
         });
       }
 
@@ -94,11 +95,11 @@ function($, _, Backbone, settings, api) {
     /**
      * Check regularly for survey updates
      */
-    autoUpdate: function() {
+    update: function() {
       this.updating = true;
       this.fetchChunks(this.models.length);
       this.lastUpdate = new Date();
-      this.trigger('checked', this.lastUpdate);
+      this.trigger('updated', this.lastUpdate);
     },
 
     /**
