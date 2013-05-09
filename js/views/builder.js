@@ -138,6 +138,13 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
         question.text = text;
         question.name = name;
 
+        if(question.type === 'checkbox') {
+          _.each(question.answers, function(answer){
+            answer.name = question.name + '-' + this.slugify(answer.text);
+            answer.value = 'yes';
+          }.bind(this));
+        }
+
         this.updatePreview();
       };
     },
@@ -148,16 +155,23 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
 
         var dataRole = $(event.target).attr('data-role');
         console.log(dataRole);
+
         if (dataRole === 'radio-question') {
           delete question.type;
+          _.each(question.answers, function(answer){
+            answer.value = this.slugify(answer.text);
+          }.bind(this));
         }
+
         if (dataRole === 'checkbox-question') {
           question.type = "checkbox";
           // Make sure each answer has a name
           _.each(question.answers, function(answer){
-            answer.name = this.slugify(answer.text);
+            answer.name = question.name + '-' + this.slugify(answer.text);
+            answer.value = 'yes';
           }.bind(this));
         }
+
         if (dataRole === 'file-question') {
           question.type = 'file';
         }
@@ -266,9 +280,12 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
         var text = $(event.target).val();
         question.answers[index].text = text;
         question.answers[index].value = this.slugify(text);
+
         if(question.type === 'checkbox') {
-          question.answers[index].name = this.slugify(text);
+          question.answers[index].name = question.name + '-' + this.slugify(text);
+          question.answers[index].value = 'yes';
         }
+
         this.updatePreview();
       };
     },
