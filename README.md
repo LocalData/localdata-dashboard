@@ -20,9 +20,9 @@ Sample `dev-settings.json`:
 ```
 {
   "deploy" : {
-    "default" : "s3://mybucket/web/my-mobile-dev/",
-    "dev" : "s3://mybucket/web/my-mobile-dev/",
-    "production" : "s3://mybucket/production-web/mobile"
+    "default" : "s3://mybucket/web/my-dashboard-dev/",
+    "dev" : "s3://mybucket/web/my-dashboard-dev/",
+    "production" : "s3://mybucket/production-web/dashboard"
   }
 }
 ```
