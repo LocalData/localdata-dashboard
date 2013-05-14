@@ -71,13 +71,23 @@ function($, _, Backbone, settings) {
 
       // Add the question to the list of questions
       // Naive -- takes more space than needed (because it includes subquestions)
-      flattenedForm.push(question);
+      if(question.type !== 'checkbox') {
+        flattenedForm.push(question);
+      }
 
       // Check if there are sub-questions associated with any of the answers
       _.each(question.answers, function(answer){
+
+        // Add each checkbox answer as a separate question
+        if(question.type === 'checkbox') {
+          flattenedForm.push({
+            name: answer.name,
+            text: question.text + ': ' + answer.text
+          });
+        }
+
         if (answer.questions !== undefined) {
           _.each(answer.questions, function(question) {
-
             // Recusively call flattenForm to process those questions.
             return this.flattenForm(question, flattenedForm);
 
