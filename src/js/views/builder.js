@@ -50,7 +50,7 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
 
     save: function(event) {
       event.preventDefault();
-      console.log('Save clicked');
+      console.log('Saving form');
       _kmq.push(['record', 'Survey questions saved']);
 
       api.createForm(settings.formData, function(){
@@ -234,6 +234,8 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
           'text': '',
           'value': ''
         });
+        this.setQuestionLayout(question);
+
         this.updatePreview();
         this.renderForm();
       };
@@ -281,6 +283,7 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
         question.answers[index].text = text;
         question.answers[index].value = this.slugify(text);
 
+        this.setQuestionLayout(question);
         if(question.type === 'checkbox') {
           question.answers[index].name = question.name + '-' + this.slugify(text);
           question.answers[index].value = 'yes';
@@ -299,9 +302,22 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
         question.answers.splice(index, 1);
         this.updatePreview();
 
+        this.setQuestionLayout(question);
+
         // Remove it from the DON.
         $answer.remove();
       };
+    },
+
+    // Display a question horizontally if it doesn't have many answers.
+    setQuestionLayout: function(question) {
+      if (question.answers.length !== 2) {
+        delete question.layout;
+      }else {
+        if (question.type !== 'checkbox') {
+          question.layout = 'horizontal';
+        }
+      }
     },
 
     renderQuestion: function(question, visible, parentID, triggerID, appendTo, questionIndex, parent) {
