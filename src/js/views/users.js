@@ -54,8 +54,8 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
     el: "#container",
 
     events: {
-      "click #login .button": "logIn",
-      "click #create-account .button": "createUser"
+      "click #login button": "logIn",
+      "click #create-account button": "createUser"
     },
 
     initialize: function(options) {
@@ -104,7 +104,7 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
 
     createUserCallback: function(error, user) {
       if(error) {
-        $("#create-account .error").html(error).fadeIn();
+        $("#create-account .error").html(error.message).fadeIn();
         return;
       }
 

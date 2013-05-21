@@ -18,7 +18,7 @@ function($, _, Backbone, settings) {
     initialize: function(options) {
       this.surveyId = options.surveyId;
     },
-    
+
     url: function() {
       if (this.get("id") !== undefined) {
         return settings.api.baseurl + '/surveys/' + this.surveyId + '/forms';
@@ -31,22 +31,22 @@ function($, _, Backbone, settings) {
   // Forms collection
   Forms.Collection = Backbone.Collection.extend({
     model: Forms.Model,
-    
+
     initialize: function(options) {
       this.surveyId = options.surveyId;
       this.fetch();
     },
-    
+
     url: function() {
       return settings.api.baseurl + '/surveys/' + this.surveyId + '/forms';
     },
-    
+
     parse: function(response) {
       if (response.forms.length === 0) {
         var newForm = new Forms.Model({ 'questions': [] });
         return [ newForm ];
       }
-      
+
       return response.forms;
     },
 
@@ -71,13 +71,23 @@ function($, _, Backbone, settings) {
 
       // Add the question to the list of questions
       // Naive -- takes more space than needed (because it includes subquestions)
-      flattenedForm.push(question);
+      if(question.type !== 'checkbox') {
+        flattenedForm.push(question);
+      }
 
       // Check if there are sub-questions associated with any of the answers
       _.each(question.answers, function(answer){
+
+        // Add each checkbox answer as a separate question
+        if(question.type === 'checkbox') {
+          flattenedForm.push({
+            name: answer.name,
+            text: question.text + ': ' + answer.text
+          });
+        }
+
         if (answer.questions !== undefined) {
           _.each(answer.questions, function(question) {
-
             // Recusively call flattenForm to process those questions.
             return this.flattenForm(question, flattenedForm);
 
@@ -102,7 +112,7 @@ function($, _, Backbone, settings) {
           flattenedForm = flattenedForm.concat(this.flattenForm(question, flattenedForm));
         }, this);
 
-        // Make sure there's only one question per ID. 
+        // Make sure there's only one question per ID.
         var questionNames = [];
         _.each(flattenedForm, function(question) {
           if (! _.contains(questionNames, question.name)) {

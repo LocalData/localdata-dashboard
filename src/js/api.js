@@ -51,7 +51,7 @@ define(function (require) {
 
     request.fail(function(jqXHR, textStatus, errorThrown) {
       console.log("Request failed: ", jqXHR);
-      callback(jqXHR.responseText, null);
+      callback($.parseJSON(jqXHR.responseText), null);
     });
   };
 
@@ -115,12 +115,12 @@ define(function (require) {
   api.setSurveyIdFromSlug = function(slug, callback) {
     var url = settings.api.baseurl +  "/slugs/" + slug;
     console.log("Survey slug: " + url);
-    
+
     // Save ourselves an ajax request
     if (settings.slug === slug && settings.surveyId !== null) {
       return callback();
     }
-    
+
     // TODO: Display a nice error if the survey wans't found.
     $.getJSON(url, function(data) {
       console.log("Survey Id: " + data.survey);
@@ -131,27 +131,27 @@ define(function (require) {
     });
   };
 
-  
+
   // Generates the URL for the current survey
   // (Current survey is set by setSurveyIdFromSlug, above)
   api.getSurveyURL = function() {
     return settings.api.baseurl + "/surveys/" + settings.surveyId;
   };
-  
+
 
   // Generates the URL for the current survey's resposnes
   api.getParcelDataURL = function(parcel_id) {
     return settings.api.baseurl + '/surveys/' + settings.surveyId + '/parcels/' + parcel_id + '/responses';
   };
 
-    
+
   // Get the form for the current survey
   api.getForm = function(callback) {
     console.log("API: getting form data");
     var url = api.getSurveyURL() + "/forms";
 
     $.getJSON(url, function(data){
-      
+
       // Get only the mobile forms
       var mobileForms = _.filter(data.forms, function(form) {
         if (_.has(form, 'type')) {
@@ -161,7 +161,7 @@ define(function (require) {
         }
         return false;
       });
-      
+
       // Endpoint should give the most recent form first.
       // And that's what we'll use
       settings.formData = mobileForms[0];
@@ -203,7 +203,7 @@ define(function (require) {
     });
 
   };
-    
+
   // Deal with the formatting of the geodata API.
   // In the future, this will be more genericized.
   // parcel_id => object_id
@@ -243,16 +243,25 @@ define(function (require) {
       }
     });
   };
-  
+
   // Get a chunk of responses.
   // If startIndex or count are not provided, get all of the responses.
   // callback(error, responses)
-  api.getResponses = function (startIndex, count, callback) {
+  // Options as follows
+  // options: {
+  //  startIndex: int,
+  //  count: int,
+  //  sort: ('asc'|'desc') -- sort by date. defaults to 'asc'
+  // }
+  api.getResponses = function (options, callback) {
     var url;
-    if (startIndex === undefined || count === undefined) {
+    if (options.sort === undefined) {
+      options.sort = 'desc';
+    }
+    if (options.startIndex === undefined || options.count === undefined) {
       url = api.getSurveyURL() + '/responses';
     } else {
-      url = api.getSurveyURL() + '/responses?startIndex=' + startIndex + '&count=' + count;
+      url = api.getSurveyURL() + '/responses?startIndex=' + options.startIndex + '&count=' + options.count + '&sort=' + options.sort;
     }
 
     $.getJSON(url, function (data) {
@@ -274,7 +283,7 @@ define(function (require) {
   api.getResponsesInBounds = function(bounds, callback) {
     var southwest = bounds.getSouthWest();
     var northeast = bounds.getNorthEast();
-    
+
     // Given the bounds, generate a URL to ge the responses from the API.
     var serializedBounds = southwest.lat + "," + southwest.lng + "," + northeast.lat + "," + northeast.lng;
     var url = api.getSurveyURL() + "/responses/in/" + serializedBounds;
@@ -286,25 +295,25 @@ define(function (require) {
       }
     });
   };
-  
+
   // Add a 100% buffer to a bounds object.
   // Makes parcels render faster when the map is moved
   var addBuffer = function(bounds) {
     var sw = bounds.getSouthWest();
     var ne = bounds.getNorthEast();
-    
+
     var lngDiff = ne.lng - sw.lng;
     var latDiff = ne.lat - sw.lat;
-    
+
     var lngMod = lngDiff / 2;
     var latMod = latDiff / 2;
-    
+
     var newSW = new L.LatLng(sw.lat - latMod, sw.lng - lngMod);
     var newNE = new L.LatLng(ne.lat + latMod, ne.lng + lngMod);
-    
+
     return new L.LatLngBounds(newSW, newNE);
   };
-  
+
   // Get all the objects in the map bounds from the GeoAPI
   // Take a map bounds object
   // Find the parcels in the bounds
@@ -313,7 +322,7 @@ define(function (require) {
     var bufferedBounds = addBuffer(bounds);
     var southwest = bufferedBounds.getSouthWest();
     var northeast = bufferedBounds.getNorthEast();
-    
+
     // Given the bounds, generate a URL to ge the responses from the API.
     var url = api.getGeoBoundsObjectsURL(southwest, northeast);
     console.log(url);
