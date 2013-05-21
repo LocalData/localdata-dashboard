@@ -113,9 +113,9 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       this.map.addLayer(this.tileLayer);
       this.tileLayer.bringToFront();
 
-      this.gridLayer = new L.UtfGrid(tilejson.grids[0]);
-      this.map.addLayer(this.gridLayer);
-      // this.gridLayer.bringToFront();
+      // this.gridLayer = new L.UtfGrid(tilejson.grids[0]);
+      //this.map.addLayer(this.gridLayer);
+      //// this.gridLayer.bringToFront();
     },
 
     render: function (arg) {
@@ -160,8 +160,10 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
         //  http://matth-nt.herokuapp.com/
         // Get tilejson
+        //           url: 'http://localhost:3001/' + this.survey.get('id') + '/filter/condition/tile.json',
+
         var request = $.ajax({
-          url: 'http://localhost:3001/' + this.survey.get('id') + '/filter/condition/tile.json',
+          url: 'http://localhost:3001/' + this.survey.get('id') + '/tile.json',
           type: "GET",
           dataType: "jsonp"
         });
