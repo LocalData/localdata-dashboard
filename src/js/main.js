@@ -38,12 +38,14 @@ require.config({
     'lib/kissmetrics': {
       deps: ['lib/kmq'],
       exports: '_kmq'
-    }
+    },
+
+    'lib/bootstrap' : ['jquery']
   }
 
 });
 
-require(['jquery', 'lib/lodash', 'backbone', 'app'],
+require(['jquery', 'lib/lodash', 'backbone', 'app', 'lib/bootstrap'],
         function ($, _, Backbone, app) {
   'use strict';
 
