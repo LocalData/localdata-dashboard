@@ -28,6 +28,10 @@ a:hover {
   color:#00949b;
 }
 
+  .dropdown-menu a {
+    border:0px none;
+  }
+
 h1, h2, h3, h4, h5, h6 {
   font-weight: normal;
 }
@@ -623,12 +627,10 @@ header a {
 #preview {
   padding-bottom: 20px;
   background: #fff;
-  width:44%;
   float:left;
 }
 
   #preview.popup {
-    flot:none;
     background:#fff;
     display:block;
     padding:10px 0 20px 20px;
