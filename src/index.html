@@ -630,17 +630,25 @@
           <a class="btn remove"><i class="icon-trash"></i></a>
         </div>
 
-        <div class="question-type-container btn-group">
-          <a class="btn btn-small <% if(question.type === 'checkbox') { %>btn-info<% } %> question-type" data-role="checkbox-question">Multiple choice</a>
-          <a class="btn btn-small  <% if(!question.type) { %>btn-info<% } %> question-type" data-role="radio-question">Select one</a>
-        </div>
-
         <div class="answers"></div>
 
         <div class="question-tools-container">
           <a class="btn add-answer"><i class="icon-plus"></i> Add answer</a>
-          <a class="btn add-question"><i class="icon-plus"></i> Insert another question</strong></a>
-          <a class="btn add-photo-question"><i class="icon-camera"></i> Insert photo upload</strong></a>
+        </div>
+
+        <div class="add-question-container">
+          <div class="btn-group">
+            <button class="btn dropdown-toggle" data-toggle="dropdown">
+              <i class="icon-plus"></i> Add a question
+              <i class="caret"></i>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="#" class="add-question" data-type="checkbox-question">Multiple choice</a></li>
+              <li><a href="#" class="add-question" data-type="radio-question">Select one</a></li>
+              <li><a href="#" class="add-question" data-type="text-question">Text field</a></li>
+              <li><a class="add-question" data-type="file-question"><i class="icon-camera"></i> Photo upload</strong></a></li>
+            </ul>
+          </div>
         </div>
 
       </div>
@@ -656,11 +664,30 @@
       </div>
     </script>
 
+    <script type="text/template" id="text-question-edit-template">
+      <div class="question" data-name="<%= question.name %>">
+        <div class="input-append input-prepend">
+          <span class="add-on"><i class=" icon-pencil"></i></span>
+          <input type="text" placeholder="Text question" value="<%= question.text %>" data-role="question" class="question-input input-xlarge">
+          <a class="btn remove"><i class="icon-trash"></i></a>
+        </div>
+      </div>
+    </script>
+
     <script type="text/template" id="answer-edit-template">
       <div data-role="answer" class="input-append">
         <input type="text" value="<%= text %>">
-        <a class="btn add-sub-question"><i class="icon-sitemap"></i> Add sub-question</a>
-        <a class="btn add-sub-photo-question">Add <i class="icon-camera"></i></strong></a>
+        <div class="btn-group">
+          <button class="btn dropdown-toggle" data-toggle="dropdown">
+          <i class="icon-plus"></i> Add a question <i class="caret"></i>
+          </button>
+          <ul class="dropdown-menu">
+            <li><a href="#" class="add-sub-question" data-type="checkbox-question">Multiple choice</a></li>
+            <li><a href="#" class="add-sub-question" data-type="radio-question">Select one</a></li>
+            <li><a href="#" class="add-sub-question" data-type="text-question">Text field</a></li>
+            <li><a class="add-sub-question" data-type="file-question"><i class="icon-camera"></i> Photo upload</strong></a></li>
+          </ul>
+        </div>
         <a class="btn remove"><i class="icon-trash"></i></a>
       </div>
     </script>
