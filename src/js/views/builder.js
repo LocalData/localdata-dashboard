@@ -31,13 +31,14 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
     templates: {
       question: _.template($('#question-edit-template').html()),
       photoQuestion: _.template($('#photo-question-edit-template').html()),
+      textQuestion: _.template($('#text-question-edit-template').html()),
       answer: _.template($('#answer-edit-template').html())
     },
 
     initialize: function(options) {
       _.bindAll(this, 'render', 'save', 'done', 'makeBlankQuestion', 'renderForm',
-        'suffix', 'editQuestion', 'editQuestionType', 'deleteQuestion',
-        'createQuestion', 'createPhotoQuestion', 'createAnswer', 'addSubQuestion', 'addSubPhotoQuestion',
+        'suffix', 'editQuestion', 'setQuestionType', 'deleteQuestion',
+        'createQuestion', 'createPhotoQuestion', 'createAnswer', 'addSubQuestion',
         'renderQuestion', 'editAnswer', 'deleteAnswer', 'slugify', 'updatePreview');
 
       this.forms = options.forms;
@@ -149,40 +150,34 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
       };
     },
 
-    editQuestionType: function(question) {
-      return function(event) {
-        _kmq.push(['record', 'Question type changed']);
+    setQuestionType: function(question, dataRole) {
+      console.log(dataRole);
 
-        var dataRole = $(event.target).attr('data-role');
-        console.log(dataRole);
+      if (dataRole === 'radio-question') {
+        delete question.type;
+        _.each(question.answers, function(answer){
+          answer.value = this.slugify(answer.text);
+        }.bind(this));
+      }
 
-        if (dataRole === 'radio-question') {
-          delete question.type;
-          _.each(question.answers, function(answer){
-            answer.value = this.slugify(answer.text);
-          }.bind(this));
-        }
+      if (dataRole === 'checkbox-question') {
+        question.type = "checkbox";
+        // Make sure each answer has a name
+        _.each(question.answers, function(answer){
+          answer.name = question.name + '-' + this.slugify(answer.text);
+          answer.value = 'yes';
+        }.bind(this));
+      }
 
-        if (dataRole === 'checkbox-question') {
-          question.type = "checkbox";
-          // Make sure each answer has a name
-          _.each(question.answers, function(answer){
-            answer.name = question.name + '-' + this.slugify(answer.text);
-            answer.value = 'yes';
-          }.bind(this));
-        }
+      if (dataRole === 'file-question') {
+        question.type = 'file';
+        delete question.answers;
+      }
 
-        if (dataRole === 'file-question') {
-          question.type = 'file';
-        }
-
-        // Update the styling
-        var $pills = $(event.target).parent().find('.question-type');
-        $pills.removeClass('btn-info');
-        $(event.target).addClass('btn-info');
-
-        this.updatePreview();
-      };
+      if (dataRole === 'text-question') {
+        question.type = 'text';
+        delete question.answers;
+      }
     },
 
     deleteQuestion: function($question, parent, questionIndex) {
@@ -201,10 +196,14 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
 
     createQuestion: function(parent, questionIndex) {
       return function(event) {
+        event.preventDefault();
+        var type = $(event.target).attr('data-type');
+
         console.log("Adding a new question");
         _kmq.push(['record', 'Question added']);
 
         var newQuestion = this.makeBlankQuestion();
+        this.setQuestionType(newQuestion, type);
         parent.splice(questionIndex + 1, 0, newQuestion);
 
         this.updatePreview();
@@ -241,32 +240,20 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
 
     addSubQuestion: function(question, index) {
       return function(event) {
-        console.log("Adding sub-question");
+        event.preventDefault();
+        var type = $(event.target).attr('data-type');
+
+        console.log("Adding sub-question", type);
         _kmq.push(['record', 'Sub-question added']);
 
+        var newQuestion = this.makeBlankQuestion();
+        this.setQuestionType(newQuestion, type);
+
+        // Add the question to the end of the array, or create a new array
         if (_.has(question.answers[index], 'questions')) {
-          question.answers[index].questions.unshift(this.makeBlankQuestion());
+          question.answers[index].questions.unshift(newQuestion);
         }else {
-          question.answers[index].questions = [this.makeBlankQuestion()];
-        }
-
-        this.updatePreview();
-        this.renderForm();
-      };
-    },
-
-    addSubPhotoQuestion: function(question, index) {
-      return function(event) {
-        console.log("Adding sub-photo-question");
-        _kmq.push(['record', 'Sub-question added']);
-        var q = this.makeBlankQuestion();
-        q.type = 'file';
-        delete q.answers;
-
-        if (_.has(question.answers[index], 'questions')) {
-          question.answers[index].questions.unshift(q);
-        }else {
-          question.answers[index].questions = [q];
+          question.answers[index].questions = [newQuestion];
         }
 
         this.updatePreview();
@@ -328,6 +315,9 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
       if(question.type === 'file') {
         $question = $(this.templates.photoQuestion({question: question}));
       }
+      if(question.type === 'text') {
+        $question = $(this.templates.textQuestion({question: question}));
+      }
 
       // Listen for changes to the question ...................................
       // TODO: make it less verbose
@@ -335,10 +325,6 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
       // Listen for changes to the question text
       var editQuestionProxy = $.proxy(this.editQuestion(question), this);
       $question.find('> div input').keyup(editQuestionProxy);
-
-      // Listen for changes of the question type
-      var editQuestionTypeProxy = $.proxy(this.editQuestionType(question), this);
-      $question.find('.question-type').click(editQuestionTypeProxy);
 
       // Listen for a request to remove a question
       var deleteQuestionProxy = $.proxy(this.deleteQuestion($question, parent, questionIndex), this);
@@ -425,11 +411,6 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
         var $addSubQuestion = $answer.find('.add-sub-question');
         var addSubQuestionProxy = $.proxy(this.addSubQuestion(question, index), this);
         $addSubQuestion.click(addSubQuestionProxy);
-
-        // Add sub photo question
-        var $addSubPhotoQuestion = $answer.find('.add-sub-photo-question');
-        var addSubPhotoQuestionProxy = $.proxy(this.addSubPhotoQuestion(question, index), this);
-        $addSubPhotoQuestion.click(addSubPhotoQuestionProxy);
 
         // Remove an answer
         var $removeButton = $answer.find('.remove');
