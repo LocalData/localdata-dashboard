@@ -113,9 +113,13 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       this.map.addLayer(this.tileLayer);
       this.tileLayer.bringToFront();
 
-      // this.gridLayer = new L.UtfGrid(tilejson.grids[0]);
-      //this.map.addLayer(this.gridLayer);
-      //// this.gridLayer.bringToFront();
+      this.gridLayer = new L.UtfGrid(tilejson.grids[0]);
+      this.map.addLayer(this.gridLayer);
+      // this.gridLayer.bringToFront();
+      this.gridLayer.on('mouseover', function (e) {
+        console.log('hover: ', e.data);
+      });
+
     },
 
     render: function (arg) {
@@ -163,7 +167,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         //           url: 'http://localhost:3001/' + this.survey.get('id') + '/filter/condition/tile.json',
 
         var request = $.ajax({
-          url: 'http://localhost:3001/' + this.survey.get('id') + '/tile.json',
+          url: 'http://matth-nt.herokuapp.com/' + this.survey.get('id') + '/tile.json',
           type: "GET",
           dataType: "jsonp"
         });
