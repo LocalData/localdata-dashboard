@@ -34,6 +34,8 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
     mapView: null,
     listView: null,
 
+    template: _.template($('#response-view').html()),
+
     el: '#response-view-container',
 
     events: {
@@ -45,8 +47,6 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
 
     initialize: function(options) {
       _.bindAll(this, 'render', 'update', 'getNew', 'filter', 'subFilter', 'updateFilterView', 'updateFilterChoices', 'lastUpdated');
-
-      this.template = _.template($('#response-view').html());
 
       this.responses = options.responses;
       this.responses.on('reset', this.update, this);

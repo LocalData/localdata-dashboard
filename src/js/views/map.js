@@ -52,6 +52,45 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
     };
   }
 
+  var ResponseView = Backbone.View.extend({
+
+    template: _.template($("#selected-results-item").html()),
+
+    tagName: 'div',
+
+    events: {
+      'click .delete': 'destroy'
+    },
+
+    initialize: function(options) {
+      this.model = options.response;
+
+      this.model.on('change', this.render, this);
+      this.model.on('destroy', this.remove, this);
+    },
+
+    render: function() {
+      console.log("Rendering");
+      this.$el = $(this.el);
+      this.$el.html(this.template({ r: this.model.toJSON() }));
+      return this;
+    },
+
+    destroy: function(event) {
+      event.preventDefault();
+      this.model.destroy({
+        success: function(model, response) {
+          console.log("success");
+        },
+        error: function(model, xhr, options) {
+          console.log("Error deleting object", xhr);
+        }
+      });
+    }
+
+  });
+
+
   var MapView = Backbone.View.extend({
 
     map: null,
@@ -66,7 +105,8 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
 
     initialize: function(options) {
       console.log("Init map view");
-      _.bindAll(this, 'render', 'selectObject', 'renderObject', 'renderObjects', 'getResponsesInBounds', 'updateMapStyleBasedOnZoom', 'updateObjectStyles',
+      _.bindAll(this, 'render', 'selectObject', 'renderObject', 'renderObjects',
+        'getResponsesInBounds', 'updateMapStyleBasedOnZoom', 'updateObjectStyles',
         'styleFeature', 'setupPolygon');
 
       this.responses = options.responses;
@@ -554,18 +594,15 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
         this.sel = new Responses.Collection(this.responses.where({'id': feature.id}));
       }
 
-      // Only show the most recent result for that parcel / point
-      // TODO
-      // Show previous results for the clicked parcel if that happens
-      var selectedObjects = this.sel.toJSON();
-
-      // Humanize the date
-      _.map(selectedObjects, function(obj){
-        obj.createdHumanized = moment(obj.created, "YYYY-MM-DDThh:mm:ss.SSSZ").format("MMM Do h:mma");
-      });
-
       // Render the object
-      $("#result-container").html(_.template($('#selected-results').html(), {responses: selectedObjects}));
+      this.sel.each(function(response) {
+        var responseView = new ResponseView({
+          response: response
+        });
+        console.log(responseView);
+        console.log(responseView.render().$el);
+        $("#result-container").append(responseView.render().$el);
+      });
 
       // Button to close the details view
       $("#result-container .close").click(function(e) {

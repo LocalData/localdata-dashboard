@@ -5,11 +5,13 @@ define([
   'jquery',
   'lib/lodash',
   'backbone',
+  'moment',
+
   'settings',
   'api'
 ],
 
-function($, _, Backbone, settings, api) {
+function($, _, Backbone, moment, settings, api) {
   'use strict';
 
   var Responses = {};
@@ -17,6 +19,12 @@ function($, _, Backbone, settings, api) {
   Responses.Model = Backbone.Model.extend({
     defaults: {
       responses: {}
+    },
+
+    toJSON: function() {
+      var json = _.clone(this.attributes);
+      json.createdHumanized = moment(json.created, "YYYY-MM-DDThh:mm:ss.SSSZ").format("MMM Do h:mma");
+      return json;
     }
   });
 
