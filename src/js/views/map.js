@@ -52,44 +52,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
     };
   }
 
-  var ResponseView = Backbone.View.extend({
-
-    template: _.template($("#selected-results-item").html()),
-
-    tagName: 'div',
-
-    events: {
-      'click .delete': 'destroy'
-    },
-
-    initialize: function(options) {
-      this.model = options.response;
-
-      this.model.on('change', this.render, this);
-      this.model.on('destroy', this.remove, this);
-    },
-
-    render: function() {
-      console.log("Rendering");
-      this.$el = $(this.el);
-      this.$el.html(this.template({ r: this.model.toJSON() }));
-      return this;
-    },
-
-    destroy: function(event) {
-      event.preventDefault();
-      this.model.destroy({
-        success: function(model, response) {
-          console.log("success");
-        },
-        error: function(model, xhr, options) {
-          console.log("Error deleting object", xhr);
-        }
-      });
-    }
-
-  });
-
 
   var MapView = Backbone.View.extend({
 
