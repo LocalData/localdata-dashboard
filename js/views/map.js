@@ -164,10 +164,12 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
         //  http://matth-nt.herokuapp.com/
         // Get tilejson
-        //           url: 'http://localhost:3001/' + this.survey.get('id') + '/filter/condition/tile.json',
 
         var request = $.ajax({
-          url: 'http://matth-nt.herokuapp.com/' + this.survey.get('id') + '/tile.json',
+          //'http://matth-nt.herokuapp.com/' + this.survey.get('id') + '/tile.json',
+          url: 'http://localhost:3001/' + this.survey.get('id') + '/tile.json',
+
+          //url: 'http://localhost:3001/' + this.survey.get('id') + '/filter/condition/tile.json',
           type: "GET",
           dataType: "jsonp"
         });
