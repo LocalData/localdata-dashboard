@@ -19,7 +19,7 @@ define([
   // Views
   'views/export',
   'views/settings',
-  'views/responses',
+  'views/response/responses',
   'views/forms',
 
   // Misc
