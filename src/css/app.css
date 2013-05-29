@@ -40,6 +40,10 @@ h3 {
   font-size:24px;
 }
 
+.light {
+  color:#fff;
+}
+
 /* Forms....................................................................*/
 form h3 {
   margin-top:1em;
@@ -319,6 +323,10 @@ header a {
     display:block;
     margin:10px 0;
     width:100%;
+  }
+
+  .response .confirm-delete {
+    display:none;
   }
 
 .answers {

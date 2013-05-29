@@ -27,13 +27,14 @@ function($, _, Backbone, events, settings, api, Responses, template) {
     template: _.template(template),
 
     events: {
-      'click .delete': 'destroy',
       'click .confirm': 'confirm',
+      'click .delete': 'destroy',
       'click .cancel': 'cancel'
     },
 
     initialize: function() {
       this.listenTo(this.model, "change", this.render);
+      this.listenTo(this.model, "destroy", this.remove);
     },
 
     render: function() {
@@ -44,12 +45,14 @@ function($, _, Backbone, events, settings, api, Responses, template) {
 
     confirm: function(event) {
       event.preventDefault();
-      $('confirm-delete').show();
+      $('.confirm').hide();
+      $('.confirm-delete').show();
     },
 
     cancel: function(event) {
       event.preventDefault();
-      $('confirm-delete').hide();
+      $('.confirm-delete').hide();
+      $('.confirm').show();
     },
 
     destroy: function(event) {
@@ -57,11 +60,10 @@ function($, _, Backbone, events, settings, api, Responses, template) {
 
       function success(model, repsonse) {
         console.log("Success");
-        this.remove();
       }
 
       function error(model, xhr, options) {
-        console.log("Error destroying");
+        console.log("Error destroying", xhr, options);
         $('.error').html('Error');
       }
 

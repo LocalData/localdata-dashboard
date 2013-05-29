@@ -29,8 +29,14 @@
     <span class="value"><%- resp %>&nbsp;</span>
   </div>
 <% }); %>
-<button class="btn delete"><i class="icon-trash"></i> Delete</button>
-<div class="delete-confirm">
-  <button class="btn delete"><i class="icon-trash"></i> Delete</button>
+
+<hr>
+
+<button class="btn confirm"><i class="icon-trash"></i> Delete</button>
+
+<div class="confirm-delete">
   <button class="btn cancel">Cancel</button>
+  <button class="btn delete"><i class="icon-trash"></i> Confirm delete</button>
 </div>
+
+<div class="error">Sorry, there was a problem deleting this record</div>
