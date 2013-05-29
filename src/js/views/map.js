@@ -15,11 +15,14 @@ define([
   'settings',
   'api',
 
+  // Views
+  'views/response/response',
+
   // Models
   'models/responses'
 ],
 
-function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
+function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseView, Responses) {
   'use strict';
 
   function indexToColor(index) {
@@ -559,7 +562,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
       // Render the object
       this.sel.each(function(response) {
         var responseView = new ResponseView({
-          response: response
+          model: response
         });
         console.log(responseView);
         console.log(responseView.render().$el);
