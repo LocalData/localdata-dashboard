@@ -40,10 +40,6 @@ h3 {
   font-size:24px;
 }
 
-.light {
-  color:#fff;
-}
-
 /* Forms....................................................................*/
 form h3 {
   margin-top:1em;
@@ -300,8 +296,8 @@ header a {
 
   .response {
     border-bottom:1px dotted #86bba6;
-    margin-bottom:10px;
-    padding-bottom:10px;
+    margin-bottom:15px;
+    padding-bottom:15px;
   }
 
   .response h2 {
@@ -313,6 +309,10 @@ header a {
   .response .created,
   .response .collector  {
     color: #589c81;
+  }
+
+  .response .answers {
+    margin-bottom:10px;
   }
 
   .response i {

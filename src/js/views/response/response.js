@@ -45,14 +45,14 @@ function($, _, Backbone, events, settings, api, Responses, template) {
 
     confirm: function(event) {
       event.preventDefault();
-      $('.confirm').hide();
-      $('.confirm-delete').show();
+      this.$('.confirm').hide();
+      this.$('.confirm-delete').show();
     },
 
     cancel: function(event) {
       event.preventDefault();
-      $('.confirm-delete').hide();
-      $('.confirm').show();
+      this.$('.confirm-delete').hide();
+      this.$('.confirm').show();
     },
 
     destroy: function(event) {

@@ -16,13 +16,13 @@ define([
   'api',
 
   // Views
-  'views/response/response',
+  'views/response/response-list',
 
   // Models
   'models/responses'
 ],
 
-function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseView, Responses) {
+function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListView, Responses) {
   'use strict';
 
   function indexToColor(index) {
@@ -559,21 +559,9 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseView, R
         this.sel = new Responses.Collection(this.responses.where({'id': feature.id}));
       }
 
-      // Render the object
-      this.sel.each(function(response) {
-        var responseView = new ResponseView({
-          model: response
-        });
-        console.log(responseView);
-        console.log(responseView.render().$el);
-        $("#result-container").append(responseView.render().$el);
-      });
+      var selectedItemListView = new ResponseListView({collection: this.sel});
+      $("#result-container").html(selectedItemListView.render().$el);
 
-      // Button to close the details view
-      $("#result-container .close").click(function(e) {
-        e.preventDefault();
-        $("#result-container").html("");
-      });
     }
 
   });
