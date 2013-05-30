@@ -561,7 +561,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
       var selectedItemListView = new ResponseListView({collection: this.sel});
       $("#result-container").html(selectedItemListView.render().$el);
-
     }
 
   });

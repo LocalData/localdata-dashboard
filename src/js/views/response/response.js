@@ -59,12 +59,13 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       event.preventDefault();
 
       function success(model, repsonse) {
-        console.log("Success");
+        // No-op for now.
+        // TODO: We might want to show a success message.
       }
 
       function error(model, xhr, options) {
         console.log("Error destroying", xhr, options);
-        $('.error').html('Error');
+        $('.error').show();
       }
 
       this.model.destroy({
@@ -76,5 +77,4 @@ function($, _, Backbone, events, settings, api, Responses, template) {
   });
 
   return ResponseView;
-
 });

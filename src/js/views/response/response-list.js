@@ -47,7 +47,6 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
         $el.append(item.render().el);
       });
 
-
       return this;
     }
   });
