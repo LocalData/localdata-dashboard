@@ -15,7 +15,7 @@ define([
   'models/responses',
 
   // Views
-  'views/responses/response',
+  'views/responses/item',
 
   // Templates
   'text!templates/responses/list.html'
@@ -24,6 +24,11 @@ define([
 function($, _, Backbone, events, settings, api, Responses, ResponseView, template) {
   'use strict';
 
+  /**
+   * Intended for shorter lists of responses (arbitrarily <25)
+   * Doesn't include pagination, which isn't relevant in this case.
+   * See responses/responses/ListView for a heavyweight implementation.
+   */
   var ResponseListView = Backbone.View.extend({
     className: 'responses',
 

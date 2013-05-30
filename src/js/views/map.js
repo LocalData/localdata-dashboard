@@ -16,7 +16,7 @@ define([
   'api',
 
   // Views
-  'views/responses/response-list',
+  'views/responses/list',
 
   // Models
   'models/responses'
