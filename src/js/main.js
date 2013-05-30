@@ -5,6 +5,7 @@
 
 require.config({
   paths: {
+    text: 'lib/text',
     jquery: 'lib/jquery-1.7.1',
     backbone: 'lib/backbone',
     moment: 'lib/moment.min',

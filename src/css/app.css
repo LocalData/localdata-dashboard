@@ -296,8 +296,8 @@ header a {
 
   .response {
     border-bottom:1px dotted #86bba6;
-    margin-bottom:10px;
-    padding-bottom:10px;
+    margin-bottom:15px;
+    padding-bottom:15px;
   }
 
   .response h2 {
@@ -311,6 +311,10 @@ header a {
     color: #589c81;
   }
 
+  .response .answers {
+    margin-bottom:10px;
+  }
+
   .response i {
     color:#999;
   }
@@ -319,6 +323,10 @@ header a {
     display:block;
     margin:10px 0;
     width:100%;
+  }
+
+  .response .confirm-delete {
+    display:none;
   }
 
 .answers {
