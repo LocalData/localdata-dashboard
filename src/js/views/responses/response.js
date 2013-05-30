@@ -15,7 +15,7 @@ define([
   'models/responses',
 
   // Templates
-  'text!templates/response-list-item.html'
+  'text!templates/responses/list-item.html'
 ],
 
 function($, _, Backbone, events, settings, api, Responses, template) {

@@ -15,10 +15,10 @@ define([
   'models/responses',
 
   // Views
-  'views/response/response',
+  'views/responses/response',
 
   // Templates
-  'text!templates/response-list.html'
+  'text!templates/responses/list.html'
 ],
 
 function($, _, Backbone, events, settings, api, Responses, ResponseView, template) {
