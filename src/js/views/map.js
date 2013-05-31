@@ -15,11 +15,14 @@ define([
   'settings',
   'api',
 
+  // Views
+  'views/responses/list',
+
   // Models
   'models/responses'
 ],
 
-function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
+function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListView, Responses) {
   'use strict';
 
   function indexToColor(index) {
@@ -52,6 +55,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
     };
   }
 
+
   var MapView = Backbone.View.extend({
 
     map: null,
@@ -66,7 +70,8 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
 
     initialize: function(options) {
       console.log("Init map view");
-      _.bindAll(this, 'render', 'selectObject', 'renderObject', 'renderObjects', 'getResponsesInBounds', 'updateMapStyleBasedOnZoom', 'updateObjectStyles',
+      _.bindAll(this, 'render', 'selectObject', 'renderObject', 'renderObjects',
+        'getResponsesInBounds', 'updateMapStyleBasedOnZoom', 'updateObjectStyles',
         'styleFeature', 'setupPolygon');
 
       this.responses = options.responses;
@@ -554,24 +559,8 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses) {
         this.sel = new Responses.Collection(this.responses.where({'id': feature.id}));
       }
 
-      // Only show the most recent result for that parcel / point
-      // TODO
-      // Show previous results for the clicked parcel if that happens
-      var selectedObjects = this.sel.toJSON();
-
-      // Humanize the date
-      _.map(selectedObjects, function(obj){
-        obj.createdHumanized = moment(obj.created, "YYYY-MM-DDThh:mm:ss.SSSZ").format("MMM Do h:mma");
-      });
-
-      // Render the object
-      $("#result-container").html(_.template($('#selected-results').html(), {responses: selectedObjects}));
-
-      // Button to close the details view
-      $("#result-container .close").click(function(e) {
-        e.preventDefault();
-        $("#result-container").html("");
-      });
+      var selectedItemListView = new ResponseListView({collection: this.sel});
+      $("#result-container").html(selectedItemListView.render().$el);
     }
 
   });
