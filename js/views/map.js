@@ -113,12 +113,19 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
       this.map.addLayer(this.tileLayer);
       this.tileLayer.bringToFront();
 
-      this.gridLayer = new L.UtfGrid(tilejson.grids[0]);
+      this.gridLayer = new L.UtfGrid(tilejson.grids[0], {
+        resolution: 1
+      });
       this.map.addLayer(this.gridLayer);
       // this.gridLayer.bringToFront();
-      this.gridLayer.on('mouseover', function (e) {
+
+
+      this.gridLayer.on('click', function (e) {
+        var layer = new L.GeoJSON(e.data.geometry);
+        console.log(layer);
+        this.map.addLayer(layer);
         console.log('hover: ', e.data);
-      });
+      }.bind(this));
 
     },
 
@@ -138,10 +145,15 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
         // Initialize the map
         this.map = new L.map('map', {
-          zoom: 12,
+          zoom: 18,
           maxZoom: 18,
-          center: [42.439167,-83.083420]
+          center: [42.439167,-83.083420],
+          //center: [37.775589, -122.413912]
+          // center: [46.8896484375, -83.0181884765625], // if we're using 4326
+          // crs: L.CRS.EPSG4326
         });
+
+
 
         // SF overview: [37.7750,-122.4183]
         // this.map.setView([42.3314,-83.0458], 11); // Detroit overview

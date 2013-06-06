@@ -131,11 +131,13 @@ L.UtfGrid = L.Class.extend({
 		    x = Math.floor(point.x / tileSize),
 		    y = Math.floor(point.y / tileSize),
 		    gridX = Math.floor((point.x - (x * tileSize)) / resolution),
-		    gridY = Math.floor((point.y - (y * tileSize)) / resolution),
+		    gridY = Math.floor((point.y - (y * tileSize)) / resolution), // - 13
 			max = map.options.crs.scale(map.getZoom()) / tileSize;
 
-		x = (x + max) % max;
-		y = (y + max) % max;
+
+			console.log(e.latlng);
+		console.log(gridX, gridY);
+		console.log("xy", x, y);
 
 		var data = this._cache[map.getZoom() + '_' + x + '_' + y];
 		if (!data) {
