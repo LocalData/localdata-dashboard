@@ -37,7 +37,9 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews) {
     },
 
     update: function() {
-      this.surveys.fetch();
+      this.surveys.fetch({
+        reset: true
+      });
     },
     
     render: function() {
