@@ -1,0 +1,19 @@
+{
+  "name": "localdata-dashboard",
+  "version": "0.0.1",
+  "description": "LocalData administrative dashboard app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LocalData/localdata-dashboard.git"
+  },
+  "author": "Amplify Labs",
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-clean": "~0.4.1",
+    "grunt-contrib-requirejs": "~0.4.0",
+    "grunt-contrib-cssmin": "~0.4.0",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-contrib-concat": "~0.3.0"
+  }
+}
