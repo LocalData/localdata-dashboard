@@ -131,7 +131,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       this.tileLayer.bringToFront();
 
       this.gridLayer = new L.UtfGrid(tilejson.grids[0], {
-        resolution: 1
+        resolution: 4
       });
       this.map.addLayer(this.gridLayer);
       // this.gridLayer.bringToFront();
