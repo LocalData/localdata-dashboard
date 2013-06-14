@@ -108,7 +108,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
 
       // Update the count
       // TODO: Use a template
-      this.$('#count').html(_.template('<%= _.size(responses) %> Response<% if(_.size(responses) != 1) { %>s<% } %>', {responses: this.responses}));
+      this.$('#count').html(_.template('<%= count %> Response<% if(count != 1) { %>s<% } %>', {count: this.survey.get('responseCount')}));
 
       // TODO:
       // Update the filters
@@ -138,7 +138,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
     updateFilterChoices: function() {
       var flattenedForm = this.forms.getFlattenedForm();
       $("#filter-view-container").html(_.template($('#filter-results').html(), {
-        responses: this.responses,
+        count: this.survey.get('responseCount'),
         flattenedForm: flattenedForm
       }));
     },
