@@ -145,7 +145,7 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
 
         // Initialize the map
         this.map = new L.map('map', {
-          zoom: 18,
+          zoom: 14,
           maxZoom: 18,
           center: [42.439167,-83.083420],
           //center: [37.775589, -122.413912]
@@ -158,11 +158,6 @@ function($, _, Backbone, L, moment, events, settings, api, Responses) {
         // SF overview: [37.7750,-122.4183]
         // this.map.setView([42.3314,-83.0458], 11); // Detroit overview
         // this.map.setView([42.370805,-83.079728], 17);  // Bethune
-
-
-        // Don't think this is needed: this.markers = {};
-
-
 
         this.baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/matth.map-zmpggdzn/{z}/{x}/{y}.png');
         this.map.addLayer(this.baseLayer);
