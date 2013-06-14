@@ -71,6 +71,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       console.log("Init map view");
       _.bindAll(this,
         'render',
+        'addTileLayer',
         'selectObject',
         'renderObject',
         'renderObjects',
@@ -140,7 +141,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         var layer = new L.GeoJSON(e.data.geometry);
         console.log(layer);
         this.map.addLayer(layer);
-        console.log('hover: ', e.data);
       }.bind(this));
 
     },
@@ -161,15 +161,10 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
         // Initialize the map
         this.map = new L.map('map', {
-          zoom: 14,
+          zoom: 16,
           maxZoom: 18,
-          center: [42.439167,-83.083420],
-          //center: [37.775589, -122.413912]
-          // center: [46.8896484375, -83.0181884765625], // if we're using 4326
-          // crs: L.CRS.EPSG4326
+          center: [42.439167,-83.083420]
         });
-
-
 
         // SF overview: [37.7750,-122.4183]
         // this.map.setView([42.3314,-83.0458], 11); // Detroit overview
@@ -188,7 +183,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         // Get tilejson
         var request = $.ajax({
           //'http://matth-nt.herokuapp.com/' + this.survey.get('id') + '/tile.json',
-          url: 'http://localhost:3001/' + this.survey.get('id') + '/tile.json',
+          url: 'https://localhost:3442/' + this.survey.get('id') + '/tile.json',
 
           //url: 'http://localhost:3001/' + this.survey.get('id') + '/filter/condition/tile.json',
           type: "GET",
