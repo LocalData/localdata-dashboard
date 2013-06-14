@@ -77,7 +77,10 @@ function($, _, Backbone, moment, settings, api) {
           // If we got as many entries as we requested, then request another
           // chunk of data.
           if (responses.length === count) {
-            getChunk(start + count, count);
+            if(count < 500) {
+              getChunk(start + count, count);
+            }
+
           }
 
           // Turn the entries into models and add them to the collection.

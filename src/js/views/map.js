@@ -6,7 +6,7 @@ define([
   'jquery',
   'lib/lodash',
   'backbone',
-  'lib/leaflet.tilejson',
+  'lib/leaflet/leaflet.tilejson',
   'moment',
   'lib/tinypubsub',
   'lib/kissmetrics',
@@ -55,7 +55,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
     };
   }
 
-
   var MapView = Backbone.View.extend({
 
     map: null,
@@ -70,10 +69,19 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
     initialize: function(options) {
       console.log("Init map view");
-      _.bindAll(this, 'render', 'addTileLayer', 'selectObject', 'renderObject', 'renderObjects',
-        'getResponsesInBounds', 'updateMapStyleBasedOnZoom', 'updateObjectStyles',
-        'styleFeature', 'setupPolygon');
-      
+      _.bindAll(this,
+        'render',
+        'addTileLayer',
+        'selectObject',
+        'renderObject',
+        'renderObjects',
+        'getResponsesInBounds',
+        'updateMapStyleBasedOnZoom',
+        'updateObjectStyles',
+        'styleFeature',
+        'setupPolygon'
+      );
+
       this.responses = options.responses;
       // TODO: if we add the filter logic to the responses collection, we can
       // more cleanly trigger off its events.
@@ -86,7 +94,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       this.parcelIdsOnTheMap = {};
       this.objectsOnTheMap = new L.FeatureGroup();
       this.zoneLayer = new L.FeatureGroup();
-      
+
       this.defaultStyle = settings.farZoomStyle;
       this.defaultPointToLayer = function (feature, latlng) {
         return new L.circleMarker(latlng, settings.farZoomStyle);
@@ -115,11 +123,26 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
     // Debounced version of fitBounds. Created in the initialize method.
     delayFitBounds: null,
-    
+
     addTileLayer: function(tilejson) {
       console.log(tilejson);
       this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
       this.map.addLayer(this.tileLayer);
+      this.tileLayer.bringToFront();
+
+      this.gridLayer = new L.UtfGrid(tilejson.grids[0], {
+        resolution: 1
+      });
+      this.map.addLayer(this.gridLayer);
+      // this.gridLayer.bringToFront();
+
+
+      this.gridLayer.on('click', function (e) {
+        var layer = new L.GeoJSON(e.data.geometry);
+        console.log(layer);
+        this.map.addLayer(layer);
+      }.bind(this));
+
     },
 
     render: function (arg) {
@@ -138,30 +161,36 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
         // Initialize the map
         this.map = new L.map('map', {
-          zoom: 15
+          zoom: 16,
+          maxZoom: 18,
+          center: [42.439167,-83.083420]
         });
 
-        // Set up the base map; add the parcels and done markers
+        // SF overview: [37.7750,-122.4183]
+        // this.map.setView([42.3314,-83.0458], 11); // Detroit overview
+        // this.map.setView([42.370805,-83.079728], 17);  // Bethune
+
         this.baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/matth.map-zmpggdzn/{z}/{x}/{y}.png');
         this.map.addLayer(this.baseLayer);
         this.satelliteLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/matth.map-yyr7jb6r/{z}/{x}/{y}.png');
         this.activeLayer = 'streets';
 
+
+        // Set up the base map; add the parcels and done markers
         this.map.addLayer(this.zoneLayer);
         this.map.addLayer(this.objectsOnTheMap);
 
         // Get tilejson
         var request = $.ajax({
-          url: 'http://localhost:3001/' + this.survey.get('id') + '/tile.json',
+          //'http://matth-nt.herokuapp.com/' + this.survey.get('id') + '/tile.json',
+          url: 'https://localhost:3442/' + this.survey.get('id') + '/tile.json',
+
+          //url: 'http://localhost:3001/' + this.survey.get('id') + '/filter/condition/tile.json',
           type: "GET",
           dataType: "jsonp"
         });
-
-        console.log("REQUESTING TILE LAYER");
         request.done(this.addTileLayer);
 
-        this.map.setView([37.7750,-122.4183], 11); // default center
-        this.updateMapStyleBasedOnZoom();
         this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
       }
 
@@ -194,7 +223,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         // Plot all of the responses from the responses collection.
         // this.plotResponses();
       }
-
 
       events.publish('loading', [false]);
       return this;
@@ -470,6 +498,10 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       // Objects should be more detailed close up (zoom 10+)
       if(zoom > 10) {
 
+        this.tileLayer.bringToFront();
+
+        console.log("Greater than 10");
+
         // If we're in pretty close, show the satellite view
         if(zoom > 14) {
           if(this.activeLayer !== 'satellite') {
@@ -479,9 +511,13 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
             this.activeLayer = 'satellite';
           }
 
-          if(this.defaultStyle !== settings.closeZoomStyle) {
-            this.defaultStyle = settings.closeZoomStyle;
-            this.updateObjectStyles(settings.closeZoomStyle);
+          if(this.activeLayer !== 'satellite') {
+            console.log("Active layer begin", this.activeLayer);
+            this.map.removeLayer(this.baseLayer);
+            this.map.addLayer(this.satelliteLayer, true);
+            this.satelliteLayer.bringToBack();
+            this.activeLayer = 'satellite';
+            console.log("Active layer end", this.activeLayer);
           }
 
         } else {
@@ -502,7 +538,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         }
 
       }else {
-        // Far zoom (>14)
+        // Far zoom (< 10)
         // Show a more abstract map when zoomed out
         if (this.activeLayer !== 'streets') {
           this.map.removeLayer(this.satelliteLayer);
@@ -537,7 +573,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       // And add them to the map
       api.getResponsesInBounds(this.map.getBounds(), this.addResultsToMap);
     },
-
 
     /**
      * Highlight a selected object; un-hilight any previously selected object
