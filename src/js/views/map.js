@@ -6,7 +6,7 @@ define([
   'jquery',
   'lib/lodash',
   'backbone',
-  'lib/leaflet.tilejson',
+  'lib/leaflet/leaflet.tilejson',
   'moment',
   'lib/tinypubsub',
   'lib/kissmetrics',

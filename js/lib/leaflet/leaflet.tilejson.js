@@ -97,7 +97,7 @@ L.TileJSON = (function() {
             }
         }
 
-        for (var validationKey in context.validation) {            
+        for (var validationKey in context.validation) {
             if (!context.validation[validationKey]) {
                 throw new Error('Missing property "'
                     + validationKey + '".');

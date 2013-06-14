@@ -27,12 +27,12 @@ require.config({
       exports: 'L'
     },
 
-    'lib/leaflet/leaflet.utfgrid': {
-      deps: ['lib/leaflet/leaflet'],
-      exports: 'L'
-    },
+    //'lib/leaflet/leaflet.utfgrid': {
+    //  deps: ['lib/leaflet/leaflet'],
+    //  exports: 'L'
+    //},
 
-    'lib/leaflet.tilejson': {
+    'lib/leaflet/leaflet.tilejson': {
       deps: ['lib/leaflet/leaflet', 'lib/leaflet/leaflet.utfgrid'],
       exports: 'L'
     },
