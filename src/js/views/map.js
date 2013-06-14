@@ -183,7 +183,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         // Get tilejson
         var request = $.ajax({
           //'http://matth-nt.herokuapp.com/' + this.survey.get('id') + '/tile.json',
-          url: 'https://localhost:3442/' + this.survey.get('id') + '/tile.json',
+          url: '/tiles/' + this.survey.get('id') + '/tile.json',
 
           //url: 'http://localhost:3001/' + this.survey.get('id') + '/filter/condition/tile.json',
           type: "GET",
