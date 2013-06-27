@@ -51,7 +51,6 @@ module.exports = function(grunt) {
           baseUrl: 'src/js',
           mainConfigFile: 'src/js/main.js',
           out: '<%= dirs.staging %>/js/main.js',
-          logLevel: 4,
           optimize: 'uglify2',
           uglify2: {
             // Preserve license/copyright comments
