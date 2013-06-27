@@ -51,6 +51,7 @@ module.exports = function(grunt) {
           baseUrl: 'src/js',
           mainConfigFile: 'src/js/main.js',
           out: '<%= dirs.staging %>/js/main.js',
+          logLevel: 4,
           optimize: 'uglify2',
           uglify2: {
             // Preserve license/copyright comments
@@ -228,7 +229,7 @@ module.exports = function(grunt) {
   grunt.task.run('setVersion');
 
   grunt.registerTask('build', ['cssmin', 'requirejs', 'copy:staging', 'concat:build', 'copy:build']);
-  
+
 
   // Default task
   grunt.registerTask('default', ['build']);
