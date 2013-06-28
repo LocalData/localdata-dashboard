@@ -145,6 +145,15 @@ define(function (require) {
   };
 
 
+  api.getResponsesForParcel = function(parcel_id, callback) {
+    var url = api.getParcelDataURL(parcel_id);
+
+    $.getJSON(url, function(data){
+      callback(data);
+    });
+  };
+
+
   // Get the form for the current survey
   api.getForm = function(callback) {
     console.log("API: getting form data");

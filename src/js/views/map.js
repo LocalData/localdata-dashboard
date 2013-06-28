@@ -63,7 +63,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
     paginationView: null,
     selectedLayer: null,
     filtered: false,
-    selectedObject: {},
     markers: {},
     filter: null,
 
@@ -124,8 +123,11 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
     // Debounced version of fitBounds. Created in the initialize method.
     delayFitBounds: null,
 
+    /**
+     * Given tilejson data, add the tiles and the UTF grid
+     * @param  {Object} tilejson
+     */
     addTileLayer: function(tilejson) {
-      console.log(tilejson);
       this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
       this.map.addLayer(this.tileLayer);
       this.tileLayer.bringToFront();
@@ -134,15 +136,9 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         resolution: 1
       });
       this.map.addLayer(this.gridLayer);
-      // this.gridLayer.bringToFront();
 
-
-      this.gridLayer.on('click', function (e) {
-        var layer = new L.GeoJSON(e.data.geometry);
-        console.log(layer);
-        this.map.addLayer(layer);
-      }.bind(this));
-
+      // Handle clicks on the grid layer
+      this.gridLayer.on('click', this.selectObject);
     },
 
     render: function (arg) {
@@ -583,16 +579,17 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
       // Visually deselect the previous style
       if (this.selectedLayer !== null) {
-        var originalStyle = this.styleFeature(this.selectedLayer.feature);
-        this.selectedLayer.setStyle(originalStyle);
+        this.map.removeLayer(this.selectedLayer);
       }
 
-      // Select the current layer
-      this.selectedLayer = event.layer;
-      this.selectedLayer.setStyle(settings.selectedStyle);
+      var layer = this.selectedLayer = new L.GeoJSON(event.data.geometry);
+      layer.setStyle(settings.selectedStyle);
+
+      console.log(event.data);
+      this.map.addLayer(layer);
 
       // Let's show some info about this object.
-      this.details(this.selectedLayer.feature);
+      this.details(event.data);
     },
 
 
@@ -603,13 +600,16 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
      */
     details: function(feature) {
       // Find out if we're looking up a set of parcels, or one point
+      var id;
       if(feature.parcelId !== undefined && feature.parcelId !== '') {
-        this.sel = new Responses.Collection(this.responses.where({'parcel_id': feature.parcelId}));
+        id = feature.parcelId;
       }else {
-        this.sel = new Responses.Collection(this.responses.where({'id': feature.id}));
+        id = feature.id;
       }
 
-      var selectedItemListView = new ResponseListView({collection: this.sel});
+      var responses = new Responses.Collection();
+
+      var selectedItemListView = new ResponseListView({collection: responses});
       $("#result-container").html(selectedItemListView.render().$el);
     }
 
