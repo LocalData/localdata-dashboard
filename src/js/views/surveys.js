@@ -161,7 +161,7 @@ function(
       this.survey.on('change', this.render, this);
 
       // Get the relevant responses
-      this.responses = new ResponseModels.Collection([], {surveyId: this.surveyId});
+      // this.responses = new ResponseModels.Collection([], {surveyId: this.surveyId});
 
       // Get the forms
       this.forms = new FormModels.Collection({surveyId: this.surveyId});
@@ -180,7 +180,6 @@ function(
       }
 
       // Set the context & render the page
-      console.log("SURVEY", this.survey.toJSON());
       var context = {
         survey: this.survey.toJSON()
       };
@@ -189,7 +188,6 @@ function(
       // List the responses
       this.responseListView = new ResponseViews.MapAndListView({
         el: $("#response-view-container"),
-        responses: this.responses,
         forms: this.forms,
         survey: this.survey
       });

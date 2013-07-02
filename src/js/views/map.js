@@ -81,12 +81,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         'setupPolygon'
       );
 
-      this.responses = options.responses;
-      // TODO: if we add the filter logic to the responses collection, we can
-      // more cleanly trigger off its events.
-      this.listenTo(this.responses, 'reset', this.render);
-      this.listenTo(this.responses, 'addSet', this.render);
-
       this.survey = options.survey;
 
       // We track the results on the map using these two groups
@@ -104,24 +98,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       this.render();
     },
 
-    fitBounds: function () {
-      this.map.invalidateSize(false);
-
-      if (this.responses !== null && this.responses.length > 0) {
-        try {
-          this.map.fitBounds(this.objectsOnTheMap.getBounds());
-        } catch (e) {
-        }
-      } else if (this.survey.has('zones')) {
-        try {
-          this.map.fitBounds(this.zoneLayer.getBounds());
-        } catch (e) {
-        }
-      }
-    },
-
-    // Debounced version of fitBounds. Created in the initialize method.
-    delayFitBounds: null,
 
     /**
      * Given tilejson data, add the tiles and the UTF grid
@@ -142,14 +118,8 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
     },
 
     render: function (arg) {
-      var hasResponses = this.responses !== null && this.responses.length > 0;
+      console.log("Rendering map");
       var hasZones = this.survey.has('zones');
-
-      // Don't draw a map if there are no responses and no survey zones to
-      // plot.
-      if (!hasResponses && !hasZones) {
-        return;
-      }
 
       if (this.map === null) {
         // Create the map.
@@ -197,12 +167,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         // We don't start listening in initialize because we might get the
         // change event before we even have a map.
         this.listenTo(this.survey, 'change', this.plotZones);
-      }
-
-      // If there are no responses, don't bother trying to plot responses or
-      // deal with filters.
-      if (!hasResponses) {
-        return;
       }
 
       // TODO: better message passing
@@ -554,42 +518,33 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
 
     /**
-     * Get all the responses in the current viewport
-     */
-    getResponsesInBounds: function(){
-      console.log("Getting responses in the map");
-
-      // Don't add any markers if the zoom is really far out.
-      var zoom = this.map.getZoom();
-      if(zoom < 17) {
-        return;
-      }
-
-      // Get the objects in the bounds
-      // And add them to the map
-      api.getResponsesInBounds(this.map.getBounds(), this.addResultsToMap);
-    },
-
-    /**
      * Highlight a selected object; un-hilight any previously selected object
      * @param  {Object} event
      */
     selectObject: function(event) {
       _kmq.push(['record', "Map object selected"]);
 
-      // Visually deselect the previous style
+      // Remove any previously selected layer
       if (this.selectedLayer !== null) {
         this.map.removeLayer(this.selectedLayer);
       }
 
-      var layer = this.selectedLayer = new L.GeoJSON(event.data.geometry);
-      layer.setStyle(settings.selectedStyle);
+      // Add a layer
+      this.selectedLayer = new L.GeoJSON(event.data.geometry);
+      this.selectedLayer.setStyle(settings.selectedStyle);
+      this.map.addLayer(this.selectedLayer);
 
-      console.log(event.data);
-      this.map.addLayer(layer);
-
-      // Let's show some info about this object.
+      // Let's show some info about this object in the sidebar.
       this.details(event.data);
+    },
+
+
+    showDetails: function(responses) {
+      console.log(responses);
+      var selectedItemListView = new ResponseListView({
+        collection: collection
+      });
+      $("#result-container").html(selectedItemListView.render().$el);
     },
 
 
@@ -601,16 +556,17 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
     details: function(feature) {
       // Find out if we're looking up a set of parcels, or one point
       var id;
-      if(feature.parcelId !== undefined && feature.parcelId !== '') {
-        id = feature.parcelId;
+      if(feature.parcel_id !== undefined && feature.parcel_id !== '') {
+        id = feature.parcel_id;
       }else {
         id = feature.id;
       }
 
-      var responses = new Responses.Collection();
-
-      var selectedItemListView = new ResponseListView({collection: responses});
-      $("#result-container").html(selectedItemListView.render().$el);
+      var collection = new Responses.Collection([], {
+        surveyId: surveyId,
+        objectId: id
+      });
+      collection.on('reset', this.showDetails);
     }
 
   });
