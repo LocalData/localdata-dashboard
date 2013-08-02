@@ -6,6 +6,7 @@ define([
   'lib/lodash',
   'backbone',
   'lib/tinypubsub',
+  'lib/async',
 
   // LocalData
   'settings',
@@ -32,6 +33,7 @@ function(
   _,
   Backbone,
   events,
+  async,
 
   // LocalData
   settings,
@@ -55,6 +57,11 @@ function(
 
   var SurveyViews = {};
 
+  function downgrade(f) {
+    return function g(data) {
+      return f(null, data);
+    };
+  }
 
   SurveyViews.ListItemView = Backbone.View.extend({
     initialize: function() {
@@ -158,13 +165,26 @@ function(
       // Set up the page and show the given survey
       this.surveyId = options.id;
       this.survey = new SurveyModels.Model({id: this.surveyId});
-      this.survey.on('change', this.render, this);
 
       // Get the relevant responses
       this.responses = new ResponseModels.Collection([], {surveyId: this.surveyId});
 
       // Get the forms
       this.forms = new FormModels.Collection({surveyId: this.surveyId});
+
+      // Don't render the page until we have the survey and the forms, both of
+      // which are necessary for the content within a SurveyView.
+      var self = this;
+      async.parallel([
+        function (next) {
+          self.survey.once('change', downgrade(next));
+        },
+        function (next) {
+          self.forms.once('reset', downgrade(next));
+        }
+      ], function (error) {
+        self.render();
+      });
     },
 
     update: function () {
