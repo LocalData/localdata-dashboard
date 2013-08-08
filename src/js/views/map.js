@@ -26,9 +26,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
   'use strict';
 
   function indexToColor(index) {
-    if (index >= 0) {
-      return settings.colorRange[index + 1];
-    }
+    if (index >= 0) return settings.colorRange[index + 1];
     return settings.colorRange[0];
   }
 
@@ -56,15 +54,16 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
   }
 
   var MapView = Backbone.View.extend({
+    SATELLITE_URL: 'http://a.tiles.mapbox.com/v3/matth.map-yyr7jb6r/{z}/{x}/{y}.png',
+    BASEMAP_URL: 'http://a.tiles.mapbox.com/v3/matth.map-n9bps30s/{z}/{x}/{y}.png',
 
-    map: null,
-    responses: null,
-    survey: null,
-    paginationView: null,
-    selectedLayer: null,
     filtered: false,
-    markers: {},
     filter: null,
+    map: null,
+    markers: {},
+    responses: null,
+    selectedLayer: null,
+    survey: null,
 
     initialize: function(options) {
       console.log("Init map view");
@@ -83,7 +82,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
       this.survey = options.survey;
 
-      // We track the results on the map using these two groups
       this.parcelIdsOnTheMap = {};
       this.objectsOnTheMap = new L.FeatureGroup();
       this.zoneLayer = new L.FeatureGroup();
@@ -118,89 +116,46 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
     },
 
     render: function (arg) {
-      console.log("Rendering map");
-      var hasZones = this.survey.has('zones');
+      if (this.map !== null) return;
 
-      if (this.map === null) {
-        // Create the map.
-        this.$el.html(_.template($('#map-view').html(), {}));
+      // Create the map.
+      this.$el.html(_.template($('#map-view').html(), {}));
 
-        // Initialize the map
-        this.map = new L.map('map', {
-          zoom: 16,
-          maxZoom: 18,
-          center: [42.439167,-83.083420]
-        });
+      // Initialize the map
+      this.map = new L.map('map', {
+        zoom: 16,
+        maxZoom: 18,
+        center: [42.439167,-83.083420]
+      });
+      // SF overview: [37.7750,-122.4183]
+      // this.map.setView([42.3314,-83.0458], 11); // Detroit overview
+      // this.map.setView([42.370805,-83.079728], 17);  // Bethune
 
-        // SF overview: [37.7750,-122.4183]
-        // this.map.setView([42.3314,-83.0458], 11); // Detroit overview
-        // this.map.setView([42.370805,-83.079728], 17);  // Bethune
+      this.baseLayer = L.tileLayer(this.BASEMAP_URL).addTo(this.map);
+      this.satelliteLayer = L.tileLayer(this.SATELLITE_URL);
+      this.activeLayer = 'streets';
 
-        this.baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/matth.map-zmpggdzn/{z}/{x}/{y}.png');
-        this.map.addLayer(this.baseLayer);
-        this.satelliteLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/matth.map-yyr7jb6r/{z}/{x}/{y}.png');
-        this.activeLayer = 'streets';
+      // Set up the base map; add the parcels and done markers
+      this.map.addLayer(this.zoneLayer);
+      this.map.addLayer(this.objectsOnTheMap);
 
+      // Get tilejson
+      //'http://matth-nt.herokuapp.com/' + this.survey.get('id') + '/tile.json',
+      //url: 'http://localhost:3001/' + this.survey.get('id') + '/filter/condition/tile.json',
+      var request = $.ajax({
+        url: '/tiles/' + this.survey.get('id') + '/tile.json',
+        type: "GET",
+        dataType: "jsonp"
+      });
+      request.done(this.addTileLayer);
 
-        // Set up the base map; add the parcels and done markers
-        this.map.addLayer(this.zoneLayer);
-        this.map.addLayer(this.objectsOnTheMap);
+      this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
 
-        // Get tilejson
-        var request = $.ajax({
-          //'http://matth-nt.herokuapp.com/' + this.survey.get('id') + '/tile.json',
-          url: '/tiles/' + this.survey.get('id') + '/tile.json',
+      // Handle zones
+      if (this.survey.has('zones')) this.plotZones();
+      this.listenTo(this.survey, 'change', this.plotZones);
 
-          //url: 'http://localhost:3001/' + this.survey.get('id') + '/filter/condition/tile.json',
-          type: "GET",
-          dataType: "jsonp"
-        });
-        request.done(this.addTileLayer);
-
-        this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
-      }
-
-      if (hasZones) {
-        // Plot the survey zones.
-        this.plotZones();
-      } else {
-        // We don't start listening in initialize because we might get the
-        // change event before we even have a map.
-        this.listenTo(this.survey, 'change', this.plotZones);
-      }
-
-      // TODO: better message passing
-      events.publish('loading', [true]);
-
-      if (this.responses.filters === null) {
-        this.filter = null;
-      }
-
-      if (_.isArray(arg)) {
-        // We got an array of models. Let's plot them.
-        // this.plotResponses(arg);
-      } else {
-        // Plot all of the responses from the responses collection.
-        // this.plotResponses();
-      }
-
-      events.publish('loading', [false]);
       return this;
-    },
-
-
-    /**
-     * Set filter parameters for displaying results on the map
-     * The response collection will activate this if we have an active filter
-     * @param {String} question Name of the question, eg 'vacant'
-     * @param {Object} answers  Possible answers to the qu
-     */
-    setFilter: function (question, answers) {
-      this.filter = {
-        question: question,
-        answers: answers
-      };
-      this.plotResponses();
     },
 
 
@@ -239,173 +194,23 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
     },
 
 
-    /**
-     * Set up a geojson feature for a response object with a polygon
-     * @param  {Object} response a response object with a polygon
-     * @return {Object}          GeoJSON feature
-     */
-    setupPolygon: function(response) {
-      // Record the objects as rendered so we don't render it twice.
-      var parcelId = response.get('parcel_id');
-      this.parcelIdsOnTheMap[parcelId] = true;
-
-      // Set up the default style
-      var style = this.defaultStyle;
-
-      // Set up the feature
-      var feature = {
-        type: 'Feature',
-        id: response.get('id'),
-        parcelId: parcelId,
-        geometry: response.get('geo_info').geometry,
-        style: style
-      };
-
-      // If there is a filter, attach the filtered question to the feature
-      // This is used later to style the feature
-      // We don't attach all the data to keep size down
-      // (large collections can have 20+ mb of data)
-      if (this.filter !== null) {
-
-        // Some responses don't have associated data. It's still important that
-        // they appear in the filter, since the user may be looking for empty
-        // result sets.
-        if(response.get('responses') === undefined) {
-          feature[this.filter.question] = undefined;
-        }else {
-          feature[this.filter.question] = response.get('responses')[this.filter.question];
-        }
-      }
-
-      // Return the feature for rendering
-      return feature;
-    },
-
-
-    /**
-     * Plot responses on the map
-     * @param  {Array} responses
-     */
-    plotResponses: function (responses) {
-      // If we aren't given an explicit set of responses to plot,
-      // we'll plot all of the responses from the collection.
-      if (responses === undefined) {
-
-        // Clear out the old results first
-        this.objectsOnTheMap.clearLayers();
-        this.parcelIdsOnTheMap = {};
-
-        // TODO: not great form to reassign one of the arguments
-        responses = this.responses.models;
-      }
-
-      var renderedParcelTracker = this.parcelIdsOnTheMap;
-
-      // We'll need to create GeoJSON FeatureCollection objects to pass
-      // to Leaflet for rendering.
-      var featureCollection = {
-        type: 'FeatureCollection',
-        features: []
-      };
-
-      var pointCollection = {
-        type: 'FeatureCollection',
-        features: []
-      };
-
-      // Populate the FeatureCollection for responses with full geometry.
-      featureCollection.features = _.map(
-        _.filter(responses, function (response) {
-
-          // Get items that have geometry
-          // AND aren't already on the map
-          return (_.has(response.get('geo_info'), 'geometry') &&
-                 !_.has(renderedParcelTracker, response.get('parcel_id'))
-          );
-      }), this.setupPolygon);
-
-      // Populate the FeatureCollection for responses with only a centroid.
-      pointCollection.features = _.map(
-        _.filter(responses, function (response) {
-
-        return (!_.has(response.get('geo_info'), 'geometry') &&
-                _.has(response.get('geo_info'), 'centroid'));
-      }), function (response) {
-
-        // Record the objects as rendered so we don't render it twice.
-        var id = response.get('id');
-        renderedParcelTracker[id] = true;
-
-        // Set up the feature
-        var feature = {
-          type: 'Feature',
-          id: id,
-          geometry: {
-            type: 'Point',
-            coordinates: response.get('geo_info').centroid
-          }
-        };
-
-        return feature;
-      });
-
-      // If we found some full-geometry responses, set up the style and pass
-      // them to Leaflet.
-      if (featureCollection.features.length > 0) {
-        // TODO: THE DATA IS GONE so the STYLE IS GONE.
-        var featureLayer = new L.geoJson(featureCollection, {
-          pointToLayer: this.defaultPointToLayer,
-          style: this.styleFeature
-        });
-        featureLayer.on('click', this.selectObject);
-
-        // Add the layer to the layergroup and the hashmap
-        this.objectsOnTheMap.addLayer(featureLayer);
-      }
-
-      // If we found some centroid-only responses, set up the style and pass
-      // them to Leaflet.
-      if (pointCollection.features.length > 0) {
-        var pointLayer = new L.geoJson(pointCollection, {
-          pointToLayer: this.defaultPointToLayer,
-          style: settings.circleMarker
-        });
-        pointLayer.on('click', this.selectObject);
-
-        // Add the layer to the layergroup and the hashmap
-        this.objectsOnTheMap.addLayer(pointLayer);
-      }
-
-
-      if (featureCollection.features.length > 0 || pointCollection.features.length > 0) {
-        this.delayFitBounds();
-      }
-    },
-
-    // Plot the zones of a survey
     plotZones: function () {
-      if (this.survey.has('zones')) {
-        var zones = this.survey.get('zones');
+      if (!this.survey.has('zones')) return;
 
-        // Clear the old layer
-        this.zoneLayer.clearLayers();
+      var zones = this.survey.get('zones');
+      this.zoneLayer.clearLayers();
+      this.zoneLayer.addLayer(new L.geoJson(zones, {
+        style: zoneStyle
+      }));
 
-        // Create and add the new layer
-        this.zoneLayer.addLayer(new L.geoJson(zones, {
-          style: zoneStyle
-        }));
-
-        // Fit the map to the zones, if appropriate.
-        this.delayFitBounds();
-
-        // Make sure objects are on top
-        this.objectsOnTheMap.bringToFront();
-      }
+      this.delayFitBounds();
+      this.objectsOnTheMap.bringToFront();
     },
 
     updateObjectStyles: function(style) {
       this.objectsOnTheMap.setStyle(style);
     },
+
 
     // Expects an object with properties
     // obj.parcelId: ID of the given object
