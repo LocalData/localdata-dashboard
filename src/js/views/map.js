@@ -461,7 +461,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
             this.updateObjectStyles(settings.closeZoomStyle);
           }
         } else {
-          // Mid zoom (11-14)
+          // Mid zoom (14-15)
           // We're not that close, show the mid zoom styles
           if(this.defaultStyle !== settings.midZoomStyle) {
             this.defaultStyle = settings.midZoomStyle;
@@ -470,7 +470,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         }
 
       }else {
-        // Far zoom (>13)
+        // Far zoom (13 and further out)
         // Show a more abstract map when zoomed out
         if(this.defaultStyle !== settings.farZoomStyle) {
           this.defaultStyle = settings.farZoomStyle;
@@ -479,7 +479,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       }
 
       // If a parcel is selected, make sure it says visually selected
-      if (this.selectedLayer !== null) {s
+      if (this.selectedLayer !== null) {
         this.selectedLayer.setStyle(settings.selectedStyle);
       }
     },
