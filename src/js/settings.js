@@ -64,8 +64,8 @@ function(L) {
 
   settings.midZoomStyle = {
     'color': '#df455d',
-    'opacity': 0,
-    'weight': 1,
+    'opacity': 1,
+    'weight': 6,
     'fillOpacity': 0.5,
     'fillColor': '#df455d'
   };
@@ -75,7 +75,7 @@ function(L) {
     'opacity': 1,
     'fillOpacity': 0.9,
     'fillColor': '#df455d',
-    'weight': 8
+    'weight': 12
   };
 
   settings.selectedStyle = {
