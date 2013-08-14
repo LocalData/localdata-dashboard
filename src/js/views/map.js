@@ -452,30 +452,21 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       _kmq.push(['record', "Map zoomed"]);
       var zoom = this.map.getZoom();
 
+      console.log("Zoom", zoom);
       // Objects should be more detailed close up (zoom 14+)
-      if(zoom > 13) {
 
-        if(zoom > 15) {
-          if(this.defaultStyle !== settings.closeZoomStyle) {
-            this.defaultStyle = settings.closeZoomStyle;
-            this.updateObjectStyles(settings.closeZoomStyle);
-          }
-        } else {
-          // Mid zoom (14-15)
-          // We're not that close, show the mid zoom styles
-          if(this.defaultStyle !== settings.midZoomStyle) {
-            this.defaultStyle = settings.midZoomStyle;
-            this.updateObjectStyles(settings.midZoomStyle);
-          }
-        }
-
-      }else {
-        // Far zoom (13 and further out)
-        // Show a more abstract map when zoomed out
-        if(this.defaultStyle !== settings.farZoomStyle) {
-          this.defaultStyle = settings.farZoomStyle;
-          this.updateObjectStyles(settings.farZoomStyle);
-        }
+      if(zoom < 14 && this.defaultStyle !== settings.farZoomStyle) {
+        console.log("out triggered", this.defaultStyle);
+        this.defaultStyle = settings.farZoomStyle;
+        this.updateObjectStyles(settings.farZoomStyle);
+      }else if (zoom < 16 && zoom > 13 && this.defaultStyle !== settings.midZoomStyle) {
+        console.log("medium", this.defaultStyle);
+        this.defaultStyle = settings.midZoomStyle;
+        this.updateObjectStyles(settings.midZoomStyle);
+      }else if(zoom >= 16 && this.defaultStyle !== settings.closeZoomStyle) {
+        console.log("close", this.defaultStyle);
+        this.defaultStyle = settings.closeZoomStyle;
+        this.updateObjectStyles(settings.closeZoomStyle);
       }
 
       // If a parcel is selected, make sure it says visually selected
