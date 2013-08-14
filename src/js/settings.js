@@ -65,7 +65,7 @@ function(L) {
   settings.midZoomStyle = {
     'color': '#df455d',
     'opacity': 1,
-    'weight': 6,
+    'weight': 5,
     'fillOpacity': 0.5,
     'fillColor': '#df455d'
   };
