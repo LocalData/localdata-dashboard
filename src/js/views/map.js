@@ -451,7 +451,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
       _kmq.push(['record', "Map zoomed"]);
       var zoom = this.map.getZoom();
-      console.log(zoom);
 
       // Objects should be more detailed close up (zoom 14+)
       if(zoom > 13) {
