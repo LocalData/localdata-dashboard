@@ -11,8 +11,6 @@
     <link href='//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,300|Pacifico' rel='stylesheet' type='text/css'>
 
     <style type="text/css" media="screen">
-      @import url("css/lib/css/bootstrap.css");
-      @import url("css/lib/css/bootstrap-responsive.css");
       @import url("/css/lib/font-awesome.min.css");
       @import url("js/lib/leaflet/leaflet.css");
       @import url("css/app.css");
@@ -21,19 +19,23 @@
 
 <body>
     <!-- Header -->
-  <div class="navbar" id="site-header">
-      <div class="container-fluid">
-        <div class="row-fluid">
-          <div class="span2">
-            <h1><a href="index.html">localdata</a></h1>
-          </div>
+
+    <header class="out">
+      <div class="in">
+        <div class="a">
+          <h1 class="logo"><a href="index.html">LocalData</a></h1>
+        </div>
+        <div class="b">
+        </div>
+      </div>
+    </header>
+
+          <!--
           <div class="span10 tools">
             <a href="/" class="mysurveys">All Surveys</a>
             <div id="userbar-container"></div>
           </div>
-        </div>
-      </div>
-  </div>
+          -->
 
 
     <div id="container">
@@ -68,25 +70,13 @@
 
 
     <!-- Dashboard ..........................................................-->
-
-
     <script type="text/template" id="dashboard">
-      <div class="container-fluid">
-        <div class="row-fluid">
-          <div class="span12 survey-header">
-            <h2>My Surveys <a href="#/surveys/new" class="mysurveys" id="newsurvey">Create a new survey</a></h2>
-          </div>
-        </div>
+      <h2>My Surveys <a href="#/surveys/new" class="mysurveys" id="newsurvey">Create a new survey</a></h2>
 
-        <div class="main">
-          <div class="row-fluid">
-              <div class="span12 survey-list">
-              </div>
-            </div>
-          </div>
-        </div>
+      <div class="survey-list">
       </div>
     </script>
+
 
     <!-- New surveys ........................................................-->
     <script type="text/template" id="new-survey-view">
@@ -257,40 +247,52 @@
     <!-- Survey ...........................................................-->
     <script type="text/template" id="survey-view">
 
-    <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span12 survey-header">
-          <h2 id="survey-name"><%= survey.name %></h2>
+      <div class="out contrast">
+        <div class="in">
+          <div class="a">
+            <h2 id="survey-name"><%= survey.name %></h2>
+          </div>
+
+          <div class="b">
+            <div class="span12">
+              <ul id="nav" class="nav nav-tabs">
+                <li class="active" id="tab-survey-home"><a href="#surveys/<%= survey.slug %>"><i class="icon-home" data-show="response-view-container"></i>Results</a></li>
+                <li class="" id="tab-survey-export" data-show=""><a href="#surveys/<%= survey.slug %>/export" data-show="export-view-container"><i class="icon-download"></i>Export</a></li>
+                <li class="" id="tab-survey-form"><a href="#surveys/<%= survey.slug %>/form" data-show="form-view-container"><i class="icon-list-ul"></i>Survey Questions</a></li>
+              </ul>
+            </div>
+
+
+          </div>
         </div>
       </div>
 
-      <div class="main">
-        <div class="row-fluid">
-          <div class="span12">
-            <ul id="nav" class="nav nav-tabs">
-              <li class="active" id="tab-survey-home"><a href="#surveys/<%= survey.slug %>"><i class="icon-home" data-show="response-view-container"></i>Results</a></li>
-              <li class="" id="tab-survey-export" data-show=""><a href="#surveys/<%= survey.slug %>/export" data-show="export-view-container"><i class="icon-download"></i>Export</a></li>
-              <li class="" id="tab-survey-form"><a href="#surveys/<%= survey.slug %>/form" data-show="form-view-container"><i class="icon-list-ul"></i>Survey Questions</a></li>
-            </ul>
-          </div>
-        </div>
-
-        <div class="row-fluid">
-          <div class="span12" id="survey-tabs">
-            <div id="loading-view-container" class="tab"></div>
-            <div id="response-view-container" class="tab"></div>
-            <div id="form-view-container" class="tab"></div>
-            <div id="export-view-container" class="tab"></div>
-            <div id="settings-view-container" class="tab"></div>
-          </div>
-        </div>
+      <div id="survey-tabs">
+        <div id="loading-view-container" class="tab"></div>
+        <div id="response-view-container" class="tab"></div>
+        <div id="form-view-container" class="tab"></div>
+        <div id="export-view-container" class="tab"></div>
+        <div id="settings-view-container" class="tab"></div>
       </div>
 
     </script>
 
     <script type="text/template" id="survey-list-item-view">
-      <div class="survey">
-        <h2><a href='#surveys/<%= survey.attributes.slug %>'><%= survey.attributes.name %></a></h2>
+      <div class="out contrast survey-list-item">
+        <div class="in">
+          <div class="a">
+            <h2><a href='#surveys/<%= survey.slug %>'><%= survey.name %></a></h2>
+
+            <div class="factoid">
+              <span class="number"><%= survey.responseCount %></span>
+              responses collected
+            </div>
+
+          </div>
+          <div class="b">
+            <div class="map" style="height:200px"></div>
+          </div>
+        </div>
       </div>
     </script>
 
@@ -426,11 +428,11 @@
     </script>
 
     <script type="text/template" id="response-view">
-      <div class="row-fluid">
+      <div class="out contrast">
 
-        <div class="span4">
+        <div class="in">
 
-          <div class="response-list">
+          <div class="a">
             <div id="last-updated"><a href="#" id="refresh" class="btn btn-small"><i class="icon-refresh"></i> Refresh</a></div>
             <div id="filter-view-container"></div>
             <div id="filters">
@@ -441,12 +443,12 @@
             <div id="responses-list-container"></div>
             <div id="result-pagination"></div>
           </div>
-        </div> <!-- end 4 column -->
 
-        <div class="span8">
-          <div id="map-view-container"></div>
+          <div class="b">
+            <div id="map-view-container"></div>
+          </div>
         </div>
-      </div><!-- end row -->
+      </div>
     </script>
 
 

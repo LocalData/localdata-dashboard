@@ -22,9 +22,9 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews) {
   'use strict';
 
   var DashboardView = Backbone.View.extend({
-  
+
     el: '#container',
-    
+
     initialize: function(options) {
       _.bindAll(this, 'render', 'appendSurvey');
 
@@ -41,10 +41,10 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews) {
         reset: true
       });
     },
-    
+
     render: function() {
       console.log("Rendering DashboardView");
-      
+
       var self = this;
       var context = {};
       this.$el.html(_.template($('#dashboard').html(), context));
@@ -58,9 +58,11 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews) {
       var surveyListItemView = new SurveyViews.ListItemView({
         model: survey
       });
+
       $('.survey-list', this.el).append(surveyListItemView.render().el);
+      surveyListItemView.map();
     }
-    
+
   });
 
   return DashboardView;

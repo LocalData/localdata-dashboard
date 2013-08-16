@@ -1,0 +1,106 @@
+/*******************************************************************************
+ * _base.scss
+
+ * Base styles define the default look.
+ *
+ * These rules will generally be made up of element selectors for HTML elements
+ * such as headings, paragraphs and lists. Common elements such as form
+ * items, collapsible fieldsets and messages should be included in this partial.
+ *
+ * The styleguide module (http://drupal.org/project/styleguide) gives you a good
+ * overview of Drupals common elements for styling. By setting a solid baseline
+ * before adding any more specific customisations you ensure that as any new
+ * features are added they will be correctly styled without any extra work.
+ ******************************************************************************/
+
+body {
+  font-family: $font;
+  -webkit-font-smoothing: antialiased;
+  color: $body-color;
+  font-size: 16px;
+  line-height: 23px;
+}
+
+h1 {
+  font-size: 76px;
+  line-height: 79px;
+  margin-bottom: 35px;
+  letter-spacing: -2px;
+
+  span {
+    color: $body-accent;
+  }
+
+  @media all and (max-width: 768px) {
+    font-size: 46px;
+    line-height: 45px;
+  }
+
+}
+
+h1.logo {
+  font-family: $bold;
+  font-size: 26px;
+  color: #fff;
+}
+
+
+h2, h3 {
+  font-family: $bold;
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
+
+h2 {
+  font-size: 40px;
+  line-height: 47px;
+  margin-top: 1em;
+}
+
+h2:first-child {
+  margin-top: 0;
+}
+
+header h2  {
+  font-family: $font;
+  font-weight: normal;
+  font-size: 22px;
+  line-height: 28px;
+  color: $blue;
+}
+
+h3 {
+  font-size: 22px;
+  line-height: 22px;
+  text-align: center;
+}
+
+ .a h3,
+ .b h3 {
+   text-align: left;
+ }
+
+p {
+  margin-bottom: 1em;
+}
+
+li {
+  list-style: circle;
+}
+
+img.responsive {
+  max-width: 100%;
+}
+
+a,
+a:hover {
+  text-decoration: none;
+  color: $blue;
+}
+
+.skiplink {
+  line-height: 100px;
+}
+
+
+

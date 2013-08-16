@@ -1,0 +1,44 @@
+/*******************************************************************************
+ * _utils.scss
+ *
+ * Sass offers come very useful features, these include variables functions and
+ * mixins. Extensions such as Compass and Susy can also be used to provide extra
+ * functions and mixins to be used throughout the theme. This file acts as a
+ * single place for defining these things, which can then be accessed by
+ * importing _utils.scss where required. The following should be defined in this
+ * file:
+ * - Custom Sass mixins for the theme.
+ * - Custom Sass functions for the theme.
+ * - Overriding the default variables provided by extensions such as Compass.
+ * - Defining new variables for:
+ *      - Colors.
+ *      - Font sizes and families.
+ *      - Layout and grid sizing.
+ ******************************************************************************/
+
+@import "reset";
+
+$body-color: #6e6663;
+$body-accent: #b7aba5;
+
+$pink: #fcf5f0;
+$thinpink: #f5ebe6;
+
+$red: #f15a24;
+$orange: #ffad00;
+$blue: #58aeff;
+
+@import url("http://fast.fonts.net/lt/1.css?apiType=css&c=9a6feb00-f8b3-48aa-b165-798ef59ba4f6&fontids=673817,673808");
+@font-face{
+font-family:"NeuzeitOfficeW01-Regula";
+  src:url("../fonts/673817/regular.eot?#iefix");
+  src:url("../fonts/673817/regular.eot?#iefix") format("eot"),url("../fonts/673817/regular.woff") format("woff"),url("../fonts/673817/regular.ttf") format("truetype"),url("../fonts/673817/regular.svg#85050462-ab1f-4478-a289-36eed1d3c53f") format("svg");
+}
+@font-face{
+font-family:"Neuzeit Office W01 Bold";
+  src:url("../fonts/673808/bold.eot?#iefix");
+  src:url("../fonts/673808/bold.eot?#iefix") format("eot"),url("../fonts/673808/bold.woff") format("woff"),url("../fonts/673808/bold.ttf") format("truetype"),url("../fonts/673808/bold.svg#d4cb246e-742d-4269-9f6a-901a050ff03f") format("svg");
+}
+
+$font: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
+$bold: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;

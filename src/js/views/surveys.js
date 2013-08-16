@@ -22,6 +22,7 @@ define([
   'views/settings',
   'views/responses/responses',
   'views/forms',
+  'views/maps/map',
 
   // Misc
   'misc/exampleform'
@@ -49,6 +50,7 @@ function(
   SettingsView,
   ResponseViews,
   FormViews,
+  MapView,
 
   // Misc
   exampleForm
@@ -65,13 +67,24 @@ function(
 
   SurveyViews.ListItemView = Backbone.View.extend({
     initialize: function() {
-      _.bindAll(this, 'render');
+      _.bindAll(this, 'render', 'map');
       this.model.bind('change', this.render);
     },
 
     render: function() {
-      this.$el.html(_.template($('#survey-list-item-view').html(), {survey: this.model }));
+      this.$el.html(_.template($('#survey-list-item-view').html(), {
+        survey: this.model.toJSON()
+      }));
       return this;
+    },
+
+    map: function() {
+      $('.b').css('background-color', '#fff');
+      // this.map = new MapView({
+      //   $el: $('.b', this.$el)
+      // });
+      //
+      // this.map.render();
     }
   });
 
@@ -149,7 +162,6 @@ function(
       });
 
     }
-
   });
 
   SurveyViews.SurveyView = Backbone.View.extend({

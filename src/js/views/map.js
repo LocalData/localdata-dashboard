@@ -137,9 +137,8 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         });
 
         // Set up the base map; add the parcels and done markers
-        this.baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/matth.map-zmpggdzn/{z}/{x}/{y}.png');
+        this.baseLayer = L.tileLayer(settings.baseLayer);
         this.map.addLayer(this.baseLayer);
-        this.satelliteLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/matth.map-yyr7jb6r/{z}/{x}/{y}.png');
         this.activeLayer = 'streets';
 
         this.map.addLayer(this.zoneLayer);
