@@ -26,16 +26,15 @@
           <h1 class="logo"><a href="index.html">LocalData</a></h1>
         </div>
         <div class="b">
+          <div class="nav">
+            <a href="/" class="mysurveys">All Surveys</a>
+            <a href="#/surveys/new" class="mysurveys" id="newsurvey">Create a new survey</a>
+            <div id="userbar-container"></div>
+          </div>
         </div>
       </div>
     </header>
 
-          <!--
-          <div class="span10 tools">
-            <a href="/" class="mysurveys">All Surveys</a>
-            <div id="userbar-container"></div>
-          </div>
-          -->
 
 
     <div id="container">
@@ -44,9 +43,11 @@
     <!-- Templates ========================================================-->
 
     <script type="text/template" id="userbar-view">
+      <!--
       <span class="userbar">
         <i class="icon-user"></i> <%= user.name %>
       </span>
+      -->
       <a href="/logout" class="logout">Log out</a>
     </script>
 
@@ -71,8 +72,6 @@
 
     <!-- Dashboard ..........................................................-->
     <script type="text/template" id="dashboard">
-      <h2>My Surveys <a href="#/surveys/new" class="mysurveys" id="newsurvey">Create a new survey</a></h2>
-
       <div class="survey-list">
       </div>
     </script>
@@ -245,56 +244,6 @@
     </script>
 
     <!-- Survey ...........................................................-->
-    <script type="text/template" id="survey-view">
-
-      <div class="out contrast">
-        <div class="in">
-          <div class="a">
-            <h2 id="survey-name"><%= survey.name %></h2>
-          </div>
-
-          <div class="b">
-            <div class="span12">
-              <ul id="nav" class="nav nav-tabs">
-                <li class="active" id="tab-survey-home"><a href="#surveys/<%= survey.slug %>"><i class="icon-home" data-show="response-view-container"></i>Results</a></li>
-                <li class="" id="tab-survey-export" data-show=""><a href="#surveys/<%= survey.slug %>/export" data-show="export-view-container"><i class="icon-download"></i>Export</a></li>
-                <li class="" id="tab-survey-form"><a href="#surveys/<%= survey.slug %>/form" data-show="form-view-container"><i class="icon-list-ul"></i>Survey Questions</a></li>
-              </ul>
-            </div>
-
-
-          </div>
-        </div>
-      </div>
-
-      <div id="survey-tabs">
-        <div id="loading-view-container" class="tab"></div>
-        <div id="response-view-container" class="tab"></div>
-        <div id="form-view-container" class="tab"></div>
-        <div id="export-view-container" class="tab"></div>
-        <div id="settings-view-container" class="tab"></div>
-      </div>
-
-    </script>
-
-    <script type="text/template" id="survey-list-item-view">
-      <div class="out contrast survey-list-item">
-        <div class="in">
-          <div class="a">
-            <h2><a href='#surveys/<%= survey.slug %>'><%= survey.name %></a></h2>
-
-            <div class="factoid">
-              <span class="number"><%= survey.responseCount %></span>
-              responses collected
-            </div>
-
-          </div>
-          <div class="b">
-            <div class="map" style="height:200px"></div>
-          </div>
-        </div>
-      </div>
-    </script>
 
     <!-- Settings .......................................................... -->
     <script type="text/template" id="settings-view">
@@ -361,7 +310,6 @@
     <script type="text/template" id="filter-results">
       <h3>
         Filter
-        <%= _.size(responses) %>
         response<% if(_.size(responses) != 1) { %>s<% } %>
         by:
       </h3>
@@ -429,11 +377,17 @@
 
     <script type="text/template" id="response-view">
       <div class="out contrast">
-
         <div class="in">
-
           <div class="a">
+
+
             <div id="last-updated"><a href="#" id="refresh" class="btn btn-small"><i class="icon-refresh"></i> Refresh</a></div>
+
+            <div class="factoid">
+              <span class="number"><%= survey.responseCount %></span>
+              responses collected
+            </div>
+
             <div id="filter-view-container"></div>
             <div id="filters">
               <div id="subfilter"></div>
@@ -444,9 +398,7 @@
             <div id="result-pagination"></div>
           </div>
 
-          <div class="b">
             <div id="map-view-container"></div>
-          </div>
         </div>
       </div>
     </script>
@@ -454,12 +406,7 @@
 
     <!-- Map ..............................................................-->
     <script type="text/template" id="map-view">
-      <div id="map-controls">
-        <input type="text" id="address-search" placeholder="address">
-        <a href="" class="button icon-search">Jump to address</a>
-      </div>
       <div id="map"></div>
-      <div id="parceldeets"></div>
     </script>
 
     <!-- Export ...........................................................-->

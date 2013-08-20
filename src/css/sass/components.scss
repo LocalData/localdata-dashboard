@@ -191,6 +191,12 @@ hr.pointer {
 /* Header ------------------------------------------------------------------- */
 header .in {
   overflow: visible;
+  padding: 0;
+}
+
+header .a,
+header .b {
+  padding: 0;
 }
 
 header .logo a,
@@ -207,20 +213,19 @@ footer .logo a {
   text-indent: -99999px;
 }
 
-.signup,
-.signup:hover {
-  font-family: $bold;
-  font-size: 40px;
-  line-height: 70px;
-
-  background: #ffad00;
-  color: #fff;
-
-  display: block;
-  margin-top: 375px;
-  margin-bottom: 115px;
-  padding: 0 20px;
+header .nav {
+  padding-top: 45px;
+  text-align: right;
 }
+
+header .nav,
+header .nav a:link,
+header .nav a:visited {
+  font-family: $bold;
+  color: $body-color;
+  padding-left: 30px;
+}
+
 
 
 /* Footer ------------------------------------------------------------------- */
@@ -395,17 +400,78 @@ img.press-logo {
 }
 
 /* Map ---------------------------------------------------------------------- */
-#map {
+#map,
+.map {
   height: 500px;
 }
+
 
 /* Survey List -------------------------------------------------------------- */
 .survey-list-item h2 {
   font-family: $font;
 }
 
-.survey-list-item .b {
-  height: 200px;
+/* Survey-------------------------------------------------------------------- */
+.survey .in {
+  padding-bottom: 10px;
+}
+
+#survey-name {
+  font-family: $font;
+  font-size: 48px;
+}
+
+#response-view-container .in {
+  padding: 0;
+}
+
+#response-view-container #map {
+  width: 764px;
+
+  /* column sizing */
+  float:left;
+
+  @media all and (max-width: 1999px) {
+    width: 556px;
+  }
+
+  @media all and (max-width: 1279px) {
+    width: 543px;
+  }
+
+  @media all and (max-width: 1119px) {
+    width: 420px;
+  }
+
+  @media all and (max-width: 899px) {
+    width: 354px;
+  }
+
+  @media all and (max-width: 768px) {
+    margin: 0;
+    width: auto;
+    float:none;
+  }
+}
+
+/* Tabs --------------------------------------------------------------------- */
+.nav-tabs {
+  float: right;
+}
+
+.nav-tabs li {
+  list-style: none;
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-tabs li a {
+  display: inline-block;
+  background: #ffad00;
+  color: #fff;
+  font-family: $bold;
+  padding: 5px 10px;
 }
 
 

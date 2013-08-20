@@ -15,22 +15,16 @@ define([
 
   // Views
   'views/surveys'
-
 ],
 
 function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews) {
   'use strict';
 
   var DashboardView = Backbone.View.extend({
-
     el: '#container',
 
     initialize: function(options) {
       _.bindAll(this, 'render', 'appendSurvey');
-
-      if (options) {
-        this.el = options.el || '#container';
-      }
 
       this.surveys = new Surveys.Collection();
       this.surveys.bind('reset', this.render);
@@ -59,10 +53,16 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews) {
         model: survey
       });
 
-      $('.survey-list', this.el).append(surveyListItemView.render().el);
-      surveyListItemView.map();
-    }
+      var $el = surveyListItemView.render().$el;
+      $('.survey-list', this.$el).append($el);
 
+      console.log($('.map', $el));
+      this.map = new L.map($('.map', $el)[0], {
+        zoom: 15
+      });
+      this.baseLayer = L.tileLayer(settings.baseLayer);
+      this.map.addLayer(this.baseLayer);
+    }
   });
 
   return DashboardView;

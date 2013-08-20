@@ -87,6 +87,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
 
       // Actually render the page
       var context = {
+        survey: this.survey.toJSON(),
         responses: this.responses
       };
       this.$el.html(this.template(context));
