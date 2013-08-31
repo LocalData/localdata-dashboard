@@ -495,59 +495,18 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       _kmq.push(['record', "Map zoomed"]);
       var zoom = this.map.getZoom();
 
-      // Objects should be more detailed close up (zoom 10+)
-      if(zoom > 10) {
-
-        this.tileLayer.bringToFront();
-
-        console.log("Greater than 10");
-
-        // If we're in pretty close, show the satellite view
-        if(zoom > 14) {
-          if(this.activeLayer !== 'satellite') {
-            this.map.removeLayer(this.baseLayer);
-            this.map.addLayer(this.satelliteLayer, true);
-            this.satelliteLayer.bringToBack();
-            this.activeLayer = 'satellite';
-          }
-
-          if(this.activeLayer !== 'satellite') {
-            console.log("Active layer begin", this.activeLayer);
-            this.map.removeLayer(this.baseLayer);
-            this.map.addLayer(this.satelliteLayer, true);
-            this.satelliteLayer.bringToBack();
-            this.activeLayer = 'satellite';
-            console.log("Active layer end", this.activeLayer);
-          }
-
-        } else {
-          // Mid zoom (11-14)
-          // We're not that close, show the mid zoom styles
-          if(this.defaultStyle !== settings.midZoomStyle) {
-            this.defaultStyle = settings.closeZoomStyle;
-            this.updateObjectStyles(settings.closeZoomStyle);
-          }
-
-          // And use the terrain map
-          if (this.activeLayer !== 'streets') {
-            // Show a more abstract map when zoomed out
-            this.map.removeLayer(this.satelliteLayer);
-            this.map.addLayer(this.baseLayer, true);
-            this.activeLayer = 'streets';
-          }
-        }
-
-      }else {
-        // Far zoom (< 10)
-        // Show a more abstract map when zoomed out
-        if (this.activeLayer !== 'streets') {
-          this.map.removeLayer(this.satelliteLayer);
-          this.map.addLayer(this.baseLayer, true);
-          this.activeLayer = 'streets';
-
-          this.defaultStyle = settings.farZoomStyle;
-          this.updateObjectStyles(settings.farZoomStyle);
-        }
+      // Objects should be more detailed close up (zoom 14+)
+      // And easier to see when zoomed out (zoom >= 16)
+      // With a transition state in the middle
+      if(zoom < 14 && this.defaultStyle !== settings.farZoomStyle) {
+        this.defaultStyle = settings.farZoomStyle;
+        this.updateObjectStyles(settings.farZoomStyle);
+      }else if (zoom < 16 && zoom > 13 && this.defaultStyle !== settings.midZoomStyle) {
+        this.defaultStyle = settings.midZoomStyle;
+        this.updateObjectStyles(settings.midZoomStyle);
+      }else if(zoom >= 16 && this.defaultStyle !== settings.closeZoomStyle) {
+        this.defaultStyle = settings.closeZoomStyle;
+        this.updateObjectStyles(settings.closeZoomStyle);
       }
 
       // If a parcel is selected, make sure it says visually selected

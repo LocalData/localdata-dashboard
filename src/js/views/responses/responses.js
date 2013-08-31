@@ -62,6 +62,13 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
 
       // Make sure we have forms available
       this.render();
+
+      // If we already have some responses, then we can display the
+      // count/filter text. We need to have rendered first, though, otherwise
+      // we won't have any place to put the filter controls!
+      if (this.responses.length > 0) {
+        this.updateFilterChoices();
+      }
     },
 
     // TODO: merge update and render
@@ -148,7 +155,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
      * If the data has already been filtered, show that on the page
      */
     updateFilterView: function () {
-      if (_.has(this.filter, 'answer')) {
+      if (_.has(this.filters, 'answer')) {
         return;
       } else {
         console.log("Clear sub filter");
@@ -163,7 +170,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
      */
     reset: function(event) {
       console.log("Clearing filter");
-      this.filter = {};
+      this.filters = {};
 
       this.responses.clearFilter();
       this.updateFilterView();
@@ -195,7 +202,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       var $answer = $(event.target);
 
       // Clear the current filter, if there is one.
-      if(_.has(this.filter, 'answer')) {
+      if(_.has(this.filters, 'answer')) {
         this.responses.clearFilter({ silent: true });
       }
 
@@ -210,9 +217,9 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       console.log("Loading");
 
       // Filter the responses
-      this.filter.answer = $answer.text();
-      this.filter.question = $("#filter").val();
-      this.responses.setFilter(this.filter.question, this.filter.answer);
+      this.filters.answer = $answer.text();
+      this.filters.question = $("#filter").val();
+      this.responses.setFilter(this.filters.question, this.filters.answer);
 
       // Note that we're done loading
       events.publish('loading', [false]);

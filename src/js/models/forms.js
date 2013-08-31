@@ -34,7 +34,7 @@ function($, _, Backbone, settings) {
 
     initialize: function(options) {
       this.surveyId = options.surveyId;
-      this.fetch();
+      this.fetch({ reset: true });
     },
 
     url: function() {

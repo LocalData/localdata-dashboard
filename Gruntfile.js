@@ -228,7 +228,7 @@ module.exports = function(grunt) {
   grunt.task.run('setVersion');
 
   grunt.registerTask('build', ['cssmin', 'requirejs', 'copy:staging', 'concat:build', 'copy:build']);
-  
+
 
   // Default task
   grunt.registerTask('default', ['build']);
