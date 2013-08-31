@@ -152,26 +152,24 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       var hasResponses = this.responses !== null && this.responses.length > 0;
       var hasZones = this.survey.has('zones');
 
-      // Don't draw a map if there are no responses and no survey zones to
-      // plot.
-      if (!hasResponses && !hasZones) {
-        return;
-      }
-
       if (this.map === null) {
         // Create the map.
         this.$el.html(_.template($('#map-view').html(), {}));
 
-        // Initialize the map
-        this.map = new L.map('map', {
-          zoom: 16,
-          maxZoom: 18,
-          center: [42.439167,-83.083420]
-        });
+        var bbox = this.survey.get('responseBounds');
 
-        // SF overview: [37.7750,-122.4183]
-        // this.map.setView([42.3314,-83.0458], 11); // Detroit overview
-        // this.map.setView([42.370805,-83.079728], 17);  // Bethune
+        // Initialize the map
+        var map = this.map = new L.map('map', { maxZoom: 18 });
+
+        // FIXME: This is a hack. The map element doesn't have a size yet, so
+        // Leaflet doesn't know how to set the view properly. If we wait until
+        // the next tick and call invalidateSize, then the map will know its
+        // size.
+        setTimeout(function () {
+          map.invalidateSize();
+          var bounds = L.latLngBounds([ [bbox[0][1], bbox[0][0]], [bbox[1][1], bbox[1][0]] ]);
+          map.fitBounds(bounds.pad(0.2), { reset: true });
+        }, 0);
 
         this.baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/matth.map-zmpggdzn/{z}/{x}/{y}.png');
         this.map.addLayer(this.baseLayer);
