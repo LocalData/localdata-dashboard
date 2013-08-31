@@ -131,13 +131,16 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       this.tileLayer.bringToFront();
 
       this.gridLayer = new L.UtfGrid(tilejson.grids[0], {
-        resolution: 1
+        resolution: 4
       });
       this.map.addLayer(this.gridLayer);
       // this.gridLayer.bringToFront();
 
 
       this.gridLayer.on('click', function (e) {
+        if (!e.data) {
+          return;
+        }
         var layer = new L.GeoJSON(e.data.geometry);
         console.log(layer);
         this.map.addLayer(layer);
