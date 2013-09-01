@@ -172,7 +172,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       console.log("Clearing filter");
       this.filters = {};
 
-      this.responses.clearFilter();
+      this.mapView.clearFilter();
       this.updateFilterView();
     },
 
@@ -222,7 +222,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       this.responses.setFilter(this.filters.question, this.filters.answer);
 
       // Note that we're done loading
-      events.publish('loading', [false]);
+      //events.publish('loading', [false]);
       $('#loadingsmg').hide();
       console.log("Done loading");
 

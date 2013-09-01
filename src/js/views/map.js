@@ -79,15 +79,13 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         'updateMapStyleBasedOnZoom',
         'updateObjectStyles',
         'styleFeature',
-        'setupPolygon'
+        'setupPolygon',
+        'setFilter',
+        'clearFilter',
+        'selectDataMap'
       );
 
       this.responses = options.responses;
-      // TODO: if we add the filter logic to the responses collection, we can
-      // more cleanly trigger off its events.
-      this.listenTo(this.responses, 'reset', this.render);
-      this.listenTo(this.responses, 'addSet', this.render);
-
       this.survey = options.survey;
 
       // We track the results on the map using these two groups
@@ -125,6 +123,9 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
     delayFitBounds: null,
 
     addTileLayer: function(tilejson) {
+      if (this.tileLayer) {
+        this.map.removeLayer(this.tileLayer);
+      }
       console.log(tilejson);
       this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
       this.map.addLayer(this.tileLayer);
@@ -181,16 +182,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         this.map.addLayer(this.zoneLayer);
         this.map.addLayer(this.objectsOnTheMap);
 
-        // Get tilejson
-        var request = $.ajax({
-          //'http://matth-nt.herokuapp.com/' + this.survey.get('id') + '/tile.json',
-          url: '/tiles/' + this.survey.get('id') + '/tile.json',
-
-          //url: 'http://localhost:3001/' + this.survey.get('id') + '/filter/condition/tile.json',
-          type: "GET",
-          dataType: "jsonp"
-        });
-        request.done(this.addTileLayer);
+        this.selectDataMap();
 
         this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
       }
@@ -230,6 +222,22 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
     },
 
 
+    selectDataMap: function () {
+      // Build the appropriate TileJSON URL.
+      var url = '/tiles/' + this.survey.get('id');
+      if (this.filter) {
+        url = url + '/filter/' + this.filter.question;
+      }
+      url = url + '/tile.json';
+
+      // Get TileJSON
+      $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'jsonp'
+      }).done(this.addTileLayer);
+    },
+
     /**
      * Set filter parameters for displaying results on the map
      * The response collection will activate this if we have an active filter
@@ -241,7 +249,12 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         question: question,
         answers: answers
       };
-      this.plotResponses();
+      this.selectDataMap();
+    },
+
+    clearFilter: function () {
+      this.filter = null;
+      this.selectDataMap();
     },
 
 
