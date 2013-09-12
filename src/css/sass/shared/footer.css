@@ -1,0 +1,51 @@
+footer .in {
+  overflow: visible;
+  padding-top: 0;
+}
+
+footer .logo {
+  float:left;
+}
+
+footer nav {
+  float: right;
+  text-align: right;
+  margin-bottom: 2em;
+  margin-top: 50px;
+}
+
+footer .logo,
+footer nav {
+  @media all and (max-width: 768px) {
+    margin-top: 0;
+    float: none;
+    text-align: left;
+  }
+}
+
+footer nav a,
+footer nav a:hover {
+  font-family: $font;
+  font-weight: normal;
+  color: #b7aba5;
+
+  @media all and (max-width: 768px) {
+    line-height: 44px;
+  }
+}
+
+footer nav a:hover {
+  color: $blue;
+}
+
+footer .social {
+  padding-left: 40px;
+
+  @media all and (max-width: 768px) {
+    padding: 0;
+  }
+}
+
+footer .social a:last-child {
+  margin-right: 0;
+}
