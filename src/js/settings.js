@@ -65,19 +65,19 @@ function(L) {
   };
 
   settings.midZoomStyle = {
-    'color': '#df455d',
-    'opacity': 1,
-    'weight': 5,
+    'color': '#a743c3',
+    'opacity': 0.4,
+    'weight': 1,
     'fillOpacity': 0.5,
-    'fillColor': '#df455d'
+    'fillColor': '#a743c3'
   };
 
   settings.farZoomStyle = {
-    'color': '#df455d',
-    'opacity': 1,
+    'color': '#a743c3',
+    'opacity': 0.9,
     'fillOpacity': 0.9,
-    'fillColor': '#df455d',
-    'weight': 12
+    'fillColor': '#a743c3',
+    'weight': 1
   };
 
   settings.selectedStyle = {
@@ -87,18 +87,6 @@ function(L) {
     'fillOpacity': 0.5,
     'fillColor': '#fcd96c'
   };
-
-  settings.googleMapsFarZoom = [
-    {
-      "elementType": "geometry",
-      "stylers": [
-        { "lightness": 40 },
-        { "gamma": 1.33 },
-        { "saturation": -52 },
-        { "hue": "#00fff7" }
-      ]
-    }
-  ];
 
   return settings;
 });

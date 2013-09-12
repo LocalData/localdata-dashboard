@@ -588,30 +588,6 @@ nav a:hover {
 .subnav .selected a:hover {
   color: #f15a24; }
 
-/* Case studies ------------------------------------------------------------- */
-h1.case {
-  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
-  font-size: 12px;
-  text-transform: uppercase;
-  margin: 0;
-  line-height: 1em;
-  letter-spacing: 1px;
-  padding-left: 6px; }
-
-.case .quote {
-  font-size: 24px;
-  line-height: 30px;
-  color: #ffad00;
-  text-align: left;
-  margin-bottom: 16px; }
-
-hr.pointer {
-  border: 0px none;
-  border-top: 6px solid #f15a24;
-  position: relative;
-  z-index: 100;
-  width: 180%; }
-
 /* Factoids ----------------------------------------------------------------- */
 .factoid {
   font-size: 36px;
@@ -675,6 +651,7 @@ footer nav {
 @media all and (max-width: 768px) {
   footer .logo,
   footer nav {
+    margin-top: 0;
     float: none;
     text-align: left; } }
 
@@ -719,7 +696,8 @@ footer .social a:last-child {
 
 #survey-name {
   font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
-  font-size: 65px; }
+  font-size: 65px;
+  line-height: 1em; }
 
 #response-view-container .in {
   padding: 0; }
@@ -752,18 +730,23 @@ footer .social a:last-child {
 
 .nav-tabs li {
   list-style: none;
-  display: inline-block;
+  display: inline;
   padding: 0;
-  margin: 0; }
+  margin: 0;
+  float: left; }
 
 .nav-tabs li a {
   display: inline-block;
   background: #ffad00;
   color: #fff;
   font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
-  padding: 5px 10px; }
+  padding: 15px 20px; }
 
-/* Signup ------------------------------------------------------------------- */
+.nav-tabs li.active a {
+  background: #fff;
+  color: #ffad00; }
+
+/* Forms ------------------------------------------------------------------- */
 form label {
   font-size: 16px;
   line-height: 20px; }
@@ -792,22 +775,27 @@ form input[type=submit] {
   height: auto;
   line-height: 2em; }
 
-.pair {
-  overflow: auto; }
-
-.pair .single {
-  width: 49%;
-  float: left; }
-  @media all and (max-width: 768px) {
-    .pair .single {
-      float: none; } }
-
 form p {
   margin-top: 1em;
   margin-bottom: 0; }
 
-#req-message {
-  display: none; }
+.preview-q-box {
+  padding-left: 20px; }
 
-form .hidden {
-  display: none; }
+.preview-q-box .depth-0,
+.preview-q-box .depth-1,
+.preview-q-box .depth-2,
+.preview-q-box .depth-3 {
+  margin-left: 15px; }
+
+.preview-question {
+  border-left: 5px solid #58aeff;
+  padding-left: 10px;
+  margin: 5px 5px 20px 5px; }
+
+.question-prompt {
+  padding: 5px;
+  font-weight: bold; }
+
+.preview-answer {
+  padding: 2px 0 2px 20px; }
