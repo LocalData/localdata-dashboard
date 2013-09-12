@@ -55,6 +55,13 @@ form input[type=submit] {
   text-align: center;
   line-height: 62px;
   letter-spacing: -1px;
+
+  cursor: pointer;
+}
+
+.flex {
+  width: auto;
+  padding: 0px 15px;
 }
 
 .small {
@@ -281,122 +288,10 @@ footer .social a:last-child {
 }
 
 
-/* Partners------------------------------------------------------------------ */
-.partners {
-  text-align: center;
-}
 
-.partner-item {
-  display: inline-block;
-  padding: 10px 17px 0 17px;
-  height: 70px;
-}
-
-.partners {
-  :first-child {
-    padding-left: 0;
-  }
-
-  :last-child {
-    padding-right: 0;
-  }
-}
-
-img.partner-logo {
-  display: inline-block;
-  max-width: 300px;
-  min-width: 40px;
-  height: 50px;
-}
-
-#houston {
-  height: 70px;
-}
-
-#uchicago {
-  height: 30px;
-  padding-bottom: 20px;
-}
-
-#mapc {
-  height: 50px;
-  padding-bottom: 10px;
-}
-
-#harvard {
-  height: 30px;
-  padding-bottom: 20px;
-}
-
-#placeeconomics {
-  height: 40px;
-  padding-bottom: 15px;
-}
-
-#wayne {
-  height: 30px;
-  padding-bottom: 15px;
-}
-
-#detroit {
-  height: 70px;
-}
-
-/* Partners------------------------------------------------------------------ */
-.press-item {
-  float: left;
-  display: inline-block;
-  height: 150px;
-  margin: 10px 4%;
-  width: 25%;
-  font-size: 17px;
-}
-
-.press-item a {
-  display: block;
-  text-align: center;
-}
-
-.press-item .quote {
-  text-align: center;
-  padding-bottom: 15px;
-}
-
-img.press-logo {
-  bottom: 0;
-  display: block;
-  margin: auto auto 10px auto;
-  text-align: center;
-  height: 80px;
-}
-
-#fastco {
-  height: 80px;
-}
-
-#ddj {
-  height: 70px;
-  padding-top: 5px;
-}
-
-#nieman {
-  height: 14px;
-  padding-top: 33px;
-}
-
-#directions {
-  height: 40px;
-  padding-top: 20px;
-}
-
-#planetizen {
-  height: 40px;
-  padding-top: 20px;
-}
-
-#strata {
-  height: 80px;
-  padding-top: 0px;
+/* General app ---------------------------------------------------------------*/
+.error {
+  display: none;
 }
 
 /* Map ---------------------------------------------------------------------- */
@@ -418,7 +313,7 @@ img.press-logo {
 
 #survey-name {
   font-family: $font;
-  font-size: 48px;
+  font-size: 65px;
 }
 
 #response-view-container .in {
