@@ -498,7 +498,12 @@ header .b {
  *       CSS. Exposed filter forms, views pagers and other views elements are
  *       also good candidates for components.
  ******************************************************************************/
-/* Boxes ------------------------------------------------------------------- */
+h2 {
+  font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
+  font-size: 65px;
+  line-height: 1em; }
+
+/* Boxes -------------------------------------------------------------------- */
 .box,
 form input[type=submit] {
   background: #fff;
@@ -514,6 +519,9 @@ form input[type=submit] {
   line-height: 62px;
   letter-spacing: -1px;
   cursor: pointer; }
+
+form button.box {
+  line-height: normal; }
 
 .flex {
   width: auto;
@@ -694,11 +702,6 @@ footer .social a:last-child {
 .survey .in {
   padding-bottom: 10px; }
 
-#survey-name {
-  font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
-  font-size: 65px;
-  line-height: 1em; }
-
 #response-view-container .in {
   padding: 0; }
 
@@ -757,7 +760,8 @@ form .question {
 form input {
   font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif; }
 
-form input[type=text] {
+form input[type=text],
+form input[type=password] {
   display: block;
   font-size: 16px;
   border: 4px solid #ccc;
@@ -772,12 +776,21 @@ form input[type=submit] {
   font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
   background: #fff;
   width: auto;
-  height: auto;
-  line-height: 2em; }
+  height: auto; }
 
 form p {
   margin-top: 1em;
   margin-bottom: 0; }
+
+#login input[type=text],
+#login input[type=password] {
+  display: block;
+  font-size: 26px;
+  border: 4px solid #58aeff;
+  line-height: 32px;
+  padding: 4px 10px;
+  margin-bottom: 1em;
+  width: 12em; }
 
 .preview-q-box {
   padding-left: 20px; }

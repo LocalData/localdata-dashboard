@@ -14,10 +14,15 @@ define([
   'api',
 
   // Models
-  'models/users'
+  'models/users',
+
+  // Templates
+  'text!templates/login.html',
+  'text!templates/signup.html'
+
 ],
 
-function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
+function($, _, Backbone, events, _kmq, router, settings, api, UserModels, loginTemplate, signupTemplate) {
   'use strict';
 
   var UserViews = {};
@@ -53,6 +58,8 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
   UserViews.LoginView = Backbone.View.extend({
     el: "#container",
 
+    template: _.template(loginTemplate),
+
     events: {
       "click #login button": "logIn",
       "click #create-account button": "createUser"
@@ -74,7 +81,7 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
       var context = {
         redirectTo: this.redirectTo
       };
-      this.$el.html(_.template($('#login-view').html(), context));
+      this.$el.html(this.template(context));
       return this;
     },
 

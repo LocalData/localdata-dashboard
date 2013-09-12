@@ -12,7 +12,8 @@ form input {
   font-family: $font;
 }
 
-form input[type=text] {
+form input[type=text],
+form input[type=password] {
   display: block;
   font-size: 16px;
   border: 4px solid #ccc;
@@ -29,10 +30,22 @@ form input[type=submit] {
   background: #fff;
   width: auto;
   height: auto;
-  line-height: 2em;
 }
 
 form p {
   margin-top: 1em;
   margin-bottom: 0;
+}
+
+#login {
+  input[type=text],
+  input[type=password] {
+    display: block;
+    font-size: 26px;
+    border: 4px solid $blue;
+    line-height: 32px;
+    padding: 4px 10px;
+    margin-bottom: 1em;
+    width: 12em;
+  }
 }

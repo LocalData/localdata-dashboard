@@ -38,7 +38,13 @@
  *       also good candidates for components.
  ******************************************************************************/
 
-/* Boxes ------------------------------------------------------------------- */
+ h2 {
+  font-family: $font;
+  font-size: 65px;
+  line-height: 1em;
+ }
+
+/* Boxes -------------------------------------------------------------------- */
 @import "shared/boxes";
 
 /* Navigation --------------------------------------------------------------- */
@@ -87,12 +93,6 @@
 /* Survey-------------------------------------------------------------------- */
 .survey .in {
   padding-bottom: 10px;
-}
-
-#survey-name {
-  font-family: $font;
-  font-size: 65px;
-  line-height: 1em;
 }
 
 #response-view-container .in {
