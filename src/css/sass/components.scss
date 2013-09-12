@@ -233,8 +233,6 @@ header .nav a:visited {
   padding-left: 30px;
 }
 
-
-
 /* Footer ------------------------------------------------------------------- */
 footer .in {
   overflow: visible;
@@ -255,6 +253,7 @@ footer nav {
 footer .logo,
 footer nav {
   @media all and (max-width: 768px) {
+    margin-top: 0;
     float: none;
     text-align: left;
   }
@@ -286,7 +285,6 @@ footer .social {
 footer .social a:last-child {
   margin-right: 0;
 }
-
 
 
 /* General app ---------------------------------------------------------------*/
