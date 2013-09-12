@@ -20,7 +20,7 @@ function(L) {
   // Colors for option maps
   settings.colorRange = [
     "#df455d", // First color used for blank entries
-    "#ce40bf",
+    "#a743c3",
     "#404ecd",
     "#40cd98",
     "#d4e647",
@@ -57,11 +57,11 @@ function(L) {
   };
 
   settings.closeZoomStyle = {
-    'color': '#ef6d4a', //'#cec40d'
+    'color': '#a743c3',
     'opacity': 1,
     'weight': 2,
     'fillOpacity': 0.5,
-    'fillColor': '#ef6d4a'
+    'fillColor': '#a743c3'
   };
 
   settings.midZoomStyle = {

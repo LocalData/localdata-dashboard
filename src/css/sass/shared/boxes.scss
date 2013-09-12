@@ -1,0 +1,42 @@
+.box,
+form input[type=submit] {
+  background: #fff;
+  border: 6px solid $body-color;
+  display: inline-block;
+  margin-right: 10px;
+  margin-bottom: 11px;
+  width: 90px;
+  height: 62px;
+
+  font-family: $bold;
+  font-size: 20px;
+  text-align: center;
+  line-height: 62px;
+  letter-spacing: -1px;
+
+  cursor: pointer;
+}
+
+.flex {
+  width: auto;
+  padding: 0px 15px;
+}
+
+.small {
+  font-size: 16px;
+}
+
+.danger {
+  border-color: $red;
+  color: $red;
+}
+
+.warn {
+  border-color: $orange;
+  color: $orange;
+}
+
+.ok {
+  border-color: $blue;
+  color: $blue;
+}

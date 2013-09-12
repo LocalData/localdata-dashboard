@@ -38,145 +38,12 @@
  *       also good candidates for components.
  ******************************************************************************/
 
- /* Boxes ------------------------------------------------------------------- */
-
-.box,
-form input[type=submit] {
-  background: #fff;
-  border: 6px solid $body-color;
-  display: inline-block;
-  margin-right: 10px;
-  margin-bottom: 11px;
-  width: 90px;
-  height: 62px;
-
-  font-family: $bold;
-  font-size: 20px;
-  text-align: center;
-  line-height: 62px;
-  letter-spacing: -1px;
-
-  cursor: pointer;
-}
-
-.flex {
-  width: auto;
-  padding: 0px 15px;
-}
-
-.small {
-  font-size: 16px;
-}
-
-.danger {
-  border-color: $red;
-  color: $red;
-}
-
-.warn {
-  border-color: $orange;
-  color: $orange;
-}
-
-.ok {
-  border-color: $blue;
-  color: $blue;
-}
+/* Boxes ------------------------------------------------------------------- */
+@import "shared/boxes";
 
 /* Navigation --------------------------------------------------------------- */
+@import "shared/navigation";
 
-nav a,
-nav a:hover {
-  font-family: $bold;
-  color: $body-color;
-  display: inline-block;
-  margin-right: 45px;
-
-  @media all and (max-width: 768px) {
-    display: block;
-    margin-right:0;
-    line-height: 44px;
-    border-bottom: 1px solid $body-accent;
-    padding-left: 30px;
-    background: #fff;
-  }
-}
-
-nav a:hover {
-  color: $blue
-}
-
-.nav {
-  @media all and (max-width: 768px) {
-    background: #fff;
-    padding: 0 15px 0 20px;
-  }
-}
-
-.nav .in {
-  padding: 20px 0 60px;
-  margin-bottom: 0;
-
-  @media all and (max-width: 768px) {
-    padding-bottom: 20px;
-  }
-}
-
-.subnav {
-  border-top: 5px solid $pink;
-  padding-top: 1em;
-}
-
-.subnav li {
-  line-height: 2em;
-  list-style-type: none;
-
-}
-
-.subnav a,
-.subnav a:hover {
-  font-family: $font;
-  font-weight: normal;
-  color: $blue;
-}
-
-.subnav .selected {
-  list-style-type: circle;
-}
-
-.subnav .selected,
-.subnav .selected a,
-.subnav .selected a:hover {
-  color: $red;
-}
-
-/* Case studies ------------------------------------------------------------- */
-
-h1.case {
-  font-family: $bold;
-  font-size: 12px;
-  text-transform: uppercase;
-  margin: 0;
-  line-height: 1em;
-  letter-spacing: 1px;
-  padding-left: 6px;
-}
-
-.case .quote {
-  font-size: 24px;
-  line-height: 30px;
-  color: #ffad00;
-  text-align: left;
-  margin-bottom: 16px;
-}
-
-hr.pointer {
-  border: 0px none;
-  border-top: 6px solid $red;
-  position: relative;
-  z-index: 100;
-  width: 180%;
-}
 
 /* Factoids ----------------------------------------------------------------- */
 .factoid {
@@ -196,48 +63,10 @@ hr.pointer {
 }
 
 /* Header ------------------------------------------------------------------- */
-header .in {
-  overflow: visible;
-  padding: 0;
-}
-
-header .a,
-header .b {
-  padding: 0;
-}
-
-header .logo a,
-footer .logo a {
-  position: relative;
-  z-index: 100;
-
-  left: -53px;
-  display: inline-block;
-  height: 112px;
-  width: 281px;
-  background: transparent url(../img/logo.png) no-repeat left center;
-  background-size: auto 112px;
-  text-indent: -99999px;
-}
-
-header .nav {
-  padding-top: 45px;
-  text-align: right;
-}
-
-header .nav,
-header .nav a:link,
-header .nav a:visited {
-  font-family: $bold;
-  color: $body-color;
-  padding-left: 30px;
-}
+@import "components/header";
 
 /* Footer ------------------------------------------------------------------- */
 @import "shared/footer";
-
-
-
 
 /* General app ---------------------------------------------------------------*/
 .error {
@@ -249,7 +78,6 @@ header .nav a:visited {
 .map {
   height: 500px;
 }
-
 
 /* Survey List -------------------------------------------------------------- */
 .survey-list-item h2 {
@@ -320,64 +148,5 @@ header .nav a:visited {
 }
 
 
-/* Signup ------------------------------------------------------------------- */
-
-form label {
-  font-size: 16px;
-  line-height: 20px;
-}
-
-form .question {
-  font-family: $bold;
-}
-
-form input {
-  font-family: $font;
-}
-
-form input[type=text] {
-  display: block;
-  font-size: 16px;
-  border: 4px solid #ccc;
-  line-height: 24px;
-  padding: 0px 8px;
-  margin-bottom: 1.5em;
-}
-
-form input[type=submit] {
-  margin-top: 1em;
-  cursor: pointer;
-  border: 6px solid #58aeff;
-  font-family: $font;
-  background: #fff;
-  width: auto;
-  height: auto;
-  line-height: 2em;
-}
-
-.pair {
-  overflow: auto;
-}
-
-.pair .single {
-  width: 49%;
-  float: left;
-
-  @media all and (max-width: 768px) {
-    float:none;
-  }
-}
-
-form p {
-  margin-top: 1em;
-  margin-bottom: 0;
-}
-
-#req-message {
-  display: none;
-}
-
-form .hidden {
-  display: none;
-}
-
+/* Forms ------------------------------------------------------------------- */
+@import "components/forms";
