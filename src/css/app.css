@@ -783,7 +783,9 @@ form p {
   margin-bottom: 0; }
 
 #login input[type=text],
-#login input[type=password] {
+#login input[type=password],
+#register input[type=text],
+#register input[type=password] {
   display: block;
   font-size: 26px;
   border: 4px solid #58aeff;

@@ -15,6 +15,7 @@ function($, _, Backbone, settings, api) {
   var IndexRouter = Backbone.Router.extend({
     routes: {
       "": "home",
+      "register": "register",
 
       "surveys/new": "new_survey",
       "surveys/:slug/map": "map",
@@ -29,15 +30,13 @@ function($, _, Backbone, settings, api) {
 
       "*actions": "default_route"
     },
-  
+
     initialize: function(options) {
       this.controller = options.controller;
-      
-      this.route(/^login\/(.*)$/, "login", this.login);
 
-      // "*actions": "default_route"
+      this.route(/^login\/(.*)$/, "login", this.login);
     },
-    
+
     home: function() {
       console.log("Index");
       this.controller.goto_home();
@@ -48,20 +47,24 @@ function($, _, Backbone, settings, api) {
       this.controller.goto_login(redirectTo);
     },
 
+    register: function() {
+      this.controller.goto_register();
+    },
+
     new_survey: function() {
       api.getUser(function(user) {
         this.controller.goto_new();
       }.bind(this));
     },
-    
+
     survey: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_survey);
     },
-    
+
     map: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_map);
     },
-    
+
     settings: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_settings);
     },
@@ -69,11 +72,11 @@ function($, _, Backbone, settings, api) {
     form: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_form);
     },
-    
+
     survey_export: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_export);
     },
-    
+
     design: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_design);
     },

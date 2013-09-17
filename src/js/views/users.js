@@ -18,11 +18,11 @@ define([
 
   // Templates
   'text!templates/login.html',
-  'text!templates/signup.html'
+  'text!templates/register.html'
 
 ],
 
-function($, _, Backbone, events, _kmq, router, settings, api, UserModels, loginTemplate, signupTemplate) {
+function($, _, Backbone, events, _kmq, router, settings, api, UserModels, loginTemplate, registerTemplate) {
   'use strict';
 
   var UserViews = {};
@@ -55,19 +55,70 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels, loginT
   });
 
 
+  UserViews.RegisterView = Backbone.View.extend({
+    el: '#container',
+
+    template: _.template(registerTemplate),
+
+    events: {
+      "click #register button": "createUser"
+    },
+
+    initialize: function(options) {
+      console.log("Initialize login view");
+      _.bindAll(this, 'render', 'update', 'createUser', 'createUserCallback');
+
+      this.user = options.user;
+
+      this.render();
+    },
+
+    render: function() {
+      this.$el.html(this.template({}));
+      return this;
+    },
+
+    update: function() {
+      this.render();
+    },
+
+    createUserCallback: function(error, user) {
+      if(error) {
+        $("#register .error").html(error.message).fadeIn();
+        return;
+      }
+
+      // Get the current user model
+      this.user.fetch();
+
+      // Success! Go to the dashboard.
+      events.publish('navigate', ['/']);
+    },
+
+    createUser: function(event) {
+      event.preventDefault();
+
+      _kmq.push(['record', 'Creating user account']);
+      var user = $(event.target).parent().serializeArray();
+      $('#register .error').fadeOut();
+
+      api.createUser(user, this.createUserCallback);
+    }
+  });
+
+
   UserViews.LoginView = Backbone.View.extend({
     el: "#container",
 
     template: _.template(loginTemplate),
 
     events: {
-      "click #login button": "logIn",
-      "click #create-account button": "createUser"
+      "click #login button": "logIn"
     },
 
     initialize: function(options) {
       console.log("Initialize login view");
-      _.bindAll(this, 'render', 'update', 'createUser', 'createUserCallback', 'logIn', 'logInCallback');
+      _.bindAll(this, 'render', 'update', 'logIn', 'logInCallback');
 
       this.redirectTo = options.redirectTo || "/";
       this.redirectTo = this.redirectTo.replace("?redirectTo=", "");
@@ -107,29 +158,6 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels, loginT
 
       var user = $(event.target).parent().serializeArray();
       api.logIn(user, this.logInCallback);
-    },
-
-    createUserCallback: function(error, user) {
-      if(error) {
-        $("#create-account .error").html(error.message).fadeIn();
-        return;
-      }
-
-      // Get the current user model
-      this.user.fetch();
-
-      // Success! Go to the dashboard.
-      events.publish('navigate', ['/']);
-    },
-
-    createUser: function(event) {
-      event.preventDefault();
-
-      _kmq.push(['record', 'Creating user account']);
-      var user = $(event.target).parent().serializeArray();
-      $('#create-account .error').fadeOut();
-
-      api.createUser(user, this.createUserCallback);
     }
   });
 
