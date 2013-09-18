@@ -77,9 +77,13 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         'updateMapStyleBasedOnZoom',
         'updateObjectStyles',
         'styleFeature',
-        'setupPolygon'
+        'setupPolygon',
+        'setFilter',
+        'clearFilter',
+        'selectDataMap'
       );
 
+      this.responses = options.responses;
       this.survey = options.survey;
 
       this.parcelIdsOnTheMap = {};
@@ -102,52 +106,88 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
      * @param  {Object} tilejson
      */
     addTileLayer: function(tilejson) {
+      if (this.tileLayer) {
+        this.map.removeLayer(this.tileLayer);
+      }
+      console.log(tilejson);
       this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
       this.map.addLayer(this.tileLayer);
       this.tileLayer.bringToFront();
 
       this.gridLayer = new L.UtfGrid(tilejson.grids[0], {
-        resolution: 1
+        resolution: 4
       });
       this.map.addLayer(this.gridLayer);
+      // this.gridLayer.bringToFront();
+
+
+      this.gridLayer.on('click', function (e) {
+        if (!e.data) {
+          return;
+        }
+        var layer = new L.GeoJSON(e.data.geometry);
+        console.log(layer);
+        this.map.addLayer(layer);
+      }.bind(this));
 
       // Handle clicks on the grid layer
       this.gridLayer.on('click', this.selectObject);
     },
 
     render: function (arg) {
-      if (this.map !== null) return;
+      var hasResponses = this.responses !== null && this.responses.length > 0;
+      var hasZones = this.survey.has('zones');
+
+      if (this.map === null) {
+        // Create the map.
+        this.$el.html(_.template($('#map-view').html(), {}));
+
+        var bbox = this.survey.get('responseBounds');
+
+        // Initialize the map
+        var map = this.map = new L.map('map', { maxZoom: 18 });
+
+        // FIXME: This is a hack. The map element doesn't have a size yet, so
+        // Leaflet doesn't know how to set the view properly. If we wait until
+        // the next tick and call invalidateSize, then the map will know its
+        // size.
+        setTimeout(function () {
+          map.invalidateSize();
+          var bounds = L.latLngBounds([ [bbox[0][1], bbox[0][0]], [bbox[1][1], bbox[1][0]] ]);
+          map.fitBounds(bounds.pad(0.2), { reset: true });
+        }, 0);
+
+        this.baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/matth.map-zmpggdzn/{z}/{x}/{y}.png');
+        this.map.addLayer(this.baseLayer);
+        this.satelliteLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/matth.map-yyr7jb6r/{z}/{x}/{y}.png');
+        this.activeLayer = 'streets';
 
       // Create the map.
       this.$el.html(_.template($('#map-view').html(), {}));
 
-      // Initialize the map
-      this.map = new L.map('map', {
-        zoom: 16,
-        maxZoom: 18,
-        center: [42.439167,-83.083420]
-      });
-      // SF overview: [37.7750,-122.4183]
-      // this.map.setView([42.3314,-83.0458], 11); // Detroit overview
-      // this.map.setView([42.370805,-83.079728], 17);  // Bethune
 
-      this.baseLayer = L.tileLayer(this.BASEMAP_URL).addTo(this.map);
-      this.satelliteLayer = L.tileLayer(this.SATELLITE_URL);
-      this.activeLayer = 'streets';
+        this.selectDataMap();
 
-      // Set up the base map; add the parcels and done markers
-      this.map.addLayer(this.zoneLayer);
-      this.map.addLayer(this.objectsOnTheMap);
+        this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
+      }
 
-      // Get tilejson
-      //'http://matth-nt.herokuapp.com/' + this.survey.get('id') + '/tile.json',
-      //url: 'http://localhost:3001/' + this.survey.get('id') + '/filter/condition/tile.json',
-      var request = $.ajax({
-        url: '/tiles/' + this.survey.get('id') + '/tile.json',
-        type: "GET",
-        dataType: "jsonp"
-      });
-      request.done(this.addTileLayer);
+      if (hasZones) {
+        // Plot the survey zones.
+        this.plotZones();
+      } else {
+        // We don't start listening in initialize because we might get the
+        // change event before we even have a map.
+        this.listenTo(this.survey, 'change', this.plotZones);
+      }
+
+      // If there are no responses, don't bother trying to plot responses or
+      // deal with filters.
+      if (!hasResponses) {
+        return;
+      }
+
+      // TODO: better message passing
+      events.publish('loading', [true]);
 
       this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
 
@@ -156,6 +196,42 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       this.listenTo(this.survey, 'change', this.plotZones);
 
       return this;
+    },
+
+
+    selectDataMap: function () {
+      // Build the appropriate TileJSON URL.
+      var url = '/tiles/' + this.survey.get('id');
+      if (this.filter) {
+        url = url + '/filter/' + this.filter.question;
+      }
+      url = url + '/tile.json';
+
+      // Get TileJSON
+      $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'jsonp'
+      }).done(this.addTileLayer);
+    },
+
+    /**
+     * Set filter parameters for displaying results on the map
+     * The response collection will activate this if we have an active filter
+     * @param {String} question Name of the question, eg 'vacant'
+     * @param {Object} answers  Possible answers to the qu
+     */
+    setFilter: function (question, answers) {
+      this.filter = {
+        question: question,
+        answers: answers
+      };
+      this.selectDataMap();
+    },
+
+    clearFilter: function () {
+      this.filter = null;
+      this.selectDataMap();
     },
 
 
@@ -260,59 +336,18 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       _kmq.push(['record', "Map zoomed"]);
       var zoom = this.map.getZoom();
 
-      // Objects should be more detailed close up (zoom 10+)
-      if(zoom > 10) {
-
-        this.tileLayer.bringToFront();
-
-        console.log("Greater than 10");
-
-        // If we're in pretty close, show the satellite view
-        if(zoom > 14) {
-          if(this.activeLayer !== 'satellite') {
-            this.map.removeLayer(this.baseLayer);
-            this.map.addLayer(this.satelliteLayer, true);
-            this.satelliteLayer.bringToBack();
-            this.activeLayer = 'satellite';
-          }
-
-          if(this.activeLayer !== 'satellite') {
-            console.log("Active layer begin", this.activeLayer);
-            this.map.removeLayer(this.baseLayer);
-            this.map.addLayer(this.satelliteLayer, true);
-            this.satelliteLayer.bringToBack();
-            this.activeLayer = 'satellite';
-            console.log("Active layer end", this.activeLayer);
-          }
-
-        } else {
-          // Mid zoom (11-14)
-          // We're not that close, show the mid zoom styles
-          if(this.defaultStyle !== settings.midZoomStyle) {
-            this.defaultStyle = settings.closeZoomStyle;
-            this.updateObjectStyles(settings.closeZoomStyle);
-          }
-
-          // And use the terrain map
-          if (this.activeLayer !== 'streets') {
-            // Show a more abstract map when zoomed out
-            this.map.removeLayer(this.satelliteLayer);
-            this.map.addLayer(this.baseLayer, true);
-            this.activeLayer = 'streets';
-          }
-        }
-
-      }else {
-        // Far zoom (< 10)
-        // Show a more abstract map when zoomed out
-        if (this.activeLayer !== 'streets') {
-          this.map.removeLayer(this.satelliteLayer);
-          this.map.addLayer(this.baseLayer, true);
-          this.activeLayer = 'streets';
-
-          this.defaultStyle = settings.farZoomStyle;
-          this.updateObjectStyles(settings.farZoomStyle);
-        }
+      // Objects should be more detailed close up (zoom 14+)
+      // And easier to see when zoomed out (zoom >= 16)
+      // With a transition state in the middle
+      if(zoom < 14 && this.defaultStyle !== settings.farZoomStyle) {
+        this.defaultStyle = settings.farZoomStyle;
+        this.updateObjectStyles(settings.farZoomStyle);
+      }else if (zoom < 16 && zoom > 13 && this.defaultStyle !== settings.midZoomStyle) {
+        this.defaultStyle = settings.midZoomStyle;
+        this.updateObjectStyles(settings.midZoomStyle);
+      }else if(zoom >= 16 && this.defaultStyle !== settings.closeZoomStyle) {
+        this.defaultStyle = settings.closeZoomStyle;
+        this.updateObjectStyles(settings.closeZoomStyle);
       }
 
       // If a parcel is selected, make sure it says visually selected
