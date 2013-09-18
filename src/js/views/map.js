@@ -134,40 +134,43 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       this.gridLayer.on('click', this.selectObject);
     },
 
-    render: function (arg) {
-      var hasResponses = this.responses !== null && this.responses.length > 0;
+
+    render: function() {
       var hasZones = this.survey.has('zones');
 
       if (this.map === null) {
-        // Create the map.
+        // Render the map template
         this.$el.html(_.template($('#map-view').html(), {}));
 
+        // Set up the bounding box
         var bbox = this.survey.get('responseBounds');
+        var southWest = new L.LatLng(bbox[0][1], bbox[0][0]),
+            northEast = new L.LatLng(bbox[1][1], bbox[1][0]),
+            bounds = new L.LatLngBounds(southWest, northEast);
 
         // Initialize the map
-        var map = this.map = new L.map('map', { maxZoom: 18 });
+        this.map = new L.map('map', {
+          zoom: 15
+        });
+
+        // Set up the base map; add the parcels and done markers
+        this.baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/matth.map-zmpggdzn/{z}/{x}/{y}.png');
+        this.map.addLayer(this.baseLayer);
+        this.satelliteLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/matth.map-yyr7jb6r/{z}/{x}/{y}.png');
+        this.activeLayer = 'streets';
 
         // FIXME: This is a hack. The map element doesn't have a size yet, so
         // Leaflet doesn't know how to set the view properly. If we wait until
         // the next tick and call invalidateSize, then the map will know its
         // size.
         setTimeout(function () {
-          map.invalidateSize();
-          var bounds = L.latLngBounds([ [bbox[0][1], bbox[0][0]], [bbox[1][1], bbox[1][0]] ]);
-          map.fitBounds(bounds.pad(0.2), { reset: true });
-        }, 0);
-
-        this.baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/matth.map-zmpggdzn/{z}/{x}/{y}.png');
-        this.map.addLayer(this.baseLayer);
-        this.satelliteLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/matth.map-yyr7jb6r/{z}/{x}/{y}.png');
-        this.activeLayer = 'streets';
-
-      // Create the map.
-      this.$el.html(_.template($('#map-view').html(), {}));
-
+          this.map.addLayer(this.zoneLayer);
+          this.updateMapStyleBasedOnZoom();
+          this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
+          this.map.fitBounds(bounds, { reset: true });
+        }.bind(this), 0);
 
         this.selectDataMap();
-
         this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
       }
 
@@ -180,11 +183,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         this.listenTo(this.survey, 'change', this.plotZones);
       }
 
-      // If there are no responses, don't bother trying to plot responses or
-      // deal with filters.
-      if (!hasResponses) {
-        return;
-      }
 
       // TODO: better message passing
       events.publish('loading', [true]);
