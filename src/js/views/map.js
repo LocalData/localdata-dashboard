@@ -111,38 +111,28 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
 
       // Listen to see if we're loading the map
-      this.tileLayer.on('loading', function(e) {
-        console.log('loading', e);
-      });
-      this.tileLayer.on('load', function(e) {
-        console.log('done loading', e);
-      });
+      this.tileLayer.on('loading', this.loading);
+      this.tileLayer.on('load', this.done);
 
       this.map.addLayer(this.tileLayer);
       this.tileLayer.bringToFront();
 
 
-      // Create the grid layer
+      // Create the grid layer & handle clicks
       this.gridLayer = new L.UtfGrid(tilejson.grids[0], {
-        resolution: 4
+        resolution: 1
       });
       this.map.addLayer(this.gridLayer);
-
-      // Listen for licks on the grid layer
-      // How many licks does it take to get to the center of a leaflet map?
-      // this.gridLayer.on('click', function (e) {
-      //   if (!e.data) {
-      //     return;
-      //   }
-      //   var layer = new L.GeoJSON(e.data.geometry);
-      //   console.log(layer);
-      //   this.map.addLayer(layer);
-      // }.bind(this));
-
-      // Handle clicks on the grid layer
       this.gridLayer.on('click', this.selectObject);
     },
 
+    loading: function() {
+      $('.loading').show();
+    },
+
+    done: function() {
+      $('.loading').hide();
+    },
 
     render: function() {
       if (this.map === null) {
@@ -345,11 +335,12 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
 
     /**
-     * Highlight a selected object; un-hilight any previously selected object
+     * Hilight a selected object; un-hilight any previously selected object
      * @param  {Object} event
      */
     selectObject: function(event) {
       _kmq.push(['record', "Map object selected"]);
+      console.log("Selected object", event);
 
       // Remove any previously selected layer
       if (this.selectedLayer !== null) {
@@ -358,8 +349,10 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
       // Add a layer
       this.selectedLayer = new L.GeoJSON(event.data.geometry);
+      console.log(this.selectedLayer);
       this.selectedLayer.setStyle(settings.selectedStyle);
       this.map.addLayer(this.selectedLayer);
+      this.selectedLayer.bringToFront();
 
       // Let's show some info about this object in the sidebar.
       this.details(event.data);
