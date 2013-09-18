@@ -171,19 +171,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
       }
 
-      if (hasZones) {
-        // Plot the survey zones.
-        this.plotZones();
-      } else {
-        // We don't start listening in initialize because we might get the
-        // change event before we even have a map.
-        this.listenTo(this.survey, 'change', this.plotZones);
-      }
-
-
-      // TODO: better message passing
-      events.publish('loading', [true]);
-
       this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
 
       // Handle zones
