@@ -48,11 +48,11 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
     initialize: function(options) {
       _.bindAll(this, 'render', 'update', 'getNew', 'filter', 'subFilter', 'updateFilterView', 'updateFilterChoices', 'lastUpdated');
 
-      this.responses = options.responses;
-      this.responses.on('reset', this.update, this);
-      this.responses.on('add', this.update, this);
-      this.responses.on('addSet', this.updateFilterChoices, this);
-      this.responses.on('addSet', this.update, this);
+      // this.responses = options.responses;
+      // this.responses.on('reset', this.update, this);
+      // this.responses.on('add', this.update, this);
+      // this.responses.on('addSet', this.updateFilterChoices, this);
+      // this.responses.on('addSet', this.update, this);
       // this.responses.on('updated', this.lastUpdated, this);
 
       this.forms = options.forms;
@@ -66,7 +66,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       // If we already have some responses, then we can display the
       // count/filter text. We need to have rendered first, though, otherwise
       // we won't have any place to put the filter controls!
-      if (this.responses.length > 0) {
+      if (this.responses && this.responses.length > 0) {
         this.updateFilterChoices();
       }
     },
