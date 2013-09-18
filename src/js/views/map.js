@@ -105,29 +105,39 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
      * @param  {Object} tilejson
      */
     addTileLayer: function(tilejson) {
-      if (this.tileLayer) {
-        this.map.removeLayer(this.tileLayer);
-      }
       console.log(tilejson);
+
+      if (this.tileLayer) this.map.removeLayer(this.tileLayer);
       this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
+
+      // Listen to see if we're loading the map
+      this.tileLayer.on('loading', function(e) {
+        console.log('loading', e);
+      });
+      this.tileLayer.on('load', function(e) {
+        console.log('done loading', e);
+      });
+
       this.map.addLayer(this.tileLayer);
       this.tileLayer.bringToFront();
 
+
+      // Create the grid layer
       this.gridLayer = new L.UtfGrid(tilejson.grids[0], {
         resolution: 4
       });
       this.map.addLayer(this.gridLayer);
-      // this.gridLayer.bringToFront();
 
-
-      this.gridLayer.on('click', function (e) {
-        if (!e.data) {
-          return;
-        }
-        var layer = new L.GeoJSON(e.data.geometry);
-        console.log(layer);
-        this.map.addLayer(layer);
-      }.bind(this));
+      // Listen for licks on the grid layer
+      // How many licks does it take to get to the center of a leaflet map?
+      // this.gridLayer.on('click', function (e) {
+      //   if (!e.data) {
+      //     return;
+      //   }
+      //   var layer = new L.GeoJSON(e.data.geometry);
+      //   console.log(layer);
+      //   this.map.addLayer(layer);
+      // }.bind(this));
 
       // Handle clicks on the grid layer
       this.gridLayer.on('click', this.selectObject);
@@ -135,8 +145,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
 
     render: function() {
-      var hasZones = this.survey.has('zones');
-
       if (this.map === null) {
         // Render the map template
         this.$el.html(_.template($('#map-view').html(), {}));
@@ -170,9 +178,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         this.selectDataMap();
         this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
       }
-
-      this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
-
       // Handle zones
       if (this.survey.has('zones')) this.plotZones();
       this.listenTo(this.survey, 'change', this.plotZones);
