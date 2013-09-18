@@ -54,7 +54,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
   }
 
   var MapView = Backbone.View.extend({
-    SATELLITE_URL: 'http://a.tiles.mapbox.com/v3/matth.map-yyr7jb6r/{z}/{x}/{y}.png',
     BASEMAP_URL: 'http://a.tiles.mapbox.com/v3/matth.map-n9bps30s/{z}/{x}/{y}.png',
 
     filtered: false,
@@ -154,10 +153,8 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         });
 
         // Set up the base map; add the parcels and done markers
-        this.baseLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/matth.map-zmpggdzn/{z}/{x}/{y}.png');
+        this.baseLayer = L.tileLayer(this.BASEMAP_URL);
         this.map.addLayer(this.baseLayer);
-        this.satelliteLayer = L.tileLayer('http://a.tiles.mapbox.com/v3/matth.map-yyr7jb6r/{z}/{x}/{y}.png');
-        this.activeLayer = 'streets';
 
         // FIXME: This is a hack. The map element doesn't have a size yet, so
         // Leaflet doesn't know how to set the view properly. If we wait until
