@@ -243,11 +243,11 @@ header a {
   border-radius:20px;
   border:2px solid #ddd;
   padding:20px;
+  display: none;
 }
 
 .loading h2 {
   text-transform: none;
-
 }
 
 /* Filtering .................................................................*/
@@ -380,6 +380,7 @@ header a {
 .leaflet-control-attribution {
   display:none;
 }
+
 
 /*  Note that we can't combine these two rules because they're
     browser-specific */

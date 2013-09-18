@@ -111,12 +111,8 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
 
       // Listen to see if we're loading the map
-      this.tileLayer.on('loading', function(e) {
-        console.log('loading', e);
-      });
-      this.tileLayer.on('load', function(e) {
-        console.log('done loading', e);
-      });
+      this.tileLayer.on('loading', this.loading);
+      this.tileLayer.on('load', this.done);
 
       this.map.addLayer(this.tileLayer);
       this.tileLayer.bringToFront();
@@ -143,6 +139,13 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       this.gridLayer.on('click', this.selectObject);
     },
 
+    loading: function() {
+      $('.loading').show();
+    },
+
+    done: function() {
+      $('.loading').hide();
+    },
 
     render: function() {
       if (this.map === null) {
