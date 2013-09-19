@@ -1,0 +1,27 @@
+<div class="out contrast survey">
+  <div class="in">
+    <div class="a">
+      <h2 id="survey-name"><%= survey.name %></h2>
+    </div>
+
+    <div class="b">
+      <div class="span12">
+        <ul id="nav" class="nav nav-tabs">
+          <li class="active" id="tab-survey-home"><a href="#surveys/<%= survey.slug %>"><i class="icon-home" data-show="response-view-container"></i>Overview</a></li>
+          <li class="active" id="tab-survey-home"><a href="#surveys/<%= survey.slug %>"><i class="icon-home" data-show="response-view-container"></i>Deep Dive</a></li>
+
+          <li class="" id="tab-survey-export" data-show=""><a href="#surveys/<%= survey.slug %>/export" data-show="export-view-container"><i class="icon-download"></i>Export</a></li>
+          <li class="" id="tab-survey-form"><a href="#surveys/<%= survey.slug %>/form" data-show="form-view-container"><i class="icon-list-ul"></i>Survey Questions</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="survey-tabs">
+  <div id="loading-view-container" class="tab"></div>
+  <div id="response-view-container" class="tab"></div>
+  <div id="form-view-container" class="tab"></div>
+  <div id="export-view-container" class="tab"></div>
+  <div id="settings-view-container" class="tab"></div>
+</div>

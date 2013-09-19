@@ -151,7 +151,8 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         });
 
         // Set up the base map; add the parcels and done markers
-        this.baseLayer = L.tileLayer(this.BASEMAP_URL);
+
+        this.baseLayer = L.tileLayer(settings.baseLayer);
         this.map.addLayer(this.baseLayer);
 
         // FIXME: This is a hack. The map element doesn't have a size yet, so

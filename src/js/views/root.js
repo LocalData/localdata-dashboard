@@ -37,6 +37,7 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
   AllViews.DesignView = DesignViews.DesignView;
 
   AllViews.LoginView = UserViews.LoginView;
+  AllViews.RegisterView = UserViews.RegisterView;
   AllViews.UserBarView = UserViews.UserBarView;
 
   // The singleton view which manages all others.
@@ -102,6 +103,13 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
         'user': this.user
       });
     },
+
+    goto_register: function() {
+      this.currentContentView = this.getOrCreateView("RegisterView", "RegisterView", {
+        'user': this.user
+      });
+    },
+
 
     // Survey dashboard routes .................................................
     goto_survey: function(tab) {

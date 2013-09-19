@@ -1,0 +1,64 @@
+nav a,
+nav a:hover {
+  font-family: $bold;
+  color: $body-color;
+  display: inline-block;
+  margin-right: 45px;
+
+  @media all and (max-width: 768px) {
+    display: block;
+    margin-right:0;
+    line-height: 44px;
+    border-bottom: 1px solid $body-accent;
+    padding-left: 30px;
+    background: #fff;
+  }
+}
+
+nav a:hover {
+  color: $blue
+}
+
+.nav {
+  @media all and (max-width: 768px) {
+    background: #fff;
+    padding: 0 15px 0 20px;
+  }
+}
+
+.nav .in {
+  padding: 20px 0 60px;
+  margin-bottom: 0;
+
+  @media all and (max-width: 768px) {
+    padding-bottom: 20px;
+  }
+}
+
+.subnav {
+  border-top: 5px solid $pink;
+  padding-top: 1em;
+}
+
+.subnav li {
+  line-height: 2em;
+  list-style-type: none;
+
+}
+
+.subnav a,
+.subnav a:hover {
+  font-family: $font;
+  font-weight: normal;
+  color: $blue;
+}
+
+.subnav .selected {
+  list-style-type: circle;
+}
+
+.subnav .selected,
+.subnav .selected a,
+.subnav .selected a:hover {
+  color: $red;
+}

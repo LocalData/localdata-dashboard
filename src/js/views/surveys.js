@@ -5,6 +5,7 @@ define([
   'jquery',
   'lib/lodash',
   'backbone',
+  'lib/leaflet/leaflet.google',
   'lib/tinypubsub',
   'lib/async',
 
@@ -22,6 +23,11 @@ define([
   'views/settings',
   'views/responses/responses',
   'views/forms',
+  'views/maps/map',
+
+  // Templates
+  'text!templates/surveys/item.html',
+  'text!templates/surveys/list-item.html',
 
   // Misc
   'misc/exampleform'
@@ -32,6 +38,7 @@ function(
   $,
   _,
   Backbone,
+  L,
   events,
   async,
 
@@ -49,6 +56,11 @@ function(
   SettingsView,
   ResponseViews,
   FormViews,
+  MapView,
+
+  // Templates
+  surveyTemplate,
+  surveyListItemTemplate,
 
   // Misc
   exampleForm
@@ -64,14 +76,21 @@ function(
   }
 
   SurveyViews.ListItemView = Backbone.View.extend({
+    template: _.template(surveyListItemTemplate),
+
     initialize: function() {
-      _.bindAll(this, 'render');
+      _.bindAll(this, 'render', 'map');
       this.model.bind('change', this.render);
     },
 
     render: function() {
-      this.$el.html(_.template($('#survey-list-item-view').html(), {survey: this.model }));
+      this.$el.html(this.template({
+        survey: this.model.toJSON()
+      }));
       return this;
+    },
+
+    map: function() {
     }
   });
 
@@ -132,35 +151,37 @@ function(
           survey.type = type;
         }
 
-        console.log("Survey form submitted");
-        console.log(survey);
-
         // Submit the details as a new survey.
         api.createSurvey(survey, function(survey) {
-          console.log("Survey created");
-          console.log(survey);
-
           // LD.router._router.navigate("surveys/" + survey.slug, {trigger: true});
 
           // TODO -- use the router
           location.href = "/#surveys/" + survey.slug + "/form";
-
         });
       });
 
     }
-
   });
 
   SurveyViews.SurveyView = Backbone.View.extend({
     el: $("#container"),
+
+    template: _.template(surveyTemplate),
 
     activeTab: undefined,
     survey: null,
     bodyView: null,
 
     initialize: function(options) {
-      _.bindAll(this, 'update', 'render', 'show', 'showResponses', 'showUpload', 'showForm', 'showSettings');
+      _.bindAll(this,
+        'update',
+        'render',
+        'show',
+        'showResponses',
+        'showUpload',
+        'showForm',
+        'showSettings'
+      );
 
       // Set up the page and show the given survey
       this.surveyId = options.id;
@@ -192,6 +213,8 @@ function(
     },
 
     render: function (model) {
+      var $el = $(this.el);
+
       console.log("Rendering survey view");
 
       // Remove old sub-views
@@ -199,11 +222,9 @@ function(
         this.responseListView.remove();
       }
 
-      // Set the context & render the page
-      var context = {
+      $el.html(this.template({
         survey: this.survey.toJSON()
-      };
-      this.$el.html(_.template($('#survey-view').html(), context));
+      }));
 
       // List the responses
       this.responseListView = new ResponseViews.MapAndListView({

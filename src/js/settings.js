@@ -15,10 +15,12 @@ function(L) {
     geo: '/api'
   };
 
+  settings.baseLayer = 'http://a.tiles.mapbox.com/v3/matth.map-n9bps30s/{z}/{x}/{y}.png';
+
   // Colors for option maps
   settings.colorRange = [
     "#df455d", // First color used for blank entries
-    "#ce40bf",
+    "#a743c3",
     "#404ecd",
     "#40cd98",
     "#d4e647",
@@ -55,27 +57,27 @@ function(L) {
   };
 
   settings.closeZoomStyle = {
-    'color': '#ef6d4a', //'#cec40d'
+    'color': '#a743c3',
     'opacity': 1,
     'weight': 2,
     'fillOpacity': 0.5,
-    'fillColor': '#ef6d4a'
+    'fillColor': '#a743c3'
   };
 
   settings.midZoomStyle = {
-    'color': '#df455d',
-    'opacity': 1,
-    'weight': 5,
+    'color': '#a743c3',
+    'opacity': 0.4,
+    'weight': 1,
     'fillOpacity': 0.5,
-    'fillColor': '#df455d'
+    'fillColor': '#a743c3'
   };
 
   settings.farZoomStyle = {
-    'color': '#df455d',
-    'opacity': 1,
+    'color': '#a743c3',
+    'opacity': 0.9,
     'fillOpacity': 0.9,
-    'fillColor': '#df455d',
-    'weight': 12
+    'fillColor': '#a743c3',
+    'weight': 1
   };
 
   settings.selectedStyle = {
@@ -85,18 +87,6 @@ function(L) {
     'fillOpacity': 0.5,
     'fillColor': '#fcd96c'
   };
-
-  settings.googleMapsFarZoom = [
-    {
-      "elementType": "geometry",
-      "stylers": [
-        { "lightness": 40 },
-        { "gamma": 1.33 },
-        { "saturation": -52 },
-        { "hue": "#00fff7" }
-      ]
-    }
-  ];
 
   return settings;
 });

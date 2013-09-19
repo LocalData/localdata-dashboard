@@ -6,26 +6,31 @@ define([
   'lib/lodash',
   'backbone',
   'settings',
-  'api'
+  'api',
+
+  // Templates
+  'text!templates/export.html'
 ],
 
-function($, _, Backbone, settings, api) {
+function($, _, Backbone, settings, api, exportTemplate) {
   'use strict';
 
   var ExportView = Backbone.View.extend({
     el: '#export-view-container',
 
+    template: _.template(exportTemplate),
+
     events: {
       'click .shapefile': 'getShapefile'
     },
-      
+
     initialize: function(options) {
       _.bindAll(this, 'render', 'pingAPI', 'pingS3');
-      
+
       // Show a given survey
       this.surveyId = options.surveyId;
     },
-      
+
     render: function(loading) {
       // Set the context & render the page
       var context = {
@@ -33,7 +38,8 @@ function($, _, Backbone, settings, api) {
         baseurl: settings.api.baseurl,
         loading: loading
       };
-      this.$el.html(_.template($('#export-view').html(), context));
+
+      this.$el.html(this.template(context));
     },
 
     // When we're done with the shapefile export process, we should reset our
