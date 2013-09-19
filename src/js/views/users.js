@@ -14,10 +14,15 @@ define([
   'api',
 
   // Models
-  'models/users'
+  'models/users',
+
+  // Templates
+  'text!templates/login.html',
+  'text!templates/register.html'
+
 ],
 
-function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
+function($, _, Backbone, events, _kmq, router, settings, api, UserModels, loginTemplate, registerTemplate) {
   'use strict';
 
   var UserViews = {};
@@ -50,17 +55,70 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
   });
 
 
-  UserViews.LoginView = Backbone.View.extend({
-    el: "#container",
+  UserViews.RegisterView = Backbone.View.extend({
+    el: '#container',
+
+    template: _.template(registerTemplate),
 
     events: {
-      "click #login button": "logIn",
-      "click #create-account button": "createUser"
+      "click #register button": "createUser"
     },
 
     initialize: function(options) {
       console.log("Initialize login view");
-      _.bindAll(this, 'render', 'update', 'createUser', 'createUserCallback', 'logIn', 'logInCallback');
+      _.bindAll(this, 'render', 'update', 'createUser', 'createUserCallback');
+
+      this.user = options.user;
+
+      this.render();
+    },
+
+    render: function() {
+      this.$el.html(this.template({}));
+      return this;
+    },
+
+    update: function() {
+      this.render();
+    },
+
+    createUserCallback: function(error, user) {
+      if(error) {
+        $("#register .error").html(error.message).fadeIn();
+        return;
+      }
+
+      // Get the current user model
+      this.user.fetch();
+
+      // Success! Go to the dashboard.
+      events.publish('navigate', ['/']);
+    },
+
+    createUser: function(event) {
+      event.preventDefault();
+
+      _kmq.push(['record', 'Creating user account']);
+      var user = $(event.target).parent().serializeArray();
+      $('#register .error').fadeOut();
+
+      api.createUser(user, this.createUserCallback);
+    }
+  });
+
+
+  UserViews.LoginView = Backbone.View.extend({
+    el: "#container",
+
+    template: _.template(loginTemplate),
+
+    events: {
+      "click #login button": "logIn"
+    },
+
+    initialize: function(options) {
+      console.log("Initialize login view");
+      _.bindAll(this, 'render', 'update', 'logIn', 'logInCallback');
 
       this.redirectTo = options.redirectTo || "/";
       this.redirectTo = this.redirectTo.replace("?redirectTo=", "");
@@ -74,7 +132,7 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
       var context = {
         redirectTo: this.redirectTo
       };
-      this.$el.html(_.template($('#login-view').html(), context));
+      this.$el.html(this.template(context));
       return this;
     },
 
@@ -100,29 +158,6 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
 
       var user = $(event.target).parent().serializeArray();
       api.logIn(user, this.logInCallback);
-    },
-
-    createUserCallback: function(error, user) {
-      if(error) {
-        $("#create-account .error").html(error.message).fadeIn();
-        return;
-      }
-
-      // Get the current user model
-      this.user.fetch();
-
-      // Success! Go to the dashboard.
-      events.publish('navigate', ['/']);
-    },
-
-    createUser: function(event) {
-      event.preventDefault();
-
-      _kmq.push(['record', 'Creating user account']);
-      var user = $(event.target).parent().serializeArray();
-      $('#create-account .error').fadeOut();
-
-      api.createUser(user, this.createUserCallback);
     }
   });
 

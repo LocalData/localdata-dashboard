@@ -1,0 +1,25 @@
+.preview-q-box {
+  padding-left: 20px;
+}
+
+.preview-q-box .depth-0,
+.preview-q-box .depth-1,
+.preview-q-box .depth-2,
+.preview-q-box .depth-3 {
+  margin-left: 15px;
+}
+
+.preview-question {
+  border-left: 5px solid $blue;
+  padding-left: 10px;
+  margin: 5px 5px 20px 5px;
+}
+
+  .question-prompt {
+    padding: 5px;
+    font-weight: bold;
+  }
+
+  .preview-answer {
+    padding: 2px 0 2px 20px;
+  }

@@ -1,0 +1,36 @@
+header .in {
+  overflow: visible;
+  padding: 0;
+}
+
+header .a,
+header .b {
+  padding: 0;
+}
+
+header .logo a,
+footer .logo a {
+  position: relative;
+  z-index: 100;
+
+  left: -53px;
+  display: inline-block;
+  height: 112px;
+  width: 281px;
+  background: transparent url(../img/logo.png) no-repeat left center;
+  background-size: auto 112px;
+  text-indent: -99999px;
+}
+
+header .nav {
+  padding-top: 45px;
+  text-align: right;
+}
+
+header .nav,
+header .nav a:link,
+header .nav a:visited {
+  font-family: $bold;
+  color: $body-color;
+  padding-left: 30px;
+}
