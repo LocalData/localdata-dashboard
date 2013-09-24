@@ -17,10 +17,13 @@ define([
   'models/responses',
 
   // Views
-  'views/map'
+  'views/map',
+
+  // Templates
+  'text!templates/responses/map-list.html'
 ],
 
-function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView) {
+function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView, mapListTemplate) {
   'use strict';
 
   var ResponseViews = {};
@@ -34,7 +37,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
     mapView: null,
     listView: null,
 
-    template: _.template($('#response-view').html()),
+    template: _.template(mapListTemplate),
 
     el: '#response-view-container',
 
@@ -46,14 +49,28 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'update', 'getNew', 'filter', 'subFilter', 'updateFilterView', 'updateFilterChoices', 'lastUpdated');
+      _.bindAll(this,
+        'render',
+        'update',
+        'grow',
+
+        // Filtering
+        'showFilters',
+        'filter',
+        'subFilter',
+        'updateFilterView',
+        'updateFilterChoices',
+
+        // Updating
+        'getNew',
+        'lastUpdated'
+      );
 
       this.responses = options.responses;
       this.responses.on('reset', this.update, this);
       this.responses.on('add', this.update, this);
       this.responses.on('addSet', this.updateFilterChoices, this);
       this.responses.on('addSet', this.update, this);
-      // this.responses.on('updated', this.lastUpdated, this);
 
       this.forms = options.forms;
       this.forms.on('reset', this.updateFilterChoices, this);
@@ -92,8 +109,6 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       };
       this.$el.html(this.template(context));
 
-      // If the data has been filtered, show that on the page.
-      // TODO: This should be done in a view.
       // Set up the map view, now that the root exists.
       if (this.mapView === null) {
         this.mapView = new MapView({
@@ -106,6 +121,8 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       // Render the map
       this.mapView.render();
 
+      // If the data has been filtered, show that on the page.
+      // TODO: This should be done in a view.
       this.updateFilterView();
     },
 
@@ -122,22 +139,13 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       // Update the filters
     },
 
-    /**
-     * Get new responses
-     */
-    getNew: function(event) {
-      event.preventDefault();
-      this.responses.update();
+    grow: function() {
+      console.log("GROWING", this.$el);
+      this.$el.css('background-color', 'red');
     },
 
-    /**
-     * Show the time of the last response collection update
-     */
-    lastUpdated: function () {
-      if(this.responses.lastUpdate !== undefined) {
-        var time = moment(this.responses.lastUpdate).format("Do h:mma");
-        $('#last-updated').html('Last updated: ' + time);
-      }
+    showFilters: function() {
+      this.grow();
     },
 
     /**
@@ -150,7 +158,6 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
         flattenedForm: flattenedForm
       }));
     },
-
 
     /**
      * If the data has already been filtered, show that on the page
@@ -194,7 +201,6 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       this.mapView.setFilter(question, answers);
     },
 
-
     /**
      * Show only responses with a specific answer
      */
@@ -231,7 +237,6 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       this.updateFilterView();
     },
 
-
     remove: function () {
       this.$el.remove();
       this.stopListening();
@@ -245,10 +250,27 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
         this.listView.remove();
       }
       return this;
+    },
+
+    /**
+     * Get new responses
+     */
+    getNew: function(event) {
+      event.preventDefault();
+      this.responses.update();
+    },
+
+    /**
+     * Show the time of the last response collection update
+     */
+    lastUpdated: function () {
+      if(this.responses.lastUpdate !== undefined) {
+        var time = moment(this.responses.lastUpdate).format("Do h:mma");
+        $('#last-updated').html('Last updated: ' + time);
+      }
     }
 
   });
-
 
 
   /**

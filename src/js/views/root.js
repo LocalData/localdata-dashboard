@@ -134,6 +134,9 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
         case "settings":
           this.currentContentView.showSettings();
           break;
+        case "filters":
+          this.currentContentView.showFilters();
+          break;
       }
     },
 
@@ -159,11 +162,15 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
       this.goto_survey("export");
     },
 
+    goto_filters: function() {
+      _kmq.push(['record', "FilterVIew"]);
+      this._router.navigate("surveys/" + settings.slug + "/dive");
+      this.goto_survey("filters");
+    },
+
     goto_design: function() {
       console.log("Going to design");
       this.currentContentView = this.getOrCreateView("DesignView", "DesignView", {id: settings.surveyId});
-
-      // this.currentContentView = this.getOrCreateView("DesignView", "DesignView");
     }
 
   });

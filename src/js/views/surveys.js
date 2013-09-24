@@ -163,14 +163,15 @@ function(
     }
   });
 
+
   SurveyViews.SurveyView = Backbone.View.extend({
     el: $("#container"),
 
-    template: _.template(surveyTemplate),
-
     activeTab: undefined,
-    survey: null,
     bodyView: null,
+    firstRun: true,
+    survey: null,
+    template: _.template(surveyTemplate),
 
     initialize: function(options) {
       _.bindAll(this,
@@ -178,9 +179,9 @@ function(
         'render',
         'show',
         'showResponses',
-        'showUpload',
         'showForm',
-        'showSettings'
+        'showSettings',
+        'showFilters'
       );
 
       // Set up the page and show the given survey
@@ -214,12 +215,15 @@ function(
 
     render: function (model) {
       var $el = $(this.el);
-
       console.log("Rendering survey view");
+      // if (!this.firstRun) {
+      //   return;
+      // }
+      // this.firstRun = false;
 
       // Remove old sub-views
-      if (this.responseListView !== undefined) {
-        this.responseListView.remove();
+      if (this.mapAndListView !== undefined) {
+        this.mapAndListView.remove();
       }
 
       $el.html(this.template({
@@ -227,8 +231,7 @@ function(
       }));
 
       // List the responses
-      this.responseListView = new ResponseViews.MapAndListView({
-        el: $("#response-view-container"),
+      this.mapAndListView = new ResponseViews.MapAndListView({
         responses: this.responses,
         forms: this.forms,
         survey: this.survey
@@ -285,15 +288,9 @@ function(
       this.show('#settings-view-container', 3);
     },
 
-    // Not yet implemented
-    showUpload: function() {
-      console.log("[not] Using upload view");
-    },
-
-    showScans: function() {
-      console.log("[not] Using scans view");
+    showFilters: function() {
+      this.show('#response-view-container', '#tab-survey-filters');
     }
-
   });
 
   return SurveyViews;
