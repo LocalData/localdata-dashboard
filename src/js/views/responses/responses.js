@@ -143,6 +143,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       console.log("GROWING", this.$el);
       var $b = $('#map-view-container', this.$el);
       this.$el.addClass('bigb');
+      console.log("I'M GROWING EVEN THOUGH I SHOULDN'T");
     },
 
     showFilters: function() {

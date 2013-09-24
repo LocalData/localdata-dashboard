@@ -231,7 +231,9 @@ function(
         forms: this.forms,
         survey: this.survey
       });
-      if(filters) this.mapAndListView.showFilters();
+      if(this.filters) {
+        this.mapAndListView.showFilters();
+      }
 
       // Form view
       this.formView = new FormViews.FormView({
