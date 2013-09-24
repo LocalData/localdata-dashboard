@@ -30,12 +30,12 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
 
 
   ResponseViews.MapAndListView = Backbone.View.extend({
-    responses: null,
-    firstRun: true,
-    survey: null,
     filters: {},
+    firstRun: true,
     mapView: null,
     listView: null,
+    responses: null,
+    survey: null,
 
     template: _.template(mapListTemplate),
 
@@ -141,7 +141,8 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
 
     grow: function() {
       console.log("GROWING", this.$el);
-      this.$el.css('background-color', 'red');
+      var $b = $('#map-view-container', this.$el);
+      this.$el.addClass('bigb');
     },
 
     showFilters: function() {

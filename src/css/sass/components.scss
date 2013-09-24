@@ -90,7 +90,7 @@
   font-family: $font;
 }
 
-/* Survey-------------------------------------------------------------------- */
+/* Survey and Map ----------------------------------------------------------- */
 .survey .in {
   padding-bottom: 10px;
 }
@@ -99,34 +99,6 @@
   padding: 0;
 }
 
-#response-view-container #map {
-  width: 764px;
-
-  /* column sizing */
-  float:left;
-
-  @media all and (max-width: 1999px) {
-    width: 556px;
-  }
-
-  @media all and (max-width: 1279px) {
-    width: 543px;
-  }
-
-  @media all and (max-width: 1119px) {
-    width: 420px;
-  }
-
-  @media all and (max-width: 899px) {
-    width: 354px;
-  }
-
-  @media all and (max-width: 768px) {
-    margin: 0;
-    width: auto;
-    float:none;
-  }
-}
 
 /* Tabs --------------------------------------------------------------------- */
 .nav-tabs {

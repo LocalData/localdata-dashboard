@@ -168,8 +168,7 @@ function(
     el: $("#container"),
 
     activeTab: undefined,
-    bodyView: null,
-    firstRun: true,
+    filters: false,
     survey: null,
     template: _.template(surveyTemplate),
 
@@ -216,10 +215,6 @@ function(
     render: function (model) {
       var $el = $(this.el);
       console.log("Rendering survey view");
-      // if (!this.firstRun) {
-      //   return;
-      // }
-      // this.firstRun = false;
 
       // Remove old sub-views
       if (this.mapAndListView !== undefined) {
@@ -236,6 +231,7 @@ function(
         forms: this.forms,
         survey: this.survey
       });
+      if(filters) this.mapAndListView.showFilters();
 
       // Form view
       this.formView = new FormViews.FormView({
@@ -290,6 +286,7 @@ function(
 
     showFilters: function() {
       this.show('#response-view-container', '#tab-survey-filters');
+      this.filters = true;
     }
   });
 
