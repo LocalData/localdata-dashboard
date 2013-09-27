@@ -214,7 +214,6 @@ function(
 
     render: function (model) {
       var $el = $(this.el);
-      console.log("Rendering survey view");
 
       // Remove old sub-views
       if (this.mapAndListView !== undefined) {
@@ -225,12 +224,13 @@ function(
         survey: this.survey.toJSON()
       }));
 
-      // List the responses
+      // Map the responses
       this.mapAndListView = new ResponseViews.MapAndListView({
         responses: this.responses,
         forms: this.forms,
         survey: this.survey
       });
+
       if(this.filters) {
         this.mapAndListView.showFilters();
       }
@@ -241,20 +241,18 @@ function(
         forms: this.forms
       });
 
-      // Nav, Export, Settings views
+      // Export, Settings views
       this.exportView = new ExportView({surveyId: this.surveyId});
       this.settingsView = new SettingsView({
         survey: this.survey,
         forms: this.forms
       });
 
-      // Render navigation, export, and settings views
       this.exportView.render();
       this.formView.render();
       this.settingsView.render();
 
       if(this.activeTab !== undefined) {
-        //this.show.apply(this.activeTab);
         this.show(this.activeTab[0], this.activeTab[1]);
       }
     },
@@ -272,6 +270,8 @@ function(
 
     showResponses: function() {
       this.show('#response-view-container', '#tab-survey-home');
+      this.filters = false;
+      if (this.mapAndListView) this.mapAndListView.hideFilters();
     },
 
     showExport: function() {
@@ -289,6 +289,7 @@ function(
     showFilters: function() {
       this.show('#response-view-container', '#tab-survey-filters');
       this.filters = true;
+      if (this.mapAndListView) this.mapAndListView.showFilters();
     }
   });
 

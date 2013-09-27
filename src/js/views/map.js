@@ -70,9 +70,17 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
     initialize: function(options) {
       console.log("Init map view");
-      _.bindAll(this, 'render', 'selectObject', 'renderObject', 'renderObjects',
-        'getResponsesInBounds', 'updateMapStyleBasedOnZoom', 'updateObjectStyles',
-        'styleFeature', 'setupPolygon');
+      _.bindAll(this,
+        'render',
+        'selectObject',
+        'renderObject',
+        'renderObjects',
+        'getResponsesInBounds',
+        'updateMapStyleBasedOnZoom',
+        'updateObjectStyles',
+        'styleFeature',
+        'setupPolygon'
+      );
 
       this.responses = options.responses;
       // TODO: if we add the filter logic to the responses collection, we can
@@ -183,7 +191,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       events.publish('loading', [false]);
       return this;
     },
-
 
     /**
      * Set filter parameters for displaying results on the map

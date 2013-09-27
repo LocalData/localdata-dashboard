@@ -17,19 +17,20 @@ function($, _, Backbone, settings) {
     urlRoot: settings.api.baseurl + "/surveys/",
 
     namespace: 'survey',
-    
+
     initialize: function(options) {
       _.bindAll(this, 'parse');
       this.fetch();
     },
-    
+
     parse: function(response) {
       if (_.has(response, 'survey')) {
         // Individual surveys are returned a little differently from
         // lists of surveys. Oh well.
+
         return response.survey;
       }
-      
+
       return response;
     }
 
@@ -39,16 +40,16 @@ function($, _, Backbone, settings) {
   Surveys.Collection = Backbone.Collection.extend({
     model: Surveys.Model,
     url: settings.api.baseurl + "/surveys",
-    
+
     initialize: function(options) {
       _.bindAll(this, 'parse');
       // this.fetch();
     },
-    
+
     parse: function(response) {
       return response.surveys;
     }
-    
+
   });
 
   return Surveys;

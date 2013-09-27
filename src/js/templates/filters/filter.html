@@ -1,0 +1,16 @@
+<h1>Filter responses</h1>
+
+<div class="questions">
+
+  <% _.each(_.keys(questions), function(question) {%>
+    <div class="question">
+      <h2><%- mapping[question] %></h2>
+
+      <div class="answers">
+        <% _.each(_.keys(questions[question]), function(answer) {%>
+          <%- answer %> <%- questions[question][answer] %>
+        <% }); %>
+      </div>
+    </div>
+  <% }); %>
+</div>

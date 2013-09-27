@@ -18,12 +18,13 @@ define([
 
   // Views
   'views/map',
+  'views/responses/filter',
 
   // Templates
   'text!templates/responses/map-list.html'
 ],
 
-function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView, mapListTemplate) {
+function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView, FilterView, mapListTemplate) {
   'use strict';
 
   var ResponseViews = {};
@@ -52,14 +53,10 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       _.bindAll(this,
         'render',
         'update',
-        'grow',
 
         // Filtering
         'showFilters',
-        'filter',
-        'subFilter',
-        'updateFilterView',
-        'updateFilterChoices',
+        'hideFilters',
 
         // Updating
         'getNew',
@@ -77,18 +74,17 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
 
       this.survey = options.survey;
 
-      // Make sure we have forms available
       this.render();
 
+      // TODO
       // If we already have some responses, then we can display the
       // count/filter text. We need to have rendered first, though, otherwise
       // we won't have any place to put the filter controls!
-      if (this.responses.length > 0) {
-        this.updateFilterChoices();
-      }
+      // if (this.responses.length > 0) {
+      //   this.updateFilterChoices();
+      // }
     },
 
-    // TODO: merge update and render
     render: function() {
       console.log("Rendering response view");
       if (this.firstRun) {
@@ -121,12 +117,18 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       // Render the map
       this.mapView.render();
 
+      this.filterView = new FilterView({
+        collection: this.responses,
+        survey: this.survey,
+        forms: this.forms
+      });
+
       // If the data has been filtered, show that on the page.
       // TODO: This should be done in a view.
-      this.updateFilterView();
+      // this.updateFilterView();
     },
 
-    update: function (event) {
+    update: function() {
       if (this.firstRun) {
         this.render();
       }
@@ -134,109 +136,22 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       // Update the count
       // TODO: Use a template
       this.$('#count').html(_.template('<%= _.size(responses) %> Response<% if(_.size(responses) != 1) { %>s<% } %>', {responses: this.responses}));
-
-      // TODO:
-      // Update the filters
-    },
-
-    grow: function() {
-      console.log("GROWING", this.$el);
-      var $b = $('#map-view-container', this.$el);
-      this.$el.addClass('bigb');
-      console.log("I'M GROWING EVEN THOUGH I SHOULDN'T");
     },
 
     showFilters: function() {
-      this.grow();
+      $('.factoid').hide();
+      this.$el.addClass('bigb');
+      this.mapView.fitBounds();
+
+      // Render the filter!
+      // var filterView = new this.filterView.render();
+      $("#filter-view-container").html(this.filterView.$el);
     },
 
-    /**
-     * Update the first-level choices for filtering responses
-     */
-    updateFilterChoices: function() {
-      var flattenedForm = this.forms.getFlattenedForm();
-      $("#filter-view-container").html(_.template($('#filter-results').html(), {
-        responses: this.responses,
-        flattenedForm: flattenedForm
-      }));
-    },
-
-    /**
-     * If the data has already been filtered, show that on the page
-     */
-    updateFilterView: function () {
-      if (_.has(this.filters, 'answer')) {
-        return;
-      } else {
-        console.log("Clear sub filter");
-        // Clear the filter selections.
-        $('#subfilter').html('');
-        $('#filter').val('');
-      }
-    },
-
-    /**
-     * Reset any filters
-     */
-    reset: function(event) {
-      console.log("Clearing filter");
-      this.filters = {};
-
-      this.responses.clearFilter();
-      this.updateFilterView();
-    },
-
-
-    /**
-     * Show possible answers to a given question
-     */
-    filter: function(e) {
-      _kmq.push(['record', "Question filter selected"]);
-      var $question = $(e.target);
-      var question = $question.val();
-
-      // Get the list of distinct options
-      var answers = this.responses.getUniqueAnswersForQuestion(question);
-      $("#subfilter").html(_.template($('#filter-results-answer').html(), { choices: answers }));
-
-      // Distinguish the responses visually on the map
-      this.mapView.setFilter(question, answers);
-    },
-
-    /**
-     * Show only responses with a specific answer
-     */
-    subFilter: function(event) {
-      _kmq.push(['record', "Answer filter selected"]);
-      var $answer = $(event.target);
-
-      // Clear the current filter, if there is one.
-      if(_.has(this.filters, 'answer')) {
-        this.responses.clearFilter({ silent: true });
-      }
-
-      // Mark the answer as selected
-      $('#subfilter a').removeClass('selected');
-      $answer.addClass('selected');
-
-      // Notify the user we're working on it
-      // (it can take a while to filter a lot of items)
-      // events.publish('loading', [true]);
-      $('#loadingsmg').show();
-      console.log("Loading");
-
-      // Filter the responses
-      this.filters.answer = $answer.text();
-      this.filters.question = $("#filter").val();
-      this.responses.setFilter(this.filters.question, this.filters.answer);
-
-      // Note that we're done loading
-      events.publish('loading', [false]);
-      $('#loadingsmg').hide();
-      console.log("Done loading");
-
-
-      this.updateFilterView();
+    hideFilters: function() {
+      this.$el.removeClass('bigb');
+      this.mapView.fitBounds();
+      this.update();
     },
 
     remove: function () {

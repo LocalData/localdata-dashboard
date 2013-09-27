@@ -123,7 +123,17 @@ function($, _, Backbone, settings) {
       }
 
       return distinctQuestions;
+    },
+
+    map: function() {
+      var names = this.getFlattenedForm();
+      var mapping = {};
+      _.each(names, function(name) {
+        mapping[name.name] = name.text;
+      });
+      return mapping;
     }
+
   });
 
 
