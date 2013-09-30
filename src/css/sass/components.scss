@@ -51,6 +51,15 @@
 @import "shared/navigation";
 
 
+/* Filters ------------------------------------------------------------------ */
+.filters label {
+  font-family: $bold;
+}
+
+.filters .question {
+  margin-bottom: 2em;
+}
+
 /* Factoids ----------------------------------------------------------------- */
 .factoid {
   font-size: 36px;

@@ -676,6 +676,13 @@ nav a:hover {
 .subnav .selected a:hover {
   color: #f15a24; }
 
+/* Filters ------------------------------------------------------------------ */
+.filters label {
+  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif; }
+
+.filters .question {
+  margin-bottom: 2em; }
+
 /* Factoids ----------------------------------------------------------------- */
 .factoid {
   font-size: 36px;

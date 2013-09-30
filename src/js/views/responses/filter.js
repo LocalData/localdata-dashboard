@@ -53,11 +53,6 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
       this.$el.html(this.template(options));
     },
 
-
-
-
-
-
     /**
      * Reset any filters
      */
