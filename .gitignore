@@ -4,4 +4,5 @@ dev-settings.json
 build
 temp
 .sass-cache
+.sass-cache/
 .sass-cache/*

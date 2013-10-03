@@ -18,7 +18,7 @@ function($, _, Backbone, settings, api) {
       "register": "register",
 
       "surveys/new": "new_survey",
-      "surveys/:slug/map": "map",
+      "surveys/:slug/dive": "dive",
       "surveys/:slug/export": "survey_export",
       "surveys/:slug/design": "design",
       "surveys/:slug": "survey",
@@ -61,8 +61,8 @@ function($, _, Backbone, settings, api) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_survey);
     },
 
-    map: function(slug) {
-      api.setSurveyIdFromSlug(slug, this.controller.goto_map);
+    dive: function(slug) {
+      api.setSurveyIdFromSlug(slug, this.controller.goto_filters);
     },
 
     settings: function(slug) {

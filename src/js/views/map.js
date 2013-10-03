@@ -68,7 +68,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       console.log("Init map view");
       _.bindAll(this,
         'render',
-        'addTileLayer',
         'selectObject',
         'renderObject',
         'renderObjects',
@@ -76,10 +75,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         'updateMapStyleBasedOnZoom',
         'updateObjectStyles',
         'styleFeature',
-        'setupPolygon',
-        'setFilter',
-        'clearFilter',
-        'selectDataMap'
+        'setupPolygon'
       );
 
       this.responses = options.responses;

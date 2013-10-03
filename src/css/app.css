@@ -413,6 +413,86 @@ header .b {
       width: auto;
       float: none; } }
 
+/* Same as .b above, but with no margins */
+.b.nomargin {
+  width: 764px;
+  margin: 0;
+  /* column sizing */
+  float: left; }
+  @media all and (max-width: 1999px) {
+    .b.nomargin {
+      width: 556px;
+      margin: 0; } }
+  @media all and (max-width: 1279px) {
+    .b.nomargin {
+      width: 543px;
+      margin: 0; } }
+  @media all and (max-width: 1119px) {
+    .b.nomargin {
+      width: 420px;
+      margin: 0; } }
+  @media all and (max-width: 899px) {
+    .b.nomargin {
+      width: 354px;
+      margin: 0; } }
+  @media all and (max-width: 768px) {
+    .b.nomargin {
+      margin: 0;
+      width: auto;
+      float: none; } }
+
+.bigb .a {
+  width: 326px;
+  /* column sizing */
+  float: left; }
+  @media all and (max-width: 1999px) {
+    .bigb .a {
+      width: 222px; } }
+  @media all and (max-width: 1279px) {
+    .bigb .a {
+      width: 229px;
+      margin-right: 43px; } }
+  @media all and (max-width: 1119px) {
+    .bigb .a {
+      margin-right: 30px;
+      width: 180px; } }
+  @media all and (max-width: 899px) {
+    .bigb .a {
+      width: 147px; } }
+  @media all and (max-width: 768px) {
+    .bigb .a {
+      margin: 0;
+      width: auto;
+      float: none; } }
+
+.bigb .b.nomargin {
+  background: red;
+  width: 1146px;
+  margin: 0;
+  /* column sizing */
+  float: left; }
+  @media all and (max-width: 1999px) {
+    .bigb .b.nomargin {
+      width: 834px;
+      margin: 0; } }
+  @media all and (max-width: 1279px) {
+    .bigb .b.nomargin {
+      width: 814px;
+      margin: 0; } }
+  @media all and (max-width: 1119px) {
+    .bigb .b.nomargin {
+      width: 630px;
+      margin: 0; } }
+  @media all and (max-width: 899px) {
+    .bigb .b.nomargin {
+      width: 531px;
+      margin: 0; } }
+  @media all and (max-width: 768px) {
+    .bigb .b.nomargin {
+      margin: 0;
+      width: auto;
+      float: none; } }
+
 .contrast {
   background: #fcf5f0; }
 
@@ -596,6 +676,13 @@ nav a:hover {
 .subnav .selected a:hover {
   color: #f15a24; }
 
+/* Filters ------------------------------------------------------------------ */
+.filters label {
+  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif; }
+
+.filters .question {
+  margin-bottom: 2em; }
+
 /* Factoids ----------------------------------------------------------------- */
 .factoid {
   font-size: 36px;
@@ -698,34 +785,12 @@ footer .social a:last-child {
 .survey-list-item h2 {
   font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif; }
 
-/* Survey-------------------------------------------------------------------- */
+/* Survey and Map ----------------------------------------------------------- */
 .survey .in {
   padding-bottom: 10px; }
 
 #response-view-container .in {
   padding: 0; }
-
-#response-view-container #map {
-  width: 764px;
-  /* column sizing */
-  float: left; }
-  @media all and (max-width: 1999px) {
-    #response-view-container #map {
-      width: 556px; } }
-  @media all and (max-width: 1279px) {
-    #response-view-container #map {
-      width: 543px; } }
-  @media all and (max-width: 1119px) {
-    #response-view-container #map {
-      width: 420px; } }
-  @media all and (max-width: 899px) {
-    #response-view-container #map {
-      width: 354px; } }
-  @media all and (max-width: 768px) {
-    #response-view-container #map {
-      margin: 0;
-      width: auto;
-      float: none; } }
 
 /* Tabs --------------------------------------------------------------------- */
 .nav-tabs {

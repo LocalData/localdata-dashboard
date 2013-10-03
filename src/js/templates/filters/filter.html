@@ -1,0 +1,18 @@
+<h3>Filter responses</h3>
+
+<div class="questions">
+
+  <% _.each(_.keys(questions), function(question) {%>
+    <% if(! _.has(questions, question)) { return; } %>
+
+    <div class="question">
+      <label><%- mapping[question] %></label>
+
+      <div class="answers">
+        <% _.each(_.keys(questions[question]), function(answer) {%>
+          <%- answer %> <%- questions[question][answer] %>
+        <% }); %>
+      </div>
+    </div>
+  <% }); %>
+</div>

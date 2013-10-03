@@ -163,14 +163,14 @@ function(
     }
   });
 
+
   SurveyViews.SurveyView = Backbone.View.extend({
     el: $("#container"),
 
-    template: _.template(surveyTemplate),
-
     activeTab: undefined,
+    filters: false,
     survey: null,
-    bodyView: null,
+    template: _.template(surveyTemplate),
 
     initialize: function(options) {
       _.bindAll(this,
@@ -178,9 +178,9 @@ function(
         'render',
         'show',
         'showResponses',
-        'showUpload',
         'showForm',
-        'showSettings'
+        'showSettings',
+        'showFilters'
       );
 
       // Set up the page and show the given survey
@@ -215,23 +215,25 @@ function(
     render: function (model) {
       var $el = $(this.el);
 
-      console.log("Rendering survey view");
-
       // Remove old sub-views
-      if (this.responseListView !== undefined) {
-        this.responseListView.remove();
+      if (this.mapAndListView !== undefined) {
+        this.mapAndListView.remove();
       }
 
       $el.html(this.template({
         survey: this.survey.toJSON()
       }));
 
-      // List the responses
-      this.responseListView = new ResponseViews.MapAndListView({
-        el: $("#response-view-container"),
+      // Map the responses
+      this.mapAndListView = new ResponseViews.MapAndListView({
+        // responses: this.responses,
         forms: this.forms,
         survey: this.survey
       });
+
+      if(this.filters) {
+        this.mapAndListView.showFilters();
+      }
 
       // Form view
       this.formView = new FormViews.FormView({
@@ -239,20 +241,18 @@ function(
         forms: this.forms
       });
 
-      // Nav, Export, Settings views
+      // Export, Settings views
       this.exportView = new ExportView({surveyId: this.surveyId});
       this.settingsView = new SettingsView({
         survey: this.survey,
         forms: this.forms
       });
 
-      // Render navigation, export, and settings views
       this.exportView.render();
       this.formView.render();
       this.settingsView.render();
 
       if(this.activeTab !== undefined) {
-        //this.show.apply(this.activeTab);
         this.show(this.activeTab[0], this.activeTab[1]);
       }
     },
@@ -270,6 +270,8 @@ function(
 
     showResponses: function() {
       this.show('#response-view-container', '#tab-survey-home');
+      this.filters = false;
+      if (this.mapAndListView) this.mapAndListView.hideFilters();
     },
 
     showExport: function() {
@@ -284,15 +286,11 @@ function(
       this.show('#settings-view-container', 3);
     },
 
-    // Not yet implemented
-    showUpload: function() {
-      console.log("[not] Using upload view");
-    },
-
-    showScans: function() {
-      console.log("[not] Using scans view");
+    showFilters: function() {
+      this.show('#response-view-container', '#tab-survey-filters');
+      this.filters = true;
+      if (this.mapAndListView) this.mapAndListView.showFilters();
     }
-
   });
 
   return SurveyViews;
