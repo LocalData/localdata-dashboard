@@ -25,7 +25,8 @@ function($, _, Backbone, settings, api) {
       this.items = [
         this.makeNavItem('nav-responses', 'surveys/' + this.slug, 'Results', 'icon-home'),
         this.makeNavItem('nav-export', 'surveys/' + this.slug + '/export', 'Export', 'icon-download'),
-        this.makeNavItem('nav-form', 'surveys/' + this.slug + '/form', 'Survey Questions', 'icon-cog')
+        this.makeNavItem('nav-form', 'surveys/' + this.slug + '/form', 'Survey Questions', 'icon-cog'),
+        this.makeNavItem('nav-form', '/mobile/#' + this.slug, 'Survey App', '')
 
         // this.makeNavItem('nav-form', 'surveys/' + this.slug + '/settings', 'Settings', 'icon-cog tab-settings')
       ];
