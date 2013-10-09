@@ -19,12 +19,12 @@ function(L) {
 
   // Colors for option maps
   settings.colorRange = [
-    "#df455d", // First color used for blank entries
+    "#b7aba5", // First color used for blank entries
     "#a743c3",
-    "#404ecd",
-    "#40cd98",
-    "#d4e647",
-    "#ee6d4a"
+    "#58aeff",
+    "#00ad00",
+    "#ffad00",
+    "#f15a24"
   ];
 
   settings.circleMarker = {
