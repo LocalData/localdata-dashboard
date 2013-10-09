@@ -3,10 +3,40 @@
   cursor: pointer;
 }
 
+.filters .question {
+  overflow: auto;
+}
+
 .filters label {
   font-family: $bold;
+  line-height: 1.2;
+  display: block;
 }
 
 .filters .question {
   margin-bottom: 2em;
+}
+
+.filters .answers {
+  display: none;
+}
+
+.answer {
+  overflow: auto;
+  clear: both;
+  margin-top: 10px
+}
+
+.filters .circle {
+  float: left;
+  margin-right: 12px;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #fff;
+  background: transparent;
+}
+
+.filters .circle.selected {
+  background: #a743c3
 }

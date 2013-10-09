@@ -4,16 +4,17 @@
 
   <% _.each(_.keys(questions), function(question) {%>
     <% if(! _.has(questions, question)) { return; } %>
+    <% if(question === 'id') { return; } %>
 
     <div class="question">
       <label class="" data-question="<%- question %>">
-        <%- mapping[question] %>
+        <div class="circle"></div> <%- mapping[question] || question %>
       </label>
 
       <div class="answers">
         <% _.each(_.keys(questions[question]), function(answer) {%>
           <div class="answer" data-answer="<%- answer %>" data-question="<%- question %>">
-            <%- answer %> <%- questions[question][answer].val %>
+            <div class="circle"></div> <%- answer %> <%- questions[question][answer].val %>
           </div>
         <% }); %>
       </div>

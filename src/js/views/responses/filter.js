@@ -33,7 +33,7 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
     template: _.template(template),
 
     events: {
-      "click .question": "filter",
+      "click .question label": "filter",
       "click .answer": "filter",
       "click .clear": "reset"
     },
@@ -86,15 +86,20 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
     },
 
     filter: function(e) {
+      console.log("CLICKEN");
       _kmq.push(['record', "Question filter selected"]);
       var $question = $(e.target);
       var question = $question.attr('data-question');
       var answers = this.stats.get(question);
 
-      // Color the responses on the map
-      this.map.setFilter(question, answers);
+      // Mark this filter as selected and show answers
+      $('.filters .circle').removeClass('selected');
+      $question.find('.circle').addClass('selected');
+      $('.answers').hide();
+      $question.parent().find('.answers').show();
 
-      // Mark this filter as selected
+      // Color the responses on the map
+      // this.map.setFilter(question, answers);
     },
 
     /**

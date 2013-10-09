@@ -206,6 +206,10 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       this.plotResponses();
     },
 
+    clearFilter: function() {
+      this.filter = null,
+      this.plotResponses();
+    },
 
     /**
      * Style a feature
