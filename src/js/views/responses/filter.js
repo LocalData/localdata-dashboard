@@ -99,7 +99,7 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
       $question.parent().find('.answers').show();
 
       // Color the responses on the map
-      // this.map.setFilter(question, answers);
+      this.map.setFilter(question, answers);
     },
 
     /**
