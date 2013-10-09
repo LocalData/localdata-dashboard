@@ -6,11 +6,15 @@
     <% if(! _.has(questions, question)) { return; } %>
 
     <div class="question">
-      <label><%- mapping[question] %></label>
+      <label class="" data-question="<%- question %>">
+        <%- mapping[question] %>
+      </label>
 
       <div class="answers">
         <% _.each(_.keys(questions[question]), function(answer) {%>
-          <%- answer %> <%- questions[question][answer] %>
+          <div class="answer" data-answer="<%- answer %>" data-question="<%- question %>">
+            <%- answer %> <%- questions[question][answer].val %>
+          </div>
         <% }); %>
       </div>
     </div>

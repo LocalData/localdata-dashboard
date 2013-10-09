@@ -32,25 +32,46 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
 
     template: _.template(template),
 
+    events: {
+      "click .question": "filter",
+      "click .answer": "filter",
+      "click .clear": "reset"
+    },
+
     initialize: function(options) {
       _.bindAll(this, 'render');
 
       this.survey = options.survey;
       this.forms = options.forms;
+      this.map = options.map;
 
       this.stats = new Stats.Model({
-        id: this.survey.get('id'),
-        forms: this.forms
+        id: this.survey.get('id')
+        // forms: this.forms
       });
       this.stats.on('change', this.render);
     },
 
     render: function() {
-      var options = {
+      console.log(this.stats.toJSON());
+      var context = {
         questions: this.stats.toJSON(),
         mapping: this.forms.map()
       };
-      this.$el.html(this.template(options));
+      this.$el.html(this.template(context));
+    },
+
+    /**
+     * Associate a unqie color with each answer in a list
+     */
+    colors: function(keys) {
+      var answers = {};
+      _.each(keys, function(key, index) {
+        answers[key] = {
+          color: settings.colorRange[index + 1]
+        };
+      });
+      return answers;
     },
 
     /**
@@ -64,20 +85,16 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
       this.updateFilterView();
     },
 
-    /**
-     * Show possible answers to a given question
-     */
     filter: function(e) {
       _kmq.push(['record', "Question filter selected"]);
       var $question = $(e.target);
-      var question = $question.val();
+      var question = $question.attr('data-question');
+      var answers = this.stats.get(question);
 
-      // Get the list of distinct options
+      // Color the responses on the map
+      this.map.setFilter(question, answers);
 
-      $("#subfilter").html(_.template($('#filter-results-answer').html(), { choices: answers }));
-
-      // Distinguish the responses visually on the map
-      this.mapView.setFilter(question, answers);
+      // Mark this filter as selected
     },
 
     /**

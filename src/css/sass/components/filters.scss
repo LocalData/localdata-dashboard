@@ -1,0 +1,12 @@
+.filters label,
+.filters .question {
+  cursor: pointer;
+}
+
+.filters label {
+  font-family: $bold;
+}
+
+.filters .question {
+  margin-bottom: 2em;
+}

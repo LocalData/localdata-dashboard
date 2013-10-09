@@ -17,11 +17,9 @@ function($, _, Backbone, settings) {
     urlRoot: settings.api.baseurl + "/surveys/",
 
     url: function() {
-      console.log("URL", this.id, this.urlRoot);
+      console.log("URL", this.urlRoot + this.id + '/stats/');
       return this.urlRoot + this.id + '/stats/';
     },
-
-    namespace: 'survey',
 
     initialize: function(options) {
       _.bindAll(this, 'parse', 'url');
@@ -29,7 +27,26 @@ function($, _, Backbone, settings) {
     },
 
     parse: function(response) {
-      return response.stats;
+      var stats = {};
+
+      // Go over each question
+      var questions = _.keys(response.stats);
+      _.each(questions, function(question) {
+        var answers = _.keys(response.stats[question]);
+        var answerObjects = {};
+
+        // Go over each answer
+        _.each(answers, function(answer, index) {
+
+          // And associate a count and color
+          answerObjects[answer] = {
+            val: response.stats[question][answer],
+            color: settings.colorRange[index]
+          };
+        });
+        stats[question] = answerObjects;
+      });
+      return stats;
     }
 
   });

@@ -120,7 +120,8 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       this.filterView = new FilterView({
         collection: this.responses,
         survey: this.survey,
-        forms: this.forms
+        forms: this.forms,
+        map: this.mapView
       });
 
       // If the data has been filtered, show that on the page.

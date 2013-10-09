@@ -583,7 +583,49 @@ h2 {
   font-size: 65px;
   line-height: 1em; }
 
-/* Boxes -------------------------------------------------------------------- */
+/* Components shared between projects --------------------------------------- */
+footer .in {
+  overflow: visible;
+  padding-top: 0; }
+
+footer .logo {
+  float: left; }
+
+footer nav {
+  float: right;
+  text-align: right;
+  margin-bottom: 2em;
+  margin-top: 50px; }
+
+@media all and (max-width: 768px) {
+  footer .logo,
+  footer nav {
+    margin-top: 0;
+    float: none;
+    text-align: left; } }
+
+footer nav a,
+footer nav a:hover {
+  font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
+  font-weight: normal;
+  color: #b7aba5; }
+  @media all and (max-width: 768px) {
+    footer nav a,
+    footer nav a:hover {
+      line-height: 44px; } }
+
+footer nav a:hover {
+  color: #58aeff; }
+
+footer .social {
+  padding-left: 40px; }
+  @media all and (max-width: 768px) {
+    footer .social {
+      padding: 0; } }
+
+footer .social a:last-child {
+  margin-right: 0; }
+
 .box,
 form input[type=submit] {
   background: #fff;
@@ -622,7 +664,6 @@ form button.box {
   border-color: #58aeff;
   color: #58aeff; }
 
-/* Navigation --------------------------------------------------------------- */
 nav a,
 nav a:hover {
   font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
@@ -676,28 +717,7 @@ nav a:hover {
 .subnav .selected a:hover {
   color: #f15a24; }
 
-/* Filters ------------------------------------------------------------------ */
-.filters label {
-  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif; }
-
-.filters .question {
-  margin-bottom: 2em; }
-
-/* Factoids ----------------------------------------------------------------- */
-.factoid {
-  font-size: 36px;
-  margin-bottom: 50px;
-  color: #f15a24; }
-
-.factoid .number {
-  font-size: 150px;
-  line-height: 1em;
-  display: block; }
-
-.factoid.orange {
-  color: #ffad00; }
-
-/* Header ------------------------------------------------------------------- */
+/* Components specific to the dashboard ------------------------------------- */
 header .in {
   overflow: visible;
   padding: 0; }
@@ -729,48 +749,29 @@ header .nav a:visited {
   color: #6e6663;
   padding-left: 30px; }
 
-/* Footer ------------------------------------------------------------------- */
-footer .in {
-  overflow: visible;
-  padding-top: 0; }
+.filters label,
+.filters .question {
+  cursor: pointer; }
 
-footer .logo {
-  float: left; }
+.filters label {
+  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif; }
 
-footer nav {
-  float: right;
-  text-align: right;
-  margin-bottom: 2em;
-  margin-top: 50px; }
+.filters .question {
+  margin-bottom: 2em; }
 
-@media all and (max-width: 768px) {
-  footer .logo,
-  footer nav {
-    margin-top: 0;
-    float: none;
-    text-align: left; } }
+/* Factoids ----------------------------------------------------------------- */
+.factoid {
+  font-size: 36px;
+  margin-bottom: 50px;
+  color: #f15a24; }
 
-footer nav a,
-footer nav a:hover {
-  font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
-  font-weight: normal;
-  color: #b7aba5; }
-  @media all and (max-width: 768px) {
-    footer nav a,
-    footer nav a:hover {
-      line-height: 44px; } }
+.factoid .number {
+  font-size: 150px;
+  line-height: 1em;
+  display: block; }
 
-footer nav a:hover {
-  color: #58aeff; }
-
-footer .social {
-  padding-left: 40px; }
-  @media all and (max-width: 768px) {
-    footer .social {
-      padding: 0; } }
-
-footer .social a:last-child {
-  margin-right: 0; }
+.factoid.orange {
+  color: #ffad00; }
 
 /* General app ---------------------------------------------------------------*/
 .error {

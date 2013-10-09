@@ -38,27 +38,22 @@
  *       also good candidates for components.
  ******************************************************************************/
 
- h2 {
+h2 {
   font-family: $font;
   font-size: 65px;
   line-height: 1em;
- }
+}
 
-/* Boxes -------------------------------------------------------------------- */
+
+/* Components shared between projects --------------------------------------- */
+@import "shared/footer";
 @import "shared/boxes";
-
-/* Navigation --------------------------------------------------------------- */
 @import "shared/navigation";
 
+/* Components specific to the dashboard ------------------------------------- */
+@import "components/header";
+@import "components/filters";
 
-/* Filters ------------------------------------------------------------------ */
-.filters label {
-  font-family: $bold;
-}
-
-.filters .question {
-  margin-bottom: 2em;
-}
 
 /* Factoids ----------------------------------------------------------------- */
 .factoid {
@@ -77,11 +72,6 @@
   color: $orange;
 }
 
-/* Header ------------------------------------------------------------------- */
-@import "components/header";
-
-/* Footer ------------------------------------------------------------------- */
-@import "shared/footer";
 
 /* General app ---------------------------------------------------------------*/
 .error {
