@@ -1,5 +1,6 @@
 .box,
 .button,
+button,
 form input[type=submit] {
   background: #fff;
   border: 6px solid $body-color;
@@ -16,6 +17,17 @@ form input[type=submit] {
   letter-spacing: -1px;
 
   cursor: pointer;
+}
+
+.mini {
+  height: 32px;
+
+  border-width: 3px;
+  font-family: $font;
+  font-size: 15px;
+  text-align: center;
+  line-height: 15px;
+  letter-spacing: 0px;
 }
 
 
@@ -42,15 +54,18 @@ form button.box {
   color: $orange;
 }
 
+.confirm,
 .ok {
   border-color: $blue;
   color: $blue;
 }
 
+
 button,
 .button {
   cursor: pointer;
   background: $blue;
+  border-color: $blue;
   color: #fff;
 }
 
@@ -58,5 +73,11 @@ button:hover,
 .button:hover {
   background: #fff;
   color: $blue;
+}
+
+button.danger {
+  border-color: $red;
+  background-color: $red;
+  color: white;
 }
 

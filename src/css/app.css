@@ -626,6 +626,7 @@ footer .social a:last-child {
 
 .box,
 .button,
+button,
 form input[type=submit] {
   background: #fff;
   border: 6px solid #6e6663;
@@ -640,6 +641,15 @@ form input[type=submit] {
   line-height: 62px;
   letter-spacing: -1px;
   cursor: pointer; }
+
+.mini {
+  height: 32px;
+  border-width: 3px;
+  font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
+  font-size: 15px;
+  text-align: center;
+  line-height: 15px;
+  letter-spacing: 0px; }
 
 form button.box {
   line-height: normal; }
@@ -659,6 +669,7 @@ form button.box {
   border-color: #ffad00;
   color: #ffad00; }
 
+.confirm,
 .ok {
   border-color: #58aeff;
   color: #58aeff; }
@@ -667,12 +678,18 @@ button,
 .button {
   cursor: pointer;
   background: #58aeff;
+  border-color: #58aeff;
   color: #fff; }
 
 button:hover,
 .button:hover {
   background: #fff;
   color: #58aeff; }
+
+button.danger {
+  border-color: #f15a24;
+  background-color: #f15a24;
+  color: white; }
 
 nav a,
 nav a:hover {
@@ -775,6 +792,10 @@ header .nav a:visited {
 
 #response-view-container .in {
   padding: 0; }
+
+/* Responses ---------------------------------------------------------------- */
+.confirm-delete {
+  display: none; }
 
 .filters label,
 .filters .question {
