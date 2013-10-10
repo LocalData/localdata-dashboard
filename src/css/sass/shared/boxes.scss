@@ -1,4 +1,5 @@
 .box,
+.button,
 form input[type=submit] {
   background: #fff;
   border: 6px solid $body-color;
@@ -16,6 +17,7 @@ form input[type=submit] {
 
   cursor: pointer;
 }
+
 
 form button.box {
   line-height: normal;
@@ -44,3 +46,17 @@ form button.box {
   border-color: $blue;
   color: $blue;
 }
+
+button,
+.button {
+  cursor: pointer;
+  background: $blue;
+  color: #fff;
+}
+
+button:hover,
+.button:hover {
+  background: #fff;
+  color: $blue;
+}
+

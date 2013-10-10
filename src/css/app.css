@@ -626,6 +626,7 @@ footer .social a:last-child {
   margin-right: 0; }
 
 .box,
+.button,
 form input[type=submit] {
   background: #fff;
   border: 6px solid #6e6663;
@@ -661,6 +662,17 @@ form button.box {
 
 .ok {
   border-color: #58aeff;
+  color: #58aeff; }
+
+button,
+.button {
+  cursor: pointer;
+  background: #58aeff;
+  color: #fff; }
+
+button:hover,
+.button:hover {
+  background: #fff;
   color: #58aeff; }
 
 nav a,
