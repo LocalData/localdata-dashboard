@@ -1,22 +1,18 @@
-<div class="out contrast survey">
+<div class="out contrast nav-tabs">
   <div class="in">
-    <div class="a">
+    <ul id="nav" class="nav">
+      <li class="active" id="tab-survey-home"><a href="#surveys/<%= survey.slug %>"><i class="icon-home" data-show="response-view-container"></i>Overview</a></li>
+      <li class="active" id="tab-survey-filters"><a href="#surveys/<%= survey.slug %>/dive"><i class="icon-home" data-show="response-view-container"></i>Deep Dive</a></li>
+      <li class="" id="tab-survey-export" data-show=""><a href="#surveys/<%= survey.slug %>/export" data-show="export-view-container"><i class="icon-download"></i>Export</a></li>
+      <li class="" id="tab-survey-form"><a href="#surveys/<%= survey.slug %>/form" data-show="form-view-container"><i class="icon-list-ul"></i>Questions</a></li>
+      <li class="" id="tab-survey-app"><a href="mobile/#<%= survey.slug %>"><i class="icon-list-ul"></i>Collect Data</a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="out contrast survey-head">
+  <div class="in">
       <h2 id="survey-name"><%= survey.name %></h2>
-    </div>
-
-    <div class="b">
-      <div class="span12">
-        <ul id="nav" class="nav nav-tabs">
-          <li class="active" id="tab-survey-home"><a href="#surveys/<%= survey.slug %>"><i class="icon-home" data-show="response-view-container"></i>Overview</a></li>
-          <li class="active" id="tab-survey-filters"><a href="#surveys/<%= survey.slug %>/dive"><i class="icon-home" data-show="response-view-container"></i>Deep Dive</a></li>
-
-          <li class="" id="tab-survey-export" data-show=""><a href="#surveys/<%= survey.slug %>/export" data-show="export-view-container"><i class="icon-download"></i>Export</a></li>
-          <li class="" id="tab-survey-form"><a href="#surveys/<%= survey.slug %>/form" data-show="form-view-container"><i class="icon-list-ul"></i>Questions</a></li>
-          <li class="" id="tab-survey-app"><a href="mobile/#<%= survey.slug %>"><i class="icon-list-ul"></i>Collect Data</a></li>
-
-        </ul>
-      </div>
-    </div>
   </div>
 </div>
 

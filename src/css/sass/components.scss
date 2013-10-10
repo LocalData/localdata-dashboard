@@ -52,6 +52,7 @@ h2 {
 
 /* Components specific to the dashboard ------------------------------------- */
 @import "components/header";
+@import "components/surveys";
 @import "components/filters";
 
 
@@ -84,32 +85,19 @@ h2 {
   height: 500px;
 }
 
-/* Survey List -------------------------------------------------------------- */
-.survey-list-item h2 {
-  font-family: $font;
-}
-
-/* Survey and Map ----------------------------------------------------------- */
-.survey .in {
-  padding-bottom: 10px;
-}
-
-#response-view-container .in {
-  padding: 0;
-}
-
 
 /* Tabs --------------------------------------------------------------------- */
-.nav-tabs {
-  float: right;
+.nav-tabs .in {
+  padding-top: 0;
+  padding-bottom: 25px;
 }
 
 .nav-tabs li {
+  float: left;
   list-style: none;
   display: inline;
   padding: 0;
   margin: 0;
-  float: left;
 }
 
 .nav-tabs li a {
