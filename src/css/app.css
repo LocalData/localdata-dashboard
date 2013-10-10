@@ -287,8 +287,7 @@ header h2 {
 
 h3 {
   font-size: 40px;
-  line-height: 47px;
-  text-align: center; }
+  line-height: 47px; }
 
 .a h3,
 .b h3 {
@@ -770,6 +769,9 @@ header .nav a:visited {
 /* Survey and Map ----------------------------------------------------------- */
 .survey .in {
   padding-bottom: 10px; }
+
+#survey-tabs .in {
+  padding-top: 0; }
 
 #response-view-container .in {
   padding: 0; }
