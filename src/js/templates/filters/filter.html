@@ -14,7 +14,7 @@
       <div class="answers">
         <% _.each(_.keys(questions[question]), function(answer) {%>
           <div class="answer" data-answer="<%- answer %>" data-question="<%- question %>">
-            <div class="circle"></div> <%- answer %> <%- questions[question][answer].val %>
+            <div class="circle" style="background-color: <%- questions[question][answer].color %>"></div> <%- answer %> <%- questions[question][answer].val %>
           </div>
         <% }); %>
       </div>

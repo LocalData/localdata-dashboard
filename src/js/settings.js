@@ -21,10 +21,10 @@ function(L) {
   settings.colorRange = [
     "#b7aba5", // First color used for blank entries
     "#a743c3",
+    "#f15a24",
     "#58aeff",
     "#00ad00",
-    "#ffad00",
-    "#f15a24"
+    "#ffad00"
   ];
 
   settings.circleMarker = {

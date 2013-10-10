@@ -466,7 +466,6 @@ header .b {
       float: none; } }
 
 .bigb .b.nomargin {
-  background: red;
   width: 1146px;
   margin: 0;
   /* column sizing */
@@ -750,7 +749,7 @@ header .nav a:visited {
   padding-left: 30px; }
 
 .survey-head .in {
-  padding-bottom: 00; }
+  padding-bottom: 0; }
 
 /* Survey List -------------------------------------------------------------- */
 .survey-list-item h2 {
@@ -769,6 +768,9 @@ header .nav a:visited {
 
 .filters .question {
   overflow: auto; }
+
+.filters h3 {
+  font-size: 24px; }
 
 .filters label {
   font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;

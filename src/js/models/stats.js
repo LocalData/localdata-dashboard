@@ -41,8 +41,12 @@ function($, _, Backbone, settings) {
           // And associate a count and color
           answerObjects[answer] = {
             val: response.stats[question][answer],
-            color: settings.colorRange[index]
+            color: settings.colorRange[index + 1]
           };
+
+          if (answer === 'no response') {
+            answerObjects[answer].color = settings.colorRange[0];
+          }
         });
         stats[question] = answerObjects;
       });
