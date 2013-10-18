@@ -229,17 +229,23 @@ define(function (require) {
   // Add "Detroit" to the end.
   // Return the first result as a lat-lng for convenience.
   // Or Null if Bing is being a jerk / we're dumb.
-  api.codeAddress = function(address, callback) {
-    console.log("Coding an address");
-    console.log(address);
-    var detroitAddress = address + " Detroit, MI"; // for ease of geocoding
-    var geocodeEndpoint = "http://dev.virtualearth.net/REST/v1/Locations/" + detroitAddress + "?o=json&key=" + settings.bing_key + "&jsonp=?";
+  /**
+   * Geocode an address
+   * @param  {String}   address  eg "123 foo street"
+   * @param  {String}   region   A region to narrow the search. eg "Detroit"
+   * @param  {Function} callback Takes params in the format error, [latlng]
+   */
+  api.codeAddress = function(address, region, callback) {
+    address = address + " " + region; // for ease of geocoding
+    var geocodeEndpoint = "https://dev.virtualearth.net/REST/v1/Locations/" + address + "?o=json&key=" + settings.bing_key + "&jsonp=?";
 
     $.getJSON(geocodeEndpoint, function(data){
       if(data.resourceSets.length > 0){
         var point = data.resourceSets[0].resources[0].point;
         var latlng = new L.LatLng(point.coordinates[0], point.coordinates[1]);
-        callback(latlng);
+        callback(null, latlng);
+      }else {
+        callback("No results received", null);
       }
     });
   };

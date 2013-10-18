@@ -353,7 +353,6 @@ header a {
 }
 
 #map-controls {
-  display:none;
   padding:10px;
   background:#3f5b88;
 }
@@ -369,7 +368,7 @@ header a {
     color:#fefefe;
     border:0;
     border-bottom:1px dotted #fefefe;
-    min-width:200px;
+    min-width:300px;
     max-width:400px;
   }
 
@@ -386,7 +385,6 @@ header a {
 #address-search::-webkit-input-placeholder {
     color: #93a9cd;
     font-weight:300;
-    text-align:center;
     text-transform:uppercase;
     font-size:12px;
     line-height:25px;
