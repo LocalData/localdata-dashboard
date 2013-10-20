@@ -550,14 +550,14 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       }
 
       // Remove any existing location marker
-      if(markers.location !== undefined) {
-
+      if(this.markers.location !== undefined) {
+        this.map.removeLayer(this.markers.location);
       }
 
       console.log("FOUND", latlng);
-      this.map.setView(latlng, 16);
+      this.map.setView(latlng, 18);
       var marker = L.marker(latlng).addTo(this.map);
-      markers.location = marker;
+      this.markers.location = marker;
     }
 
   });

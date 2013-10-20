@@ -15,6 +15,8 @@ function(L) {
     geo: '/api'
   };
 
+  settings.BingKey = 'Arc0Uekwc6xUCJJgDA6Kv__AL_rvEh4Hcpj4nkyUmGTIx-SxMd52PPmsqKbvI_ce';
+
   // Colors for option maps
   settings.colorRange = [
     "#df455d", // First color used for blank entries

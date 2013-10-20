@@ -237,7 +237,8 @@ define(function (require) {
    */
   api.codeAddress = function(address, region, callback) {
     address = address + " " + region; // for ease of geocoding
-    var geocodeEndpoint = "https://dev.virtualearth.net/REST/v1/Locations/" + address + "?o=json&key=" + settings.bing_key + "&jsonp=?";
+    address = address.replace(/^\s+|\s+$/g, '');
+    var geocodeEndpoint = "https://dev.virtualearth.net/REST/v1/Locations/" + address + "?o=json&key=" + settings.BingKey + "&jsonp=?";
 
     $.getJSON(geocodeEndpoint, function(data){
       if(data.resourceSets.length > 0){
