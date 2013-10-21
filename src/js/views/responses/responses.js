@@ -29,7 +29,6 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
 
   var ResponseViews = {};
 
-
   ResponseViews.MapAndListView = Backbone.View.extend({
     filters: {},
     firstRun: true,
@@ -43,9 +42,6 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
     el: '#response-view-container',
 
     events: {
-      "change #filter":  "filter",
-      "click #subfilter a": "subFilter",
-      "click #clear": "reset",
       "click #refresh": "getNew"
     },
 
@@ -144,15 +140,17 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       this.$el.addClass('bigb');
       this.mapView.fitBounds();
 
-      // Render the filter!
-      // var filterView = new this.filterView.render();
+      // Render the filter
       $("#filter-view-container").html(this.filterView.$el);
     },
 
     hideFilters: function() {
+      $('.factoid').show();
       this.$el.removeClass('bigb');
       this.mapView.fitBounds();
       this.update();
+
+      $("#filter-view-container").html('');
     },
 
     remove: function () {
