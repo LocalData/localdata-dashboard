@@ -196,7 +196,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
      * Set filter parameters for displaying results on the map
      * The response collection will activate this if we have an active filter
      * @param {String} question Name of the question, eg 'vacant'
-     * @param {Object} answers  Possible answers to the qu
+     * @param {Object} answers  Possible answers to the question
      */
     setFilter: function (question, answers) {
       this.filter = {

@@ -29,11 +29,12 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
    */
   var FilterView = Backbone.View.extend({
     className: 'filters',
+    filters: {},
 
     template: _.template(template),
 
     events: {
-      "click .question label": "filter",
+      "click .question label": "bin",
       "click .answer": "filter",
       "click .clear": "reset"
     },
@@ -81,15 +82,14 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
       console.log("Clearing filter");
       this.filters = {};
 
-      this.responses.clearFilter();
-      this.updateFilterView();
+      this.collection.clearFilter();
     },
 
-    filter: function(e) {
-      console.log("CLICKEN");
+    bin: function(event) {
       _kmq.push(['record', "Question filter selected"]);
-      var $question = $(e.target);
+      var $question = $(event.target);
       var question = $question.attr('data-question');
+      this.filters.question = question;
       var answers = this.stats.get(question);
 
       // Mark this filter as selected and show answers
@@ -105,13 +105,13 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
     /**
      * Show only responses with a specific answer
      */
-    subFilter: function(event) {
+    filter: function(event) {
       _kmq.push(['record', "Answer filter selected"]);
       var $answer = $(event.target);
 
       // Clear the current filter, if there is one.
       if(_.has(this.filters, 'answer')) {
-        this.responses.clearFilter({ silent: true });
+        this.collection.clearFilter({ silent: true });
       }
 
       // Mark the answer as selected
@@ -126,16 +126,12 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
 
       // Filter the responses
       this.filters.answer = $answer.text();
-      this.filters.question = $("#filter").val();
-      this.responses.setFilter(this.filters.question, this.filters.answer);
+      this.collection.setFilter(this.filters.question, this.filters.answer);
 
       // Note that we're done loading
       events.publish('loading', [false]);
       $('#loadingsmg').hide();
       console.log("Done loading");
-
-
-      this.updateFilterView();
     }
   });
 
