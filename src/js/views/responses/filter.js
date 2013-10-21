@@ -79,14 +79,23 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
      * Reset any filters
      */
     reset: function(event) {
-      console.log("Clearing filter");
+      event.preventDefault();
       this.filters = {};
-
       this.collection.clearFilter();
+
+      $('.questions .circle').removeClass('selected');
+      $('.answers').hide();
     },
 
     bin: function(event) {
       _kmq.push(['record', "Question filter selected"]);
+
+      // Clear out any filters
+      if(this.filters.answer) {
+        this.reset();
+      }
+
+
       var $question = $(event.target);
       var question = $question.attr('data-question');
       this.filters.question = question;
@@ -125,7 +134,8 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
       console.log("Loading");
 
       // Filter the responses
-      this.filters.answer = $answer.text();
+      this.filters.answer = $answer.attr('data-answer');
+      console.log($answer, this.filters.answer);
       this.collection.setFilter(this.filters.question, this.filters.answer);
 
       // Note that we're done loading
