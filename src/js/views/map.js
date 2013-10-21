@@ -542,7 +542,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       api.codeAddress(address, location, this.searchResults);
     },
 
-    searchResults: function(error, latlng) {
+    searchResults: function(error, results) {
       if(error) {
         $('#map-controls .error').html(error);
       }else {
@@ -554,6 +554,9 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         this.map.removeLayer(this.markers.location);
       }
 
+      console.log("RESULTS", error, results);
+
+      var latlng = results.coords;
       console.log("FOUND", latlng);
       this.map.setView(latlng, 18);
       var marker = L.marker(latlng).addTo(this.map);
