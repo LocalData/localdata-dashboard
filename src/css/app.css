@@ -948,18 +948,52 @@ form p {
 .saved {
   display: none; }
 
-.editor input[type=text] {
-  width: 300px;
-  border-width: 3px;
-  background: #fcf5f0;
-  border-color: #f5ebe6; }
-.editor input[type=text].question-input {
-  font: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif !important; }
-.editor input[type=text]:hover,
-.editor input:focus {
-  outline: none;
-  border-color: #ffad00;
-  background: #fff; }
+.editor {
+  /*
+    input[type=text] {
+      border-bottom-width: 3px;
+      background: $pink;
+      border-color: $pin;
+      padding: 5px 15px;
+      margin-bottom: 0.5em;
+    }
+   */ }
+  .editor input[type=text] {
+    width: 400px;
+    border-width: 0;
+    border-bottom-width: 3px;
+    background: white;
+    border-color: white;
+    padding: 5px 15px;
+    margin-bottom: 0.5em; }
+  .editor .question input[type=text] {
+    width: 400px; }
+  .editor .question .answers input[type=text] {
+    width: 368px; }
+  .editor .question .answers .question input[type=text] {
+    width: 336px; }
+  .editor .question .answers .question .answers input[type=text] {
+    width: 304px; }
+  .editor .remove,
+  .editor .btn-group {
+    display: none; }
+  .editor input[type=text].question-input {
+    font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
+    color: #6e6663;
+    font-size: 16px; }
+  .editor input:focus {
+    outline: none;
+    border-color: #ffad00;
+    background: #fff; }
+  .editor .question .question,
+  .editor .answers,
+  .editor .add-answer {
+    border-left: 2px solid white;
+    padding-left: 30px; }
+  .editor .add-answer {
+    cursor: pointer; }
+  .editor .question .question {
+    padding-left: 30px; }
 
 .preview-q-box {
   padding-left: 20px; }
