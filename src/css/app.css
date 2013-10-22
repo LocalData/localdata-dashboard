@@ -1,3 +1,5 @@
+@import url(font-awesome-ie7.min.css);
+@import url(font-awesome.min.css);
 /*******************************************************************************
  * style.scss
  *
@@ -76,13 +78,13 @@ table {
  */
 @font-face {
   font-family: "NeuzeitOfficeW01-Regula";
-  src: url("../fonts/673817/regular.eot?#iefix");
-  src: url("../fonts/673817/regular.eot?#iefix") format("eot"), url("../fonts/673817/regular.woff") format("woff"), url("../fonts/673817/regular.ttf") format("truetype"), url("../fonts/673817/regular.svg#85050462-ab1f-4478-a289-36eed1d3c53f") format("svg"); }
+  src: url("../font/673817/regular.eot?#iefix");
+  src: url("../font/673817/regular.eot?#iefix") format("eot"), url("../font/673817/regular.woff") format("woff"), url("../font/673817/regular.ttf") format("truetype"), url("../font/673817/regular.svg#85050462-ab1f-4478-a289-36eed1d3c53f") format("svg"); }
 
 @font-face {
   font-family: "Neuzeit Office W01 Bold";
-  src: url("../fonts/673808/bold.eot?#iefix");
-  src: url("../fonts/673808/bold.eot?#iefix") format("eot"), url("../fonts/673808/bold.woff") format("woff"), url("../fonts/673808/bold.ttf") format("truetype"), url("../fonts/673808/bold.svg#d4cb246e-742d-4269-9f6a-901a050ff03f") format("svg"); }
+  src: url("../font/673808/bold.eot?#iefix");
+  src: url("../font/673808/bold.eot?#iefix") format("eot"), url("../font/673808/bold.woff") format("woff"), url("../font/673808/bold.ttf") format("truetype"), url("../font/673808/bold.svg#d4cb246e-742d-4269-9f6a-901a050ff03f") format("svg"); }
 
 /* Animations ==============================================================  */
 .animated {
@@ -959,7 +961,7 @@ form p {
     }
    */ }
   .editor input[type=text] {
-    width: 400px;
+    width: 450px;
     border-width: 0;
     border-bottom-width: 3px;
     background: white;
@@ -967,16 +969,22 @@ form p {
     padding: 5px 15px;
     margin-bottom: 0.5em; }
   .editor .question input[type=text] {
-    width: 400px; }
+    width: 450px; }
   .editor .question .answers input[type=text] {
-    width: 368px; }
+    width: 450px; }
   .editor .question .answers .question input[type=text] {
-    width: 336px; }
+    width: 450px; }
   .editor .question .answers .question .answers input[type=text] {
-    width: 304px; }
+    width: 450px; }
   .editor .remove,
   .editor .btn-group {
     display: none; }
+  .editor .add-on {
+    display: inline-block;
+    float: left;
+    line-height: 40px;
+    width: 30px;
+    text-align: center; }
   .editor input[type=text].question-input {
     font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
     color: #6e6663;

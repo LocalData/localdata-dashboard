@@ -57,10 +57,10 @@ form p {
 }
 
 .editor {
-  $editor-base-width: 400px;
+  $editor-base-width: 450px;
   $editor-padding: 30px;
   $editor-border: 2px;
-  $editor-total: $editor-padding + $editor-border;
+  $editor-total: 0;
 
   input[type=text] {
     width: $editor-base-width;
@@ -100,6 +100,14 @@ form p {
   .remove,
   .btn-group {
     display: none;
+  }
+
+  .add-on {
+    display: inline-block;
+    float: left;
+    line-height: 40px;
+    width: 30px;
+    text-align: center;
   }
 
   input[type=text].question-input {
