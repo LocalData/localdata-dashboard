@@ -544,7 +544,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
     searchResults: function(error, results) {
       if(error) {
-        $('#map-controls .error').html(error);
+        $('#map-controls .error').html(error.message);
       }else {
         $('#map-controls .error').html('');
       }
@@ -554,10 +554,9 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         this.map.removeLayer(this.markers.location);
       }
 
-      console.log("RESULTS", error, results);
+      console.log('Geocoding results:', error, results);
 
       var latlng = results.coords;
-      console.log("FOUND", latlng);
       this.map.setView(latlng, 18);
       var marker = L.marker(latlng).addTo(this.map);
       this.markers.location = marker;
