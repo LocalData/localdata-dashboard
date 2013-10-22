@@ -353,9 +353,8 @@ header a {
 }
 
 #map-controls {
-  display:none;
-  padding:10px;
-  background:#3f5b88;
+  padding:10px 10px 0 10px;
+  background:#39abb7;
 }
 
   #map-controls a {
@@ -367,9 +366,8 @@ header a {
   #map-controls #address-search {
     background:transparent;
     color:#fefefe;
-    border:0;
-    border-bottom:1px dotted #fefefe;
-    min-width:200px;
+    border:1px solid #fefefe;
+    min-width:300px;
     max-width:400px;
   }
 
@@ -384,9 +382,8 @@ header a {
 /*  Note that we can't combine these two rules because they're
     browser-specific */
 #address-search::-webkit-input-placeholder {
-    color: #93a9cd;
+    color: #fefefe;
     font-weight:300;
-    text-align:center;
     text-transform:uppercase;
     font-size:12px;
     line-height:25px;

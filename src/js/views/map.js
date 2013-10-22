@@ -68,11 +68,16 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
     markers: {},
     filter: null,
 
+    events: {
+      "click .address-search-button": "search"
+    },
+
+
     initialize: function(options) {
       console.log("Init map view");
       _.bindAll(this, 'render', 'selectObject', 'renderObject', 'renderObjects',
         'getResponsesInBounds', 'updateMapStyleBasedOnZoom', 'updateObjectStyles',
-        'styleFeature', 'setupPolygon');
+        'styleFeature', 'setupPolygon', 'search', 'searchResults');
 
       this.responses = options.responses;
       // TODO: if we add the filter logic to the responses collection, we can
@@ -528,6 +533,33 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
       var selectedItemListView = new ResponseListView({collection: this.sel});
       $("#result-container").html(selectedItemListView.render().$el);
+    },
+
+    search: function(event) {
+      event.preventDefault();
+      var address = $('#address-search').val();
+      var location = this.survey.get('location');
+      api.codeAddress(address, location, this.searchResults);
+    },
+
+    searchResults: function(error, results) {
+      if(error) {
+        $('#map-controls .error').html(error.message);
+      }else {
+        $('#map-controls .error').html('');
+      }
+
+      // Remove any existing location marker
+      if(this.markers.location !== undefined) {
+        this.map.removeLayer(this.markers.location);
+      }
+
+      console.log('Geocoding results:', error, results);
+
+      var latlng = results.coords;
+      this.map.setView(latlng, 18);
+      var marker = L.marker(latlng).addTo(this.map);
+      this.markers.location = marker;
     }
 
   });
