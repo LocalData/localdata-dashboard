@@ -944,6 +944,23 @@ form p {
   margin-bottom: 1em;
   width: 12em; }
 
+/* Editor --------------------------------------------------------------------*/
+.saved {
+  display: none; }
+
+.editor input[type=text] {
+  width: 300px;
+  border-width: 3px;
+  background: #fcf5f0;
+  border-color: #f5ebe6; }
+.editor input[type=text].question-input {
+  font: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif !important; }
+.editor input[type=text]:hover,
+.editor input:focus {
+  outline: none;
+  border-color: #ffad00;
+  background: #fff; }
+
 .preview-q-box {
   padding-left: 20px; }
 

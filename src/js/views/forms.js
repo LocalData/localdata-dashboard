@@ -102,10 +102,12 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
       // old: Make sure we have up-to-date form data before showing the design view
       api.getForm(function() {
         this.showDesigner();
+        this.showBuilder();
       }.bind(this));
 
       // Show the editor
-      $('.edit-form-button').click(this.showBuilder);
+      // $('.edit-form-button').click(this.showBuilder);
+
     }
   });
 

@@ -440,8 +440,8 @@
           <div class="span12">
           <form>
             <h3>Questions</h3>
-            <a class="btn save">Save your edits</a>
-            <a class="btn done">Close editor</a>
+            <button class="mini flex save">Save your edits</button>
+            <!-- <button class="mini flex done">Close editor</button> -->
             <div class="saved">Form saved</div>
 
             <div id="editor" class="editor"></div>
@@ -502,7 +502,7 @@
         <div class="input-append input-prepend">
           <span class="add-on"><i class=" icon-pencil"></i></span>
           <input type="text" placeholder="Text question" value="<%= question.text %>" data-role="question" class="question-input input-xlarge">
-          <a class="btn remove"><i class="icon-trash"></i></a>
+          <button class="remove"><i class="icon-trash"></i> Remove</button>
         </div>
       </div>
     </script>

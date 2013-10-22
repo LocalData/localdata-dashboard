@@ -50,3 +50,30 @@ form p {
     width: 12em;
   }
 }
+
+/* Editor --------------------------------------------------------------------*/
+.saved {
+  display: none;
+}
+
+.editor {
+
+  input[type=text] {
+    width: 300px;
+    border-width: 3px;
+    background: $pink;
+    border-color: $thinpink;
+  }
+
+  input[type=text].question-input {
+    font: $bold!important;
+  }
+
+  input[type=text]:hover,
+  input:focus {
+    outline: none;
+    border-color: $orange;
+    background: #fff;
+  }
+
+}
