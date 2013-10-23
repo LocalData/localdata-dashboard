@@ -54,7 +54,8 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
     },
 
     render: function() {
-      console.log(this.stats.toJSON());
+      console.log("Rendering the filters", this.stats.toJSON());
+      console.log(this.$el);
       var context = {
         questions: this.stats.toJSON(),
         mapping: this.forms.map()
