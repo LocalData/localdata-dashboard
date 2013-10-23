@@ -42,7 +42,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
     el: '#response-view-container',
 
     events: {
-      "click #refresh": "getNew"
+      'click #refresh': 'getNew'
     },
 
     initialize: function(options) {
