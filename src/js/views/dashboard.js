@@ -52,16 +52,8 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews) {
       var surveyListItemView = new SurveyViews.ListItemView({
         model: survey
       });
+      this.$('.survey-list').append(surveyListItemView.$el);
 
-      var $el = surveyListItemView.render().$el;
-      $('.survey-list', this.$el).append($el);
-
-      console.log($('.map', $el));
-      this.map = new L.map($('.map', $el)[0], {
-        zoom: 15
-      });
-      this.baseLayer = L.tileLayer(settings.baseLayer);
-      this.map.addLayer(this.baseLayer);
     }
   });
 
