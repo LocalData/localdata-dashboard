@@ -864,6 +864,13 @@ header .nav a:visited {
 .confirm-delete {
   display: none; }
 
+.response h2 {
+  font-size: 26px;
+  text-transform: titlecase; }
+
+.response .answers {
+  margin-bottom: 1em; }
+
 .filters label,
 .filters .question {
   cursor: pointer; }

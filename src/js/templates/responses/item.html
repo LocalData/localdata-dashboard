@@ -9,11 +9,18 @@
 <div class="collector">
   <i class="icon-user"></i>
   <% if(r.geo_info != undefined) { %>
-    <%- r.source.collector %>
-  <% } else{ %>
+    <% if(r.source.collector) { %>
+      <%- r.source.collector %>
+    <% } else { %>
+      No name given
+    <% } %>
+  <% } else { %>
     <%- r.responses.collector %>
   <% } %>
-  &nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-time"></i>
+</div>
+
+<div class="time">
+  <i class="icon-time"></i>
   <%- r.createdHumanized %>
 </div>
 
