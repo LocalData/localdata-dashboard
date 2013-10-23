@@ -31,10 +31,6 @@ form input[type=submit] {
 }
 
 
-form button.box {
-  line-height: normal;
-}
-
 .flex {
   width: auto;
   padding: 0px 15px;
@@ -68,6 +64,10 @@ button,
   border-color: $blue;
   color: #fff;
   line-height: inherit;
+}
+
+a.button {
+  line-height: 60px;
 }
 
 button:hover,
