@@ -360,7 +360,6 @@ header .b {
   padding-top: 75px; }
 
 /*
-
 2000 = 236 708 56 56 708 236 = 1528px center
 1280 = 84 500 56 56 500 84 = 1112px center
 1120 = 30 500 30 30 500 30 = 1060px center
@@ -672,7 +671,7 @@ form input[type=submit] {
 .confirm,
 .ok {
   border-color: #58aeff;
-  color: #58aeff; }
+  color: white; }
 
 button,
 .button {
@@ -776,7 +775,8 @@ header .a,
 header .b {
   padding: 0; }
 
-header h1 {
+header h1,
+footer h1 {
   position: relative;
   z-index: 100;
   left: -53px;
@@ -838,8 +838,17 @@ header .nav a:visited {
     margin: 0; }
 
 /* Survey List -------------------------------------------------------------- */
+.survey-list-item .in {
+  padding: 0; }
+
+.survey-list-item .in .a {
+  padding: 50px 0 0 0; }
+
 .survey-list-item h2 {
   font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif; }
+
+.survey-list-item.even {
+  background: #fff; }
 
 /* Survey and Map ----------------------------------------------------------- */
 .survey .in {
@@ -944,6 +953,9 @@ form label {
   font-size: 16px;
   line-height: 20px; }
 
+form .error {
+  color: #f15a24; }
+
 form .question {
   font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif; }
 
@@ -959,12 +971,6 @@ input[type=password] {
   line-height: 24px;
   padding: 0px 8px;
   margin-bottom: 1.5em; }
-
-input.large {
-  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
-  font-size: 24px;
-  padding: 5px 15px;
-  border-color: #ffad00; }
 
 input.error {
   color: #f15a24;
@@ -991,12 +997,15 @@ form p {
   margin-top: 1em;
   margin-bottom: 0; }
 
+input.large input[type=text],
+input.large input[type=password],
 #login input[type=text],
 #login input[type=password],
 #register input[type=text],
 #register input[type=password] {
   display: block;
   font-size: 26px;
+  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
   border: 4px solid #58aeff;
   line-height: 32px;
   padding: 4px 10px;

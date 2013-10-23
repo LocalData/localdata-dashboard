@@ -43,7 +43,15 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews) {
       var context = {};
       this.$el.html(_.template($('#dashboard').html(), context));
 
+      var parity = 0;
       this.surveys.each(function(survey) {
+        if (parity === 0) {
+          survey.set('parity', 'odd');
+          parity = 1;
+        }else {
+          survey.set('parity', 'even');
+          parity = 0;
+        }
         self.appendSurvey(survey);
       });
     },
@@ -53,7 +61,6 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews) {
         model: survey
       });
       this.$('.survey-list').append(surveyListItemView.$el);
-
     }
   });
 

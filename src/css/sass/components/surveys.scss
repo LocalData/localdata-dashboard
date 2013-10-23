@@ -30,8 +30,20 @@
 
 
 /* Survey List -------------------------------------------------------------- */
+.survey-list-item .in {
+  padding: 0;
+}
+
+.survey-list-item .in .a {
+  padding: 50px 0 0 0;
+}
+
 .survey-list-item h2 {
   font-family: $font;
+}
+
+.survey-list-item.even {
+  background: #fff;
 }
 
 /* Survey and Map ----------------------------------------------------------- */
