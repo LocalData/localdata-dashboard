@@ -5,7 +5,7 @@ define([
   'jquery',
   'lib/lodash',
   'backbone',
-  'lib/leaflet/leaflet.google',
+  'lib/leaflet/leaflet',
   'lib/tinypubsub',
   'lib/async',
 
@@ -75,6 +75,10 @@ function(
     };
   }
 
+  function flip(a) {
+    return [a[1], a[0]];
+  }
+
   SurveyViews.ListItemView = Backbone.View.extend({
     template: _.template(surveyListItemTemplate),
 
@@ -87,6 +91,26 @@ function(
       this.$el.html(this.template({
         survey: this.model.toJSON()
       }));
+
+      var map = L.map(this.$('.map')[0], {
+        zoom: 15,
+        center: [37.77585785035733, -122.41362811351655]
+      });
+      var bounds = this.model.get('responseBounds');
+      if (bounds) {
+        bounds = [flip(bounds[0]), flip(bounds[1])];
+        if (bounds[0][0] === bounds[1][0] || bounds[0][1] === bounds[1][1]) {
+          // We have a degenerate rectangle, so Leaflet doesn't know what to show us.
+          map.setView(bounds[0], 15);
+        } else {
+          map.fitBounds(bounds);
+        }
+      }
+      var baseLayer = L.tileLayer(settings.baseLayer);
+      map.addLayer(baseLayer);
+      if (map.getZoom() > baseLayer.options.maxZoom) {
+        map.setView(map.getCenter(), baseLayer.options.maxZoom - 1);
+      }
       return this;
     },
 
