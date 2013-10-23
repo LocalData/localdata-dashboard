@@ -11,7 +11,6 @@
     <link href='//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,300|Pacifico' rel='stylesheet' type='text/css'>
 
     <style type="text/css" media="screen">
-      @import url("/css/lib/font-awesome.min.css");
       @import url("js/lib/leaflet/leaflet.css");
       @import url("css/app.css");
     </style>
@@ -268,15 +267,10 @@
 
       <div class="out contrast">
         <div class="in">
-          <div class="a">
-            <div id="preview-view-container"></div>
+          <div id="survey-form-tools-container">
+            <a class="button ok edit-form-button">Edit form</a>
           </div>
-          <div class="b">
-            <div id="survey-form-tools-container">
-              <a class="button ok edit-form-button">Edit form</a>
-            </div>
-            <div id="builder-view-container"></div>
-          </div>
+          <div id="builder-view-container"></div>
         </div>
       </div>
 
@@ -439,8 +433,8 @@
         <div class="row-fluid">
           <div class="span12">
           <form>
-            <h3>Questions</h3>
-            <button class="mini flex save">Save your edits</button>
+            <h3>Survey editor <button class="mini flex save">Save your edits</button></h3>
+
             <!-- <button class="mini flex done">Close editor</button> -->
             <div class="saved">Form saved</div>
 

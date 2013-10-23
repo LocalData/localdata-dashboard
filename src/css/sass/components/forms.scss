@@ -57,23 +57,87 @@ form p {
 }
 
 .editor {
+  $editor-base-width: 450px;
+  $editor-padding: 30px;
+  $editor-border: 2px;
+  $editor-total: 0;
 
   input[type=text] {
-    width: 300px;
-    border-width: 3px;
+    width: $editor-base-width;
+    border-width: 0;
+    border-bottom-width: 3px;
+    background: white;
+    border-color: white;
+    padding: 5px 15px;
+    margin-bottom: 0.5em;
+  }
+
+/*
+  input[type=text] {
+    border-bottom-width: 3px;
     background: $pink;
-    border-color: $thinpink;
+    border-color: $pin;
+    padding: 5px 15px;
+    margin-bottom: 0.5em;
+  }
+ */
+  .question input[type=text] {
+    width: $editor-base-width;
+  }
+
+  .question .answers input[type=text] {
+    width: $editor-base-width - $editor-total;
+  }
+
+  .question .answers .question input[type=text] {
+    width: $editor-base-width - ($editor-total * 2);
+  }
+
+  .question .answers .question .answers input[type=text] {
+    width: $editor-base-width -  ($editor-total * 3);
+  }
+
+  .remove,
+  .btn-group {
+    display: none;
+  }
+
+  .add-on {
+    display: inline-block;
+    float: left;
+    line-height: 40px;
+    width: 30px;
+    text-align: center;
   }
 
   input[type=text].question-input {
-    font: $bold!important;
+    font-family: $bold;
+    color: $body-color;
+    font-size: 16px;
   }
 
-  input[type=text]:hover,
   input:focus {
     outline: none;
     border-color: $orange;
     background: #fff;
+  }
+
+  .question {
+  }
+
+  .question .question,
+  .answers,
+  .add-answer {
+    border-left: $editor-border solid #fff;
+    padding-left: $editor-padding;
+  }
+
+  .add-answer {
+    cursor: pointer;
+  }
+
+  .question .question {
+    padding-left: $editor-padding;
   }
 
 }
