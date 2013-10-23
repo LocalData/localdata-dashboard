@@ -2,6 +2,33 @@
   padding-bottom: 0;
 }
 
+/* Designer ---------------------------------------------------------------- */
+.choice-boxes {
+  overflow: auto;
+}
+
+.choice-box-wrap {
+  float: left;
+  width: 250px;
+  background: #fff;
+  margin-right: 20px;
+
+  .choice-box {
+    padding: 20px;
+  }
+
+  h3 {
+    font-size: 24px;
+    line-height: 30px;
+  }
+
+  button {
+    width: 100%;
+    margin: 0;
+  }
+}
+
+
 /* Survey List -------------------------------------------------------------- */
 .survey-list-item h2 {
   font-family: $font;

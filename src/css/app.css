@@ -682,7 +682,8 @@ button,
   cursor: pointer;
   background: #58aeff;
   border-color: #58aeff;
-  color: #fff; }
+  color: #fff;
+  line-height: inherit; }
 
 button:hover,
 .button:hover {
@@ -693,6 +694,25 @@ button.danger {
   border-color: #f15a24;
   background-color: #f15a24;
   color: white; }
+
+button.disabled {
+  background-color: #cbc8c7;
+  border-color: #cbc8c7; }
+
+/* Tabs --------------------------------------------------------------------- */
+.tabs {
+  overflow: auto;
+  margin-bottom: 24px; }
+  .tabs .tab {
+    font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
+    font-size: 24px;
+    line-height: 2em;
+    float: left;
+    width: 40%;
+    padding: 5px 15px;
+    background: #cbc8c7; }
+  .tabs .tab:last-child {
+    float: right; }
 
 nav a,
 nav a:hover {
@@ -798,6 +818,24 @@ header .nav a:visited {
 
 .survey-head .in {
   padding-bottom: 0; }
+
+/* Designer ---------------------------------------------------------------- */
+.choice-boxes {
+  overflow: auto; }
+
+.choice-box-wrap {
+  float: left;
+  width: 250px;
+  background: #fff;
+  margin-right: 20px; }
+  .choice-box-wrap .choice-box {
+    padding: 20px; }
+  .choice-box-wrap h3 {
+    font-size: 24px;
+    line-height: 30px; }
+  .choice-box-wrap button {
+    width: 100%;
+    margin: 0; }
 
 /* Survey List -------------------------------------------------------------- */
 .survey-list-item h2 {
@@ -916,6 +954,7 @@ input[type=text],
 input[type=password] {
   display: block;
   font-size: 16px;
+  color: #6e6663;
   border: 4px solid #ccc;
   line-height: 24px;
   padding: 0px 8px;
@@ -930,6 +969,9 @@ input.large {
 input.error {
   color: #f15a24;
   border-color: #f15a24; }
+
+label {
+  cursor: pointer; }
 
 label.radio {
   max-width: 75%;

@@ -99,54 +99,6 @@
 
 
     <script type="text/template" id="survey-design-view">
-      <div class="survey-designer">
-        <h2 class="getting-started">Getting started</h2>
-        <h2>What kind of survey are you planning?</h2>
-        <h3>Pick from one of our pre-made survey templates</h3>
-        <p><a class="button use-blank-survey">Or, create a new survey from scratch</a></p>
-
-        <div class="choice-boxes floatcontainer">
-          <div class="choice-box">
-            <img src="img/icons/builder-icon.png" alt="">
-            <h3>Standard neigbhorhood survey</h3>
-            <p>Asks basic questions about condition, vacancy and other factors. Quick and informative.</p>
-            <p class="time-estimate"><i class="icon-time"></i> About 1 minute per property</p>
-            <label><a href="" class="preview btn">Preview survey</a></label>
-            <label><a class="btn use-survey">Use this survey</a></label>
-          </div>
-
-          <div class="choice-box">
-            <img src="img/icons/builder-icon.png" alt="">
-            <h3>Comprehensive neighborhood survey</h3>
-            <p>Collect detailed information about condition, use, vacancy, and more. Takes longer to complete.</p>
-            <p class="time-estimate"><i class="icon-time"></i> About 4 minutes per property</p>
-            <button class="btn disabled" disabled>Coming soon</button>
-
-            <!--<a href="" class="preview button">Preview survey</a>
-            < class="btn use-survey">Use this survey</a>-->
-          </div>
-
-          <div class="choice-box">
-            <img src="img/icons/builder-icon.png" alt="">
-            <h3>Neighborhood<br> asset<br> survey</h3>
-            <p>Map parks, churches, stores, and more.<br><br></p>
-            <p class="time-estimate"><i class="icon-time"></i> About 2 minutes per property</p>
-            <button class="btn disabled" disabled>Coming soon</button>
-
-            <!--<a href="" class="preview button">Preview survey</a>
-            <a class="button use-survey">Use this survey</a>-->
-          </div>
-        </div>
-
-              <div id="preview-survey-title">
-        <h3><%= name %></h3>
-      </div>
-
-
-        <p class="advanced">Or, <a href="">design your own custom survey</a>.
-
-        <div id="preview-view-container"></div>
-      </div>
     </script>
 
     <!-- Login ............................................................-->
@@ -231,10 +183,11 @@
             <a class="button ok edit-form-button">Edit form</a>
           </div>
           <div id="builder-view-container"></div>
+          <div id="survey-design-container"></div>
+
         </div>
       </div>
 
-      <div id="survey-design-container"></div>
     </script>
 
 

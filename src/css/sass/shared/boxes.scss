@@ -67,6 +67,7 @@ button,
   background: $blue;
   border-color: $blue;
   color: #fff;
+  line-height: inherit;
 }
 
 button:hover,
@@ -81,3 +82,28 @@ button.danger {
   color: white;
 }
 
+button.disabled {
+  background-color: $disabled;
+  border-color: $disabled;
+}
+
+/* Tabs --------------------------------------------------------------------- */
+.tabs {
+  overflow: auto;
+  margin-bottom: 24px;
+
+  .tab {
+    font-family: $bold;
+    font-size: 24px;
+
+    line-height: 2em;
+    float: left;
+    width: 40%;
+    padding: 5px 15px;
+    background: $disabled;
+  }
+
+  .tab:last-child {
+    float: right;
+  }
+}

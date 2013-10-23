@@ -48,7 +48,7 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
 
         var designView = new DesignViews.DesignView({
           el: '#survey-design-container',
-          survey: this.survey
+          model: this.survey
         });
         designView.render();
 
@@ -102,7 +102,6 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
       // old: Make sure we have up-to-date form data before showing the design view
       api.getForm(function() {
         this.showDesigner();
-        this.showBuilder();
       }.bind(this));
 
       // Show the editor
