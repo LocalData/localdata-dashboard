@@ -997,8 +997,7 @@ form p {
   margin-top: 1em;
   margin-bottom: 0; }
 
-input.large input[type=text],
-input.large input[type=password],
+input.large,
 #login input[type=text],
 #login input[type=password],
 #register input[type=text],

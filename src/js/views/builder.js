@@ -36,10 +36,29 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'save', 'done', 'makeBlankQuestion', 'renderForm',
-        'suffix', 'editQuestion', 'setQuestionType', 'deleteQuestion',
-        'createQuestion', 'createPhotoQuestion', 'createAnswer', 'addSubQuestion',
-        'renderQuestion', 'editAnswer', 'deleteAnswer', 'slugify', 'updatePreview');
+      _.bindAll(this,
+        'render',
+        'save',
+        'done',
+
+        'makeBlankQuestion',
+        'renderForm',
+        'suffix',
+        'slugify',
+        'updatePreview',
+
+        'editQuestion',
+        'setQuestionType',
+        'deleteQuestion',
+        'createQuestion',
+        'createPhotoQuestion',
+        'addSubQuestion',
+        'renderQuestion',
+
+        'createAnswer',
+        'editAnswer',
+        'deleteAnswer'
+      );
 
       this.forms = options.forms;
     },

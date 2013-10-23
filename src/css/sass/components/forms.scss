@@ -58,19 +58,18 @@ form p {
 }
 
 input.large,
-#login,
-#register {
-  input[type=text],
-  input[type=password] {
-    display: block;
-    font-size: 26px;
-    font-family: $bold;
-    border: 4px solid $blue;
-    line-height: 32px;
-    padding: 4px 10px;
-    margin-bottom: 1em;
-    width: 12em;
-  }
+#login input[type=text],
+#login input[type=password],
+#register input[type=text],
+#register input[type=password] {
+  display: block;
+  font-size: 26px;
+  font-family: $bold;
+  border: 4px solid $blue;
+  line-height: 32px;
+  padding: 4px 10px;
+  margin-bottom: 1em;
+  width: 12em;
 }
 
 

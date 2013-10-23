@@ -110,10 +110,10 @@ function(
       }
       var baseLayer = L.tileLayer(settings.baseLayer);
       map.addLayer(baseLayer);
-      console.log(this.model.get('name'), map.getZoom(), baseLayer.options.maxZoom);
+      // console.log(this.model.get('name'), map.getZoom(), baseLayer.options.maxZoom);
       if (map.getZoom() > baseLayer.options.maxZoom) {
         map.setZoom(18);
-        console.log("Fixed to ",18);
+        // console.log("Fixed to ",18);
       }
       return this;
     },
