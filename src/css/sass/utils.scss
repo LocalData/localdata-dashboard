@@ -28,16 +28,25 @@ $red: #f15a24;
 $orange: #ffad00;
 $blue: #58aeff;
 
-@import url("http://fast.fonts.net/lt/1.css?apiType=css&c=9a6feb00-f8b3-48aa-b165-798ef59ba4f6&fontids=673817,673808");
+$disabled: #cbc8c7;
+
+$body-size: 16px;
+$medium-size: 26px;
+
+@import "font-awesome-ie7.min.css";
+@import "font-awesome.min.css";
+
+/* @import url("http://fast.fonts.net/lt/1.css?apiType=css&c=9a6feb00-f8b3-48aa-b165-798ef59ba4f6&fontids=673817,673808");
+ */
 @font-face{
 font-family:"NeuzeitOfficeW01-Regula";
-  src:url("../fonts/673817/regular.eot?#iefix");
-  src:url("../fonts/673817/regular.eot?#iefix") format("eot"),url("../fonts/673817/regular.woff") format("woff"),url("../fonts/673817/regular.ttf") format("truetype"),url("../fonts/673817/regular.svg#85050462-ab1f-4478-a289-36eed1d3c53f") format("svg");
+  src:url("../font/673817/regular.eot?#iefix");
+  src:url("../font/673817/regular.eot?#iefix") format("eot"),url("../font/673817/regular.woff") format("woff"),url("../font/673817/regular.ttf") format("truetype"),url("../font/673817/regular.svg#85050462-ab1f-4478-a289-36eed1d3c53f") format("svg");
 }
 @font-face{
 font-family:"Neuzeit Office W01 Bold";
-  src:url("../fonts/673808/bold.eot?#iefix");
-  src:url("../fonts/673808/bold.eot?#iefix") format("eot"),url("../fonts/673808/bold.woff") format("woff"),url("../fonts/673808/bold.ttf") format("truetype"),url("../fonts/673808/bold.svg#d4cb246e-742d-4269-9f6a-901a050ff03f") format("svg");
+  src:url("../font/673808/bold.eot?#iefix");
+  src:url("../font/673808/bold.eot?#iefix") format("eot"),url("../font/673808/bold.woff") format("woff"),url("../font/673808/bold.ttf") format("truetype"),url("../font/673808/bold.svg#d4cb246e-742d-4269-9f6a-901a050ff03f") format("svg");
 }
 
 $font: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;

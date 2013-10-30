@@ -43,7 +43,15 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews) {
       var context = {};
       this.$el.html(_.template($('#dashboard').html(), context));
 
+      var parity = 0;
       this.surveys.each(function(survey) {
+        if (parity === 0) {
+          survey.set('parity', 'odd');
+          parity = 1;
+        }else {
+          survey.set('parity', 'even');
+          parity = 0;
+        }
         self.appendSurvey(survey);
       });
     },
@@ -52,16 +60,7 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews) {
       var surveyListItemView = new SurveyViews.ListItemView({
         model: survey
       });
-
-      var $el = surveyListItemView.render().$el;
-      $('.survey-list', this.$el).append($el);
-
-      console.log($('.map', $el));
-      this.map = new L.map($('.map', $el)[0], {
-        zoom: 15
-      });
-      this.baseLayer = L.tileLayer(settings.baseLayer);
-      this.map.addLayer(this.baseLayer);
+      this.$('.survey-list').append(surveyListItemView.$el);
     }
   });
 

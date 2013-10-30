@@ -158,7 +158,7 @@ function($, _, Backbone, moment, settings, api) {
         answer: answer
       };
 
-      if(answer === 'no answer') {
+      if(answer === 'no response') {
         answer = undefined;
       }
 
@@ -172,9 +172,7 @@ function($, _, Backbone, moment, settings, api) {
     clearFilter: function (options) {
       console.log("Clearing filter");
       this.filters = null;
-      if (this.unfilteredModels === null) {
-        this.reset();
-      } else {
+      if (this.unfilteredModels !== null) {
         this.reset(this.unfilteredModels, options);
       }
     }

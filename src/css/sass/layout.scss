@@ -46,7 +46,6 @@ body {
   }
 }
 
-
 header .in {
   padding-top: 20px;
   padding-bottom: 10px;
@@ -56,9 +55,7 @@ header .b {
   padding-top: 75px;
 }
 
-
 /*
-
 2000 = 236 708 56 56 708 236 = 1528px center
 1280 = 84 500 56 56 500 84 = 1112px center
 1120 = 30 500 30 30 500 30 = 1060px center
@@ -194,7 +191,6 @@ header .b {
 
 
 .bigb .b.nomargin {
-  background:red;
   width: 1146px;
   margin: 0;
 
@@ -228,11 +224,9 @@ header .b {
   }
 }
 
-
 .contrast {
   background: $pink;
 }
-
 
 .contrast + .contrast .in {
   padding-top: 0;
@@ -250,7 +244,6 @@ header .b {
 .contrast .rule {
   border-bottom: 6px solid #fff;
 }
-
 
 
 /* Photo header ------------------------------------------------------------- */
@@ -279,7 +272,6 @@ header .b {
     padding-right: 30px;
   }
 }
-
 
 .photo .a {
   @media all and (max-width: 768px) {

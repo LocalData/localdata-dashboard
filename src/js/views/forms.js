@@ -37,10 +37,9 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
     },
 
     showDesigner: function() {
-      $('#survey-design-container').empty();
+      // $('#survey-design-container').empty();
 
       // If there isn't a form yet, let's show the survey creation view
-      if (settings.formData === undefined) {
 
         $('#survey-form-tools-container').hide();
 
@@ -48,22 +47,11 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
 
         var designView = new DesignViews.DesignView({
           el: '#survey-design-container',
-          survey: this.survey
+          model: this.survey
         });
         designView.render();
 
         designView.on('formAdded', this.render, this);
-
-      }else {
-        $('#survey-form-tools-container').show(); // hacky!
-
-        // Preview the form if there already is one.
-        this.previewView = new PreviewView({
-          el: '#preview-view-container',
-          forms: [settings.formData]
-        });
-
-      }
     },
 
     showBuilder: function() {
@@ -81,7 +69,6 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
         console.log(this.previewView);
         this.previewView.render();
       }, this);
-
 
       this.listenTo(this.builderView, 'done', function () {
         $(this.builderView.el).html('');
@@ -101,11 +88,13 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
 
       // old: Make sure we have up-to-date form data before showing the design view
       api.getForm(function() {
-        this.showDesigner();
+        if (settings.formData === undefined) {
+          this.showDesigner();
+        }else {
+          this.showBuilder();
+        }
       }.bind(this));
 
-      // Show the editor
-      $('.edit-form-button').click(this.showBuilder);
     }
   });
 

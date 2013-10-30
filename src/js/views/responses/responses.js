@@ -29,7 +29,6 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
 
   var ResponseViews = {};
 
-
   ResponseViews.MapAndListView = Backbone.View.extend({
     filters: {},
     firstRun: true,
@@ -43,10 +42,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
     el: '#response-view-container',
 
     events: {
-      "change #filter":  "filter",
-      "click #subfilter a": "subFilter",
-      "click #clear": "reset",
-      "click #refresh": "getNew"
+      'click #refresh': 'getNew'
     },
 
     initialize: function(options) {
@@ -120,7 +116,8 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       this.filterView = new FilterView({
         collection: this.responses,
         survey: this.survey,
-        forms: this.forms
+        forms: this.forms,
+        map: this.mapView
       });
 
       // If the data has been filtered, show that on the page.
@@ -141,18 +138,20 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
     showFilters: function() {
       $('.factoid').hide();
       this.$el.addClass('bigb');
-      this.mapView.fitBounds();
+      // this.mapView.fitBounds();
 
-      // Render the filter!
-      // var filterView = new this.filterView.render();
+      // Render the filter
       $("#filter-view-container").html(this.filterView.$el);
     },
 
 
     hideFilters: function() {
+      $('.factoid').show();
       this.$el.removeClass('bigb');
       this.mapView.fitBounds();
       this.update();
+
+      $("#filter-view-container").html('');
     },
 
     remove: function () {

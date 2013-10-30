@@ -11,7 +11,6 @@
     <link href='//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,300|Pacifico' rel='stylesheet' type='text/css'>
 
     <style type="text/css" media="screen">
-      @import url("/css/lib/font-awesome.min.css");
       @import url("js/lib/leaflet/leaflet.css");
       @import url("css/app.css");
     </style>
@@ -21,7 +20,10 @@
     <header class="out">
       <div class="in">
         <div class="a">
-          <h1 class="logo animated swing"><a href="index.html">LocalData</a></h1>
+          <h1>
+            <a href="index.html" class="logo animated swing"></a>
+            <a href="index.html" class="logotype">LocalData</a>
+          </h1>
         </div>
         <div class="b">
           <div class="nav">
@@ -38,7 +40,10 @@
 
     <footer class="out">
       <div class="in">
-        <h1 class="logo"><a href="index">LocalData</a></h1>
+        <h1>
+          <a href="index.html" class="logo animated swing"></a>
+          <a href="index.html" class="logotype">LocalData</a>
+        </h1>
 
         <nav>
           <a href="case-muncie">In Action</a>
@@ -93,95 +98,7 @@
     </script>
 
 
-    <!-- New surveys ........................................................-->
-    <script type="text/template" id="new-survey-view">
-      <div class="container-fluid">
-        <header id="" class="survey-header new-survey">
-            <h2>Create a new survey</h2>
-        </header>
-      </div>
-
-      <div class="container-fluid">
-        <!--<div id="content">
-          <div id="body">-->
-            <form action="" id="new-survey-form">
-              <input type="text" placeholder="Survey name" class="survey-name">
-              <input type="text" placeholder="Survey city and state" class="survey-location">
-
-              <h3>What data are you collecting?</h3>
-
-              <label class="radio">
-                <input type="radio" value="point" name="type">
-                Points on a map (for example, potholes, trees, data that doesn&apos;t correspond to an address)
-              </label>
-
-              <label class="radio">
-                <input type="radio" value="parcel" name="type">
-                Data using a parcel map (for example, property, homes, businesses with an address)
-              </label>
-
-              <label class="radio">
-                <input type="radio" value="pointandparcel" name="type">
-                We need to collect information about points and parcels
-              </label>
-
-              <hr>
-              <a class="btn btn-info submit">Create new survey</a>
-            </form>
-        <!--  </div>
-        </div>-->
-      </div>
-    </script>
-
     <script type="text/template" id="survey-design-view">
-      <div class="survey-designer">
-        <h2 class="getting-started">Getting started</h2>
-        <h2>What kind of survey are you planning?</h2>
-        <h3>Pick from one of our pre-made survey templates</h3>
-        <p><a class="button use-blank-survey">Or, create a new survey from scratch</a></p>
-
-        <div class="choice-boxes floatcontainer">
-          <div class="choice-box">
-            <img src="img/icons/builder-icon.png" alt="">
-            <h3>Standard neigbhorhood survey</h3>
-            <p>Asks basic questions about condition, vacancy and other factors. Quick and informative.</p>
-            <p class="time-estimate"><i class="icon-time"></i> About 1 minute per property</p>
-            <label><a href="" class="preview btn">Preview survey</a></label>
-            <label><a class="btn use-survey">Use this survey</a></label>
-          </div>
-
-          <div class="choice-box">
-            <img src="img/icons/builder-icon.png" alt="">
-            <h3>Comprehensive neighborhood survey</h3>
-            <p>Collect detailed information about condition, use, vacancy, and more. Takes longer to complete.</p>
-            <p class="time-estimate"><i class="icon-time"></i> About 4 minutes per property</p>
-            <button class="btn disabled" disabled>Coming soon</button>
-
-            <!--<a href="" class="preview button">Preview survey</a>
-            < class="btn use-survey">Use this survey</a>-->
-          </div>
-
-          <div class="choice-box">
-            <img src="img/icons/builder-icon.png" alt="">
-            <h3>Neighborhood<br> asset<br> survey</h3>
-            <p>Map parks, churches, stores, and more.<br><br></p>
-            <p class="time-estimate"><i class="icon-time"></i> About 2 minutes per property</p>
-            <button class="btn disabled" disabled>Coming soon</button>
-
-            <!--<a href="" class="preview button">Preview survey</a>
-            <a class="button use-survey">Use this survey</a>-->
-          </div>
-        </div>
-
-              <div id="preview-survey-title">
-        <h3><%= name %></h3>
-      </div>
-
-
-        <p class="advanced">Or, <a href="">design your own custom survey</a>.
-
-        <div id="preview-view-container"></div>
-      </div>
     </script>
 
     <!-- Login ............................................................-->
@@ -262,24 +179,15 @@
 
       <div class="out contrast">
         <div class="in">
-          <div class="a">
-            <div id="preview-view-container"></div>
+          <div id="survey-form-tools-container">
+            <a class="button ok edit-form-button">Edit form</a>
           </div>
-          <div class="b">
-            <div id="survey-form-tools-container">
-              <a class="box ok edit-form-button">Edit form</a>
-            </div>
-            <div id="builder-view-container"></div>
-          </div>
+          <div id="builder-view-container"></div>
+          <div id="survey-design-container"></div>
+
         </div>
       </div>
 
-      <div class="alert alert-info">
-        <a href="<%= mobile %>">Go to the mobile app</a>
-        <code><%= mobile %></code>
-      </div>
-
-      <div id="survey-design-container"></div>
     </script>
 
 
@@ -385,15 +293,6 @@
       </ul>
     </script>
 
-
-    <!-- Navigation ........................................................-->
-    <script type="text/template" id="nav-view">
-    <% _.each(items, function(item) {  %>
-      <li class="<%= item.active %>"><a href="#<%= item.fragment %>"><span class="<%= item.icon %>"></span><%= item.title %></a></li>
-    <% }); %>
-    </script>
-
-
     <!-- Pagination .......................................................-->
     <script type="text/template" id="t-responses-pagination">
       <% var buffer = 1; %>
@@ -448,9 +347,9 @@
         <div class="row-fluid">
           <div class="span12">
           <form>
-            <h3>Questions</h3>
-            <a class="btn save">Save your edits</a>
-            <a class="btn done">Close editor</a>
+            <h3>Survey editor <button class="mini flex save">Save your edits</button></h3>
+
+            <!-- <button class="mini flex done">Close editor</button> -->
             <div class="saved">Form saved</div>
 
             <div id="editor" class="editor"></div>
@@ -511,7 +410,7 @@
         <div class="input-append input-prepend">
           <span class="add-on"><i class=" icon-pencil"></i></span>
           <input type="text" placeholder="Text question" value="<%= question.text %>" data-role="question" class="question-input input-xlarge">
-          <a class="btn remove"><i class="icon-trash"></i></a>
+          <button class="remove"><i class="icon-trash"></i> Remove</button>
         </div>
       </div>
     </script>

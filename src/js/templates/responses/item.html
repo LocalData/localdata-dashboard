@@ -9,11 +9,18 @@
 <div class="collector">
   <i class="icon-user"></i>
   <% if(r.geo_info != undefined) { %>
-    <%- r.source.collector %>
-  <% } else{ %>
+    <% if(r.source.collector) { %>
+      <%- r.source.collector %>
+    <% } else { %>
+      No name given
+    <% } %>
+  <% } else { %>
     <%- r.responses.collector %>
   <% } %>
-  &nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-time"></i>
+</div>
+
+<div class="time">
+  <i class="icon-time"></i>
   <%- r.createdHumanized %>
 </div>
 
@@ -32,11 +39,11 @@
 <% }); %>
 </div>
 
-<button class="btn btn-mini confirm"><i class="icon-trash"></i> Delete</button>
+<button class="mini danger confirm"><i class="icon-trash"></i> Delete</button>
 
 <div class="confirm-delete">
-  <button class="btn btn-mini cancel">Cancel</button>
-  <button class="btn btn-mini delete"><i class="icon-trash"></i> Confirm delete</button>
+  <button class="mini cancel">Cancel</button>
+  <button class="mini danger flex delete"><i class="icon-trash"></i> Confirm delete</button>
 </div>
 
 <div class="error">Sorry, there was a problem deleting this record</div>

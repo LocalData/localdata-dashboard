@@ -1,0 +1,66 @@
+.survey-head .in {
+  padding-bottom: 0;
+}
+
+/* Designer ---------------------------------------------------------------- */
+.choice-boxes {
+  overflow: auto;
+}
+
+.choice-box-wrap {
+  float: left;
+  width: 250px;
+  background: #fff;
+  margin-right: 20px;
+
+  .choice-box {
+    padding: 20px;
+  }
+
+  h3 {
+    font-size: 24px;
+    line-height: 30px;
+  }
+
+  button {
+    width: 100%;
+    margin: 0;
+  }
+}
+
+
+/* Survey List -------------------------------------------------------------- */
+.survey-list-item .in {
+  padding: 0;
+}
+
+.survey-list-item .in .a {
+  padding: 50px 0 0 0;
+}
+
+.survey-list-item h2 {
+  font-family: $font;
+}
+
+.survey-list-item.even {
+  background: #fff;
+}
+
+/* Survey and Map ----------------------------------------------------------- */
+.survey .in {
+  padding-bottom: 10px;
+}
+
+#survey-tabs .in {
+  padding-top: 0;
+}
+
+#response-view-container .in {
+  padding: 0;
+}
+
+/* Responses ---------------------------------------------------------------- */
+
+.confirm-delete {
+  display: none;
+}

@@ -5,7 +5,7 @@ define([
   'jquery',
   'lib/lodash',
   'backbone',
-  'lib/leaflet/leaflet.google',
+  'lib/leaflet/leaflet',
   'lib/tinypubsub',
   'lib/async',
 
@@ -26,6 +26,7 @@ define([
   'views/maps/map',
 
   // Templates
+  'text!templates/surveys/new.html',
   'text!templates/surveys/item.html',
   'text!templates/surveys/list-item.html',
 
@@ -59,6 +60,7 @@ function(
   MapView,
 
   // Templates
+  newSurveyTemplate,
   surveyTemplate,
   surveyListItemTemplate,
 
@@ -75,6 +77,10 @@ function(
     };
   }
 
+  function flip(a) {
+    return [a[1], a[0]];
+  }
+
   SurveyViews.ListItemView = Backbone.View.extend({
     template: _.template(surveyListItemTemplate),
 
@@ -87,6 +93,28 @@ function(
       this.$el.html(this.template({
         survey: this.model.toJSON()
       }));
+
+      var map = L.map(this.$('.map')[0], {
+        zoom: 15,
+        center: [37.77585785035733, -122.41362811351655]
+      });
+      var bounds = this.model.get('responseBounds');
+      if (bounds) {
+        bounds = [flip(bounds[0]), flip(bounds[1])];
+        if (bounds[0][0] === bounds[1][0] || bounds[0][1] === bounds[1][1]) {
+          // We have a degenerate rectangle, so Leaflet doesn't know what to show us.
+          map.setView(bounds[0], 15);
+        } else {
+          map.fitBounds(bounds);
+        }
+      }
+      var baseLayer = L.tileLayer(settings.baseLayer);
+      map.addLayer(baseLayer);
+      // console.log(this.model.get('name'), map.getZoom(), baseLayer.options.maxZoom);
+      if (map.getZoom() > baseLayer.options.maxZoom) {
+        map.setZoom(18);
+        // console.log("Fixed to ",18);
+      }
       return this;
     },
 
@@ -96,10 +124,15 @@ function(
 
 
   SurveyViews.NewSurveyView = Backbone.View.extend({
+    template: _.template(newSurveyTemplate),
+
     el: $("#container"),
 
+    events: {
+      'submit #new-survey-form': 'submit'
+    },
+
     initialize: function(options) {
-      console.log("Init new survey view");
     },
 
     update: function() {
@@ -107,59 +140,50 @@ function(
     },
 
     render: function() {
-      console.log("Rendering new survey view");
-
       // Set the context & render the page
       var context = {};
-      this.$el.html(_.template($('#new-survey-view').html(), context));
+      this.$el.html(this.template(context));
 
       $('#new-survey-form .show-advanced').click(function() {
         $('#new-survey-form .advanced').show();
       });
+    },
 
-      // TODO: This should be unnecessary.
-      $("#new-survey-form .submit").click(function(){
-        $("#new-survey-form").submit();
+    submit: function(event) {
+      event.preventDefault();
+
+      // Hide the submit button so it doesn't get over-clicked
+      $("#new-survey-form .submit").hide();
+
+      // Get the name and other basic details
+      // TODO: this should probably be a new Survey model?
+      var survey = {
+        "type": $('input[name=type]:checked', '#new-survey-form').val(),
+        "name": $("#new-survey-form input.survey-name").val(),
+        "location": $("#new-survey-form input.survey-location").val()
+      };
+
+      // Get some of the optional parameters
+      // Custom geoObjectSource
+      var geoObjectSource = $(".survey-geoObjectSource").val();
+      if(geoObjectSource) {
+        survey.geoObjectSource = $.parseJSON(geoObjectSource);
+      }
+
+      // Custom survey type
+      // (Right now, only "point" is a real option)
+      var type = $("input[name=type]:checked").val();
+      if(type) {
+        survey.type = type;
+      }
+
+      // Submit the details as a new survey.
+      api.createSurvey(survey, function(survey) {
+        // LD.router._router.navigate("surveys/" + survey.slug, {trigger: true});
+
+        // TODO -- use the router
+        location.href = "/#surveys/" + survey.slug + "/form";
       });
-
-      // When the new survey form is submitted:
-      $("#new-survey-form").submit(function(event){
-        event.preventDefault();
-
-        // Hide the submit button so it doesn't get over-clicked
-        $("#new-survey-form .submit").hide();
-
-        // Get the name and other basic details
-        // TODO: this should probably be a new Survey model?
-        var survey = {
-          "type": $('input[name=type]:checked', '#new-survey-form').val(),
-          "name": $("#new-survey-form input.survey-name").val(),
-          "location": $("#new-survey-form input.survey-location").val()
-        };
-
-        // Get some of the optional parameters
-        // Custom geoObjectSource
-        var geoObjectSource = $(".survey-geoObjectSource").val();
-        if(geoObjectSource) {
-          survey.geoObjectSource = $.parseJSON(geoObjectSource);
-        }
-
-        // Custom survey type
-        // (Right now, only "point" is a real option)
-        var type = $("input[name=type]:checked").val();
-        if(type) {
-          survey.type = type;
-        }
-
-        // Submit the details as a new survey.
-        api.createSurvey(survey, function(survey) {
-          // LD.router._router.navigate("surveys/" + survey.slug, {trigger: true});
-
-          // TODO -- use the router
-          location.href = "/#surveys/" + survey.slug + "/form";
-        });
-      });
-
     }
   });
 

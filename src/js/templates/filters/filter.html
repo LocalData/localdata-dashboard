@@ -4,15 +4,23 @@
 
   <% _.each(_.keys(questions), function(question) {%>
     <% if(! _.has(questions, question)) { return; } %>
+    <% if(question === 'id') { return; } %>
 
     <div class="question">
-      <label><%- mapping[question] %></label>
+      <label class="" data-question="<%- question %>">
+        <div class="circle"></div> <%- mapping[question] || question %>
+      </label>
 
       <div class="answers">
         <% _.each(_.keys(questions[question]), function(answer) {%>
-          <%- answer %> <%- questions[question][answer] %>
+          <div class="answer" data-answer="<%- answer %>" data-question="<%- question %>">
+            <div class="circle" style="background-color: <%- questions[question][answer].color %>"></div> <%- answer %> <%- questions[question][answer].val %>
+          </div>
         <% }); %>
+
+        <button href="" class="button mini flex clear">Clear filter</button>
       </div>
+
     </div>
   <% }); %>
 </div>

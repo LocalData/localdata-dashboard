@@ -193,7 +193,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
      * Set filter parameters for displaying results on the map
      * The response collection will activate this if we have an active filter
      * @param {String} question Name of the question, eg 'vacant'
-     * @param {Object} answers  Possible answers to the qu
+     * @param {Object} answers  Possible answers to the question
      */
     setFilter: function (question, answers) {
       this.filter = {
@@ -208,6 +208,10 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       this.selectDataMap();
     },
 
+    clearFilter: function() {
+      this.filter = null,
+      this.plotResponses();
+    },
 
     /**
      * Style a feature
@@ -379,11 +383,12 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         id = feature.id;
       }
 
-      var collection = new Responses.Collection([], {
-        surveyId: surveyId,
-        objectId: id
+      var selectedItemListView = new ResponseListView({collection: this.sel});
+      $('.factoid').hide();
+      $("#responses-list-container").html(selectedItemListView.render().$el);
+      selectedItemListView.on('delete', function() {
+        $('.factoid').show();
       });
-      collection.on('reset', this.showDetails);
     }
 
   });

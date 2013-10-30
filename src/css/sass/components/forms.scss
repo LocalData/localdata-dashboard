@@ -4,22 +4,42 @@ form label {
   line-height: 20px;
 }
 
+form .error {
+  color: $red;
+}
+
 form .question {
   font-family: $bold;
 }
 
-form input {
+input {
   font-family: $font;
 }
 
-form input[type=text],
-form input[type=password] {
+input[type=text],
+input[type=password] {
   display: block;
   font-size: 16px;
+  color: $body-color;
   border: 4px solid #ccc;
   line-height: 24px;
   padding: 0px 8px;
   margin-bottom: 1.5em;
+}
+
+input.error {
+  color: $red;
+  border-color: $red;
+}
+
+label {
+  cursor: pointer;
+}
+
+label.radio {
+  max-width: 75%;
+  display: block;
+  margin-bottom: 1em;
 }
 
 form input[type=submit] {
@@ -37,16 +57,109 @@ form p {
   margin-bottom: 0;
 }
 
-#login,
-#register {
-  input[type=text],
-  input[type=password] {
-    display: block;
-    font-size: 26px;
-    border: 4px solid $blue;
-    line-height: 32px;
-    padding: 4px 10px;
-    margin-bottom: 1em;
-    width: 12em;
+input.large,
+#login input[type=text],
+#login input[type=password],
+#register input[type=text],
+#register input[type=password] {
+  display: block;
+  font-size: 26px;
+  font-family: $bold;
+  border: 4px solid $blue;
+  line-height: 32px;
+  padding: 4px 10px;
+  margin-bottom: 1em;
+  width: 12em;
+}
+
+
+/* Editor --------------------------------------------------------------------*/
+.saved {
+  display: none;
+}
+
+.editor {
+  $editor-base-width: 450px;
+  $editor-padding: 30px;
+  $editor-border: 2px;
+  $editor-total: 0;
+
+  input[type=text] {
+    width: $editor-base-width;
+    border-width: 0;
+    border-bottom-width: 3px;
+    background: white;
+    border-color: white;
+    padding: 5px 15px;
+    margin-bottom: 0.5em;
   }
+
+/*
+  input[type=text] {
+    border-bottom-width: 3px;
+    background: $pink;
+    border-color: $pin;
+    padding: 5px 15px;
+    margin-bottom: 0.5em;
+  }
+ */
+  .question input[type=text] {
+    width: $editor-base-width;
+  }
+
+  .question .answers input[type=text] {
+    width: $editor-base-width - $editor-total;
+  }
+
+  .question .answers .question input[type=text] {
+    width: $editor-base-width - ($editor-total * 2);
+  }
+
+  .question .answers .question .answers input[type=text] {
+    width: $editor-base-width -  ($editor-total * 3);
+  }
+
+  .remove,
+  .btn-group {
+    display: none;
+  }
+
+  .add-on {
+    display: inline-block;
+    float: left;
+    line-height: 40px;
+    width: 30px;
+    text-align: center;
+  }
+
+  input[type=text].question-input {
+    font-family: $bold;
+    color: $body-color;
+    font-size: 16px;
+  }
+
+  input:focus {
+    outline: none;
+    border-color: $orange;
+    background: #fff;
+  }
+
+  .question {
+  }
+
+  .question .question,
+  .answers,
+  .add-answer {
+    border-left: $editor-border solid #fff;
+    padding-left: $editor-padding;
+  }
+
+  .add-answer {
+    cursor: pointer;
+  }
+
+  .question .question {
+    padding-left: $editor-padding;
+  }
+
 }

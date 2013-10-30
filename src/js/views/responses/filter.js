@@ -29,67 +29,99 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
    */
   var FilterView = Backbone.View.extend({
     className: 'filters',
+    filters: {},
 
     template: _.template(template),
+
+    events: {
+      "click .question label": "bin",
+      "click .answer": "filter",
+      "click .clear": "reset"
+    },
 
     initialize: function(options) {
       _.bindAll(this, 'render');
 
       this.survey = options.survey;
       this.forms = options.forms;
+      this.map = options.map;
 
       this.stats = new Stats.Model({
-        id: this.survey.get('id'),
-        forms: this.forms
+        id: this.survey.get('id')
+        // forms: this.forms
       });
       this.stats.on('change', this.render);
     },
 
     render: function() {
-      var options = {
+      console.log("Rendering the filters", this.stats.toJSON());
+      console.log(this.$el);
+      var context = {
         questions: this.stats.toJSON(),
         mapping: this.forms.map()
       };
-      this.$el.html(this.template(options));
+      this.$el.html(this.template(context));
+    },
+
+    /**
+     * Associate a unqie color with each answer in a list
+     */
+    colors: function(keys) {
+      var answers = {};
+      _.each(keys, function(key, index) {
+        answers[key] = {
+          color: settings.colorRange[index + 1]
+        };
+      });
+      return answers;
     },
 
     /**
      * Reset any filters
      */
     reset: function(event) {
-      console.log("Clearing filter");
+      event.preventDefault();
       this.filters = {};
+      this.collection.clearFilter();
 
-      this.responses.clearFilter();
-      this.updateFilterView();
+      $('.questions .circle').removeClass('selected');
+      $('.answers').hide();
     },
 
-    /**
-     * Show possible answers to a given question
-     */
-    filter: function(e) {
+    bin: function(event) {
       _kmq.push(['record', "Question filter selected"]);
-      var $question = $(e.target);
-      var question = $question.val();
 
-      // Get the list of distinct options
+      // Clear out any filters
+      if(this.filters.answer) {
+        this.reset();
+      }
 
-      $("#subfilter").html(_.template($('#filter-results-answer').html(), { choices: answers }));
 
-      // Distinguish the responses visually on the map
-      this.mapView.setFilter(question, answers);
+      var $question = $(event.target);
+      var question = $question.attr('data-question');
+      this.filters.question = question;
+      var answers = this.stats.get(question);
+
+      // Mark this filter as selected and show answers
+      $('.filters .circle').removeClass('selected');
+      $question.find('.circle').addClass('selected');
+      $('.answers').hide();
+      $question.parent().find('.answers').show();
+
+      // Color the responses on the map
+      this.map.setFilter(question, answers);
     },
 
     /**
      * Show only responses with a specific answer
      */
-    subFilter: function(event) {
+    filter: function(event) {
       _kmq.push(['record', "Answer filter selected"]);
       var $answer = $(event.target);
 
       // Clear the current filter, if there is one.
       if(_.has(this.filters, 'answer')) {
-        this.responses.clearFilter({ silent: true });
+        this.collection.clearFilter({ silent: true });
       }
 
       // Mark the answer as selected
@@ -103,17 +135,14 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
       console.log("Loading");
 
       // Filter the responses
-      this.filters.answer = $answer.text();
-      this.filters.question = $("#filter").val();
-      this.responses.setFilter(this.filters.question, this.filters.answer);
+      this.filters.answer = $answer.attr('data-answer');
+      console.log($answer, this.filters.answer);
+      this.collection.setFilter(this.filters.question, this.filters.answer);
 
       // Note that we're done loading
       events.publish('loading', [false]);
       $('#loadingsmg').hide();
       console.log("Done loading");
-
-
-      this.updateFilterView();
     }
   });
 
