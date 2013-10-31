@@ -83,6 +83,7 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
       event.preventDefault();
       this.filters = {};
       this.collection.clearFilter();
+      this.map.setFilter({});
 
       $('.questions .circle').removeClass('selected');
       $('.answers').hide();

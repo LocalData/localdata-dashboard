@@ -60,10 +60,10 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       );
 
       this.responses = options.responses;
-      this.responses.on('reset', this.update, this);
-      this.responses.on('add', this.update, this);
-      this.responses.on('addSet', this.updateFilterChoices, this);
-      this.responses.on('addSet', this.update, this);
+      // this.responses.on('reset', this.update, this);
+      // this.responses.on('add', this.update, this);
+      // this.responses.on('addSet', this.updateFilterChoices, this);
+      // this.responses.on('addSet', this.update, this);
 
       this.forms = options.forms;
       this.forms.on('reset', this.updateFilterChoices, this);

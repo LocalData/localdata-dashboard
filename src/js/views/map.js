@@ -75,7 +75,8 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         'updateMapStyleBasedOnZoom',
         'updateObjectStyles',
         'styleFeature',
-        'setupPolygon'
+        'setupPolygon',
+        'addTileLayer'
       );
 
       this.responses = options.responses;
@@ -113,10 +114,9 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       this.map.addLayer(this.tileLayer);
       this.tileLayer.bringToFront();
 
-
       // Create the grid layer & handle clicks
       this.gridLayer = new L.UtfGrid(tilejson.grids[0], {
-        resolution: 1
+        resolution: 4
       });
       this.map.addLayer(this.gridLayer);
       this.gridLayer.on('click', this.selectObject);
@@ -177,10 +177,16 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       // Build the appropriate TileJSON URL.
       var url = '/tiles/' + this.survey.get('id');
       if (this.filter) {
-        url = url + '/filter/' + this.filter.question;
+        if(this.filter.question) {
+          url = url + '/filter/' + this.filter.question;
+        }
+        if(this.filter.answer) {
+          url = url + '/' + this.filter.answer;
+        }
       }
       url = url + '/tile.json';
 
+      console.log("SETTING FILTER", url);
       // Get TileJSON
       $.ajax({
         url: url,
@@ -206,11 +212,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
     clearFilter: function () {
       this.filter = null;
       this.selectDataMap();
-    },
-
-    clearFilter: function() {
-      this.filter = null,
-      this.plotResponses();
     },
 
     /**
@@ -247,7 +248,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       return style;
     },
 
-
     plotZones: function () {
       if (!this.survey.has('zones')) return;
 
@@ -264,7 +264,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
     updateObjectStyles: function(style) {
       this.objectsOnTheMap.setStyle(style);
     },
-
 
     // Expects an object with properties
     // obj.parcelId: ID of the given object
@@ -350,7 +349,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
       // Add a layer
       this.selectedLayer = new L.GeoJSON(event.data.geometry);
-      console.log(this.selectedLayer);
       this.selectedLayer.setStyle(settings.selectedStyle);
       this.map.addLayer(this.selectedLayer);
       this.selectedLayer.bringToFront();
