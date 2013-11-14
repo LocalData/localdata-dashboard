@@ -102,7 +102,16 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
      * @param  {Object} tilejson
      */
     addTileLayer: function(tilejson) {
-      console.log(tilejson);
+      /*
+        wow                                    so raster
+                       total quality
+
+                                    much map
+
+              such tiles
+                              wow
+      */
+      console.log("heyyyy very tilejson", tilejson);
 
       if (this.tileLayer) this.map.removeLayer(this.tileLayer);
       this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
@@ -191,8 +200,8 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       $.ajax({
         url: url,
         type: 'GET',
-        dataType: 'jsonp'
-      }).done(this.addTileLayer);
+        dataType: 'json'
+      }).done(this.addTileLayer).error(function(foo, bar){ console.log("ERRROR", foo, bar)});
     },
 
     /**
