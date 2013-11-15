@@ -7,6 +7,7 @@ define([
   'backbone',
   'lib/tinypubsub',
   'lib/async',
+  'lib/kissmetrics',
 
   // LocalData
   'settings',
@@ -34,6 +35,7 @@ function(
   Backbone,
   events,
   async,
+  _kmq,
 
   // LocalData
   settings,
@@ -137,6 +139,8 @@ function(
 
         // Submit the details as a new survey.
         api.createSurvey(survey, function(survey) {
+          _kmq.push(['record', "Survey created"]);
+
           console.log("Survey created");
           console.log(survey);
 
@@ -144,7 +148,6 @@ function(
 
           // TODO -- use the router
           location.href = "/#surveys/" + survey.slug + "/form";
-
         });
       });
 
@@ -193,6 +196,7 @@ function(
 
     render: function (model) {
       console.log("Rendering survey view");
+      _kmq.push(['record', "Survey view displayed"]);
 
       // Remove old sub-views
       if (this.responseListView !== undefined) {
@@ -239,6 +243,8 @@ function(
     },
 
     show: function(id, tab) {
+      _kmq.push(['record', "Survey tab selected"]);
+
       // This is a really bad way to show the right tab
       this.activeTab = [id, tab];
 

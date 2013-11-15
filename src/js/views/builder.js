@@ -51,7 +51,7 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
 
     save: function(event) {
       event.preventDefault();
-      console.log('Saving form');
+      console.log('Saving form', _kmq);
       _kmq.push(['record', 'Survey questions saved']);
 
       api.createForm(settings.formData, function(){
@@ -64,6 +64,7 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
       event.preventDefault();
       console.log('Done editing');
       _kmq.push(['record', 'Done editing survey questions']);
+
       this.trigger("done");
     },
 
