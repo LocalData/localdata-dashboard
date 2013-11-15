@@ -155,6 +155,12 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
           zoom: 15
         });
 
+        // Not currently used
+        // But this gives us a hook into map clicks from external owners.
+        if (this.clickHandler) {
+          this.map.on('click', options.clickHandler);
+        }
+
         // Set up the base map; add the parcels and done markers
 
         this.baseLayer = L.tileLayer(settings.baseLayer);
@@ -201,7 +207,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         url: url,
         type: 'GET',
         dataType: 'json'
-      }).done(this.addTileLayer).error(function(foo, bar){ console.log("ERRROR", foo, bar)});
+      }).done(this.addTileLayer);
     },
 
     /**
@@ -344,10 +350,22 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
 
     /**
+     * Handle a click on the map
+     */
+    click: function(event) {
+      console.log("Selected object", event);
+      event.latlng;
+      api.getResponseAt(latlng, handleResponses);
+    },
+
+
+    /**
      * Hilight a selected object; un-hilight any previously selected object
      * @param  {Object} event
+     *
+     * THIS WAS  selectObject.
      */
-    selectObject: function(event) {
+    handleResponses: function(event) {
       _kmq.push(['record', "Map object selected"]);
       console.log("Selected object", event);
 
