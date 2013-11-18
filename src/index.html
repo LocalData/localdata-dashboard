@@ -313,12 +313,12 @@
         <label><input type="radio" value="parcel" name="type" <% if(survey.type !== 'point' && survey.type !== 'pointandparcel') { %>checked <% } %>>We&apos;re collecting data using a parcel map (for example, property, homes, businesses with an address)
         </label>
 
-        <label><input type="radio" value="pointandparcel" name="type" <% if(survey.type !== 'pointandparcel') { %>checked <% } %>>We need to collect information about points and parcels.
+        <label><input type="radio" value="pointandparcel" name="type" <% if(survey.type === 'pointandparcel') { %>checked <% } %>>We need to collect information about points and parcels.
         </label>
 
         <submit class="btn save">Save</submit>
-        <div class="saved">Form saved</div>
-        <div class="error">Error saving the form &mdash; did you complete all fields?</div>
+        <div class="saved">Changes saved</div>
+        <div class="error">We coudln't save your changes.</div>
       </form>
     </script>
 
