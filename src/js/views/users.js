@@ -35,6 +35,8 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
     },
 
     render: function() {
+      _kmq.push(['identify', this.user.get('email')]);
+
       var context = {
         user: this.user.toJSON()
       };
@@ -84,7 +86,7 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels) {
 
     logInCallback: function(error, user) {
       if(error) {
-        _kmq.push(['record', error]);
+        _kmq.push(['record', 'Login error: ' + error]);
         $('#login .error').html(error).fadeIn();
         return;
       }

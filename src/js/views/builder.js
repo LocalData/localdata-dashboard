@@ -64,6 +64,7 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
       event.preventDefault();
       console.log('Done editing');
       _kmq.push(['record', 'Done editing survey questions']);
+
       this.trigger("done");
     },
 
