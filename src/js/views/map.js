@@ -87,6 +87,10 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
       this.survey = options.survey;
 
+      // We can pass in a function that gets called when
+      // objects are selected.
+      this.handleSelect = options.handleSelect;
+
       // We track the results on the map using these two groups
       this.parcelIdsOnTheMap = {};
       this.objectsOnTheMap = new L.FeatureGroup();
@@ -513,26 +517,9 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       this.selectedLayer = event.layer;
       this.selectedLayer.setStyle(settings.selectedStyle);
 
-      // Let's show some info about this object.
-      this.details(this.selectedLayer.feature);
-    },
-
-
-    /**
-     * Show details for a particular feature.
-     *
-     * @param  {Object} options An object with a parcelId or id property
-     */
-    details: function(feature) {
-      // Find out if we're looking up a set of parcels, or one point
-      if(feature.parcelId !== undefined && feature.parcelId !== '') {
-        this.sel = new Responses.Collection(this.responses.where({'parcel_id': feature.parcelId}));
-      }else {
-        this.sel = new Responses.Collection(this.responses.where({'id': feature.id}));
+      if(this.handleSelect) {
+        this.handleSelect(this.selectedLayer.feature);
       }
-
-      var selectedItemListView = new ResponseListView({collection: this.sel});
-      $("#result-container").html(selectedItemListView.render().$el);
     },
 
     search: function(event) {

@@ -32,14 +32,19 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       'click .cancel': 'cancel'
     },
 
-    initialize: function() {
+    initialize: function(options) {
       this.listenTo(this.model, "change", this.render);
       this.listenTo(this.model, "destroy", this.remove);
+
+      this.labels = options.labels;
     },
 
     render: function() {
       var $el = $(this.el);
-      $el.html(this.template({r: this.model.toJSON() }));
+      $el.html(this.template({
+        r: this.model.toJSON(),
+        labels: this.labels
+      }));
       return this;
     },
 
