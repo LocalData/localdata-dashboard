@@ -54,7 +54,7 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
           model: response,
           labels: this.labels
         });
-        $el.append(item.render().el);
+        $el.prepend(item.render().el);
       }.bind(this));
 
       return this;
