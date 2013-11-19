@@ -37,7 +37,7 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       this.listenTo(this.model, "destroy", this.remove);
 
       this.labels = options.labels;
-    }
+    },
 
     render: function() {
       var $el = $(this.el);
