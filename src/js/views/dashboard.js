@@ -60,6 +60,7 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews) {
       var surveyListItemView = new SurveyViews.ListItemView({
         model: survey
       });
+      console.log("Appending survey");
       this.$('.survey-list').append(surveyListItemView.$el);
     }
   });

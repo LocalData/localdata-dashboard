@@ -78,6 +78,7 @@ function(
   }
 
   function flip(a) {
+    console.log(a);
     return [a[1], a[0]];
   }
 
@@ -90,6 +91,7 @@ function(
     },
 
     render: function() {
+      console.log("Render LI");
       this.$el.html(this.template({
         survey: this.model.toJSON()
       }));
@@ -100,20 +102,23 @@ function(
       });
       var bounds = this.model.get('responseBounds');
       if (bounds) {
-        bounds = [flip(bounds[0]), flip(bounds[1])];
+        // bounds = [flip(bounds[0]), flip(bounds[1])];
+
         if (bounds[0][0] === bounds[1][0] || bounds[0][1] === bounds[1][1]) {
+          console.log("DEgeerate");
           // We have a degenerate rectangle, so Leaflet doesn't know what to show us.
           map.setView(bounds[0], 15);
         } else {
+          console.log("Fitting to ", bounds[0], bounds[1]);
           map.fitBounds(bounds);
         }
+      }else {
+        console.log("No bounds");
       }
       var baseLayer = L.tileLayer(settings.baseLayer);
       map.addLayer(baseLayer);
-      // console.log(this.model.get('name'), map.getZoom(), baseLayer.options.maxZoom);
       if (map.getZoom() > baseLayer.options.maxZoom) {
         map.setZoom(18);
-        // console.log("Fixed to ",18);
       }
       return this;
     },
@@ -121,7 +126,6 @@ function(
     map: function() {
     }
   });
-
 
   SurveyViews.NewSurveyView = Backbone.View.extend({
     template: _.template(newSurveyTemplate),

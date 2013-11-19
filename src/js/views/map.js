@@ -127,8 +127,8 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       this.gridLayer = new L.UtfGrid(tilejson.grids[0], {
         resolution: 4
       });
-      this.map.addLayer(this.gridLayer);
-      this.gridLayer.on('click', this.selectObject);
+      // this.map.addLayer(this.gridLayer);
+      // this.gridLayer.on('click', this.selectObject);
     },
 
     loading: function() {
