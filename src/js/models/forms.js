@@ -121,6 +121,15 @@ function($, _, Backbone, settings) {
       }
 
       return distinctQuestions;
+    },
+
+    getQuestions: function() {
+      var flattenedForm = this.getFlattenedForm();
+      var questions = {};
+      _.each(flattenedForm, function(question) {
+        questions[question.name] = question.text;
+      })
+      return questions;
     }
   });
 

@@ -17,10 +17,11 @@ define([
   'models/responses',
 
   // Views
-  'views/map'
+  'views/map',
+  'views/responses/list'
 ],
 
-function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView) {
+function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView, ResponseListView) {
   'use strict';
 
   var ResponseViews = {};
@@ -46,7 +47,17 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'update', 'getNew', 'filter', 'subFilter', 'updateFilterView', 'updateFilterChoices', 'lastUpdated');
+      _.bindAll(this,
+        'render',
+        'update',
+        'getNew',
+        'filter',
+        'subFilter',
+        'updateFilterView',
+        'updateFilterChoices',
+        'lastUpdated',
+        'details'
+      );
 
       this.responses = options.responses;
       this.responses.on('reset', this.update, this);
@@ -98,7 +109,8 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
         this.mapView = new MapView({
           el: $('#map-view-container'),
           responses: this.responses,
-          survey: this.survey
+          survey: this.survey,
+          handleSelect: this.details
         });
       }
 
@@ -106,6 +118,27 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       this.mapView.render();
 
       this.updateFilterView();
+    },
+
+
+    /**
+     * Show details for a particular feature.
+     *
+     * @param  {Object} options An object with a parcelId or id property
+     */
+    details: function(feature) {
+      // Find out if we're looking up a set of parcels, or one point
+      if(feature.parcelId !== undefined && feature.parcelId !== '') {
+        this.sel = new Responses.Collection(this.responses.where({'parcel_id': feature.parcelId}));
+      }else {
+        this.sel = new Responses.Collection(this.responses.where({'id': feature.id}));
+      }
+
+      var selectedItemListView = new ResponseListView({
+        collection: this.sel,
+        labels: this.forms.getQuestions()
+      });
+      $("#result-container").html(selectedItemListView.render().$el);
     },
 
     update: function (event) {
