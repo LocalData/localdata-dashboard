@@ -138,7 +138,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
     showFilters: function() {
       $('.factoid').hide();
       this.$el.addClass('bigb');
-      // this.mapView.fitBounds();
+      this.mapView.map.invalidateSize();
 
       // Render the filter
       $("#filter-view-container").html(this.filterView.$el);

@@ -59,6 +59,17 @@
   padding: 0;
 }
 
+.map-loading {
+  text-align: center;
+  background: url(../img/preloader.gif) no-repeat center center;
+  height: 128px;
+  position: relative;
+  top: 220px;
+  left: 50%;
+  width: 50%;
+
+}
+
 /* Responses ---------------------------------------------------------------- */
 
 .confirm-delete {

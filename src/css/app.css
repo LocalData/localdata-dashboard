@@ -860,16 +860,18 @@ header .nav a:visited {
 #response-view-container .in {
   padding: 0; }
 
+.map-loading {
+  text-align: center;
+  background: url(../img/preloader.gif) no-repeat center center;
+  height: 128px;
+  position: relative;
+  top: 220px;
+  left: 50%;
+  width: 50%; }
+
 /* Responses ---------------------------------------------------------------- */
 .confirm-delete {
   display: none; }
-
-.response h2 {
-  font-size: 26px;
-  text-transform: titlecase; }
-
-.response .answers {
-  margin-bottom: 1em; }
 
 .filters label,
 .filters .question {
@@ -907,7 +909,10 @@ header .nav a:visited {
   background: transparent; }
 
 .filters .circle.selected {
-  background: #a743c3; }
+  background: #6e6663; }
+
+.filters .circle.inactive {
+  background: transparent !important; }
 
 /* Factoids ----------------------------------------------------------------- */
 .factoid {

@@ -108,7 +108,10 @@ function(
 
       var map = this.map = L.map(this.$('.map')[0], {
         zoom: 15,
-        center: [37.77585785035733, -122.41362811351655]
+        center: [37.77585785035733, -122.41362811351655],
+        scrollWheelZoom: false,
+        zoomControl: false,
+        attributionControl: false
       });
 
       // Center the map
@@ -129,7 +132,6 @@ function(
       // Add the survey data
       var url = '/tiles/' + this.model.get('id');
       url = url + '/tile.json';
-      console.log("SETTING FILTER", url);
       // Get TileJSON
       $.ajax({
         url: url,

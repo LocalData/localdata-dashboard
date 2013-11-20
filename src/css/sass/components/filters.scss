@@ -42,5 +42,10 @@
 }
 
 .filters .circle.selected {
-  background: #a743c3
+  background: #6e6663;
 }
+
+.filters .circle.inactive {
+  background: transparent ! important;
+}
+

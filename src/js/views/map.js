@@ -132,11 +132,11 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
     },
 
     loading: function() {
-      $('.loading').show();
+      $('.map-loading').show();
     },
 
     done: function() {
-      $('.loading').hide();
+      $('.map-loading').hide();
     },
 
     render: function() {
@@ -187,7 +187,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       return this;
     },
 
-
     selectDataMap: function () {
       // Build the appropriate TileJSON URL.
       var url = '/tiles/' + this.survey.get('id');
@@ -216,11 +215,12 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
      * @param {String} question Name of the question, eg 'vacant'
      * @param {Object} answers  Possible answers to the question
      */
-    setFilter: function (question, answers) {
+    setFilter: function (question, answer) {
       this.filter = {
         question: question,
-        answers: answers
+        answer: answer
       };
+      this.map.invalidateSize();
       this.selectDataMap();
     },
 
