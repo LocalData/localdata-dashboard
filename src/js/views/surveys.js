@@ -85,47 +85,63 @@ function(
     template: _.template(surveyListItemTemplate),
 
     initialize: function() {
-      _.bindAll(this, 'render', 'map');
+      _.bindAll(this, 'render', 'addTileLayer');
       this.model.bind('change', this.render);
     },
 
+    addTileLayer: function(tilejson) {
+      if (this.tileLayer) this.map.removeLayer(this.tileLayer);
+      this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
+
+      // Listen to see if we're loading the map
+      // this.tileLayer.on('loading', this.loading);
+      // this.tileLayer.on('load', this.done);
+
+      this.map.addLayer(this.tileLayer);
+      this.tileLayer.bringToFront();
+    },
+
     render: function() {
-      console.log("Render LI");
       this.$el.html(this.template({
         survey: this.model.toJSON()
       }));
 
-      var map = L.map(this.$('.map')[0], {
+      var map = this.map = L.map(this.$('.map')[0], {
         zoom: 15,
         center: [37.77585785035733, -122.41362811351655]
       });
 
+      // Center the map
       var bounds = this.model.get('responseBounds');
       if (bounds) {
         bounds = [flip(bounds[0]), flip(bounds[1])];
-
         if (bounds[0][0] === bounds[1][0] || bounds[0][1] === bounds[1][1]) {
-          console.log("DEgeerate", bounds[0]);
-          // We have a degenerate rectangle, so Leaflet doesn't know what to show us.
           map.setView(bounds[0], 15);
         } else {
-          console.log("Fitting to ", bounds[0], bounds[1]);
-          map.setView(bounds[0], 15);
-
-          // map.fitBounds(bounds);
+          map.fitBounds(bounds);
         }
-      }else {
-        console.log("No bounds");
       }
+
+      // Add our baselayer
       var baseLayer = L.tileLayer(settings.baseLayer);
       map.addLayer(baseLayer);
+
+      // Add the survey data
+      var url = '/tiles/' + this.model.get('id');
+      url = url + '/tile.json';
+      console.log("SETTING FILTER", url);
+      // Get TileJSON
+      $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json'
+      }).done(this.addTileLayer);
+
+      // Fix over-zoom from fitBounds
       if (map.getZoom() > baseLayer.options.maxZoom) {
         map.setZoom(18);
       }
       return this;
-    },
-
-    map: function() {
     }
   });
 
