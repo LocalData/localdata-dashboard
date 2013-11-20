@@ -78,7 +78,6 @@ function(
   }
 
   function flip(a) {
-    console.log(a);
     return [a[1], a[0]];
   }
 
@@ -100,17 +99,20 @@ function(
         zoom: 15,
         center: [37.77585785035733, -122.41362811351655]
       });
+
       var bounds = this.model.get('responseBounds');
       if (bounds) {
-        // bounds = [flip(bounds[0]), flip(bounds[1])];
+        bounds = [flip(bounds[0]), flip(bounds[1])];
 
         if (bounds[0][0] === bounds[1][0] || bounds[0][1] === bounds[1][1]) {
-          console.log("DEgeerate");
+          console.log("DEgeerate", bounds[0]);
           // We have a degenerate rectangle, so Leaflet doesn't know what to show us.
           map.setView(bounds[0], 15);
         } else {
           console.log("Fitting to ", bounds[0], bounds[1]);
-          map.fitBounds(bounds);
+          map.setView(bounds[0], 15);
+
+          // map.fitBounds(bounds);
         }
       }else {
         console.log("No bounds");
