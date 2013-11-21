@@ -1,0 +1,95 @@
+/* Editor --------------------------------------------------------------------*/
+.saved {
+  display: none;
+}
+
+.editor {
+  $editor-base-width: 450px;
+  $editor-padding: 30px;
+  $editor-border: 2px;
+  $editor-total: 0;
+
+  input[type=text] {
+    display: inline-block;
+    width: $editor-base-width;
+    border-width: 0;
+    border-bottom-width: 3px;
+    background: white;
+    border-color: white;
+    padding: 5px 15px;
+    margin-bottom: 0.5em;
+  }
+
+  .question input[type=text] {
+    width: $editor-base-width;
+  }
+
+  .question .answers input[type=text] {
+    width: $editor-base-width - $editor-total;
+  }
+
+  .question .answers .question input[type=text] {
+    width: $editor-base-width - ($editor-total * 2);
+  }
+
+  .question .answers .question .answers input[type=text] {
+    width: $editor-base-width -  ($editor-total * 3);
+  }
+
+  .remove,
+  .btn-group {
+    display: none;
+  }
+
+  .input-append:hover > .remove,
+  .input-append:focus > .remove {
+    display: inline-block;
+  }
+
+  .add-on {
+    display: inline-block;
+    float: left;
+    line-height: 40px;
+    width: 30px;
+    text-align: center;
+  }
+
+  input[type=text].question-input {
+    font-family: $bold;
+    color: $body-color;
+    font-size: 16px;
+  }
+
+  input:focus {
+    outline: none;
+    border-color: $orange;
+    background: #fff;
+  }
+
+  .question {
+  }
+
+  .question .question,
+  .answers,
+  .add-answer {
+    border-left: $editor-border solid #fff;
+    padding-left: $editor-padding;
+  }
+
+  .question-tools-container {
+    font-family: $font;
+    padding-bottom: 8px;
+
+    a {
+      padding-left: 45px;
+      cursor: pointer;
+
+    }
+
+  }
+
+  .question .question {
+    padding-left: $editor-padding;
+  }
+
+}

@@ -79,8 +79,8 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         'addTileLayer'
       );
 
-      this.responses = options.responses;
       this.survey = options.survey;
+      this.clickHandler = options.clickHandler;
 
       this.parcelIdsOnTheMap = {};
       this.objectsOnTheMap = new L.FeatureGroup();
@@ -127,7 +127,8 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       this.gridLayer = new L.UtfGrid(tilejson.grids[0], {
         resolution: 4
       });
-      // this.map.addLayer(this.gridLayer);
+
+    // this.map.addLayer(this.gridLayer);
       // this.gridLayer.on('click', this.selectObject);
     },
 
@@ -158,7 +159,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         // Not currently used
         // But this gives us a hook into map clicks from external owners.
         if (this.clickHandler) {
-          this.map.on('click', options.clickHandler);
+          this.map.on('click', this.clickHandler);
         }
 
         // Set up the base map; add the parcels and done markers

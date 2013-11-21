@@ -60,10 +60,6 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       );
 
       this.responses = options.responses;
-      // this.responses.on('reset', this.update, this);
-      // this.responses.on('add', this.update, this);
-      // this.responses.on('addSet', this.updateFilterChoices, this);
-      // this.responses.on('addSet', this.update, this);
 
       this.forms = options.forms;
       this.forms.on('reset', this.updateFilterChoices, this);
@@ -71,14 +67,6 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       this.survey = options.survey;
 
       this.render();
-
-      // TODO
-      // If we already have some responses, then we can display the
-      // count/filter text. We need to have rendered first, though, otherwise
-      // we won't have any place to put the filter controls!
-      // if (this.responses.length > 0) {
-      //   this.updateFilterChoices();
-      // }
     },
 
     render: function() {
@@ -96,8 +84,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
 
       // Actually render the page
       var context = {
-        survey: this.survey.toJSON(),
-        responses: this.responses
+        survey: this.survey.toJSON()
       };
       this.$el.html(this.template(context));
 
@@ -105,8 +92,8 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       if (this.mapView === null) {
         this.mapView = new MapView({
           el: $('#map-view-container'),
-          responses: this.responses,
-          survey: this.survey
+          survey: this.survey,
+          clickHandler: this.clickHandler
         });
       }
 
@@ -123,6 +110,10 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       // If the data has been filtered, show that on the page.
       // TODO: This should be done in a view.
       // this.updateFilterView();
+    },
+
+    clickHandler: function(event) {
+      console.log("Map clicked at", event);
     },
 
     update: function() {
@@ -144,11 +135,10 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       $("#filter-view-container").html(this.filterView.$el);
     },
 
-
     hideFilters: function() {
       $('.factoid').show();
       this.$el.removeClass('bigb');
-      this.mapView.fitBounds();
+      this.mapView.map.invalidateSize();
       this.update();
 
       $("#filter-view-container").html('');
