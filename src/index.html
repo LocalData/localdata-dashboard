@@ -21,7 +21,7 @@
       <div class="in">
         <div class="a">
           <h1>
-            <a href="index.html" class="logo animated swing"></a>
+            <a href="index.html" class="logo"></a>
             <a href="index.html" class="logotype">LocalData</a>
           </h1>
         </div>
@@ -41,7 +41,7 @@
     <footer class="out">
       <div class="in">
         <h1>
-          <a href="index.html" class="logo animated swing"></a>
+          <a href="index.html" class="logo"></a>
           <a href="index.html" class="logotype">LocalData</a>
         </h1>
 
@@ -66,7 +66,7 @@
     <script type="text/template" id="userbar-view">
       <!--
       <span class="userbar">
-        <i class="icon-user"></i> <%= user.name %>
+        <i class="fa fa-user"></i> <%= user.name %>
       </span>
       -->
       <a href="/logout" class="logout">Log out</a>
@@ -203,7 +203,7 @@
     </script>
 
     <script type="text/template" id="filter-results-answer">
-      <a id="clear" class="btn close"><i class="icon-close"></i> Clear filter</a>
+      <a id="clear" class="btn close"><i class="fa fa-close"></i> Clear filter</a>
       <h2>Select an answer to filter by:</h2>
       <div id="loadingsmg" style="display:none"></div>
       <ul>
@@ -227,13 +227,13 @@
           </h2>
 
           <div class="collector">
-            <i class="icon-user"></i>
+            <i class="fa fa-user"></i>
             <% if(r.geo_info != undefined) { %>
               <%- r.source.collector %>
             <% } else{ %>
               <%- r.responses.collector %>
             <% } %>
-            &nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-time"></i>
+            &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-time"></i>
             <%- r.createdHumanized %>
           </div>
 
@@ -363,7 +363,7 @@
 
         <div class="input-append">
           <input type="text" placeholder="Question" value="<%= question.text %>" data-role="question" class="question-input input-xlarge">
-          <a class="btn remove"><i class="icon-trash"></i></a>
+          <a class="btn remove"><i class="fa fa-trash"></i></a>
         </div>
 
         <div class="answers"></div>
@@ -375,14 +375,27 @@
         <div class="add-question-container">
           <div class="btn-group">
             <button class="btn dropdown-toggle" data-toggle="dropdown">
-              <i class="icon-plus"></i> Add a question
+              <i class="fa fa-plus"></i> Add question
               <i class="caret"></i>
             </button>
             <ul class="dropdown-menu">
-              <li><a href="#" class="add-question" data-type="checkbox-question">Multiple choice</a></li>
-              <li><a href="#" class="add-question" data-type="radio-question">Select one</a></li>
-              <li><a href="#" class="add-question" data-type="text-question">Text field</a></li>
-              <li><a class="add-question" data-type="file-question"><i class="icon-camera"></i> Photo upload</strong></a></li>
+              <li>
+                <a href="#" class="add-question" data-type="radio-question">Select one choice</a>
+                Good for ranking and yes-no questions. Example: Rank the condition of this property.
+              </li>
+              <li>
+                <a href="#" class="add-question" data-type="checkbox-question">Select multiple answers</a>
+                Good for questions where several factors are in play. Example: Select problems that apply to this building.
+
+              </li>
+              <li>
+                <a href="#" class="add-question" data-type="text-question">Text field</a>
+                Add notes or other details.
+              </li>
+              <li>
+                <a class="add-question" data-type="file-question"><i class="fa fa-camera"></i> Photo upload</strong></a>
+                Prompts surveyors to add a photo
+              </li>
             </ul>
           </div>
         </div>
@@ -393,9 +406,9 @@
     <script type="text/template" id="photo-question-edit-template">
       <div class="question" data-name="<%= question.name %>">
         <div class="input-append input-prepend">
-          <span class="add-on"><i class="icon-camera"> </i></span>
+          <span class="add-on"><i class="fa fa-camera"> </i></span>
           <input type="text" placeholder="Photo upload question" value="<%= question.text %>" data-role="question" class="question-input input-xlarge">
-          <a class="btn remove"><i class="icon-trash"></i></a>
+          <a class="btn remove"><i class="fa fa-trash"></i></a>
         </div>
       </div>
     </script>
@@ -403,9 +416,9 @@
     <script type="text/template" id="text-question-edit-template">
       <div class="question" data-name="<%= question.name %>">
         <div class="input-append input-prepend">
-          <span class="add-on"><i class=" icon-pencil"></i></span>
+          <span class="add-on"><i class=" fa fa-pencil"></i></span>
           <input type="text" placeholder="Text question" value="<%= question.text %>" data-role="question" class="question-input input-xlarge">
-          <button class="remove"><i class="icon-trash"></i> Remove</button>
+          <button class="remove"><i class="fa fa-trash"></i> Remove</button>
         </div>
       </div>
     </script>
@@ -413,18 +426,39 @@
     <script type="text/template" id="answer-edit-template">
       <div data-role="answer" class="input-append">
         <input type="text" value="<%= text %>">
-        <div class="btn-group">
-          <button class="btn dropdown-toggle" data-toggle="dropdown">
-          <i class="icon-plus"></i> Add a question <i class="caret"></i>
-          </button>
-          <ul class="dropdown-menu">
-            <li><a href="#" class="add-sub-question" data-type="checkbox-question">Multiple choice</a></li>
-            <li><a href="#" class="add-sub-question" data-type="radio-question">Select one</a></li>
-            <li><a href="#" class="add-sub-question" data-type="text-question">Text field</a></li>
-            <li><a class="add-sub-question" data-type="file-question"><i class="icon-camera"></i> Photo upload</strong></a></li>
-          </ul>
+        <a class="btn remove"><i class="fa fa-trash"></i></a>
+
+        <a class="add-question">Add sub-question</a>
+        <div class="question-choices">
+          <div class="choice add-sub-question" data-type="radio-question">
+            <span class="title">
+              <i class="fa fa-dot-circle-o"></i>
+              <i class="fa fa-circle-o"></i> Select one
+            </span>
+            Use when only one answer applies.
+            <span class="example"> Example: Rank the condition of this property.</span>
+          </div>
+          <div class="choice add-sub-question" data-type="checkbox-question">
+            <span class="title">
+              <i class="fa fa-check-square-o"></i>
+              <i class="fa fa-check-square-o"></i> Select multiple
+            </span>
+            Use when several answers may apply.
+            <span class="example">Example: Select problems that apply to this building.</span>
+          </div>
+          <div class="choice add-sub-question" data-type="text-question">
+            <span class="title"><i class="fa fa-edit"></i> Text field</span>
+            Add notes or other details.
+          </div>
+          <div class="choice add-sub-question" data-type="file-question">
+            <span class="title"><i class="fa fa-camera"></i> Photo upload</strong></span>
+            Prompts surveyors to add a photo
+          </div>
+          <div class="choice close-add-sub-question">
+            <span class="title"><i class="fa fa-times"></i> Cancel</span>
+          </div>
         </div>
-        <a class="btn remove"><i class="icon-trash"></i></a>
+
       </div>
     </script>
 

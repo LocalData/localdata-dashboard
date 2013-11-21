@@ -1,4 +1,3 @@
-@import url(font-awesome-ie7.min.css);
 @import url(font-awesome.min.css);
 /*******************************************************************************
  * style.scss
@@ -78,13 +77,13 @@ table {
  */
 @font-face {
   font-family: "NeuzeitOfficeW01-Regula";
-  src: url("../font/673817/regular.eot?#iefix");
-  src: url("../font/673817/regular.eot?#iefix") format("eot"), url("../font/673817/regular.woff") format("woff"), url("../font/673817/regular.ttf") format("truetype"), url("../font/673817/regular.svg#85050462-ab1f-4478-a289-36eed1d3c53f") format("svg"); }
+  src: url("../fonts/673817/regular.eot?#iefix");
+  src: url("../fonts/673817/regular.eot?#iefix") format("eot"), url("../fonts/673817/regular.woff") format("woff"), url("../fonts/673817/regular.ttf") format("truetype"), url("../fonts/673817/regular.svg#85050462-ab1f-4478-a289-36eed1d3c53f") format("svg"); }
 
 @font-face {
   font-family: "Neuzeit Office W01 Bold";
-  src: url("../font/673808/bold.eot?#iefix");
-  src: url("../font/673808/bold.eot?#iefix") format("eot"), url("../font/673808/bold.woff") format("woff"), url("../font/673808/bold.ttf") format("truetype"), url("../font/673808/bold.svg#d4cb246e-742d-4269-9f6a-901a050ff03f") format("svg"); }
+  src: url("../fonts/673808/bold.eot?#iefix");
+  src: url("../fonts/673808/bold.eot?#iefix") format("eot"), url("../fonts/673808/bold.woff") format("woff"), url("../fonts/673808/bold.ttf") format("truetype"), url("../fonts/673808/bold.svg#d4cb246e-742d-4269-9f6a-901a050ff03f") format("svg"); }
 
 /* Animations ==============================================================  */
 .animated {
@@ -1048,53 +1047,79 @@ input.large,
 .saved {
   display: none; }
 
-.editor input[type=text] {
-  display: inline-block;
-  width: 450px;
-  border-width: 0;
-  border-bottom-width: 3px;
-  background: white;
-  border-color: white;
-  padding: 5px 15px;
-  margin-bottom: 0.5em; }
-.editor .question input[type=text] {
-  width: 450px; }
-.editor .question .answers input[type=text] {
-  width: 450px; }
-.editor .question .answers .question input[type=text] {
-  width: 450px; }
-.editor .question .answers .question .answers input[type=text] {
-  width: 450px; }
-.editor .remove,
-.editor .btn-group {
-  display: none; }
-.editor .input-append:hover > .remove,
-.editor .input-append:focus > .remove {
-  display: inline-block; }
-.editor .add-on {
-  display: inline-block;
-  float: left;
-  line-height: 40px;
-  width: 30px;
-  text-align: center; }
-.editor input[type=text].question-input {
-  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
-  color: #6e6663;
-  font-size: 16px; }
-.editor input:focus {
-  outline: none;
-  border-color: #ffad00;
-  background: #fff; }
-.editor .question .question,
-.editor .answers,
-.editor .add-answer {
-  border-left: 2px solid white;
-  padding-left: 30px; }
-.editor .question-tools-container {
-  font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
-  padding-bottom: 8px; }
-  .editor .question-tools-container a {
-    padding-left: 45px;
-    cursor: pointer; }
-.editor .question .question {
-  padding-left: 30px; }
+.editor {
+  /* Question & answer tools*/ }
+  .editor input[type=text] {
+    display: inline-block;
+    width: 450px;
+    border-width: 0;
+    border-bottom-width: 3px;
+    background: white;
+    border-color: white;
+    padding: 5px 15px;
+    margin-bottom: 0.5em; }
+  .editor .question input[type=text] {
+    width: 450px; }
+  .editor .question .answers input[type=text] {
+    width: 450px; }
+  .editor .question .answers .question input[type=text] {
+    width: 450px; }
+  .editor .question .answers .question .answers input[type=text] {
+    width: 450px; }
+  .editor .remove,
+  .editor .btn-group {
+    display: none; }
+  .editor .remove {
+    padding-left: 8px; }
+  .editor .input-append:hover > .btn-group,
+  .editor .input-append:focus > .btn-group {
+    ddisplay: inline-block; }
+  .editor .add-on {
+    display: inline-block;
+    float: left;
+    line-height: 40px;
+    width: 30px;
+    text-align: center; }
+  .editor input[type=text].question-input {
+    font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
+    color: #6e6663;
+    font-size: 16px; }
+  .editor input:focus,
+  .editor input:hover {
+    outline: none;
+    border-color: #ffad00;
+    background: #fff;
+    position: relative; }
+  .editor .question .question,
+  .editor .answers,
+  .editor .add-answer {
+    border-left: 2px solid white;
+    padding-left: 30px; }
+  .editor .question .question {
+    padding-left: 30px; }
+  .editor .question-tools-container {
+    font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
+    padding-bottom: 8px; }
+    .editor .question-tools-container a {
+      padding-left: 45px;
+      cursor: pointer; }
+  .editor .question-choices {
+    overflow: auto;
+    margin-bottom: 1em; }
+  .editor .question-choices .choice {
+    font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
+    max-width: 150px;
+    padding: 10px;
+    float: left;
+    background: #fff;
+    margin-right: 10px;
+    cursor: pointer;
+    border: 3px solid #fff; }
+    .editor .question-choices .choice .title {
+      color: #58aeff;
+      font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
+      display: block; }
+    .editor .question-choices .choice .example {
+      display: none; }
+  .editor .question-choices .choice:hover {
+    border: 3px solid #58aeff; }

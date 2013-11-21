@@ -41,10 +41,15 @@
     display: none;
   }
 
-  .input-append:hover > .remove,
-  .input-append:focus > .remove {
-    display: inline-block;
+  .remove {
+    padding-left: 8px;
   }
+
+  .input-append:hover > .btn-group,
+  .input-append:focus > .btn-group {
+    ddisplay: inline-block;
+  }
+
 
   .add-on {
     display: inline-block;
@@ -60,10 +65,12 @@
     font-size: 16px;
   }
 
-  input:focus {
+  input:focus,
+  input:hover {
     outline: none;
     border-color: $orange;
     background: #fff;
+    position: relative;
   }
 
   .question {
@@ -76,6 +83,12 @@
     padding-left: $editor-padding;
   }
 
+  .question .question {
+    padding-left: $editor-padding;
+  }
+
+  /* Question & answer tools*/
+
   .question-tools-container {
     font-family: $font;
     padding-bottom: 8px;
@@ -83,13 +96,36 @@
     a {
       padding-left: 45px;
       cursor: pointer;
+    }
+  }
 
+  .question-choices {
+    overflow: auto;
+    margin-bottom: 1em;
+  }
+
+  .question-choices .choice {
+    font-family: $font;
+    max-width: 150px;
+    padding: 10px;
+    float: left;
+    background: #fff;
+    margin-right: 10px;
+    cursor: pointer;
+    border: 3px solid #fff;
+
+    .title {
+      color: $blue;
+      font-family: $bold;
+      display: block;
     }
 
+    .example {
+      display: none;
+    }
   }
 
-  .question .question {
-    padding-left: $editor-padding;
+  .question-choices .choice:hover {
+    border: 3px solid $blue;
   }
-
 }
