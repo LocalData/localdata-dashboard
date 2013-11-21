@@ -425,6 +425,14 @@
 
     <script type="text/template" id="answer-edit-template">
       <div data-role="answer" class="input-append">
+        <span class="add-on add-on-light">
+          <% if(question.type !== 'checkbox') { %>
+            <i class=" fa fa-circle-o" title="Select one choice. Good for ranking and yes-no questions."></i>
+
+          <% }else {  %>
+            <i class=" fa fa-check-square-o" title="Select one choice. Use when several answers may apply."></i>
+          <% }  %>
+        </span>
         <input type="text" value="<%= text %>">
         <a class="btn remove"><i class="fa fa-trash"></i></a>
 

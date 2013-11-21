@@ -5,7 +5,7 @@
 
 .editor {
   $editor-base-width: 450px;
-  $editor-padding: 30px;
+  $editor-padding: 40px;
   $editor-border: 2px;
   $editor-total: 0;
 
@@ -50,13 +50,16 @@
     ddisplay: inline-block;
   }
 
-
   .add-on {
     display: inline-block;
     float: left;
     line-height: 40px;
-    width: 30px;
+    width: 40px;
     text-align: center;
+  }
+
+  .add-on-light {
+    color: #fff;
   }
 
   input[type=text].question-input {
@@ -73,24 +76,23 @@
     position: relative;
   }
 
-  .question {
+  .question .question,
+  .answers {
+    border-left: $editor-border solid #fff;
+    margin-left: $editor-padding;
   }
 
-  .question .question,
-  .answers,
-  .add-answer {
-    border-left: $editor-border solid #fff;
-    padding-left: $editor-padding;
+  .answers {
+    margin-left: 0px;
   }
 
   .question .question {
-    padding-left: $editor-padding;
+    padding-left: $editor-padding - 5;
   }
 
   /* Question & answer tools*/
 
   .question-tools-container {
-    font-family: $font;
     padding-bottom: 8px;
 
     a {
@@ -98,14 +100,24 @@
     }
   }
 
+  .question-tools-container,
+  .show-add-sub-question,
+  .question-choices .choice {
+    font-family: $font;
+  }
+
+  .show-add-sub-question {
+    padding-left: 10px;
+  }
+
   .question-choices {
     display: none;
     overflow: auto;
     margin-bottom: 1em;
+    margin-left: 30px;
   }
 
   .question-choices .choice {
-    font-family: $font;
     max-width: 150px;
     padding: 10px;
     float: left;
