@@ -63,6 +63,10 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
     $(document).ajaxError(function (event, xhr) {
       console.log("Ajax error: " + xhr.status);
       if (xhr.status === 401) {
+        if (Backbone.history.fragment.indexOf('login') !== -1 ||
+            Backbone.history.fragment.indexOf('reset') === 0) {
+          return;
+        }
         redirectToLogin();
       }
     });

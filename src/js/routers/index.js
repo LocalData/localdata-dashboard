@@ -16,6 +16,8 @@ function($, _, Backbone, settings, api) {
     routes: {
       "": "home",
 
+      "reset/:resetInfo": "reset_password",
+
       "surveys/new": "new_survey",
       "surveys/:slug/map": "map",
       "surveys/:slug/export": "survey_export",
@@ -46,6 +48,10 @@ function($, _, Backbone, settings, api) {
     login: function(redirectTo) {
       console.log("Going to login view");
       this.controller.goto_login(redirectTo);
+    },
+
+    reset_password: function (resetInfo) {
+      this.controller.goto_password_reset(resetInfo);
     },
 
     new_survey: function() {

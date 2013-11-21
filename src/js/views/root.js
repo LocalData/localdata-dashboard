@@ -38,6 +38,7 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
 
   AllViews.LoginView = UserViews.LoginView;
   AllViews.UserBarView = UserViews.UserBarView;
+  AllViews.ResetView = UserViews.ResetView;
 
   // The singleton view which manages all others.
   // Essentially, a "controller".
@@ -100,6 +101,12 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
       this.currentContentView = this.getOrCreateView("LoginView", "LoginView", {
         'redirectTo': redirectTo,
         'user': this.user
+      });
+    },
+
+    goto_password_reset: function (resetInfo) {
+      this.currentContentView = this.getOrCreateView('ResetView', 'ResetView', {
+        resetInfo: resetInfo
       });
     },
 
