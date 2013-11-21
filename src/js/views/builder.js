@@ -237,7 +237,7 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
     addSubQuestionFactory: function(question, index) {
       return function(event) {
         event.preventDefault();
-        var type = $(event.target).attr('data-type');
+        var type = $(event.currentTarget).attr('data-type');
 
         console.log("Adding sub-question", type);
         _kmq.push(['record', 'Sub-question added']);
@@ -423,13 +423,16 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
         $input.keyup(editAnswerProxy);
 
         // Show add sub-question
+        $answer.find('.show-add-sub-question').click(function(event) {
+          event.preventDefault();
+          $(this).parent().find('> .question-choices').slideDown();
+        });
 
         // Hide add sub-question
         $answer.find('.close-add-sub-question').click(function(event) {
           event.preventDefault();
-          $(this).parent().hide();
+          $(this).parents('.question-choices').slideUp();
         });
-
 
         // Add a sub-question
         var $addSubQuestion = $answer.find('.add-sub-question');

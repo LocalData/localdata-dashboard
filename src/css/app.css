@@ -305,9 +305,12 @@ img.responsive {
   max-width: 100%; }
 
 a,
-a:hover {
+a:hover,
+a:visited,
+a:active {
   text-decoration: none;
-  color: #58aeff; }
+  color: #58aeff;
+  cursor: pointer; }
 
 .skiplink {
   line-height: 100px; }
@@ -1101,9 +1104,9 @@ input.large,
     font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
     padding-bottom: 8px; }
     .editor .question-tools-container a {
-      padding-left: 45px;
-      cursor: pointer; }
+      padding-left: 45px; }
   .editor .question-choices {
+    display: none;
     overflow: auto;
     margin-bottom: 1em; }
   .editor .question-choices .choice {

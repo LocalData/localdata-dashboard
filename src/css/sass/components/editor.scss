@@ -95,11 +95,11 @@
 
     a {
       padding-left: 45px;
-      cursor: pointer;
     }
   }
 
   .question-choices {
+    display: none;
     overflow: auto;
     margin-bottom: 1em;
   }
