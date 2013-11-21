@@ -191,10 +191,10 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
       };
     },
 
-    createQuestion: function(parent, questionIndex) {
+    createQuestionFactory: function(parent, questionIndex) {
       return function(event) {
         event.preventDefault();
-        var type = $(event.target).attr('data-type');
+        var type = $(event.currentTarget).attr('data-type');
 
         console.log("Adding a new question");
         _kmq.push(['record', 'Question added']);
@@ -342,16 +342,36 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
       $question.find('> div input').keyup(editQuestionProxy);
 
       // Listen for a request to remove a question
+      // TODO: confirm delete
       var deleteQuestionProxy = $.proxy(this.deleteQuestion($question, parent, questionIndex), this);
       $question.find('> div .remove').click(deleteQuestionProxy);
 
-      // Listen for a request to add a question
-      var createQuestionProxy = $.proxy(this.createQuestion(parent, questionIndex), this);
-      $question.find('.add-question').click(createQuestionProxy);
 
-      // Listen for a request to add a photo question
-      var createPhotoQuestionProxy = $.proxy(this.createPhotoQuestion(parent, questionIndex), this);
-      $question.find('.add-photo-question').click(createPhotoQuestionProxy);
+      // Add a question
+      // Show add sub-question
+      $question.find('.add-question').click(function(event) {
+        event.preventDefault();
+        $(this).parent().find('> .question-choices').slideDown();
+      });
+
+      // Hide add sub-question
+      $question.find('.close-add-sub-question').click(function(event) {
+        event.preventDefault();
+        $(this).parents('.question-choices').slideUp();
+      });
+
+      // Listen for a request to add a question
+      var createQuestionProxy = $.proxy(this.createQuestionFactory(parent, questionIndex), this);
+      $question.find('.add-sub-question').click(createQuestionProxy);
+
+      // // Add a sub-question
+      // var $addSubQuestion = $answer.find('.add-sub-question');
+      // var addSubQuestionProxy = $.proxy(this.addSubQuestionFactory(question, index), this);
+      // $addSubQuestion.click(addSubQuestionProxy);
+
+      // // Listen for a request to add a photo question
+      // var createPhotoQuestionProxy = $.proxy(this.createPhotoQuestion(parent, questionIndex), this);
+      // $question.find('.add-photo-question').click(createPhotoQuestionProxy);
 
       // Listen for a request to add an answer
       var createAnswerProxy = $.proxy(this.createAnswer(question), this);
@@ -377,6 +397,17 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
       // TODO Infoboxes (aka help text for questions)
       // if(question.info !== undefined) {
       // }
+
+      // Show question tools on hover
+      // TODO: this selector sucks. Let's try to make it generic.
+      $question.hover(function(event) {
+        // if (event.currentTarget !== event.target) return;
+        $(this).find('> .input-append .remove').fadeIn(150);
+      }, function() {
+        $(this).find('> .input-append.remove').fadeOut(150);
+      })
+
+
 
       // Deal with answers ....................................................
       var questionID = id;
@@ -423,6 +454,19 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
         var $input = $answer.find('input');
         var editAnswerProxy = $.proxy(this.editAnswer(question, index), this);
         $input.keyup(editAnswerProxy);
+
+        // Show tools on hover
+        $answer.hover(function() {
+          $(this).find('> .btn').fadeIn(150);
+        }, function() {
+          $(this).find('> .btn').fadeOut(150);
+        })
+
+        $answer.find('> .show-add-sub-question').hover(function() {
+          $(this).find('span').fadeIn(150);
+        }, function() {
+          $(this).find('span').fadeOut(150);
+        })
 
         // Show add sub-question
         $answer.find('.show-add-sub-question').click(function(event) {

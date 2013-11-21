@@ -363,7 +363,7 @@
 
         <div class="input-append">
           <input type="text" placeholder="Question" value="<%= question.text %>" data-role="question" class="question-input input-xlarge">
-          <a class="btn remove"><i class="fa fa-trash"></i></a>
+          <a class="btn remove"><i class="fa fa-trash-o"></i></a>
         </div>
 
         <div class="answers"></div>
@@ -373,30 +373,36 @@
         </div>
 
         <div class="add-question-container">
-          <div class="btn-group">
-            <button class="btn dropdown-toggle" data-toggle="dropdown">
-              <i class="fa fa-plus"></i> Add question
-              <i class="caret"></i>
-            </button>
-            <ul class="dropdown-menu">
-              <li>
-                <a href="#" class="add-question" data-type="radio-question">Select one choice</a>
-                Good for ranking and yes-no questions. Example: Rank the condition of this property.
-              </li>
-              <li>
-                <a href="#" class="add-question" data-type="checkbox-question">Select multiple answers</a>
-                Good for questions where several factors are in play. Example: Select problems that apply to this building.
+          <a class="btn add-question"><i class="fa fa-plus-square-o"></i> Add question</a>
 
-              </li>
-              <li>
-                <a href="#" class="add-question" data-type="text-question">Text field</a>
-                Add notes or other details.
-              </li>
-              <li>
-                <a class="add-question" data-type="file-question"><i class="fa fa-camera"></i> Photo upload</a>
-                Prompts surveyors to add a photo
-              </li>
-            </ul>
+          <div class="question-choices">
+            <div class="choice add-sub-question" data-type="radio-question">
+              <span class="title">
+                <i class="fa fa-dot-circle-o"></i>
+                <i class="fa fa-circle-o"></i> Select one
+              </span>
+              Use when only one answer applies.
+              <span class="example"> Example: Rank the condition of this property.</span>
+            </div>
+            <div class="choice add-sub-question" data-type="checkbox-question">
+              <span class="title">
+                <i class="fa fa-check-square-o"></i>
+                <i class="fa fa-check-square-o"></i> Select multiple
+              </span>
+              Use when several answers may apply.
+              <span class="example">Example: Select problems that apply to this building.</span>
+            </div>
+            <div class="choice add-sub-question" data-type="text-question">
+              <span class="title"><i class="fa fa-edit"></i> Text field</span>
+              Add notes or other details.
+            </div>
+            <div class="choice add-sub-question" data-type="file-question">
+              <span class="title"><i class="fa fa-camera"></i> Photo upload</span>
+              Prompts surveyors to add a photo
+            </div>
+            <div class="choice close-add-sub-question">
+              <span class="title"><i class="fa fa-times"></i> Cancel</span>
+            </div>
           </div>
         </div>
 
@@ -434,9 +440,8 @@
           <% }  %>
         </span>
         <input type="text" value="<%= text %>">
-        <a class="btn remove"><i class="fa fa-trash"></i></a>
-
-        <a class="show-add-sub-question">Add sub-question</a>
+        <a class="btn remove"><i class="fa fa-trash-o"></i></a>
+        <a class="btn show-add-sub-question"><i class="fa fa-sitemap"></i><span> Add sub-question</span></a>
         <div class="question-choices">
           <div class="choice add-sub-question" data-type="radio-question">
             <span class="title">

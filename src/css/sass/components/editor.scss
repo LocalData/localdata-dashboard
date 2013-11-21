@@ -37,6 +37,7 @@
   }
 
   .remove,
+  .show-add-sub-question,
   .btn-group {
     display: none;
   }
@@ -92,6 +93,7 @@
 
   /* Question & answer tools*/
 
+  .add-question,
   .question-tools-container {
     padding-bottom: 8px;
 
@@ -102,6 +104,7 @@
 
   .question-tools-container,
   .show-add-sub-question,
+  .add-question,
   .question-choices .choice {
     font-family: $font;
   }
@@ -110,11 +113,15 @@
     padding-left: 10px;
   }
 
+  .show-add-sub-question span {
+    display: none;
+  }
+
   .question-choices {
     display: none;
     overflow: auto;
     margin-bottom: 1em;
-    margin-left: 30px;
+    margin-left: $editor-padding;
   }
 
   .question-choices .choice {

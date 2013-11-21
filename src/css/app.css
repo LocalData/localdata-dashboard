@@ -1070,6 +1070,7 @@ input.large,
   .editor .question .answers .question .answers input[type=text] {
     width: 450px; }
   .editor .remove,
+  .editor .show-add-sub-question,
   .editor .btn-group {
     display: none; }
   .editor .remove {
@@ -1103,21 +1104,26 @@ input.large,
     margin-left: 0px; }
   .editor .question .question {
     padding-left: 35px; }
+  .editor .add-question,
   .editor .question-tools-container {
     padding-bottom: 8px; }
+    .editor .add-question a,
     .editor .question-tools-container a {
       padding-left: 45px; }
   .editor .question-tools-container,
   .editor .show-add-sub-question,
+  .editor .add-question,
   .editor .question-choices .choice {
     font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif; }
   .editor .show-add-sub-question {
     padding-left: 10px; }
+  .editor .show-add-sub-question span {
+    display: none; }
   .editor .question-choices {
     display: none;
     overflow: auto;
     margin-bottom: 1em;
-    margin-left: 30px; }
+    margin-left: 40px; }
   .editor .question-choices .choice {
     max-width: 150px;
     padding: 10px;
