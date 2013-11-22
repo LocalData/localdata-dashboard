@@ -423,7 +423,6 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
           id = suffixed_name;
         }
 
-        console.log("QUESTION", question);
         // Set the data used to render the answer
         var answerData = {
           questionName: suffixed_name,

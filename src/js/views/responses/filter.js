@@ -85,6 +85,7 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
       this.map.clearFilter();
 
       $('.questions .circle').removeClass('selected');
+      $('.answers .circle').removeClass('inactive');
       $('.answers').hide();
     },
 

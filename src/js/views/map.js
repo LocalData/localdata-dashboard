@@ -68,7 +68,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       console.log("Init map view");
       _.bindAll(this,
         'render',
-        'selectObject',
+        'handleResponses',
         'renderObject',
         'renderObjects',
         'getResponsesInBounds',
@@ -98,7 +98,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
 
     /**
-     * Given tilejson data, add the tiles and the UTF grid
+     * Given tilejson data, add the tiles and the UTFgrid
      * @param  {Object} tilejson
      */
     addTileLayer: function(tilejson) {
@@ -121,15 +121,16 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       this.tileLayer.on('load', this.done);
 
       this.map.addLayer(this.tileLayer);
-      this.tileLayer.bringToFront();
 
       // Create the grid layer & handle clicks
       this.gridLayer = new L.UtfGrid(tilejson.grids[0], {
         resolution: 4
       });
 
-    // this.map.addLayer(this.gridLayer);
-      // this.gridLayer.on('click', this.selectObject);
+      this.map.addLayer(this.gridLayer);
+      console.log("Gridlayer", this.gridLayer);
+      // this.gridLayer.bringToFront();
+      this.gridLayer.on('click', this.handleResponses);
     },
 
     loading: function() {
@@ -158,9 +159,9 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
         // Not currently used
         // But this gives us a hook into map clicks from external owners.
-        if (this.clickHandler) {
-          this.map.on('click', this.clickHandler);
-        }
+        // if (this.clickHandler) {
+        //   this.map.on('click', this.clickHandler);
+        // }
 
         // Set up the base map; add the parcels and done markers
 
@@ -306,7 +307,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
           pointToLayer: pointToLayer,
           style: style
         });
-        geojsonLayer.on('click', this.selectObject);
+        geojsonLayer.on('click', this.handleResponses);
 
         // Add the layer to the layergroup and the hashmap
         this.objectsOnTheMap.addLayer(geojsonLayer); // was (geojsonLayer);
@@ -347,16 +348,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       if (this.selectedLayer !== null) {
         this.selectedLayer.setStyle(settings.selectedStyle);
       }
-    },
-
-
-    /**
-     * Handle a click on the map
-     */
-    click: function(event) {
-      console.log("Selected object", event);
-      event.latlng;
-      api.getResponseAt(latlng, handleResponses);
     },
 
 

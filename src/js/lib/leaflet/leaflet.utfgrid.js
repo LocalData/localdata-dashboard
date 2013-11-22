@@ -1,3 +1,4 @@
+
 L.Util.ajax = function (url, cb) {
   // the following is from JavaScript: The Definitive Guide
   // and https://developer.mozilla.org/en-US/docs/DOM/XMLHttpRequest/Using_XMLHttpRequest_in_IE6
@@ -240,6 +241,3 @@ L.UtfGrid = L.Class.extend({
   }
 });
 
-L.utfGrid = function(url, options) {
-  return new L.UtfGrid(url, options);
-};
