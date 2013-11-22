@@ -139,10 +139,13 @@ define(function (require) {
   };
 
 
-  // Generates the URL for the current survey's resposnes
-  api.getParcelDataURL = function(parcel_id) {
-    return settings.api.baseurl + '/surveys/' + settings.surveyId + '/parcels/' + parcel_id + '/responses';
-  };
+  // api.getResponsesForParcel = function(parcel_id, callback) {
+  //   var url = api.getParcelDataURL(parcel_id);
+  //   console.log("Getting data for", url);
+  //   $.getJSON(url, function(data){
+  //     callback(data.responses || []);
+  //   });
+  // };
 
 
   // Get the form for the current survey
@@ -254,6 +257,7 @@ define(function (require) {
   //  sort: ('asc'|'desc') -- sort by date. defaults to 'asc'
   // }
   api.getResponses = function (options, callback) {
+    console.log("Getting chunk");
     var url;
     if (options.sort === undefined) {
       options.sort = 'desc';

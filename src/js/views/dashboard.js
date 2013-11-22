@@ -43,6 +43,10 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews) {
       var context = {};
       this.$el.html(_.template($('#dashboard').html(), context));
 
+      if(this.surveys.length === 0) {
+        $('.first-run').slideDown();
+      }
+
       var parity = 0;
       this.surveys.each(function(survey) {
         if (parity === 0) {
@@ -60,6 +64,7 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews) {
       var surveyListItemView = new SurveyViews.ListItemView({
         model: survey
       });
+      console.log("Appending survey");
       this.$('.survey-list').append(surveyListItemView.$el);
     }
   });

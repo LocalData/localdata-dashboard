@@ -40,7 +40,7 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render');
+      _.bindAll(this, 'render', 'reset');
 
       this.survey = options.survey;
       this.forms = options.forms;
@@ -82,9 +82,10 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
     reset: function(event) {
       event.preventDefault();
       this.filters = {};
-      this.collection.clearFilter();
+      this.map.clearFilter();
 
       $('.questions .circle').removeClass('selected');
+      $('.answers .circle').removeClass('inactive');
       $('.answers').hide();
     },
 
@@ -95,7 +96,6 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
       if(this.filters.answer) {
         this.reset();
       }
-
 
       var $question = $(event.target);
       var question = $question.attr('data-question');
@@ -109,40 +109,32 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
       $question.parent().find('.answers').show();
 
       // Color the responses on the map
-      this.map.setFilter(question, answers);
+      this.map.setFilter(question);
     },
 
     /**
      * Show only responses with a specific answer
      */
     filter: function(event) {
+      console.log("FILTERY");
+
       _kmq.push(['record', "Answer filter selected"]);
       var $answer = $(event.target);
-
-      // Clear the current filter, if there is one.
-      if(_.has(this.filters, 'answer')) {
-        this.collection.clearFilter({ silent: true });
-      }
+      this.filters.answer = $answer.attr('data-answer');
+      console.log($answer);
 
       // Mark the answer as selected
-      $('#subfilter a').removeClass('selected');
-      $answer.addClass('selected');
+      console.log($('.answers .circle'));
+      $('.answers .circle').removeClass('selected');
+      $('.answers .circle').addClass('inactive');
 
-      // Notify the user we're working on it
-      // (it can take a while to filter a lot of items)
-      // events.publish('loading', [true]);
-      $('#loadingsmg').show();
-      console.log("Loading");
+      $answer.find('.circle').addClass('selected');
+      $answer.find('.circle').removeClass('inactive');
 
-      // Filter the responses
-      this.filters.answer = $answer.attr('data-answer');
-      console.log($answer, this.filters.answer);
-      this.collection.setFilter(this.filters.question, this.filters.answer);
+      // Color the responses on the map
+      this.map.setFilter(this.filters.question, this.filters.answer);
 
-      // Note that we're done loading
-      events.publish('loading', [false]);
-      $('#loadingsmg').hide();
-      console.log("Done loading");
+      console.log("Selected answer", $answer, this.filters.answer);
     }
   });
 

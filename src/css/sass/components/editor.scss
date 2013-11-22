@@ -1,0 +1,150 @@
+/* Editor --------------------------------------------------------------------*/
+.saved {
+  display: none;
+}
+
+.editor {
+  $editor-base-width: 450px;
+  $editor-padding: 40px;
+  $editor-border: 2px;
+  $editor-total: 0;
+
+  input[type=text] {
+    display: inline-block;
+    width: $editor-base-width;
+    border-width: 0;
+    border-bottom-width: 3px;
+    background: white;
+    border-color: white;
+    padding: 5px 15px;
+    margin-bottom: 0.5em;
+  }
+
+  .question input[type=text] {
+    width: $editor-base-width;
+  }
+
+  .question .answers input[type=text] {
+    width: $editor-base-width - $editor-total;
+  }
+
+  .question .answers .question input[type=text] {
+    width: $editor-base-width - ($editor-total * 2);
+  }
+
+  .question .answers .question .answers input[type=text] {
+    width: $editor-base-width -  ($editor-total * 3);
+  }
+
+  .remove,
+  .show-add-sub-question,
+  .btn-group {
+    display: none;
+  }
+
+  .remove {
+    padding-left: 8px;
+  }
+
+  .input-append:hover > .btn-group,
+  .input-append:focus > .btn-group {
+    ddisplay: inline-block;
+  }
+
+  .add-on {
+    display: inline-block;
+    float: left;
+    line-height: 40px;
+    width: 40px;
+    text-align: center;
+  }
+
+  .add-on-light {
+    color: #fff;
+  }
+
+  input[type=text].question-input {
+    font-family: $bold;
+    color: $body-color;
+    font-size: 16px;
+  }
+
+  input:focus,
+  input:hover {
+    outline: none;
+    border-color: $orange;
+    background: #fff;
+    position: relative;
+  }
+
+  .question .question,
+  .answers {
+    border-left: $editor-border solid #fff;
+    margin-left: $editor-padding;
+  }
+
+  .answers {
+    margin-left: 0px;
+  }
+
+  .question .question {
+    padding-left: $editor-padding - 5;
+  }
+
+  /* Question & answer tools*/
+
+  .add-question,
+  .question-tools-container {
+    padding-bottom: 8px;
+
+    a {
+      padding-left: 45px;
+    }
+  }
+
+  .question-tools-container,
+  .show-add-sub-question,
+  .add-question,
+  .question-choices .choice {
+    font-family: $font;
+  }
+
+  .show-add-sub-question {
+    padding-left: 10px;
+  }
+
+  .show-add-sub-question span {
+    display: none;
+  }
+
+  .question-choices {
+    display: none;
+    overflow: auto;
+    margin-bottom: 1em;
+    margin-left: $editor-padding;
+  }
+
+  .question-choices .choice {
+    max-width: 150px;
+    padding: 10px;
+    float: left;
+    background: #fff;
+    margin-right: 10px;
+    cursor: pointer;
+    border: 3px solid #fff;
+
+    .title {
+      color: $blue;
+      font-family: $bold;
+      display: block;
+    }
+
+    .example {
+      display: none;
+    }
+  }
+
+  .question-choices .choice:hover {
+    border: 3px solid $blue;
+  }
+}

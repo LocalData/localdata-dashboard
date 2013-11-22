@@ -1,4 +1,3 @@
-@import url(font-awesome-ie7.min.css);
 @import url(font-awesome.min.css);
 /*******************************************************************************
  * style.scss
@@ -78,13 +77,13 @@ table {
  */
 @font-face {
   font-family: "NeuzeitOfficeW01-Regula";
-  src: url("../font/673817/regular.eot?#iefix");
-  src: url("../font/673817/regular.eot?#iefix") format("eot"), url("../font/673817/regular.woff") format("woff"), url("../font/673817/regular.ttf") format("truetype"), url("../font/673817/regular.svg#85050462-ab1f-4478-a289-36eed1d3c53f") format("svg"); }
+  src: url("../fonts/673817/regular.eot?#iefix");
+  src: url("../fonts/673817/regular.eot?#iefix") format("eot"), url("../fonts/673817/regular.woff") format("woff"), url("../fonts/673817/regular.ttf") format("truetype"), url("../fonts/673817/regular.svg#85050462-ab1f-4478-a289-36eed1d3c53f") format("svg"); }
 
 @font-face {
   font-family: "Neuzeit Office W01 Bold";
-  src: url("../font/673808/bold.eot?#iefix");
-  src: url("../font/673808/bold.eot?#iefix") format("eot"), url("../font/673808/bold.woff") format("woff"), url("../font/673808/bold.ttf") format("truetype"), url("../font/673808/bold.svg#d4cb246e-742d-4269-9f6a-901a050ff03f") format("svg"); }
+  src: url("../fonts/673808/bold.eot?#iefix");
+  src: url("../fonts/673808/bold.eot?#iefix") format("eot"), url("../fonts/673808/bold.woff") format("woff"), url("../fonts/673808/bold.ttf") format("truetype"), url("../fonts/673808/bold.svg#d4cb246e-742d-4269-9f6a-901a050ff03f") format("svg"); }
 
 /* Animations ==============================================================  */
 .animated {
@@ -306,9 +305,12 @@ img.responsive {
   max-width: 100%; }
 
 a,
-a:hover {
+a:hover,
+a:visited,
+a:active {
   text-decoration: none;
-  color: #58aeff; }
+  color: #58aeff;
+  cursor: pointer; }
 
 .skiplink {
   line-height: 100px; }
@@ -819,6 +821,9 @@ header .nav a:visited {
 .survey-head .in {
   padding-bottom: 0; }
 
+.first-run {
+  display: none; }
+
 /* Designer ---------------------------------------------------------------- */
 .choice-boxes {
   overflow: auto; }
@@ -860,16 +865,18 @@ header .nav a:visited {
 #response-view-container .in {
   padding: 0; }
 
+.map-loading {
+  text-align: center;
+  background: url(../img/preloader.gif) no-repeat center center;
+  height: 128px;
+  position: relative;
+  top: 220px;
+  left: 50%;
+  width: 50%; }
+
 /* Responses ---------------------------------------------------------------- */
 .confirm-delete {
   display: none; }
-
-.response h2 {
-  font-size: 26px;
-  text-transform: titlecase; }
-
-.response .answers {
-  margin-bottom: 1em; }
 
 .filters label,
 .filters .question {
@@ -907,7 +914,10 @@ header .nav a:visited {
   background: transparent; }
 
 .filters .circle.selected {
-  background: #a743c3; }
+  background: #6e6663; }
+
+.filters .circle.inactive {
+  background: transparent !important; }
 
 /* Factoids ----------------------------------------------------------------- */
 .factoid {
@@ -1018,63 +1028,6 @@ input.large,
   margin-bottom: 1em;
   width: 12em; }
 
-/* Editor --------------------------------------------------------------------*/
-.saved {
-  display: none; }
-
-.editor {
-  /*
-    input[type=text] {
-      border-bottom-width: 3px;
-      background: $pink;
-      border-color: $pin;
-      padding: 5px 15px;
-      margin-bottom: 0.5em;
-    }
-   */ }
-  .editor input[type=text] {
-    width: 450px;
-    border-width: 0;
-    border-bottom-width: 3px;
-    background: white;
-    border-color: white;
-    padding: 5px 15px;
-    margin-bottom: 0.5em; }
-  .editor .question input[type=text] {
-    width: 450px; }
-  .editor .question .answers input[type=text] {
-    width: 450px; }
-  .editor .question .answers .question input[type=text] {
-    width: 450px; }
-  .editor .question .answers .question .answers input[type=text] {
-    width: 450px; }
-  .editor .remove,
-  .editor .btn-group {
-    display: none; }
-  .editor .add-on {
-    display: inline-block;
-    float: left;
-    line-height: 40px;
-    width: 30px;
-    text-align: center; }
-  .editor input[type=text].question-input {
-    font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
-    color: #6e6663;
-    font-size: 16px; }
-  .editor input:focus {
-    outline: none;
-    border-color: #ffad00;
-    background: #fff; }
-  .editor .question .question,
-  .editor .answers,
-  .editor .add-answer {
-    border-left: 2px solid white;
-    padding-left: 30px; }
-  .editor .add-answer {
-    cursor: pointer; }
-  .editor .question .question {
-    padding-left: 30px; }
-
 .preview-q-box {
   padding-left: 20px; }
 
@@ -1095,3 +1048,98 @@ input.large,
 
 .preview-answer {
   padding: 2px 0 2px 20px; }
+
+/* Editor --------------------------------------------------------------------*/
+.saved {
+  display: none; }
+
+.editor {
+  /* Question & answer tools*/ }
+  .editor input[type=text] {
+    display: inline-block;
+    width: 450px;
+    border-width: 0;
+    border-bottom-width: 3px;
+    background: white;
+    border-color: white;
+    padding: 5px 15px;
+    margin-bottom: 0.5em; }
+  .editor .question input[type=text] {
+    width: 450px; }
+  .editor .question .answers input[type=text] {
+    width: 450px; }
+  .editor .question .answers .question input[type=text] {
+    width: 450px; }
+  .editor .question .answers .question .answers input[type=text] {
+    width: 450px; }
+  .editor .remove,
+  .editor .show-add-sub-question,
+  .editor .btn-group {
+    display: none; }
+  .editor .remove {
+    padding-left: 8px; }
+  .editor .input-append:hover > .btn-group,
+  .editor .input-append:focus > .btn-group {
+    ddisplay: inline-block; }
+  .editor .add-on {
+    display: inline-block;
+    float: left;
+    line-height: 40px;
+    width: 40px;
+    text-align: center; }
+  .editor .add-on-light {
+    color: #fff; }
+  .editor input[type=text].question-input {
+    font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
+    color: #6e6663;
+    font-size: 16px; }
+  .editor input:focus,
+  .editor input:hover {
+    outline: none;
+    border-color: #ffad00;
+    background: #fff;
+    position: relative; }
+  .editor .question .question,
+  .editor .answers {
+    border-left: 2px solid white;
+    margin-left: 40px; }
+  .editor .answers {
+    margin-left: 0px; }
+  .editor .question .question {
+    padding-left: 35px; }
+  .editor .add-question,
+  .editor .question-tools-container {
+    padding-bottom: 8px; }
+    .editor .add-question a,
+    .editor .question-tools-container a {
+      padding-left: 45px; }
+  .editor .question-tools-container,
+  .editor .show-add-sub-question,
+  .editor .add-question,
+  .editor .question-choices .choice {
+    font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif; }
+  .editor .show-add-sub-question {
+    padding-left: 10px; }
+  .editor .show-add-sub-question span {
+    display: none; }
+  .editor .question-choices {
+    display: none;
+    overflow: auto;
+    margin-bottom: 1em;
+    margin-left: 40px; }
+  .editor .question-choices .choice {
+    max-width: 150px;
+    padding: 10px;
+    float: left;
+    background: #fff;
+    margin-right: 10px;
+    cursor: pointer;
+    border: 3px solid #fff; }
+    .editor .question-choices .choice .title {
+      color: #58aeff;
+      font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
+      display: block; }
+    .editor .question-choices .choice .example {
+      display: none; }
+  .editor .question-choices .choice:hover {
+    border: 3px solid #58aeff; }

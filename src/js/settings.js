@@ -2,7 +2,7 @@
 /*globals define: true */
 
 define([
-  'lib/leaflet/leaflet.google'
+  'lib/leaflet/leaflet.tilejson'
 ],
 
 function(L) {
