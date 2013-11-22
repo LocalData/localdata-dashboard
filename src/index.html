@@ -261,6 +261,7 @@
               <li class="active" id="tab-survey-home"><a href="#surveys/<%= survey.slug %>"><i class="icon-home" data-show="response-view-container"></i>Results</a></li>
               <li class="" id="tab-survey-export" data-show=""><a href="#surveys/<%= survey.slug %>/export" data-show="export-view-container"><i class="icon-download"></i>Export</a></li>
               <li class="" id="tab-survey-form"><a href="#surveys/<%= survey.slug %>/form" data-show="form-view-container"><i class="icon-list-ul"></i>Survey Questions</a></li>
+              <li class="" id="tab-survey-settings"><a href="#surveys/<%= survey.slug %>/settings" data-show="settings-view-container"><i class="icon-cog"></i>Settings</a></li>
             </ul>
           </div>
         </div>
@@ -302,12 +303,12 @@
         <label><input type="radio" value="parcel" name="type" <% if(survey.type !== 'point' && survey.type !== 'pointandparcel') { %>checked <% } %>>We&apos;re collecting data using a parcel map (for example, property, homes, businesses with an address)
         </label>
 
-        <label><input type="radio" value="pointandparcel" name="type" <% if(survey.type !== 'pointandparcel') { %>checked <% } %>>We need to collect information about points and parcels.
+        <label><input type="radio" value="pointandparcel" name="type" <% if(survey.type === 'pointandparcel') { %>checked <% } %>>We need to collect information about points and parcels.
         </label>
 
         <submit class="btn save">Save</submit>
-        <div class="saved">Form saved</div>
-        <div class="error">Error saving the form &mdash; did you complete all fields?</div>
+        <div class="saved">Changes saved</div>
+        <div class="error">We coudln't save your changes.</div>
       </form>
     </script>
 

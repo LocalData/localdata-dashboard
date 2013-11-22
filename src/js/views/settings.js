@@ -26,18 +26,15 @@ function($, _, Backbone, settings, api) {
       _.bindAll(this, 'render', 'save', 'success', 'error');
 
       this.survey = options.survey;
-      this.forms = options.forms;
 
       this.survey.on('change', this.render);
     },
 
     error: function(model, xhr, options) {
-      console.log(model, xhr, options);
       $(".error").fadeIn().css("display","inline-block").delay(2000).fadeOut();
     },
 
     success: function() {
-      console.log("Success!");
       $(".saved").fadeIn().css("display","inline-block").delay(2000).fadeOut();
     },
 
@@ -61,10 +58,8 @@ function($, _, Backbone, settings, api) {
     },
 
     render: function() {
-
       var context = {
         survey: this.survey.toJSON(),
-        forms: this.forms.toJSON()
       };
 
       this.$el.html(_.template($('#settings-view').html(), context));
