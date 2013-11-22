@@ -21,7 +21,7 @@
       <div class="in">
         <div class="a">
           <h1>
-            <a href="index.html" class="logo animated swing"></a>
+            <a href="index.html" class="logo"></a>
             <a href="index.html" class="logotype">LocalData</a>
           </h1>
         </div>
@@ -41,7 +41,7 @@
     <footer class="out">
       <div class="in">
         <h1>
-          <a href="index.html" class="logo animated swing"></a>
+          <a href="index.html" class="logo"></a>
           <a href="index.html" class="logotype">LocalData</a>
         </h1>
 
@@ -66,7 +66,7 @@
     <script type="text/template" id="userbar-view">
       <!--
       <span class="userbar">
-        <i class="icon-user"></i> <%= user.name %>
+        <i class="fa fa-user"></i> <%= user.name %>
       </span>
       -->
       <a href="/logout" class="logout">Log out</a>
@@ -93,6 +93,19 @@
 
     <!-- Dashboard ..........................................................-->
     <script type="text/template" id="dashboard">
+      <div class="out first-run">
+        <div class="in">
+          <div class="a">
+            <h1>Welcome to LocalData.</h1>
+          </div>
+          <div class="b">
+            <div style="text-align: right; padding-right: 40px; font-size: 100px; width:30px; position: absolute; top: 80px; left: 75%; color: #b7aba5;"><i class="fa fa-level-up"></i></div>
+            <h3>To get started, create your first survey.</h3>
+
+          </div>
+        </div>
+      </div>
+
       <div class="survey-list">
       </div>
     </script>
@@ -101,10 +114,7 @@
     <script type="text/template" id="survey-design-view">
     </script>
 
-    <!-- Login ............................................................-->
-    <script type="text/template" id="login-view">
-    </script>
-
+    <!-- Loading ..........................................................-->
     <script type="text/template" id="loading-view">
       <div class="loading">
         <img src="img/preloader.gif" alt="">
@@ -144,8 +154,6 @@
         <% _.each(answers, function (answer, i) { %> <div class="preview-answer"> <%= letters[i] %>: <%= answer %> </div> <% }); %>
       </div>
     </script>
-
-    <!-- Survey ...........................................................-->
 
     <!-- Settings .......................................................... -->
     <script type="text/template" id="settings-view">
@@ -190,12 +198,12 @@
 
     </script>
 
-
     <!-- Responses & Filtering ..............................................-->
     <script type="text/template" id="filter-results">
       <h3>
         Filter
-        response<% if(_.size(responses) != 1) { %>s<% } %>
+        <%= count %>
+        response<% if(count != 1) { %>s<% } %>
         by:
       </h3>
 
@@ -208,7 +216,7 @@
     </script>
 
     <script type="text/template" id="filter-results-answer">
-      <a id="clear" class="btn close"><i class="icon-close"></i> Clear filter</a>
+      <a id="clear" class="btn close"><i class="fa fa-close"></i> Clear filter</a>
       <h2>Select an answer to filter by:</h2>
       <div id="loadingsmg" style="display:none"></div>
       <ul>
@@ -232,13 +240,13 @@
           </h2>
 
           <div class="collector">
-            <i class="icon-user"></i>
+            <i class="fa fa-user"></i>
             <% if(r.geo_info != undefined) { %>
               <%- r.source.collector %>
             <% } else{ %>
               <%- r.responses.collector %>
             <% } %>
-            &nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-time"></i>
+            &nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-time"></i>
             <%- r.createdHumanized %>
           </div>
 
@@ -264,6 +272,7 @@
     <!-- Map ..............................................................-->
     <script type="text/template" id="map-view">
       <div id="map" class="b nomargin"></div>
+      <div class="map-loading"></div>
     </script>
 
 
@@ -367,27 +376,46 @@
 
         <div class="input-append">
           <input type="text" placeholder="Question" value="<%= question.text %>" data-role="question" class="question-input input-xlarge">
-          <a class="btn remove"><i class="icon-trash"></i></a>
+          <a class="btn remove"><i class="fa fa-trash-o"></i></a>
         </div>
 
         <div class="answers"></div>
 
         <div class="question-tools-container">
-          <a class="btn add-answer"><i class="icon-plus"></i> Add answer</a>
+          <a class="btn add-answer">+ Add answer</a>
         </div>
 
         <div class="add-question-container">
-          <div class="btn-group">
-            <button class="btn dropdown-toggle" data-toggle="dropdown">
-              <i class="icon-plus"></i> Add a question
-              <i class="caret"></i>
-            </button>
-            <ul class="dropdown-menu">
-              <li><a href="#" class="add-question" data-type="checkbox-question">Multiple choice</a></li>
-              <li><a href="#" class="add-question" data-type="radio-question">Select one</a></li>
-              <li><a href="#" class="add-question" data-type="text-question">Text field</a></li>
-              <li><a class="add-question" data-type="file-question"><i class="icon-camera"></i> Photo upload</strong></a></li>
-            </ul>
+          <a class="btn add-question"><i class="fa fa-plus-square-o"></i> Add question</a>
+
+          <div class="question-choices">
+            <div class="choice add-sub-question" data-type="radio-question">
+              <span class="title">
+                <i class="fa fa-dot-circle-o"></i>
+                <i class="fa fa-circle-o"></i> Select one
+              </span>
+              Use when only one answer applies.
+              <span class="example"> Example: Rank the condition of this property.</span>
+            </div>
+            <div class="choice add-sub-question" data-type="checkbox-question">
+              <span class="title">
+                <i class="fa fa-check-square-o"></i>
+                <i class="fa fa-check-square-o"></i> Select multiple
+              </span>
+              Use when several answers may apply.
+              <span class="example">Example: Select problems that apply to this building.</span>
+            </div>
+            <div class="choice add-sub-question" data-type="text-question">
+              <span class="title"><i class="fa fa-edit"></i> Text field</span>
+              Add notes or other details.
+            </div>
+            <div class="choice add-sub-question" data-type="file-question">
+              <span class="title"><i class="fa fa-camera"></i> Photo upload</span>
+              Prompts surveyors to add a photo
+            </div>
+            <div class="choice close-add-sub-question">
+              <span class="title"><i class="fa fa-times"></i> Cancel</span>
+            </div>
           </div>
         </div>
 
@@ -397,9 +425,9 @@
     <script type="text/template" id="photo-question-edit-template">
       <div class="question" data-name="<%= question.name %>">
         <div class="input-append input-prepend">
-          <span class="add-on"><i class="icon-camera"> </i></span>
+          <span class="add-on"><i class="fa fa-camera"> </i></span>
           <input type="text" placeholder="Photo upload question" value="<%= question.text %>" data-role="question" class="question-input input-xlarge">
-          <a class="btn remove"><i class="icon-trash"></i></a>
+          <a class="btn remove"><i class="fa fa-trash-o"></i></a>
         </div>
       </div>
     </script>
@@ -407,28 +435,56 @@
     <script type="text/template" id="text-question-edit-template">
       <div class="question" data-name="<%= question.name %>">
         <div class="input-append input-prepend">
-          <span class="add-on"><i class=" icon-pencil"></i></span>
+          <span class="add-on"><i class=" fa fa-pencil"></i></span>
           <input type="text" placeholder="Text question" value="<%= question.text %>" data-role="question" class="question-input input-xlarge">
-          <button class="remove"><i class="icon-trash"></i> Remove</button>
+          <button class="remove"><i class="fa fa-trash-o"></i> Remove</button>
         </div>
       </div>
     </script>
 
     <script type="text/template" id="answer-edit-template">
       <div data-role="answer" class="input-append">
+        <span class="add-on add-on-light">
+          <% if(question.type !== 'checkbox') { %>
+            <i class=" fa fa-circle-o" title="Select one choice. Good for ranking and yes-no questions."></i>
+
+          <% }else {  %>
+            <i class=" fa fa-check-square-o" title="Select one choice. Use when several answers may apply."></i>
+          <% }  %>
+        </span>
         <input type="text" value="<%= text %>">
-        <div class="btn-group">
-          <button class="btn dropdown-toggle" data-toggle="dropdown">
-          <i class="icon-plus"></i> Add a question <i class="caret"></i>
-          </button>
-          <ul class="dropdown-menu">
-            <li><a href="#" class="add-sub-question" data-type="checkbox-question">Multiple choice</a></li>
-            <li><a href="#" class="add-sub-question" data-type="radio-question">Select one</a></li>
-            <li><a href="#" class="add-sub-question" data-type="text-question">Text field</a></li>
-            <li><a class="add-sub-question" data-type="file-question"><i class="icon-camera"></i> Photo upload</strong></a></li>
-          </ul>
+        <a class="btn remove"><i class="fa fa-trash-o"></i></a>
+        <a class="btn show-add-sub-question"><i class="fa fa-sitemap"></i><span> Add sub-question</span></a>
+        <div class="question-choices">
+          <div class="choice add-sub-question" data-type="radio-question">
+            <span class="title">
+              <i class="fa fa-dot-circle-o"></i>
+              <i class="fa fa-circle-o"></i> Select one
+            </span>
+            Use when only one answer applies.
+            <span class="example"> Example: Rank the condition of this property.</span>
+          </div>
+          <div class="choice add-sub-question" data-type="checkbox-question">
+            <span class="title">
+              <i class="fa fa-check-square-o"></i>
+              <i class="fa fa-check-square-o"></i> Select multiple
+            </span>
+            Use when several answers may apply.
+            <span class="example">Example: Select problems that apply to this building.</span>
+          </div>
+          <div class="choice add-sub-question" data-type="text-question">
+            <span class="title"><i class="fa fa-edit"></i> Text field</span>
+            Add notes or other details.
+          </div>
+          <div class="choice add-sub-question" data-type="file-question">
+            <span class="title"><i class="fa fa-camera"></i> Photo upload</span>
+            Prompts surveyors to add a photo
+          </div>
+          <div class="choice close-add-sub-question">
+            <span class="title"><i class="fa fa-times"></i> Cancel</span>
+          </div>
         </div>
-        <a class="btn remove"><i class="icon-trash"></i></a>
+
       </div>
     </script>
 

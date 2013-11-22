@@ -82,6 +82,7 @@ function($, _, Backbone, settings) {
         if(question.type === 'checkbox') {
           flattenedForm.push({
             name: answer.name,
+            answers: ['yes'],
             text: question.text + ': ' + answer.text
           });
         }

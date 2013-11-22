@@ -93,9 +93,12 @@ img.responsive {
 }
 
 a,
-a:hover {
+a:hover,
+a:visited,
+a:active {
   text-decoration: none;
   color: $blue;
+  cursor: pointer;
 }
 
 .skiplink {

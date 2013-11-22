@@ -61,7 +61,7 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels, loginT
     template: _.template(registerTemplate),
 
     events: {
-      "click #register button": "createUser"
+      "click #register .button": "createUser"
     },
 
     initialize: function(options) {

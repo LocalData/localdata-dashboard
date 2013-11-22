@@ -6,7 +6,7 @@ define([
   'jquery',
   'lib/lodash',
   'backbone',
-  'lib/leaflet/leaflet.google',
+  'lib/leaflet/leaflet.tilejson',
   'moment',
   'lib/tinypubsub',
   'lib/kissmetrics',
@@ -26,9 +26,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
   'use strict';
 
   function indexToColor(index) {
-    if (index >= 0) {
-      return settings.colorRange[index + 1];
-    }
+    if (index >= 0) return settings.colorRange[index + 1];
     return settings.colorRange[0];
   }
 
@@ -55,42 +53,36 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
     };
   }
 
-
   var MapView = Backbone.View.extend({
+    BASEMAP_URL: 'http://a.tiles.mapbox.com/v3/matth.map-n9bps30s/{z}/{x}/{y}.png',
 
-    map: null,
-    responses: null,
-    survey: null,
-    paginationView: null,
-    selectedLayer: null,
     filtered: false,
-    selectedObject: {},
-    markers: {},
     filter: null,
+    map: null,
+    markers: {},
+    responses: null,
+    selectedLayer: null,
+    survey: null,
+    gridLayer: null,
 
     initialize: function(options) {
       console.log("Init map view");
       _.bindAll(this,
         'render',
-        'selectObject',
+        'handleResponses',
         'renderObject',
         'renderObjects',
         'getResponsesInBounds',
         'updateMapStyleBasedOnZoom',
         'updateObjectStyles',
         'styleFeature',
-        'setupPolygon'
+        'setupPolygon',
+        'addTileLayer'
       );
 
-      this.responses = options.responses;
-      // TODO: if we add the filter logic to the responses collection, we can
-      // more cleanly trigger off its events.
-      this.listenTo(this.responses, 'reset', this.render);
-      this.listenTo(this.responses, 'addSet', this.render);
-
       this.survey = options.survey;
+      this.clickHandler = options.clickHandler;
 
-      // We track the results on the map using these two groups
       this.parcelIdsOnTheMap = {};
       this.objectsOnTheMap = new L.FeatureGroup();
       this.zoneLayer = new L.FeatureGroup();
@@ -105,91 +97,109 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       this.render();
     },
 
-    fitBounds: function () {
-      this.map.invalidateSize(false);
 
-      if (this.responses !== null && this.responses.length > 0) {
-        try {
-          this.map.fitBounds(this.objectsOnTheMap.getBounds());
-        } catch (e) {
-        }
-      } else if (this.survey.has('zones')) {
-        try {
-          this.map.fitBounds(this.zoneLayer.getBounds());
-        } catch (e) {
-        }
-      }
+    /**
+     * Given tilejson data, add the tiles and the UTFgrid
+     * @param  {Object} tilejson
+     */
+    addTileLayer: function(tilejson) {
+      console.log("heyyyy very tilejson", tilejson);
+
+      if (this.tileLayer) this.map.removeLayer(this.tileLayer);
+      this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
+
+      // Listen to see if we're loading the map
+      this.tileLayer.on('loading', this.loading);
+      this.tileLayer.on('load', this.done);
+
+      this.map.addLayer(this.tileLayer);
+
+      // Create the grid layer & handle clicks
+      this.gridLayer = new L.UtfGrid(tilejson.grids[0], {
+        resolution: 4
+      });
+
+      this.map.addLayer(this.gridLayer);
+      console.log("Gridlayer", this.gridLayer);
+      this.gridLayer.on('click', this.handleResponses);
     },
 
-    // Debounced version of fitBounds. Created in the initialize method.
-    delayFitBounds: null,
+    loading: function() {
+      $('.map-loading').show();
+    },
 
+    done: function() {
+      $('.map-loading').hide();
+    },
 
-    render: function (arg) {
-      var hasResponses = this.responses !== null && this.responses.length > 0;
-      var hasZones = this.survey.has('zones');
-
-      // Don't draw a map if there are no responses and no survey zones to
-      // plot.
-      if (!hasResponses && !hasZones) {
-        return;
-      }
-
+    render: function() {
       if (this.map === null) {
-        // Create the map.
+        // Render the map template
         this.$el.html(_.template($('#map-view').html(), {}));
+
+        // Set up the bounding box
+        var bbox = this.survey.get('responseBounds');
+        var southWest = new L.LatLng(bbox[0][1], bbox[0][0]),
+            northEast = new L.LatLng(bbox[1][1], bbox[1][0]),
+            bounds = new L.LatLngBounds(southWest, northEast);
 
         // Initialize the map
         this.map = new L.map('map', {
           zoom: 15
         });
 
+        // Not currently used
+        // But this gives us a hook into map clicks from external owners.
+        // if (this.clickHandler) {
+        //   this.map.on('click', this.clickHandler);
+        // }
+
         // Set up the base map; add the parcels and done markers
+
         this.baseLayer = L.tileLayer(settings.baseLayer);
         this.map.addLayer(this.baseLayer);
-        this.activeLayer = 'streets';
 
-        this.map.addLayer(this.zoneLayer);
-        this.map.addLayer(this.objectsOnTheMap);
+        // FIXME: This is a hack. The map element doesn't have a size yet, so
+        // Leaflet doesn't know how to set the view properly. If we wait until
+        // the next tick and call invalidateSize, then the map will know its
+        // size.
+        setTimeout(function () {
+          this.map.addLayer(this.zoneLayer);
+          this.updateMapStyleBasedOnZoom();
+          this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
+          this.map.fitBounds(bounds, { reset: true });
+        }.bind(this), 0);
 
-        this.map.setView([0,0], 17); // default center
-        this.updateMapStyleBasedOnZoom();
+        this.selectDataMap();
         this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
       }
+      // Handle zones
+      if (this.survey.has('zones')) this.plotZones();
+      this.listenTo(this.survey, 'change', this.plotZones);
 
-      if (hasZones) {
-        // Plot the survey zones.
-        this.plotZones();
-      } else {
-        // We don't start listening in initialize because we might get the
-        // change event before we even have a map.
-        this.listenTo(this.survey, 'change', this.plotZones);
-      }
-
-      // If there are no responses, don't bother trying to plot responses or
-      // deal with filters.
-      if (!hasResponses) {
-        return;
-      }
-
-      // TODO: better message passing
-      events.publish('loading', [true]);
-
-      if (this.responses.filters === null) {
-        this.filter = null;
-      }
-
-      if (_.isArray(arg)) {
-        // We got an array of models. Let's plot just that set them.
-        this.plotResponses(arg);
-      } else {
-        // Plot all of the responses from the responses collection.
-        this.plotResponses();
-      }
-
-
-      events.publish('loading', [false]);
       return this;
+    },
+
+    selectDataMap: function () {
+      // Build the appropriate TileJSON URL.
+      var url = '/tiles/' + this.survey.get('id');
+      if (this.filter) {
+        if(this.filter.question) {
+          url = url + '/filter/' + this.filter.question;
+        }
+        if(this.filter.answer) {
+          url = url + '/' + this.filter.answer;
+        }
+      }
+      url = url + '/tile.json';
+
+      console.log("SETTING FILTER", url);
+      // Get TileJSON
+      $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json'
+      }).done(this.addTileLayer);
     },
 
     /**
@@ -198,17 +208,18 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
      * @param {String} question Name of the question, eg 'vacant'
      * @param {Object} answers  Possible answers to the question
      */
-    setFilter: function (question, answers) {
+    setFilter: function (question, answer) {
       this.filter = {
         question: question,
-        answers: answers
+        answer: answer
       };
-      this.plotResponses();
+      this.map.invalidateSize();
+      this.selectDataMap();
     },
 
-    clearFilter: function() {
-      this.filter = null,
-      this.plotResponses();
+    clearFilter: function () {
+      this.filter = null;
+      this.selectDataMap();
     },
 
     /**
@@ -245,169 +256,17 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       return style;
     },
 
-
-    /**
-     * Set up a geojson feature for a response object with a polygon
-     * @param  {Object} response a response object with a polygon
-     * @return {Object}          GeoJSON feature
-     */
-    setupPolygon: function(response) {
-      // Record the objects as rendered so we don't render it twice.
-      var parcelId = response.get('parcel_id');
-      this.parcelIdsOnTheMap[parcelId] = true;
-
-      // Set up the default style
-      var style = this.defaultStyle;
-
-      // Set up the feature
-      var feature = {
-        type: 'Feature',
-        id: response.get('id'),
-        parcelId: parcelId,
-        geometry: response.get('geo_info').geometry,
-        style: style
-      };
-
-      // If there is a filter, attach the filtered question to the feature
-      // This is used later to style the feature
-      // We don't attach all the data to keep size down
-      // (large collections can have 20+ mb of data)
-      if (this.filter !== null) {
-
-        // Some responses don't have associated data. It's still important that
-        // they appear in the filter, since the user may be looking for empty
-        // result sets.
-        if(response.get('responses') === undefined) {
-          feature[this.filter.question] = undefined;
-        }else {
-          feature[this.filter.question] = response.get('responses')[this.filter.question];
-        }
-      }
-
-      // Return the feature for rendering
-      return feature;
-    },
-
-
-    /**
-     * Plot responses on the map
-     * @param  {Array} responses
-     */
-    plotResponses: function (responses) {
-      // If we aren't given an explicit set of responses to plot,
-      // we'll plot all of the responses from the collection.
-      if (responses === undefined) {
-
-        // Clear out the old results first
-        this.objectsOnTheMap.clearLayers();
-        this.parcelIdsOnTheMap = {};
-
-        // TODO: not great form to reassign one of the arguments
-        responses = this.responses.models;
-      }
-
-      var renderedParcelTracker = this.parcelIdsOnTheMap;
-
-      // We'll need to create GeoJSON FeatureCollection objects to pass
-      // to Leaflet for rendering.
-      var featureCollection = {
-        type: 'FeatureCollection',
-        features: []
-      };
-
-      var pointCollection = {
-        type: 'FeatureCollection',
-        features: []
-      };
-
-      // Populate the FeatureCollection for responses with full geometry.
-      featureCollection.features = _.map(
-        _.filter(responses, function (response) {
-
-          // Get items that have geometry
-          // AND aren't already on the map
-          return (_.has(response.get('geo_info'), 'geometry') &&
-                 !_.has(renderedParcelTracker, response.get('parcel_id'))
-          );
-      }), this.setupPolygon);
-
-      // Populate the FeatureCollection for responses with only a centroid.
-      pointCollection.features = _.map(
-        _.filter(responses, function (response) {
-
-        return (!_.has(response.get('geo_info'), 'geometry') &&
-                _.has(response.get('geo_info'), 'centroid'));
-      }), function (response) {
-
-        // Record the objects as rendered so we don't render it twice.
-        var id = response.get('id');
-        renderedParcelTracker[id] = true;
-
-        // Set up the feature
-        var feature = {
-          type: 'Feature',
-          id: id,
-          geometry: {
-            type: 'Point',
-            coordinates: response.get('geo_info').centroid
-          }
-        };
-
-        return feature;
-      });
-
-      // If we found some full-geometry responses, set up the style and pass
-      // them to Leaflet.
-      if (featureCollection.features.length > 0) {
-        // TODO: THE DATA IS GONE so the STYLE IS GONE.
-        var featureLayer = new L.geoJson(featureCollection, {
-          pointToLayer: this.defaultPointToLayer,
-          style: this.styleFeature
-        });
-        featureLayer.on('click', this.selectObject);
-
-        // Add the layer to the layergroup and the hashmap
-        this.objectsOnTheMap.addLayer(featureLayer);
-      }
-
-      // If we found some centroid-only responses, set up the style and pass
-      // them to Leaflet.
-      if (pointCollection.features.length > 0) {
-        var pointLayer = new L.geoJson(pointCollection, {
-          pointToLayer: this.defaultPointToLayer,
-          style: settings.circleMarker
-        });
-        pointLayer.on('click', this.selectObject);
-
-        // Add the layer to the layergroup and the hashmap
-        this.objectsOnTheMap.addLayer(pointLayer);
-      }
-
-
-      if (featureCollection.features.length > 0 || pointCollection.features.length > 0) {
-        this.delayFitBounds();
-      }
-    },
-
-    // Plot the zones of a survey
     plotZones: function () {
-      if (this.survey.has('zones')) {
-        var zones = this.survey.get('zones');
+      if (!this.survey.has('zones')) return;
 
-        // Clear the old layer
-        this.zoneLayer.clearLayers();
+      var zones = this.survey.get('zones');
+      this.zoneLayer.clearLayers();
+      this.zoneLayer.addLayer(new L.geoJson(zones, {
+        style: zoneStyle
+      }));
 
-        // Create and add the new layer
-        this.zoneLayer.addLayer(new L.geoJson(zones, {
-          style: zoneStyle
-        }));
-
-        // Fit the map to the zones, if appropriate.
-        this.delayFitBounds();
-
-        // Make sure objects are on top
-        this.objectsOnTheMap.bringToFront();
-      }
+      this.delayFitBounds();
+      this.objectsOnTheMap.bringToFront();
     },
 
     updateObjectStyles: function(style) {
@@ -439,7 +298,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
           pointToLayer: pointToLayer,
           style: style
         });
-        geojsonLayer.on('click', this.selectObject);
+        geojsonLayer.on('click', this.handleResponses);
 
         // Add the layer to the layergroup and the hashmap
         this.objectsOnTheMap.addLayer(geojsonLayer); // was (geojsonLayer);
@@ -484,42 +343,37 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
 
     /**
-     * Get all the responses in the current viewport
+     * Hilight a selected object; un-hilight any previously selected object
+     * @param  {Object} event
+     *
+     * THIS WAS  selectObject.
      */
-    getResponsesInBounds: function(){
-      console.log("Getting responses in the map");
+    handleResponses: function(event) {
+      _kmq.push(['record', "Map object selected"]);
+      console.log("Selected object", event);
 
-      // Don't add any markers if the zoom is really far out.
-      var zoom = this.map.getZoom();
-      if(zoom < 17) {
-        return;
+      // Remove any previously selected layer
+      if (this.selectedLayer !== null) {
+        this.map.removeLayer(this.selectedLayer);
       }
 
-      // Get the objects in the bounds
-      // And add them to the map
-      api.getResponsesInBounds(this.map.getBounds(), this.addResultsToMap);
+      // Add a layer
+      this.selectedLayer = new L.GeoJSON(event.data.geometry);
+      this.selectedLayer.setStyle(settings.selectedStyle);
+      this.map.addLayer(this.selectedLayer);
+      this.selectedLayer.bringToFront();
+
+      // Let's show some info about this object in the sidebar.
+      this.details(event.data);
     },
 
 
-    /**
-     * Highlight a selected object; un-hilight any previously selected object
-     * @param  {Object} event
-     */
-    selectObject: function(event) {
-      _kmq.push(['record', "Map object selected"]);
-
-      // Visually deselect the previous style
-      if (this.selectedLayer !== null) {
-        var originalStyle = this.styleFeature(this.selectedLayer.feature);
-        this.selectedLayer.setStyle(originalStyle);
-      }
-
-      // Select the current layer
-      this.selectedLayer = event.layer;
-      this.selectedLayer.setStyle(settings.selectedStyle);
-
-      // Let's show some info about this object.
-      this.details(this.selectedLayer.feature);
+    showDetails: function(responses) {
+      console.log(responses);
+      var selectedItemListView = new ResponseListView({
+        collection: collection
+      });
+      $("#result-container").html(selectedItemListView.render().$el);
     },
 
 
@@ -530,10 +384,11 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
      */
     details: function(feature) {
       // Find out if we're looking up a set of parcels, or one point
-      if(feature.parcelId !== undefined && feature.parcelId !== '') {
-        this.sel = new Responses.Collection(this.responses.where({'parcel_id': feature.parcelId}));
+      var id;
+      if(feature.parcel_id !== undefined && feature.parcel_id !== '') {
+        id = feature.parcel_id;
       }else {
-        this.sel = new Responses.Collection(this.responses.where({'id': feature.id}));
+        id = feature.id;
       }
 
       var selectedItemListView = new ResponseListView({collection: this.sel});
