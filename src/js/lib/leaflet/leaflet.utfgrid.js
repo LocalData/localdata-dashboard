@@ -28,6 +28,7 @@ L.Util.ajax = function (url, cb) {
   };
   request.send();
 };
+
 L.UtfGrid = L.Class.extend({
   includes: L.Mixin.Events,
   options: {
@@ -72,6 +73,7 @@ L.UtfGrid = L.Class.extend({
     this._container = this._map._container;
 
     this._update();
+    console.log("ADDED UTF GRID");
 
     var zoom = this._map.getZoom();
 
@@ -94,6 +96,7 @@ L.UtfGrid = L.Class.extend({
   _click: function (e) {
     this.fire('click', this._objectForEvent(e));
   },
+
   _move: function (e) {
     var on = this._objectForEvent(e);
 
@@ -150,6 +153,7 @@ L.UtfGrid = L.Class.extend({
   //Load up all required json grid files
   //TODO: Load from center etc
   _update: function () {
+    console.log("UPDATE UTF GRID");
 
     var bounds = this._map.getPixelBounds(),
         zoom = this._map.getZoom(),
@@ -167,7 +171,7 @@ L.UtfGrid = L.Class.extend({
         Math.floor(bounds.max.y / tileSize)),
         max = this._map.options.crs.scale(zoom) / tileSize;
 
-    //Load all required ones
+    // Load all required ones
     for (var x = nwTilePoint.x; x <= seTilePoint.x; x++) {
       for (var y = nwTilePoint.y; y <= seTilePoint.y; y++) {
 
@@ -202,6 +206,8 @@ L.UtfGrid = L.Class.extend({
       cb: wk + '.' + functionName
     }, this.options));
 
+    console.log("MADE TILE URL", url, wk, functionName);
+
     var script = document.createElement('script');
     script.setAttribute("type", "text/javascript");
     script.setAttribute("src", url);
@@ -225,7 +231,9 @@ L.UtfGrid = L.Class.extend({
 
     var key = zoom + '_' + x + '_' + y;
     var self = this;
+    console.log("LEAFLET CHECKING", url);
     L.Util.ajax(url, function (data) {
+      console.log("LEAFLET GOT DATA", data);
       self._cache[key] = data;
     });
   },

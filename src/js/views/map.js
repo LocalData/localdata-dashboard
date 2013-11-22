@@ -63,6 +63,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
     responses: null,
     selectedLayer: null,
     survey: null,
+    gridLayer: null,
 
     initialize: function(options) {
       console.log("Init map view");
@@ -102,15 +103,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
      * @param  {Object} tilejson
      */
     addTileLayer: function(tilejson) {
-      /*
-        wow                                    so raster
-                       total quality
-
-                                    much map
-
-              such tiles
-                              wow
-      */
       console.log("heyyyy very tilejson", tilejson);
 
       if (this.tileLayer) this.map.removeLayer(this.tileLayer);
@@ -129,7 +121,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
       this.map.addLayer(this.gridLayer);
       console.log("Gridlayer", this.gridLayer);
-      // this.gridLayer.bringToFront();
       this.gridLayer.on('click', this.handleResponses);
     },
 

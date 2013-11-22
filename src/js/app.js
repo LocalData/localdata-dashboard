@@ -54,9 +54,12 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
     // login page
     var redirectToLogin = function () {
       // Don't keep redirecting to login
-      if (Backbone.history.fragment.indexOf("login") !== -1 ) {
+      var isLogin = Backbone.history.fragment.indexOf("login") !== -1;
+      var isRegister = Backbone.history.fragment.indexOf("register") !== -1;
+      if (isLogin || isRegister) {
         return;
       }
+
       LD.router._router.navigate("/login/?redirectTo=" + Backbone.history.fragment, {trigger: true});
     };
 
