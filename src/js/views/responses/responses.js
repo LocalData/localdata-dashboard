@@ -56,7 +56,9 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
 
         // Updating
         'getNew',
-        'lastUpdated'
+        'lastUpdated',
+
+        'mapClickHandler'
       );
 
       this.responses = options.responses;
@@ -93,7 +95,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
         this.mapView = new MapView({
           el: $('#map-view-container'),
           survey: this.survey,
-          clickHandler: this.clickHandler
+          clickHandler: this.mapClickHandler
         });
       }
 
@@ -112,8 +114,61 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       // this.updateFilterView();
     },
 
-    clickHandler: function(event) {
-      console.log("Map clicked at", event);
+    mapClickHandler: function(event) {
+      console.log("CLICK HANDLER", event);
+      if (!event.data) return;
+      if (!event.data.object_id) return;
+
+      var object_id = event.data.object_id;
+      console.log(this.survey.get('id'));
+      var rc = new Responses.Collection({
+        surveyId: this.survey.get('id'),
+        objectId: object_id
+      });
+
+      console.log(rc);
+
+
+      // Check what object ID
+      // Fetch the data for those objects
+      // Create a collection with that
+        // Collections should hadle ID objects.
+      // Create a list view
+
+
+              //showDetails: function(responses) {
+              //  console.log(responses);
+              //  var selectedItemListView = new ResponseListView({
+              //    collection: collection
+              //  });
+              //  $("#result-container").html(selectedItemListView.render().$el);
+              //},
+//
+//
+              ///**
+              // * Show details for a particular feature.
+              // *
+              // * @param  {Object} options An object with a parcelId or id property
+              // */
+              //details: function(feature) {
+              //  console.log("Got feature", feature);
+              //  // Find out if we're looking up a set of parcels, or one point
+              //  var id;
+              //  if(feature.parcel_id !== undefined && feature.parcel_id !== '') {
+              //    id = feature.parcel_id;
+              //  }else {
+              //    id = feature.id;
+              //  }
+//
+              //  var selectedItemListView = new ResponseListView({collection: this.sel});
+              //  $('.factoid').hide();
+              //  $("#responses-list-container").html(selectedItemListView.render().$el);
+              //  selectedItemListView.on('delete', function() {
+              //    $('.factoid').show();
+              //  });
+              //}
+
+
     },
 
     update: function() {
