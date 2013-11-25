@@ -70,6 +70,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       _.bindAll(this,
         'render',
         'selectObject',
+        'deselectObject',
         'renderObject',
         'renderObjects',
         'getResponsesInBounds',
@@ -341,24 +342,26 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
     /**
      * Hilight a selected object; un-hilight any previously selected object
      * @param  {Object} event
-     *
-     * THIS WAS  selectObject.
      */
     selectObject: function(event) {
       _kmq.push(['record', "Map object selected"]);
       console.log("Selected object", event);
       if (!event.data) return;
 
-      // Remove any previously selected layer
-      if (this.selectedLayer !== null) {
-        this.map.removeLayer(this.selectedLayer);
-      }
+      this.deselectObject();
 
       // Add a layer
       this.selectedLayer = new L.GeoJSON(event.data.geometry);
       this.selectedLayer.setStyle(settings.selectedStyle);
       this.map.addLayer(this.selectedLayer);
       this.selectedLayer.bringToFront();
+    },
+
+    deselectObject: function() {
+      if (this.selectedLayer !== null) {
+        this.map.removeLayer(this.selectedLayer);
+        delete this.selectedLayer;
+      }
     }
 
   });

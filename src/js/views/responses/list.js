@@ -43,6 +43,13 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
       this.listenTo(this.collection, 'reset', this.render);
     },
 
+    remove: function() {
+      this.$el.empty();
+      this.stopListening();
+      this.trigger('delete');
+      return this;
+    },
+
     render: function() {
       var $el = $(this.el);
       $el.html(this.template());

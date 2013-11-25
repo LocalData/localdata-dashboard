@@ -129,9 +129,9 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
         collection: rc
       });
 
-      // selectedItemListView.on('delete', function() {
-      //   $('.factoid').show();
-      // });
+      selectedItemListView.on('delete', function() {
+        this.mapView.deselectObject();
+      }.bind(this));
     },
 
     update: function() {
