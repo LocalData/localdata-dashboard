@@ -19,12 +19,13 @@ define([
   // Views
   'views/map',
   'views/responses/filter',
+  'views/responses/list',
 
   // Templates
   'text!templates/responses/map-list.html'
 ],
 
-function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView, FilterView, mapListTemplate) {
+function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView, FilterView, ResponseListView, mapListTemplate) {
   'use strict';
 
   var ResponseViews = {};
@@ -125,16 +126,17 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
         surveyId: this.survey.get('id'),
         objectId: object_id
       });
-
       console.log(rc);
 
-
-      // Check what object ID
-      // Fetch the data for those objects
-      // Create a collection with that
-        // Collections should hadle ID objects.
-      // Create a list view
-
+      var selectedItemListView = new ResponseListView({
+        collection: rc,
+        el: '#responses-list-container'
+      });
+      $('.factoid').hide();
+      //$("#responses-list-container").html(selectedItemListView.render().$el);
+      selectedItemListView.on('delete', function() {
+        $('.factoid').show();
+      });
 
               //showDetails: function(responses) {
               //  console.log(responses);
@@ -143,8 +145,6 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
               //  });
               //  $("#result-container").html(selectedItemListView.render().$el);
               //},
-//
-//
               ///**
               // * Show details for a particular feature.
               // *
@@ -159,7 +159,6 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
               //  }else {
               //    id = feature.id;
               //  }
-//
               //  var selectedItemListView = new ResponseListView({collection: this.sel});
               //  $('.factoid').hide();
               //  $("#responses-list-container").html(selectedItemListView.render().$el);

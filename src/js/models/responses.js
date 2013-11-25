@@ -53,6 +53,7 @@ function($, _, Backbone, moment, settings, api) {
     },
 
     parse: function(response) {
+      console.log("Parsing", response);
       return response.responses;
     },
 
