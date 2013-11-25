@@ -39,6 +39,7 @@ function($, _, Backbone, events, settings, api, Responses, template) {
 
     render: function() {
       var $el = $(this.el);
+      console.log(this.model);
       $el.html(this.template({r: this.model.toJSON() }));
       return this;
     },

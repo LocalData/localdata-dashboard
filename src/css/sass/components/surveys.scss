@@ -75,6 +75,26 @@
 }
 
 /* Responses ---------------------------------------------------------------- */
+.map-list-view {
+  position: relative;
+}
+
+.responses-list {
+  position: absolute;
+  width: 50%;
+  background: #fff;
+  border: 8px solid $thinpink;
+  padding: 20px;
+  top: 20px;
+  margin-left: 10%;
+  z-index: 10000;
+
+  button {
+    float: right;
+    margin-right: 0;
+    margin-bottom: 0;
+  }
+}
 
 .confirm-delete {
   display: none;

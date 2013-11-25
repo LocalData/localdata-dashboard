@@ -369,14 +369,7 @@ a:active {
 .skiplink {
   line-height: 100px; }
 
-/*******************************************************************************
- * _layout.scss
- *
- * The layout of the major regions (usually, but not necessarily Drupal regions)
- * that components will be placed within. Layout styles for the theme's
- * components should not be placed here and should instead be kept with the
- * relevant SCSS for that component.
- ******************************************************************************/
+fcontr
 html,
 body {
   margin: 0;
@@ -929,6 +922,23 @@ header .nav a:visited {
   width: 50%; }
 
 /* Responses ---------------------------------------------------------------- */
+.map-list-view {
+  position: relative; }
+
+.responses-list {
+  position: absolute;
+  width: 50%;
+  background: #fff;
+  border: 8px solid #f5ebe6;
+  padding: 20px;
+  top: 20px;
+  margin-left: 10%;
+  z-index: 10000; }
+  .responses-list button {
+    float: right;
+    margin-right: 0;
+    margin-bottom: 0; }
+
 .confirm-delete {
   display: none; }
 
