@@ -49,7 +49,7 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
 
       this.collection.each(function(response) {
         var item = new ResponseView({ model: response });
-        $el.append(item.render().el);
+        $el.find('.responses-list').append(item.render().el);
       });
 
       return this;
