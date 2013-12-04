@@ -101,11 +101,11 @@ define(function (require) {
     });
 
     request.done(function(surveys) {
-      callback(surveys.surveys[0]);
+      callback(null, surveys.surveys[0]);
     });
 
     request.fail(function(jqXHR, textStatus) {
-      console.log("Request failed: " + textStatus);
+      callback(jqXHR.responseText);
     });
   };
 
