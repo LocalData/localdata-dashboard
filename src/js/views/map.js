@@ -142,14 +142,16 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         this.$el.html(_.template($('#map-view').html(), {}));
 
         // Set up the bounding box
-        var bbox = this.survey.get('responseBounds');
-        var southWest = new L.LatLng(bbox[0][1], bbox[0][0]),
-            northEast = new L.LatLng(bbox[1][1], bbox[1][0]),
-            bounds = new L.LatLngBounds(southWest, northEast);
+        //var bbox = this.survey.get('responseBounds');
+//
+        //var southWest = new L.LatLng(bbox[0][1], bbox[0][0]),
+        //    northEast = new L.LatLng(bbox[1][1], bbox[1][0]),
+        //    bounds = new L.LatLngBounds(southWest, northEast);
 
         // Initialize the map
         this.map = new L.map('map', {
-          zoom: 15
+          zoom: 15,
+          center: [37.77585785035733, -122.41362811351655]
         });
 
         // Set up the base map; add the parcels and done markers
@@ -164,7 +166,17 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
           this.map.addLayer(this.zoneLayer);
           this.updateMapStyleBasedOnZoom();
           this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
-          this.map.fitBounds(bounds, { reset: true });
+
+          // Center the map
+          var bounds = this.survey.get('responseBounds');
+          if (bounds) {
+            bounds = [flip(bounds[0]), flip(bounds[1])];
+            if (bounds[0][0] === bounds[1][0] || bounds[0][1] === bounds[1][1]) {
+              this.map.setView(bounds[0], 15);
+            } else {
+              this.map.fitBounds(bounds, { reset: true });
+            }
+          }
         }.bind(this), 0);
 
         this.selectDataMap();
