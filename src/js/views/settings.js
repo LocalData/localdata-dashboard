@@ -53,6 +53,8 @@ function($, _, Backbone, settings, api, template) {
         return memo;
       }, {});
 
+      console.log(fields);
+
       this.survey.set(fields);
       this.survey.save({}, {
         success: this.success,

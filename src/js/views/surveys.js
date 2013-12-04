@@ -331,7 +331,7 @@ function(
     },
 
     showSettings: function() {
-      this.show('#settings-view-container', 3);
+        this.show('#settings-view-container', '#tab-survey-settings');
     },
 
     showFilters: function() {
