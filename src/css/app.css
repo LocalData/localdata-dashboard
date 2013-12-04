@@ -909,6 +909,9 @@ header .nav a:visited {
 .filters .answers {
   display: none; }
 
+.answers button {
+  margin-top: 10px; }
+
 .answer {
   overflow: auto;
   clear: both;
