@@ -101,6 +101,14 @@
     right: 20px;
     top: 20px;
   }
+
+  .time, .collector {
+    color: $body-accent;
+  }
+
+  .collector {
+    padding-right: 2em;
+  }
 }
 
 .confirm-delete {

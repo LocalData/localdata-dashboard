@@ -889,6 +889,10 @@ header .nav a:visited {
     position: absolute;
     right: 20px;
     top: 20px; }
+  .responses-list .time, .responses-list .collector {
+    color: #b7aba5; }
+  .responses-list .collector {
+    padding-right: 2em; }
 
 .confirm-delete {
   display: none; }
