@@ -51,8 +51,17 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
     },
 
     render: function() {
+      var first = this.collection.at(0);
+      var name;
+
+      if(first.get('geo_info') != undefined) {
+        name = first.get('geo_info').humanReadableName;
+      }else {
+        name = first.get('parcel_id');
+      }
+
       var $el = $(this.el);
-      $el.html(this.template());
+      $el.html(this.template({ name: name }));
 
       this.collection.each(function(response) {
         var item = new ResponseView({ model: response });

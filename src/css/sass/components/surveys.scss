@@ -94,6 +94,13 @@
     margin-right: 0;
     margin-bottom: 0;
   }
+
+  button.close {
+    float: none;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+  }
 }
 
 .confirm-delete {

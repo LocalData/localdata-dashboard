@@ -25,6 +25,10 @@ define([
 function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListView, Responses) {
   'use strict';
 
+  function flip(a) {
+    return [a[1], a[0]];
+  }
+
   function indexToColor(index) {
     if (index >= 0) return settings.colorRange[index + 1];
     return settings.colorRange[0];
