@@ -109,6 +109,8 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
         forms: this.forms,
         map: this.mapView
       });
+      $("#filter-view-container").html(this.filterView.$el);
+
 
       // If the data has been filtered, show that on the page.
       // TODO: This should be done in a view.
@@ -150,7 +152,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       this.mapView.map.invalidateSize();
 
       // Render the filter
-      $("#filter-view-container").html(this.filterView.$el);
+      $("#filter-view-container").show();
     },
 
     hideFilters: function() {
@@ -159,7 +161,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       this.mapView.map.invalidateSize();
       this.update();
 
-      $("#filter-view-container").html('');
+      $("#filter-view-container").hide();
     },
 
     remove: function () {

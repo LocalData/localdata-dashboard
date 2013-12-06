@@ -42,6 +42,7 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
     initialize: function(options) {
       _.bindAll(this, 'render', 'reset');
 
+      console.log("init filters");
       this.survey = options.survey;
       this.forms = options.forms;
       this.map = options.map;
@@ -116,8 +117,6 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
      * Show only responses with a specific answer
      */
     filter: function(event) {
-      console.log("FILTERY");
-
       _kmq.push(['record', "Answer filter selected"]);
       var $answer = $(event.target);
       this.filters.answer = $answer.attr('data-answer');

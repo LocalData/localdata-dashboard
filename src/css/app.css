@@ -897,6 +897,9 @@ header .nav a:visited {
 .confirm-delete {
   display: none; }
 
+#filter-view-container {
+  display: none; }
+
 .filters label,
 .filters .question {
   cursor: pointer; }
