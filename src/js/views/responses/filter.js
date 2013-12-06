@@ -81,7 +81,10 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
      * Reset any filters
      */
     reset: function(event) {
-      event.preventDefault();
+      if(event) {
+        event.preventDefault();
+      }
+
       this.filters = {};
       this.map.clearFilter();
 
@@ -92,6 +95,7 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
 
     bin: function(event) {
       _kmq.push(['record', "Question filter selected"]);
+      console.log("Another filter selected", event);
 
       // Clear out any filters
       if(this.filters.answer) {
