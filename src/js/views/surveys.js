@@ -32,7 +32,6 @@ define([
 
   // Misc
   'misc/exampleform'
-
 ],
 
 function(
@@ -90,7 +89,13 @@ function(
     },
 
     addTileLayer: function(tilejson) {
-      if (this.tileLayer) this.map.removeLayer(this.tileLayer);
+      // Disabled for now
+      // On long lists, this adds too many tile requests.
+      return;
+
+      if (this.tileLayer) {
+        this.map.removeLayer(this.tileLayer);
+      }
       this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
 
       // Listen to see if we're loading the map
@@ -325,7 +330,9 @@ function(
     showResponses: function() {
       this.show('#response-view-container', '#tab-survey-home');
       this.filters = false;
-      if (this.mapAndListView) this.mapAndListView.hideFilters();
+      if (this.mapAndListView) {
+        this.mapAndListView.hideFilters();
+      }
     },
 
     showExport: function() {
@@ -343,7 +350,9 @@ function(
     showFilters: function() {
       this.show('#response-view-container', '#tab-survey-filters');
       this.filters = true;
-      if (this.mapAndListView) this.mapAndListView.showFilters();
+      if (this.mapAndListView) {
+        this.mapAndListView.showFilters();
+      }
     }
   });
 

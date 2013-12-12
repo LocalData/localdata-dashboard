@@ -30,7 +30,9 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
   }
 
   function indexToColor(index) {
-    if (index >= 0) return settings.colorRange[index + 1];
+    if (index >= 0) {
+      return settings.colorRange[index + 1];
+    }
     return settings.colorRange[0];
   }
 
@@ -110,7 +112,9 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
     addTileLayer: function(tilejson) {
       console.log("heyyyy very tilejson", tilejson);
 
-      if (this.tileLayer) this.map.removeLayer(this.tileLayer);
+      if (this.tileLayer) {
+        this.map.removeLayer(this.tileLayer);
+      }
       this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
 
       // Listen to see if we're loading the map
@@ -144,13 +148,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       if (this.map === null) {
         // Render the map template
         this.$el.html(_.template($('#map-view').html(), {}));
-
-        // Set up the bounding box
-        //var bbox = this.survey.get('responseBounds');
-//
-        //var southWest = new L.LatLng(bbox[0][1], bbox[0][0]),
-        //    northEast = new L.LatLng(bbox[1][1], bbox[1][0]),
-        //    bounds = new L.LatLngBounds(southWest, northEast);
 
         // Initialize the map
         this.map = new L.map('map', {
@@ -187,7 +184,9 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
       }
       // Handle zones
-      if (this.survey.has('zones')) this.plotZones();
+      if (this.survey.has('zones')) {
+        this.plotZones();
+      }
       this.listenTo(this.survey, 'change', this.plotZones);
 
       return this;
@@ -270,7 +269,9 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
     },
 
     plotZones: function () {
-      if (!this.survey.has('zones')) return;
+      if (!this.survey.has('zones')) {
+        return;
+      }
 
       var zones = this.survey.get('zones');
       this.zoneLayer.clearLayers();
@@ -362,7 +363,9 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
     selectObject: function(event) {
       _kmq.push(['record', "Map object selected"]);
       console.log("Selected object", event);
-      if (!event.data) return;
+      if (!event.data) {
+        return;
+      }
 
       this.deselectObject();
 
