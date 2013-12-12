@@ -25,6 +25,10 @@ define([
 function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListView, Responses) {
   'use strict';
 
+  function flip(a) {
+    return [a[1], a[0]];
+  }
+
   function indexToColor(index) {
     if (index >= 0) return settings.colorRange[index + 1];
     return settings.colorRange[0];
@@ -69,7 +73,8 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       console.log("Init map view");
       _.bindAll(this,
         'render',
-        'handleResponses',
+        'selectObject',
+        'deselectObject',
         'renderObject',
         'renderObjects',
         'getResponsesInBounds',
@@ -121,7 +126,10 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
       this.map.addLayer(this.gridLayer);
       console.log("Gridlayer", this.gridLayer);
-      this.gridLayer.on('click', this.handleResponses);
+      this.gridLayer.on('click', this.selectObject);
+      if (this.clickHandler) {
+        this.gridLayer.on('click', this.clickHandler);
+      }
     },
 
     loading: function() {
@@ -138,24 +146,19 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         this.$el.html(_.template($('#map-view').html(), {}));
 
         // Set up the bounding box
-        var bbox = this.survey.get('responseBounds');
-        var southWest = new L.LatLng(bbox[0][1], bbox[0][0]),
-            northEast = new L.LatLng(bbox[1][1], bbox[1][0]),
-            bounds = new L.LatLngBounds(southWest, northEast);
+        //var bbox = this.survey.get('responseBounds');
+//
+        //var southWest = new L.LatLng(bbox[0][1], bbox[0][0]),
+        //    northEast = new L.LatLng(bbox[1][1], bbox[1][0]),
+        //    bounds = new L.LatLngBounds(southWest, northEast);
 
         // Initialize the map
         this.map = new L.map('map', {
-          zoom: 15
+          zoom: 15,
+          center: [37.77585785035733, -122.41362811351655]
         });
 
-        // Not currently used
-        // But this gives us a hook into map clicks from external owners.
-        // if (this.clickHandler) {
-        //   this.map.on('click', this.clickHandler);
-        // }
-
         // Set up the base map; add the parcels and done markers
-
         this.baseLayer = L.tileLayer(settings.baseLayer);
         this.map.addLayer(this.baseLayer);
 
@@ -167,7 +170,17 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
           this.map.addLayer(this.zoneLayer);
           this.updateMapStyleBasedOnZoom();
           this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
-          this.map.fitBounds(bounds, { reset: true });
+
+          // Center the map
+          var bounds = this.survey.get('responseBounds');
+          if (bounds) {
+            bounds = [flip(bounds[0]), flip(bounds[1])];
+            if (bounds[0][0] === bounds[1][0] || bounds[0][1] === bounds[1][1]) {
+              this.map.setView(bounds[0], 15);
+            } else {
+              this.map.fitBounds(bounds, { reset: true });
+            }
+          }
         }.bind(this), 0);
 
         this.selectDataMap();
@@ -345,58 +358,26 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
     /**
      * Hilight a selected object; un-hilight any previously selected object
      * @param  {Object} event
-     *
-     * THIS WAS  selectObject.
      */
-    handleResponses: function(event) {
+    selectObject: function(event) {
       _kmq.push(['record', "Map object selected"]);
       console.log("Selected object", event);
+      if (!event.data) return;
 
-      // Remove any previously selected layer
-      if (this.selectedLayer !== null) {
-        this.map.removeLayer(this.selectedLayer);
-      }
+      this.deselectObject();
 
       // Add a layer
       this.selectedLayer = new L.GeoJSON(event.data.geometry);
       this.selectedLayer.setStyle(settings.selectedStyle);
       this.map.addLayer(this.selectedLayer);
       this.selectedLayer.bringToFront();
-
-      // Let's show some info about this object in the sidebar.
-      this.details(event.data);
     },
 
-
-    showDetails: function(responses) {
-      console.log(responses);
-      var selectedItemListView = new ResponseListView({
-        collection: collection
-      });
-      $("#result-container").html(selectedItemListView.render().$el);
-    },
-
-
-    /**
-     * Show details for a particular feature.
-     *
-     * @param  {Object} options An object with a parcelId or id property
-     */
-    details: function(feature) {
-      // Find out if we're looking up a set of parcels, or one point
-      var id;
-      if(feature.parcel_id !== undefined && feature.parcel_id !== '') {
-        id = feature.parcel_id;
-      }else {
-        id = feature.id;
+    deselectObject: function() {
+      if (this.selectedLayer !== null) {
+        this.map.removeLayer(this.selectedLayer);
+        delete this.selectedLayer;
       }
-
-      var selectedItemListView = new ResponseListView({collection: this.sel});
-      $('.factoid').hide();
-      $("#responses-list-container").html(selectedItemListView.render().$el);
-      selectedItemListView.on('delete', function() {
-        $('.factoid').show();
-      });
     }
 
   });

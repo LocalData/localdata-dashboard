@@ -37,7 +37,7 @@ function($, _, Backbone, moment, settings, api) {
 
     initialize: function(options) {
       if (options !== undefined) {
-        console.log("Getting responses");
+        console.log("Getting responses", options);
         this.surveyId = options.surveyId;
         this.objectId = options.objectId;
         this.fetch();
@@ -53,6 +53,7 @@ function($, _, Backbone, moment, settings, api) {
     },
 
     parse: function(response) {
+      console.log("Parsing", response);
       return response.responses;
     },
 

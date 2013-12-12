@@ -178,6 +178,7 @@ function(
 
       // Hide the submit button so it doesn't get over-clicked
       $("#new-survey-form .submit").hide();
+      $("#new-survey-form .error").hide();
 
       // Get the name and other basic details
       // TODO: this should probably be a new Survey model?
@@ -202,8 +203,13 @@ function(
       }
 
       // Submit the details as a new survey.
-      api.createSurvey(survey, function(survey) {
+      api.createSurvey(survey, function(error, survey) {
         // LD.router._router.navigate("surveys/" + survey.slug, {trigger: true});
+        if(error) {
+          $("#new-survey-form .submit").fadeIn();
+          $("#new-survey-form .error").fadeIn();
+          return;
+        }
 
         // TODO -- use the router
         location.href = "/#surveys/" + survey.slug + "/form";
@@ -331,7 +337,7 @@ function(
     },
 
     showSettings: function() {
-      this.show('#settings-view-container', 3);
+        this.show('#settings-view-container', '#tab-survey-settings');
     },
 
     showFilters: function() {

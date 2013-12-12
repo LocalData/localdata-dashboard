@@ -19,12 +19,13 @@ define([
   // Views
   'views/map',
   'views/responses/filter',
+  'views/responses/list',
 
   // Templates
   'text!templates/responses/map-list.html'
 ],
 
-function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView, FilterView, mapListTemplate) {
+function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView, FilterView, ResponseListView, mapListTemplate) {
   'use strict';
 
   var ResponseViews = {};
@@ -56,7 +57,9 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
 
         // Updating
         'getNew',
-        'lastUpdated'
+        'lastUpdated',
+
+        'mapClickHandler'
       );
 
       this.responses = options.responses;
@@ -93,7 +96,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
         this.mapView = new MapView({
           el: $('#map-view-container'),
           survey: this.survey,
-          clickHandler: this.clickHandler
+          clickHandler: this.mapClickHandler
         });
       }
 
@@ -106,14 +109,31 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
         forms: this.forms,
         map: this.mapView
       });
+      $("#filter-view-container").html(this.filterView.$el);
+
 
       // If the data has been filtered, show that on the page.
       // TODO: This should be done in a view.
       // this.updateFilterView();
     },
 
-    clickHandler: function(event) {
-      console.log("Map clicked at", event);
+    mapClickHandler: function(event) {
+      if (!event.data) return;
+      if (!event.data.object_id) return;
+
+      var rc = new Responses.Collection({
+        surveyId: this.survey.get('id'),
+        objectId: event.data.object_id
+      });
+
+      var selectedItemListView = new ResponseListView({
+        el: '#responses-list-container',
+        collection: rc
+      });
+
+      selectedItemListView.on('delete', function() {
+        this.mapView.deselectObject();
+      }.bind(this));
     },
 
     update: function() {
@@ -132,7 +152,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       this.mapView.map.invalidateSize();
 
       // Render the filter
-      $("#filter-view-container").html(this.filterView.$el);
+      $("#filter-view-container").show();
     },
 
     hideFilters: function() {
@@ -141,7 +161,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       this.mapView.map.invalidateSize();
       this.update();
 
-      $("#filter-view-container").html('');
+      $("#filter-view-container").hide();
     },
 
     remove: function () {

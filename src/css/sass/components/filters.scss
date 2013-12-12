@@ -1,3 +1,7 @@
+#filter-view-container {
+  display: none;
+}
+
 .filters label,
 .filters .question {
   cursor: pointer;
@@ -23,6 +27,10 @@
 
 .filters .answers {
   display: none;
+}
+
+.answers button {
+  margin-top: 10px;
 }
 
 .answer {

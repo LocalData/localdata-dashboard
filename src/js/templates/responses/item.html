@@ -1,13 +1,5 @@
-<h2>
-  <% if(r.geo_info != undefined) { %>
-    <%- r.geo_info.humanReadableName %><br />
-  <% }else { %>
-    <%- r.parcel_id %>
-  <% }; %>
-</h2>
-
-<div class="collector">
-  <i class="icon-user"></i>
+<span class="collector">
+  <i class="fa fa-user"></i>
   <% if(r.geo_info != undefined) { %>
     <% if(r.source.collector) { %>
       <%- r.source.collector %>
@@ -17,12 +9,12 @@
   <% } else { %>
     <%- r.responses.collector %>
   <% } %>
-</div>
+</span>
 
-<div class="time">
-  <i class="icon-time"></i>
+<span class="time">
+  <i class="fa fa-clock-o"></i>
   <%- r.createdHumanized %>
-</div>
+</span>
 
 <% if(r.files != undefined) { %>
   <% _.each(r.files, function(file){ %>
