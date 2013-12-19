@@ -8,6 +8,7 @@ define([
   'lib/leaflet/leaflet',
   'lib/tinypubsub',
   'lib/async',
+  'lib/kissmetrics',
 
   // LocalData
   'settings',
@@ -41,6 +42,7 @@ function(
   L,
   events,
   async,
+  _kmq,
 
   // LocalData
   settings,

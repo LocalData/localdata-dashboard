@@ -75,6 +75,8 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       console.log("Init map view");
       _.bindAll(this,
         'render',
+        'update',
+        'fitBounds',
         'selectObject',
         'deselectObject',
         'renderObject',
@@ -110,7 +112,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
      * @param  {Object} tilejson
      */
     addTileLayer: function(tilejson) {
-      console.log("heyyyy very tilejson", tilejson);
 
       if (this.tileLayer) {
         this.map.removeLayer(this.tileLayer);
@@ -144,6 +145,24 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       $('.map-loading').hide();
     },
 
+    fitBounds: function() {
+      var bounds = this.survey.get('responseBounds');
+      if (bounds) {
+        bounds = [flip(bounds[0]), flip(bounds[1])];
+        if (bounds[0][0] === bounds[1][0] || bounds[0][1] === bounds[1][1]) {
+          this.map.setView(bounds[0], 15);
+        } else {
+          this.map.fitBounds(bounds, { reset: true });
+        }
+      }
+    },
+
+    update: function() {
+      this.tileLayer.redraw();
+      this.gridLayer.redraw();
+      this.fitBounds();
+    },
+
     render: function() {
       if (this.map === null) {
         // Render the map template
@@ -169,15 +188,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
           this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
 
           // Center the map
-          var bounds = this.survey.get('responseBounds');
-          if (bounds) {
-            bounds = [flip(bounds[0]), flip(bounds[1])];
-            if (bounds[0][0] === bounds[1][0] || bounds[0][1] === bounds[1][1]) {
-              this.map.setView(bounds[0], 15);
-            } else {
-              this.map.fitBounds(bounds, { reset: true });
-            }
-          }
+          this.fitBounds();
         }.bind(this), 0);
 
         this.selectDataMap();

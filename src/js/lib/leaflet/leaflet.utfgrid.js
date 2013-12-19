@@ -73,7 +73,6 @@ L.UtfGrid = L.Class.extend({
     this._container = this._map._container;
 
     this._update();
-    console.log("ADDED UTF GRID");
 
     var zoom = this._map.getZoom();
 
@@ -153,8 +152,6 @@ L.UtfGrid = L.Class.extend({
   //Load up all required json grid files
   //TODO: Load from center etc
   _update: function () {
-    console.log("UPDATE UTF GRID");
-
     var bounds = this._map.getPixelBounds(),
         zoom = this._map.getZoom(),
         tileSize = this.options.tileSize;
@@ -206,8 +203,6 @@ L.UtfGrid = L.Class.extend({
       cb: wk + '.' + functionName
     }, this.options));
 
-    console.log("MADE TILE URL", url, wk, functionName);
-
     var script = document.createElement('script');
     script.setAttribute("type", "text/javascript");
     script.setAttribute("src", url);
@@ -231,9 +226,7 @@ L.UtfGrid = L.Class.extend({
 
     var key = zoom + '_' + x + '_' + y;
     var self = this;
-    console.log("LEAFLET CHECKING", url);
     L.Util.ajax(url, function (data) {
-      console.log("LEAFLET GOT DATA", data);
       self._cache[key] = data;
     });
   },

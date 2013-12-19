@@ -20,12 +20,20 @@ define([
   'views/map',
   'views/responses/filter',
   'views/responses/list',
+  'views/surveys/count',
 
   // Templates
   'text!templates/responses/map-list.html'
 ],
 
-function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView, FilterView, ResponseListView, mapListTemplate) {
+function($, _, Backbone, moment, events, _kmq, settings, api,
+  Responses,
+  MapView,
+  FilterView,
+  ResponseListView,
+  ResponseCountView,
+  mapListTemplate) {
+
   'use strict';
 
   var ResponseViews = {};
@@ -43,7 +51,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
     el: '#response-view-container',
 
     events: {
-      'click #refresh': 'getNew'
+      'click .refresh': 'getNew'
     },
 
     initialize: function(options) {
@@ -111,15 +119,20 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       });
       $("#filter-view-container").html(this.filterView.$el);
 
+      // Set up the response count view.
+      this.countView = new ResponseCountView({
+        model: this.survey
+      }).render();
+      $("#response-count-container").html(this.countView.$el);
 
-      // If the data has been filtered, show that on the page.
-      // TODO: This should be done in a view.
-      // this.updateFilterView();
+      // Listen for new responses
+      this.survey.on('change', this.mapView.update);
     },
 
     mapClickHandler: function(event) {
-      if (!event.data) return;
-      if (!event.data.object_id) return;
+      if (_.isUndefined(event.data) || _.isUndefined(event.data.object_id)) {
+        return;
+      }
 
       var rc = new Responses.Collection({
         surveyId: this.survey.get('id'),
@@ -184,7 +197,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
      */
     getNew: function(event) {
       event.preventDefault();
-      this.responses.update();
+      this.survey.fetch();
     },
 
     /**

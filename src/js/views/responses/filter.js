@@ -52,6 +52,8 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
         // forms: this.forms
       });
       this.stats.on('change', this.render);
+
+      // this.survey.on('change', this.stats.fetch);
     },
 
     render: function() {
