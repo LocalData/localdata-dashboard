@@ -1,0 +1,25 @@
+body {
+  padding:0;
+  color:#333;
+  font-family:"Open Sans", "Source Sans Pro", Helvetica, sans-serif;
+}
+
+#last-updated,
+#filter-view-container,
+#nav,
+.tools,
+#map-controls {
+    display: none;
+}
+
+.survey-header h2 {
+  clear: both;
+  color: #333;
+  margin-bottom: 0;
+}
+
+#content,
+.main {
+  padding: 0;
+  box-shadow: none;
+}
