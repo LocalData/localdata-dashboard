@@ -8,6 +8,8 @@ body {
 #filter-view-container,
 #nav,
 .tools,
+#subfilter h2,
+#clear,
 #map-controls {
     display: none;
 }
@@ -22,4 +24,12 @@ body {
 .main {
   padding: 0;
   box-shadow: none;
+}
+
+.badge {
+  border-right-width: 25px;
+}
+
+.printlink {
+  font-weight: bold;
 }

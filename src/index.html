@@ -376,7 +376,7 @@
       <div id="loadingsmg" style="display:none"></div>
       <ul>
         <% _.each(choices, function(choice) { %>
-          <li><a><%- choice.name %></a> <span class="badge" style="background-color: <%- choice.color %>"><%- choice.count %></span></li>
+          <li><a class="printlink" style="color: <%- choice.color %>;"><%- choice.name %></a> <span class="badge" style="background-color: <%- choice.color %>;>"><%- choice.count %></span></li>
         <% }); %>
       </ul>
     </script>
