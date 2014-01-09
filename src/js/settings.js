@@ -28,7 +28,7 @@ function(L) {
   ];
 
   settings.circleMarker = {
-    radius: 8,
+    radius: 7,
     fillColor: "#df455d",
     color: "#df455d",
     weight: 1,
@@ -67,7 +67,7 @@ function(L) {
   settings.midZoomStyle = {
     'color': '#df455d',
     'opacity': 1,
-    'weight': 5,
+    'weight': 1,
     'fillOpacity': 0.5,
     'fillColor': '#df455d'
   };

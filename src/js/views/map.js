@@ -77,7 +77,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       console.log("Init map view");
       _.bindAll(this, 'render', 'selectObject', 'renderObject', 'renderObjects',
         'getResponsesInBounds', 'updateMapStyleBasedOnZoom', 'updateObjectStyles',
-        'styleFeature', 'setupPolygon', 'search', 'searchResults');
+        'styleFeature', 'setupPolygon', 'search', 'searchResults', 'setStyle');
 
       this.responses = options.responses;
       // TODO: if we add the filter logic to the responses collection, we can
@@ -98,7 +98,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
       this.defaultStyle = settings.farZoomStyle;
       this.defaultPointToLayer = function (feature, latlng) {
-        return new L.circleMarker(latlng, settings.farZoomStyle);
+        return new L.circleMarker(latlng, settings.circleMarker);
       };
 
       this.delayFitBounds = _.debounce(this.fitBounds, 250);
@@ -409,8 +409,15 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       }
     },
 
+    setStyle: function(feature) {
+      if (feature.geometry.type === 'Point') {
+        return settings.circleMarker;
+      }
+      return this.defaultStyle;
+    },
+
     updateObjectStyles: function(style) {
-      this.objectsOnTheMap.setStyle(style);
+      this.objectsOnTheMap.setStyle(this.setStyle);
     },
 
     // Expects an object with properties
