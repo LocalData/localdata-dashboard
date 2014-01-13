@@ -53,8 +53,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
     return {
       color: feature.properties.color,
       opacity: 0.3,
-      fillColor: feature.properties.color,
-      fillOpacity: 0.15,
+      fillOpacity: 0.0,
       weight: 2
     };
   }
@@ -81,11 +80,9 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         'deselectObject',
         'renderObject',
         'renderObjects',
-        'getResponsesInBounds',
         'updateMapStyleBasedOnZoom',
         'updateObjectStyles',
         'styleFeature',
-        'setupPolygon',
         'addTileLayer'
       );
 
@@ -129,7 +126,9 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         resolution: 4
       });
 
+      // Make sure the grid layer is on top.
       this.map.addLayer(this.gridLayer);
+
       console.log("Gridlayer", this.gridLayer);
       this.gridLayer.on('click', this.selectObject);
       if (this.clickHandler) {
@@ -191,14 +190,15 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
           this.fitBounds();
         }.bind(this), 0);
 
+        // Handle zones
+        if (this.survey.has('zones')) {
+          this.plotZones();
+        }
+        this.listenTo(this.survey, 'change', this.plotZones);
+
         this.selectDataMap();
         this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
       }
-      // Handle zones
-      if (this.survey.has('zones')) {
-        this.plotZones();
-      }
-      this.listenTo(this.survey, 'change', this.plotZones);
 
       return this;
     },
@@ -289,6 +289,14 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       this.zoneLayer.addLayer(new L.geoJson(zones, {
         style: zoneStyle
       }));
+
+      // This is a leaflet workaround. Leaflet doesn't allow tiles on top of objects
+      // When there are zones drawn on the map, they are on top, which means the
+      // grid layer can't be clicked.
+      // Hopefully will be fixed in 0.8 or 1.0
+      this.zoneLayer.on('click', function(e) {
+        this.gridLayer._click(e);
+      }.bind(this));
 
       this.delayFitBounds();
       this.objectsOnTheMap.bringToFront();

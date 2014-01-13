@@ -85,6 +85,10 @@ L.UtfGrid = L.Class.extend({
     map.on('moveend', this._update, this);
   },
 
+  getContainer: function () {
+    return this._container;
+  },
+
   onRemove: function () {
     var map = this._map;
     map.off('click', this._click, this);
@@ -93,6 +97,7 @@ L.UtfGrid = L.Class.extend({
   },
 
   _click: function (e) {
+    console.log("CLICKY" ,e);
     this.fire('click', this._objectForEvent(e));
   },
 
@@ -134,6 +139,7 @@ L.UtfGrid = L.Class.extend({
     y = (y + max) % max;
 
     var data = this._cache[map.getZoom() + '_' + x + '_' + y];
+
     if (!data) {
       return { latlng: e.latlng, data: null };
     }
