@@ -52,9 +52,9 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
         'editQuestionFactory',
         'setQuestionType',
         'deleteQuestion',
-        'createQuestion',
+        'createQuestionFactory',
         'createPhotoQuestion',
-        'addSubQuestion',
+        'addSubQuestionFactory',
         'renderQuestion',
 
         'createAnswer',
@@ -405,9 +405,7 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
         $(this).find('> .input-append .remove').fadeIn(150);
       }, function() {
         $(this).find('> .input-append.remove').fadeOut(150);
-      })
-
-
+      });
 
       // Deal with answers ....................................................
       var questionID = id;
@@ -459,13 +457,13 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
           $(this).find('> .btn').fadeIn(150);
         }, function() {
           $(this).find('> .btn').fadeOut(150);
-        })
+        });
 
         $answer.find('> .show-add-sub-question').hover(function() {
           $(this).find('span').fadeIn(150);
         }, function() {
           $(this).find('span').fadeOut(150);
-        })
+        });
 
         // Show add sub-question
         $answer.find('.show-add-sub-question').click(function(event) {
