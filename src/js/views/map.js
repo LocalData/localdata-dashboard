@@ -109,6 +109,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
      * @param  {Object} tilejson
      */
     addTileLayer: function(tilejson) {
+      console.log("Got the tilejson", tilejson);
 
       if (this.tileLayer) {
         this.map.removeLayer(this.tileLayer);
@@ -205,7 +206,8 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
     selectDataMap: function () {
       // Build the appropriate TileJSON URL.
-      var url = '/tiles/' + this.survey.get('id');
+      var tileBase = this.survey.get('tileBase');
+      var url = tileBase + '/' + this.survey.get('id');
       if (this.filter) {
         if(this.filter.question) {
           url = url + '/filter/' + this.filter.question;
@@ -216,13 +218,17 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
       }
       url = url + '/tile.json';
 
-      console.log("SETTING FILTER", url);
+      console.log("Getting tilejson", url);
       // Get TileJSON
       $.ajax({
         url: url,
         type: 'GET',
-        dataType: 'json'
-      }).done(this.addTileLayer);
+        dataType: 'json',
+        cache: false
+      }).done(this.addTileLayer)
+      .fail(function(jqXHR, textStatus, errorThrown) {
+        console.log("Dang", jqXHR, textStatus, errorThrown);
+      });
     },
 
     /**
