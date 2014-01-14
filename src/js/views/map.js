@@ -159,7 +159,9 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
     update: function() {
       this.tileLayer.redraw();
-      this.gridLayer.redraw();
+      if(this.gridLayer) {
+        this.gridLayer.redraw();
+      }
       this.fitBounds();
     },
 
@@ -206,8 +208,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
 
     selectDataMap: function () {
       // Build the appropriate TileJSON URL.
-      var tileBase = this.survey.get('tileBase');
-      var url = tileBase + '/' + this.survey.get('id');
+      var url = '/tiles/' + this.survey.get('id');
       if (this.filter) {
         if(this.filter.question) {
           url = url + '/filter/' + this.filter.question;
@@ -227,7 +228,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         cache: false
       }).done(this.addTileLayer)
       .fail(function(jqXHR, textStatus, errorThrown) {
-        console.log("Dang", jqXHR, textStatus, errorThrown);
+        console.log("Error fetching tilejson", jqXHR, textStatus, errorThrown);
       });
     },
 
