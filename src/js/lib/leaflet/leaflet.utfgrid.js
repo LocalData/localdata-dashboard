@@ -1,3 +1,9 @@
+/*
+ Copyright (c) 2012, Smartrak, David Leaver
+ Leaflet.utfgrid is an open-source JavaScript library that provides utfgrid interaction on leaflet powered maps.
+ https://github.com/danzel/Leaflet.utfgrid
+*/
+(function (window, undefined) {
 
 L.Util.ajax = function (url, cb) {
   // the following is from JavaScript: The Definitive Guide
@@ -28,7 +34,6 @@ L.Util.ajax = function (url, cb) {
   };
   request.send();
 };
-
 L.UtfGrid = L.Class.extend({
   includes: L.Mixin.Events,
   options: {
@@ -85,22 +90,19 @@ L.UtfGrid = L.Class.extend({
     map.on('moveend', this._update, this);
   },
 
-  getContainer: function () {
-    return this._container;
-  },
-
   onRemove: function () {
     var map = this._map;
     map.off('click', this._click, this);
     map.off('mousemove', this._move, this);
     map.off('moveend', this._update, this);
+    if (this.options.pointerCursor) {
+      this._container.style.cursor = '';
+    }
   },
 
   _click: function (e) {
-    console.log("CLICKY" ,e);
     this.fire('click', this._objectForEvent(e));
   },
-
   _move: function (e) {
     var on = this._objectForEvent(e);
 
@@ -139,7 +141,6 @@ L.UtfGrid = L.Class.extend({
     y = (y + max) % max;
 
     var data = this._cache[map.getZoom() + '_' + x + '_' + y];
-
     if (!data) {
       return { latlng: e.latlng, data: null };
     }
@@ -158,6 +159,7 @@ L.UtfGrid = L.Class.extend({
   //Load up all required json grid files
   //TODO: Load from center etc
   _update: function () {
+
     var bounds = this._map.getPixelBounds(),
         zoom = this._map.getZoom(),
         tileSize = this.options.tileSize;
@@ -174,7 +176,7 @@ L.UtfGrid = L.Class.extend({
         Math.floor(bounds.max.y / tileSize)),
         max = this._map.options.crs.scale(zoom) / tileSize;
 
-    // Load all required ones
+    //Load all required ones
     for (var x = nwTilePoint.x; x <= seTilePoint.x; x++) {
       for (var y = nwTilePoint.y; y <= seTilePoint.y; y++) {
 
@@ -248,3 +250,11 @@ L.UtfGrid = L.Class.extend({
   }
 });
 
+L.utfGrid = function (url, options) {
+  return new L.UtfGrid(url, options);
+};
+
+
+
+
+}(this));
