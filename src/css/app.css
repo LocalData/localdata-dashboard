@@ -867,6 +867,9 @@ header .nav a:visited {
   left: 50%;
   width: 50%; }
 
+.checking {
+  display: none; }
+
 /* Responses ---------------------------------------------------------------- */
 .map-list-view {
   position: relative; }

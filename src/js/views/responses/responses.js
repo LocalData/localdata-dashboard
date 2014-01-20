@@ -196,8 +196,12 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
      * Get new responses
      */
     getNew: function(event) {
+      console.log("Getting new responses");
       event.preventDefault();
       this.survey.fetch();
+      // This is a hack because it's hard to watch .fetch
+      // if there are no changes.
+      $('.checking').fadeIn(500).fadeOut(750);
     },
 
     /**
