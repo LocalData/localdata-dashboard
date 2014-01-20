@@ -158,10 +158,10 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
     },
 
     update: function() {
-      this.tileLayer.redraw();
-      if(this.gridLayer) {
-        this.gridLayer.redraw();
-      }
+      // A hack because gridLayer doesn't have redraw:
+      this.map.removeLayer(this.tileLayer);
+      this.map.removeLayer(this.gridLayer);
+      this.selectDataMap();
       this.fitBounds();
     },
 

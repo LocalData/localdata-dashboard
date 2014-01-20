@@ -100,6 +100,14 @@ L.UtfGrid = L.Class.extend({
     }
   },
 
+  redraw: function () {
+    if (this._map) {
+      this._reset({hard: true});
+      this._update();
+    }
+    return this;
+  },
+
   _click: function (e) {
     this.fire('click', this._objectForEvent(e));
   },
@@ -247,7 +255,29 @@ L.UtfGrid = L.Class.extend({
       c--;
     }
     return c - 32;
+  },
+
+  _reset: function (e) {
+    for (var key in this._tiles) {
+      this.fire('tileunload', {tile: this._tiles[key]});
+    }
+
+    this._tiles = {};
+    this._tilesToLoad = 0;
+
+    if (this.options.reuseTiles) {
+      this._unusedTiles = [];
+    }
+
+    this._tileContainer.innerHTML = '';
+
+    if (this._animated && e && e.hard) {
+      this._clearBgBuffer();
+    }
+
+    this._initContainer();
   }
+
 });
 
 L.utfGrid = function (url, options) {
