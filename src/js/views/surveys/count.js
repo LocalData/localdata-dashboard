@@ -25,9 +25,16 @@ function($, _, Backbone, events, Responses, template) {
       this.listenTo(this.model, "destroy", this.remove);
     },
 
+    numberWithCommas: function(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
+
     render: function() {
       var $el = $(this.el);
-      $el.html(this.template({s: this.model.toJSON() }));
+
+      var count = this.model.get('responseCount');
+      count = this.numberWithCommas(count);
+      $el.html(this.template({count: count }));
       return this;
     }
 
