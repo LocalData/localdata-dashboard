@@ -45,21 +45,18 @@ h1.logo {
   margin-bottom: 5px;
 }
 
-
 h2, h3 {
-  font-family: $bold;
+  font-family: $font;
   margin-bottom: 0.5em;
 }
 
 h2 {
   font-size: 65px;
-  line-height: px;
-  margin-top: 1em;
+  margin-top: 0.2em;
+  line-height: 1em;
+  letter-spacing: -2px;
 }
 
-h2:first-child {
-  margin-top: 0;
-}
 
 header h2  {
   font-family: $font;

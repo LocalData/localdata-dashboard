@@ -268,16 +268,14 @@ h1.logo {
   margin-bottom: 5px; }
 
 h2, h3 {
-  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
+  font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
   margin-bottom: 0.5em; }
 
 h2 {
   font-size: 65px;
-  line-height: px;
-  margin-top: 1em; }
-
-h2:first-child {
-  margin-top: 0; }
+  margin-top: 0.2em;
+  line-height: 1em;
+  letter-spacing: -2px; }
 
 header h2 {
   font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
@@ -585,11 +583,6 @@ header .b {
  *       CSS. Exposed filter forms, views pagers and other views elements are
  *       also good candidates for components.
  ******************************************************************************/
-h2 {
-  font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
-  font-size: 65px;
-  line-height: 1em; }
-
 /* Components shared between projects --------------------------------------- */
 footer .in {
   overflow: visible;

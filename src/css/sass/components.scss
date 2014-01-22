@@ -38,13 +38,6 @@
  *       also good candidates for components.
  ******************************************************************************/
 
-h2 {
-  font-family: $font;
-  font-size: 65px;
-  line-height: 1em;
-}
-
-
 /* Components shared between projects --------------------------------------- */
 @import "shared/footer";
 @import "shared/boxes";
