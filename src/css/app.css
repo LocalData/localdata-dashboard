@@ -1058,11 +1058,14 @@ input.large,
   display: block;
   font-size: 26px;
   ffont-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
-  border: 4px solid #58aeff;
+  border: 4px solid #ffad00;
   line-height: 32px;
   padding: 4px 10px;
   margin-bottom: 1em;
   width: 12em; }
+
+input.large {
+  width: 18em; }
 
 .preview-q-box {
   padding-left: 20px; }

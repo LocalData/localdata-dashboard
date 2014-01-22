@@ -65,12 +65,15 @@ input.large,
   display: block;
   font-size: 26px;
   ffont-family: $bold;
-  border: 4px solid $blue;
+  border: 4px solid $orange;
   line-height: 32px;
   padding: 4px 10px;
   margin-bottom: 1em;
   width: 12em;
 }
 
+input.large {
+  width: 18em;
+}
 
 
