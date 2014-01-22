@@ -23,6 +23,14 @@ function($, _, Backbone, settings) {
       this.fetch();
     },
 
+    numberWithCommas: function(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
+
+    getCount: function() {
+      return this.numberWithCommas(this.get('responseCount'));
+    },
+
     parse: function(response) {
       if (_.has(response, 'survey')) {
         // Individual surveys are returned a little differently from

@@ -109,8 +109,10 @@ function(
     },
 
     render: function() {
+
       this.$el.html(this.template({
-        survey: this.model.toJSON()
+        survey: this.model.toJSON(),
+        count: this.model.getCount()
       }));
 
       var map = this.map = L.map(this.$('.map')[0], {
