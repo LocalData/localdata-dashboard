@@ -66,6 +66,10 @@ header h2  {
   font-weight: normal;
   font-size: 22px;
   line-height: 28px;
+  color: $body-med;
+}
+
+header h2:hover {
   color: $blue;
 }
 

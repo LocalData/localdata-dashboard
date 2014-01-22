@@ -44,6 +44,16 @@
 
 .survey-list-item h2 {
   font-family: $font;
+
+  a:link,
+  a:visited {
+    color: $body-med;
+  }
+
+  a:hover,
+  a:active {
+    color: $blue;
+  }
 }
 
 .survey-list-item.even {

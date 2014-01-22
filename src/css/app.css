@@ -284,6 +284,9 @@ header h2 {
   font-weight: normal;
   font-size: 22px;
   line-height: 28px;
+  color: #6e6663; }
+
+header h2:hover {
   color: #58aeff; }
 
 h3 {
@@ -631,11 +634,10 @@ form input[type=submit] {
   margin-bottom: 11px;
   width: 90px;
   height: 62px;
-  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
+  font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
   font-size: 20px;
   text-align: center;
   line-height: 62px;
-  letter-spacing: -1px;
   cursor: pointer; }
 
 .mini {
@@ -843,6 +845,12 @@ header .nav a:visited {
 
 .survey-list-item h2 {
   font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif; }
+  .survey-list-item h2 a:link,
+  .survey-list-item h2 a:visited {
+    color: #6e6663; }
+  .survey-list-item h2 a:hover,
+  .survey-list-item h2 a:active {
+    color: #58aeff; }
 
 .survey-list-item.even {
   background: #fff; }
@@ -950,7 +958,7 @@ header .nav a:visited {
 .factoid {
   font-size: 36px;
   margin-bottom: 50px;
-  color: #f15a24; }
+  color: #58aeff; }
 
 .factoid .number {
   font-size: 150px;
@@ -1049,7 +1057,7 @@ input.large,
 #register input[type=password] {
   display: block;
   font-size: 26px;
-  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
+  ffont-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
   border: 4px solid #58aeff;
   line-height: 32px;
   padding: 4px 10px;
