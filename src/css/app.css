@@ -685,7 +685,8 @@ a.button {
 
 button:hover,
 .button:hover {
-  background: #fff;
+  background: #daedff;
+  border-color: #daedff;
   color: #58aeff; }
 
 button.danger {
