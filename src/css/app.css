@@ -269,7 +269,6 @@ h1.logo {
 
 h2, h3 {
   font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
-  font-weight: bold;
   margin-bottom: 0.5em; }
 
 h2 {
@@ -1073,7 +1072,7 @@ input.large,
 
 .question-prompt {
   padding: 5px;
-  font-weight: bold; }
+  font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif; }
 
 .preview-answer {
   padding: 2px 0 2px 20px; }
