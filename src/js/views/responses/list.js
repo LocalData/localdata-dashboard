@@ -54,7 +54,7 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
       var first = this.collection.at(0);
       var name;
 
-      if(first.get('geo_info') != undefined) {
+      if(first.get('geo_info') !== undefined) {
         name = first.get('geo_info').humanReadableName;
       }else {
         name = first.get('parcel_id');
