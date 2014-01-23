@@ -176,10 +176,6 @@ function(
       // Set the context & render the page
       var context = {};
       this.$el.html(this.template(context));
-
-      $('#new-survey-form .show-advanced').click(function() {
-        $('#new-survey-form .advanced').show();
-      });
     },
 
     submit: function(event) {
