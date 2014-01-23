@@ -60,12 +60,13 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       event.preventDefault();
 
       function success(model, repsonse) {
-        // No-op for now.
-        // TODO: We might want to show a success message.
+        console.log("Success!", model, repsonse);
+        this.trigger('delete');
       }
 
       function error(model, xhr, options) {
         console.log("Error destroying", xhr, options);
+        console.log($('.error'));
         $('.error').show();
       }
 
