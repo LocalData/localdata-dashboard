@@ -18,14 +18,28 @@ define([
 
   // Templates
   'text!templates/login.html',
-  'text!templates/register.html'
+  'text!templates/register.html',
+  'text!templates/reset.html'
 
 ],
 
-function($, _, Backbone, events, _kmq, router, settings, api, UserModels, loginTemplate, registerTemplate) {
+function($, _, Backbone, events, _kmq, router, settings, api,
+  UserModels,
+  loginTemplate,
+  registerTemplate,
+  resetTemplate
+) {
   'use strict';
 
   var UserViews = {};
+
+  function deserializeResetInfo(serialized) {
+    var data = JSON.parse(window.atob(serialized));
+    return {
+      email: data[0],
+      token: data[1]
+    };
+  }
 
   UserViews.UserBarView = Backbone.View.extend({
     el: "#userbar-container",
@@ -160,6 +174,62 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels, loginT
       api.logIn(user, this.logInCallback);
     }
   });
+
+  UserViews.ResetView = Backbone.View.extend({
+    el: '#container',
+
+    events: {
+      'click #change-password button': 'changePassword'
+    },
+
+    initialize: function (options) {
+      console.log('Initialize password reset view');
+      _.bindAll(this, 'render', 'update', 'changePassword', 'changeDone');
+
+      this.redirectTo = '/';
+
+      var resetInfo = deserializeResetInfo(options.resetInfo);
+      this.token = resetInfo.token;
+      this.user = new UserModels.Model({
+        email: resetInfo.email
+      });
+
+      this.render();
+    },
+
+    render: function () {
+      this.$el.html(resetTemplate);
+      return this;
+    },
+
+    update: function () {
+      this.render();
+    },
+
+    changeDone: function (error, user) {
+      if (error) {
+        _kmq.push(['record', 'Password reset error: ' + error]);
+        this.$('.error').html(error.message).fadeIn();
+        return;
+      }
+
+      this.user.fetch();
+      events.publish('navigate', [this.redirectTo]);
+    },
+
+    changePassword: function(event) {
+      event.preventDefault();
+      _kmq.push(['record', 'User reset password']);
+      this.$('.error').fadeOut();
+
+      var user = {
+        email: this.$('input[name=email]').val(),
+        password: this.$('input[name=password]').val()
+      };
+      api.resetPassword(user, this.token, this.changeDone);
+    }
+  });
+
 
   return UserViews;
 
