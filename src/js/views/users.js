@@ -34,6 +34,7 @@ function($, _, Backbone, events, _kmq, router, settings, api,
   var UserViews = {};
 
   function deserializeResetInfo(serialized) {
+    console.log(serialized);
     var data = JSON.parse(window.atob(serialized));
     return {
       email: data[0],
