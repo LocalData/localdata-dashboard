@@ -223,6 +223,13 @@ function($, _, Backbone, events, _kmq, router, settings, api,
       _kmq.push(['record', 'User reset password']);
       this.$('.error').fadeOut();
 
+      var pw = this.$('input[name=password]').val();
+      var pw2 = this.$('input[name=password-check]').val();
+      if(pw !== pw2) {
+        this.$('.error').html("The passwords don't match").fadeIn();
+        return;
+      }
+
       var user = {
         email: this.$('input[name=email]').val(),
         password: this.$('input[name=password]').val()
