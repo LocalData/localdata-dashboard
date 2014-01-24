@@ -1,703 +1,1188 @@
-/* LocalData Styles .........................................................*/
-/*
-  Colors
-  Link: #00949b
-  Link hover: #138288
+@import url(font-awesome.min.css);
+/*******************************************************************************
+ * style.scss
+ *
+ * This file shouldn't directly contain any SCSS code, instead it only serves to
+ * combine the SCSS contained in other Sass partials through @import directives.
+ *
+ * BASE............Styling for common HTML and Drupal elements.
+ * LAYOUT..........Styles for the page structure that contain components.
+ * COMPONENTS......Components, their modifiers and sub-components.
+ ******************************************************************************/
+/*******************************************************************************
+ * _utils.scss
+ *
+ * Sass offers come very useful features, these include variables functions and
+ * mixins. Extensions such as Compass and Susy can also be used to provide extra
+ * functions and mixins to be used throughout the theme. This file acts as a
+ * single place for defining these things, which can then be accessed by
+ * importing _utils.scss where required. The following should be defined in this
+ * file:
+ * - Custom Sass mixins for the theme.
+ * - Custom Sass functions for the theme.
+ * - Overriding the default variables provided by extensions such as Compass.
+ * - Defining new variables for:
+ *      - Colors.
+ *      - Font sizes and families.
+ *      - Layout and grid sizing.
+ ******************************************************************************/
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
 */
-html, body {
-  padding:0;
-  margin:0;
-}
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline; }
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block; }
 
 body {
-  background:#39abb7 url('../img/tile.gif');
-  padding:0;
-  color:#333;
-  font-family:"Open Sans", "Source Sans Pro", Helvetica, sans-serif;
-}
+  line-height: 1; }
 
-/* Type ....................................................................*/
-a {
-  text-decoration:none;
-  color:#00949b;
-  border-bottom:1px solid #00949b;
-}
+ol, ul {
+  list-style: none; }
 
-a:hover {
-  text-decoration:none;
-  color:#00949b;
-}
+blockquote, q {
+  quotes: none; }
 
-  .dropdown-menu a {
-    border:0px none;
-  }
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none; }
 
-h1, h2, h3, h4, h5, h6 {
+table {
+  border-collapse: collapse;
+  border-spacing: 0; }
+
+/* @import url("http://fast.fonts.net/lt/1.css?apiType=css&c=9a6feb00-f8b3-48aa-b165-798ef59ba4f6&fontids=673817,673808");
+ */
+@font-face {
+  font-family: "NeuzeitOfficeW01-Regula";
+  src: url("../fonts/673817/regular.eot?#iefix");
+  src: url("../fonts/673817/regular.eot?#iefix") format("eot"), url("../fonts/673817/regular.woff") format("woff"), url("../fonts/673817/regular.ttf") format("truetype"), url("../fonts/673817/regular.svg#85050462-ab1f-4478-a289-36eed1d3c53f") format("svg"); }
+
+@font-face {
+  font-family: "Neuzeit Office W01 Bold";
+  src: url("../fonts/673808/bold.eot?#iefix");
+  src: url("../fonts/673808/bold.eot?#iefix") format("eot"), url("../fonts/673808/bold.woff") format("woff"), url("../fonts/673808/bold.ttf") format("truetype"), url("../fonts/673808/bold.svg#d4cb246e-742d-4269-9f6a-901a050ff03f") format("svg"); }
+
+/* Animations ==============================================================  */
+.animated {
+  -webkit-animation-fill-mode: both;
+  -moz-animation-fill-mode: both;
+  -ms-animation-fill-mode: both;
+  -o-animation-fill-mode: both;
+  animation-fill-mode: both;
+  -webkit-animation-duration: 1s;
+  -moz-animation-duration: 1s;
+  -ms-animation-duration: 1s;
+  -o-animation-duration: 1s;
+  animation-duration: 1s; }
+
+.animated.hinge {
+  -webkit-animation-duration: 1s;
+  -moz-animation-duration: 1s;
+  -ms-animation-duration: 1s;
+  -o-animation-duration: 1s;
+  animation-duration: 1s; }
+
+@-webkit-keyframes shake {
+  0%, 100% {
+    -webkit-transform: translateX(0); }
+
+  10%, 30%, 50%, 70%, 90% {
+    -webkit-transform: translateX(-10px); }
+
+  20%, 40%, 60%, 80% {
+    -webkit-transform: translateX(10px); } }
+
+@-moz-keyframes shake {
+  0%, 100% {
+    -moz-transform: translateX(0); }
+
+  10%, 30%, 50%, 70%, 90% {
+    -moz-transform: translateX(-10px); }
+
+  20%, 40%, 60%, 80% {
+    -moz-transform: translateX(10px); } }
+
+@-o-keyframes shake {
+  0%, 100% {
+    -o-transform: translateX(0); }
+
+  10%, 30%, 50%, 70%, 90% {
+    -o-transform: translateX(-10px); }
+
+  20%, 40%, 60%, 80% {
+    -o-transform: translateX(10px); } }
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0); }
+
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-10px); }
+
+  20%, 40%, 60%, 80% {
+    transform: translateX(10px); } }
+
+.shake {
+  -webkit-animation-name: shake;
+  -moz-animation-name: shake;
+  -o-animation-name: shake;
+  animation-name: shake; }
+
+@-webkit-keyframes swing {
+  20%, 40%, 60%, 80%, 100% {
+    -webkit-transform-origin: top center; }
+
+  20% {
+    -webkit-transform: rotate(15deg); }
+
+  40% {
+    -webkit-transform: rotate(-10deg); }
+
+  60% {
+    -webkit-transform: rotate(5deg); }
+
+  80% {
+    -webkit-transform: rotate(-5deg); }
+
+  100% {
+    -webkit-transform: rotate(0deg); } }
+
+@-moz-keyframes swing {
+  20% {
+    -moz-transform: rotate(15deg); }
+
+  40% {
+    -moz-transform: rotate(-10deg); }
+
+  60% {
+    -moz-transform: rotate(5deg); }
+
+  80% {
+    -moz-transform: rotate(-5deg); }
+
+  100% {
+    -moz-transform: rotate(0deg); } }
+
+@-o-keyframes swing {
+  20% {
+    -o-transform: rotate(15deg); }
+
+  40% {
+    -o-transform: rotate(-10deg); }
+
+  60% {
+    -o-transform: rotate(5deg); }
+
+  80% {
+    -o-transform: rotate(-5deg); }
+
+  100% {
+    -o-transform: rotate(0deg); } }
+
+@keyframes swing {
+  20% {
+    transform: rotate(15deg); }
+
+  40% {
+    transform: rotate(-10deg); }
+
+  60% {
+    transform: rotate(5deg); }
+
+  80% {
+    transform: rotate(-5deg); }
+
+  100% {
+    transform: rotate(0deg); } }
+
+.swing {
+  -webkit-transform-origin: top center;
+  -moz-transform-origin: top center;
+  -o-transform-origin: top center;
+  transform-origin: top center;
+  -webkit-animation-name: swing;
+  -moz-animation-name: swing;
+  -o-animation-name: swing;
+  animation-name: swing; }
+
+/*******************************************************************************
+ * _base.scss
+
+ * Base styles define the default look.
+ *
+ * These rules will generally be made up of element selectors for HTML elements
+ * such as headings, paragraphs and lists. Common elements such as form
+ * items, collapsible fieldsets and messages should be included in this partial.
+ *
+ * The styleguide module (http://drupal.org/project/styleguide) gives you a good
+ * overview of Drupals common elements for styling. By setting a solid baseline
+ * before adding any more specific customisations you ensure that as any new
+ * features are added they will be correctly styled without any extra work.
+ ******************************************************************************/
+body {
+  font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  color: #6e6663;
+  font-size: 16px;
+  line-height: 23px; }
+
+h1 {
+  font-size: 76px;
+  line-height: 79px;
+  margin-bottom: 35px;
+  letter-spacing: -2px; }
+  h1 span {
+    color: #b7aba5; }
+  @media all and (max-width: 768px) {
+    h1 {
+      font-size: 46px;
+      line-height: 45px; } }
+
+h1.logo {
+  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
+  font-size: 26px;
+  color: #fff;
+  margin-bottom: 5px; }
+
+h2, h3 {
+  font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
+  margin-bottom: 0.5em; }
+
+h2 {
+  font-size: 65px;
+  margin-top: 0.2em;
+  line-height: 1em;
+  letter-spacing: -2px; }
+
+header h2 {
+  font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
   font-weight: normal;
-}
+  font-size: 22px;
+  line-height: 28px;
+  color: #6e6663; }
+
+header h2:hover {
+  color: #58aeff; }
 
 h3 {
-  font-size:24px;
-}
+  font-size: 40px;
+  line-height: 47px; }
 
-/* Forms....................................................................*/
-form h3 {
-  margin-top:1em;
-}
+.a h3,
+.b h3 {
+  text-align: left; }
+
+p {
+  margin-bottom: 1em; }
+
+li {
+  list-style: circle; }
+
+img.responsive {
+  max-width: 100%; }
+
+a,
+a:hover,
+a:visited,
+a:active {
+  text-decoration: none;
+  color: #58aeff;
+  cursor: pointer; }
+
+.skiplink {
+  line-height: 100px; }
+
+/*******************************************************************************
+ * _layout.scss
+ *
+ * The layout of the major regions (usually, but not necessarily Drupal regions)
+ * that components will be placed within. Layout styles for the theme's
+ * components should not be placed here and should instead be kept with the
+ * relevant SCSS for that component.
+ ******************************************************************************/
+html,
+body {
+  margin: 0;
+  padding: 0; }
+
+.out {
+  overflow: hidden;
+  background: #fff; }
+
+.in {
+  width: 1528px;
+  margin: 0px auto;
+  padding: 50px 0 50px 0;
+  overflow: auto; }
+  @media all and (max-width: 1999px) {
+    .in {
+      width: 1112px; } }
+  @media all and (max-width: 1279px) {
+    .in {
+      width: 1086px; } }
+  @media all and (max-width: 1119px) {
+    .in {
+      width: 866px; } }
+  @media all and (max-width: 899px) {
+    .in {
+      width: 708px; } }
+  @media all and (max-width: 768px) {
+    .in {
+      width: auto;
+      padding: 0 30px; } }
+
+header .in {
+  padding-top: 20px;
+  padding-bottom: 10px; }
+
+header .b {
+  padding-top: 75px; }
+
+/*
+2000 = 236 708 56 56 708 236 = 1528px center
+1280 = 84 500 56 56 500 84 = 1112px center
+1120 = 30 500 30 30 500 30 = 1060px center
+900 = 30 390 30 30 390 30 = 840px center
+769 = 30 324 30 30 390 30 = 708px center
+768 = 30 708 30
+500 = 30 440 30
+320 = 30 260 30 (minimum responsive width)
+
+1200 = 57 500 43 43 500 57 = 1086px center
+ */
+.a, .b {
+  width: 708px;
+  margin-right: 56px;
+  /* column sizing */
+  float: left; }
+  @media all and (max-width: 1999px) {
+    .a, .b {
+      width: 500px; } }
+  @media all and (max-width: 1279px) {
+    .a, .b {
+      margin-right: 43px; } }
+  @media all and (max-width: 1119px) {
+    .a, .b {
+      margin-right: 30px;
+      width: 390px; } }
+  @media all and (max-width: 899px) {
+    .a, .b {
+      width: 324px; } }
+  @media all and (max-width: 768px) {
+    .a, .b {
+      margin: 0;
+      width: auto;
+      float: none; } }
+
+.b {
+  margin-right: 0;
+  margin-left: 56px; }
+  @media all and (max-width: 1999px) {
+    .b {
+      margin-left: 56px; } }
+  @media all and (max-width: 1279px) {
+    .b {
+      margin-left: 43px; } }
+  @media all and (max-width: 1119px) {
+    .b {
+      margin-left: 30px; } }
+  @media all and (max-width: 768px) {
+    .b {
+      margin-left: 30px;
+      margin: 0;
+      width: auto;
+      float: none; } }
+
+/* Same as .b above, but with no margins */
+.b.nomargin {
+  width: 764px;
+  margin: 0;
+  /* column sizing */
+  float: left; }
+  @media all and (max-width: 1999px) {
+    .b.nomargin {
+      width: 556px;
+      margin: 0; } }
+  @media all and (max-width: 1279px) {
+    .b.nomargin {
+      width: 543px;
+      margin: 0; } }
+  @media all and (max-width: 1119px) {
+    .b.nomargin {
+      width: 420px;
+      margin: 0; } }
+  @media all and (max-width: 899px) {
+    .b.nomargin {
+      width: 354px;
+      margin: 0; } }
+  @media all and (max-width: 768px) {
+    .b.nomargin {
+      margin: 0;
+      width: auto;
+      float: none; } }
+
+.bigb .a {
+  width: 326px;
+  /* column sizing */
+  float: left; }
+  @media all and (max-width: 1999px) {
+    .bigb .a {
+      width: 222px; } }
+  @media all and (max-width: 1279px) {
+    .bigb .a {
+      width: 229px;
+      margin-right: 43px; } }
+  @media all and (max-width: 1119px) {
+    .bigb .a {
+      margin-right: 30px;
+      width: 180px; } }
+  @media all and (max-width: 899px) {
+    .bigb .a {
+      width: 147px; } }
+  @media all and (max-width: 768px) {
+    .bigb .a {
+      margin: 0;
+      width: auto;
+      float: none; } }
+
+.bigb .b.nomargin {
+  width: 1146px;
+  margin: 0;
+  /* column sizing */
+  float: left; }
+  @media all and (max-width: 1999px) {
+    .bigb .b.nomargin {
+      width: 834px;
+      margin: 0; } }
+  @media all and (max-width: 1279px) {
+    .bigb .b.nomargin {
+      width: 814px;
+      margin: 0; } }
+  @media all and (max-width: 1119px) {
+    .bigb .b.nomargin {
+      width: 630px;
+      margin: 0; } }
+  @media all and (max-width: 899px) {
+    .bigb .b.nomargin {
+      width: 531px;
+      margin: 0; } }
+  @media all and (max-width: 768px) {
+    .bigb .b.nomargin {
+      margin: 0;
+      width: auto;
+      float: none; } }
+
+#container {
+  min-height: 500px; }
+
+.contrast {
+  background: #fcf5f0; }
+
+.contrast + .contrast .in {
+  padding-top: 0; }
+
+.contrast .rule {
+  margin-bottom: 50px; }
+
+.rule {
+  border: 0 none;
+  border-bottom: 5px solid #f5ebe6; }
+
+.contrast .rule {
+  border-bottom: 6px solid #fff; }
+
+/* Photo header ------------------------------------------------------------- */
+.photo {
+  background: url(../img/bg4.jpg) no-repeat;
+  background-size: 50%; }
+  @media all and (max-width: 768px) {
+    .photo {
+      background: none;
+      background-size: auto; } }
+
+@media all and (max-width: 768px) {
+  .photo .in {
+    padding-left: 0;
+    padding-right: 0; } }
+
+@media all and (max-width: 768px) {
+  .photo .a,
+  .photo .b {
+    padding-left: 30px;
+    padding-right: 30px; } }
+
+@media all and (max-width: 768px) {
+  .photo .a {
+    padding-bottom: 100px;
+    margin-bottom: 2em;
+    background: transparent url(../img/bg4.jpg) no-repeat;
+    background-size: 100%; } }
+
+.demoback {
+  background: #f5ebe6; }
+
+/*******************************************************************************
+ * _components.scss
+ *
+ * Imports more partials that contain full components (modules in SMACSS), their
+ * sub-components and modifiers.
+ *
+ * Components are discrete parts of your page that should sit within the regions
+ * of your layouts. You should try to abstract your components as much as
+ * possible to promote reuse throughout the theme. Components should be flexible
+ * enough to respond to any width and should never rely on context
+ * (e.g. .sidebar-first .component) for styling. This allows modules to be
+ * placed throughout the theme with no risk of them breaking.
+ *
+ * If you find you need to change the look of a component depending on it's
+ * context you should avoid using context based classes at all costs. Instead it
+ * is better to add another "modifier" class to the component to alter the
+ * styling. Again, this promotes reuse.
+ *
+ * Sub-components are the individual parts that make up a component. As a
+ * general rule, adding a class to target a sub-component is a much better
+ * option than using descendant selectors or element selectors. In many cases
+ * sub-components can be made more reusable by making them components in their
+ * own right, so they can then be used within other components.
+ *
+ * Almost everything that doesn't belong in base should be made a component.
+ * Here's some common examples throughout Drupal:
+ *
+ * - Blocks
+ * - Content Types - For example, you may have a generic node component that
+ *      contains sub-components for the submitted by line and links. Specific
+ *      components can then be created for each content type to style the
+ *      specifics of each. Finally, by using entity view modes you can easily
+ *      apply modifications based on the .node-[view-mode] classes.
+ * - Forms - For instance the log in form.
+ * - Views - Each views output style could be made into a component, the content
+ *       of each row should be provided my a view mode styled by it's component
+ *       CSS. Exposed filter forms, views pagers and other views elements are
+ *       also good candidates for components.
+ ******************************************************************************/
+/* Components shared between projects --------------------------------------- */
+footer .in {
+  overflow: visible;
+  padding-top: 0; }
+
+footer .logo {
+  float: left; }
+
+footer nav {
+  float: right;
+  text-align: right;
+  margin-bottom: 2em;
+  margin-top: 50px; }
+
+@media all and (max-width: 768px) {
+  footer .logo,
+  footer nav {
+    margin-top: 0;
+    float: none;
+    text-align: left; } }
+
+footer nav a,
+footer nav a:hover {
+  font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
+  font-weight: normal;
+  color: #b7aba5; }
+  @media all and (max-width: 768px) {
+    footer nav a,
+    footer nav a:hover {
+      line-height: 44px; } }
+
+footer nav a:hover {
+  color: #58aeff; }
+
+footer .social {
+  padding-left: 40px; }
+  @media all and (max-width: 768px) {
+    footer .social {
+      padding: 0; } }
+
+footer .social a:last-child {
+  margin-right: 0; }
+
+.box,
+.button,
+button,
+form input[type=submit] {
+  background: #fff;
+  border: 6px solid #6e6663;
+  display: inline-block;
+  margin-right: 10px;
+  margin-bottom: 11px;
+  width: 90px;
+  height: 62px;
+  font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
+  font-size: 20px;
+  text-align: center;
+  line-height: 62px;
+  cursor: pointer; }
+
+.mini {
+  height: 32px;
+  border-width: 3px;
+  font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
+  font-size: 15px;
+  text-align: center;
+  line-height: 15px;
+  letter-spacing: 0px; }
+
+.flex {
+  width: auto;
+  padding: 0px 15px; }
+
+.small {
+  font-size: 16px; }
+
+.danger {
+  border-color: #f15a24;
+  color: #f15a24; }
+
+.warn {
+  border-color: #ffad00;
+  color: #ffad00; }
+
+.confirm,
+.ok {
+  border-color: #58aeff;
+  color: white; }
+
+button,
+.button {
+  cursor: pointer;
+  background: #58aeff;
+  border-color: #58aeff;
+  color: #fff;
+  line-height: inherit; }
+
+a.button {
+  line-height: 60px; }
+
+button:hover,
+.button:hover {
+  background: #daedff;
+  border-color: #daedff;
+  color: #58aeff; }
+
+button.danger {
+  border-color: #f15a24;
+  background-color: #f15a24;
+  color: white; }
+
+button.disabled {
+  background-color: #cbc8c7;
+  border-color: #cbc8c7; }
+
+/* Tabs --------------------------------------------------------------------- */
+.tabs {
+  overflow: auto;
+  margin-bottom: 24px; }
+  .tabs .tab {
+    font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
+    font-size: 24px;
+    line-height: 2em;
+    float: left;
+    width: 40%;
+    padding: 5px 15px;
+    background: #cbc8c7; }
+  .tabs .tab:last-child {
+    float: right; }
+
+nav a,
+nav a:hover {
+  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
+  color: #6e6663;
+  display: inline-block;
+  margin-right: 45px; }
+  @media all and (max-width: 768px) {
+    nav a,
+    nav a:hover {
+      display: block;
+      margin-right: 0;
+      line-height: 44px;
+      border-bottom: 1px solid #b7aba5;
+      padding-left: 30px;
+      background: #fff; } }
+
+nav a:hover {
+  color: #58aeff; }
+
+@media all and (max-width: 768px) {
+  .nav {
+    background: #fff;
+    padding: 0 15px 0 20px; } }
+
+.nav .in {
+  padding: 20px 0 60px;
+  margin-bottom: 0; }
+  @media all and (max-width: 768px) {
+    .nav .in {
+      padding-bottom: 20px; } }
+
+.subnav {
+  border-top: 5px solid #fcf5f0;
+  padding-top: 1em; }
+
+.subnav li {
+  line-height: 2em;
+  list-style-type: none; }
+
+.subnav a,
+.subnav a:hover {
+  font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
+  font-weight: normal;
+  color: #58aeff; }
+
+.subnav .selected {
+  list-style-type: circle; }
+
+.subnav .selected,
+.subnav .selected a,
+.subnav .selected a:hover {
+  color: #f15a24; }
+
+/* Components specific to the dashboard ------------------------------------- */
+header .in {
+  overflow: visible;
+  padding: 0; }
+
+header .a,
+header .b {
+  padding: 0; }
+
+header h1,
+footer h1 {
+  position: relative;
+  z-index: 100;
+  left: -53px;
+  display: inline-block;
+  height: 112px;
+  width: 382px;
+  overflow: auto;
+  margin-bottom: 0; }
+
+header .logo,
+footer .logo {
+  display: inline-block;
+  height: 112px;
+  width: 112px;
+  background: transparent url(../img/logo.png) no-repeat left center;
+  background-size: auto 112px;
+  text-indent: -99999px;
+  float: left; }
+
+header .logotype,
+footer .logotype {
+  display: inline-block;
+  height: 112px;
+  width: 270px;
+  background: transparent url(../img/logotype.png) no-repeat left center;
+  text-indent: -99999px;
+  float: left; }
+
+header .nav {
+  padding-top: 45px;
+  text-align: right; }
+
+header .nav,
+header .nav a:link,
+header .nav a:visited {
+  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
+  color: #6e6663;
+  padding-left: 30px; }
+
+.survey-head .in {
+  padding-bottom: 0; }
+
+.first-run {
+  display: none; }
+
+/* Designer ---------------------------------------------------------------- */
+.choice-boxes {
+  overflow: auto; }
+
+.choice-box-wrap {
+  float: left;
+  width: 250px;
+  background: #fff;
+  margin-right: 20px; }
+  .choice-box-wrap .choice-box {
+    padding: 20px; }
+  .choice-box-wrap h3 {
+    font-size: 24px;
+    line-height: 30px; }
+  .choice-box-wrap button {
+    width: 100%;
+    margin: 0; }
+
+/* Survey List -------------------------------------------------------------- */
+.survey-list-item .in {
+  padding: 0; }
+
+.survey-list-item .in .a {
+  padding: 50px 0 0 0; }
+
+.survey-list-item h2 {
+  font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif; }
+  .survey-list-item h2 a:link,
+  .survey-list-item h2 a:visited {
+    color: #6e6663; }
+  .survey-list-item h2 a:hover,
+  .survey-list-item h2 a:active {
+    color: #58aeff; }
+
+.survey-list-item.even {
+  background: #fff; }
+
+/* Survey and Map ----------------------------------------------------------- */
+.survey .in {
+  padding-bottom: 10px; }
+
+#survey-tabs .in {
+  padding-top: 0; }
+
+#response-view-container .in {
+  padding: 0; }
+
+.map-loading {
+  text-align: center;
+  background: url(../img/preloader.gif) no-repeat center center;
+  height: 128px;
+  position: relative;
+  top: 220px;
+  left: 50%;
+  width: 50%; }
+
+.checking {
+  display: none; }
+
+/* Responses ---------------------------------------------------------------- */
+.map-list-view {
+  position: relative; }
+
+.responses-list {
+  position: absolute;
+  width: 50%;
+  background: #fff;
+  border: 8px solid #f5ebe6;
+  padding: 20px;
+  top: 20px;
+  margin-left: 10%;
+  z-index: 10000; }
+  .responses-list button {
+    float: right;
+    margin-right: 0;
+    margin-bottom: 0; }
+  .responses-list button.close {
+    float: none;
+    position: absolute;
+    right: 20px;
+    top: 20px; }
+  .responses-list .time, .responses-list .collector {
+    color: #b7aba5; }
+  .responses-list .collector {
+    padding-right: 2em; }
+
+.confirm-delete {
+  display: none; }
+
+#filter-view-container {
+  display: none; }
+
+.filters label,
+.filters .question {
+  cursor: pointer; }
+
+.filters .question {
+  overflow: auto; }
+
+.filters h3 {
+  font-size: 24px; }
+
+.filters label {
+  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
+  line-height: 1.2;
+  display: block; }
+
+.filters .question {
+  margin-bottom: 2em; }
+
+.filters .answers {
+  display: none; }
+
+.answers button {
+  margin-top: 10px; }
+
+.answer {
+  overflow: auto;
+  clear: both;
+  margin-top: 10px; }
+
+.filters .circle {
+  float: left;
+  margin-right: 12px;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  border: 3px solid #fff;
+  background: transparent; }
+
+.filters .circle.selected {
+  background: #6e6663; }
+
+.filters .circle.inactive {
+  background: transparent !important; }
+
+/* Factoids ----------------------------------------------------------------- */
+.factoid {
+  font-size: 36px;
+  margin-bottom: 50px;
+  color: #58aeff; }
+
+.factoid .number {
+  font-size: 150px;
+  line-height: 1em;
+  display: block; }
+
+.factoid.orange {
+  color: #ffad00; }
+
+/* General app ---------------------------------------------------------------*/
+.error {
+  display: none;
+  color: #f15a24; }
+
+/* Map ---------------------------------------------------------------------- */
+#map,
+.map {
+  height: 500px; }
+
+/* Tabs --------------------------------------------------------------------- */
+.nav-tabs .in {
+  padding-top: 0;
+  padding-bottom: 25px; }
+
+.nav-tabs li {
+  float: left;
+  list-style: none;
+  display: inline;
+  padding: 0;
+  margin: 0; }
+
+.nav-tabs li a {
+  display: inline-block;
+  background: #ffad00;
+  color: #fff;
+  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
+  padding: 15px 20px; }
+
+.nav-tabs li.active a {
+  background: #fff;
+  color: #ffad00; }
+
+/* Forms ------------------------------------------------------------------- */
+form label {
+  font-size: 16px;
+  line-height: 20px; }
 
 form .error {
-  color:#ef6d4a;
-}
-
-.advanced {
-  display:none;
-}
-
-
-/* Structure ...............................................................*/
-
-.container {
-
-}
-
-#content,
-.main {
-  background:#fff;
-  padding:30px;
-  -webkit-box-shadow: 0 16px 16px rgba(0, 124, 129, 1);
-  box-shadow: 0 6px 16px rgba(0, 124, 129, 1);
-}
-
-.tab {
-  display:none;
-}
-
-/* Header ..................................................................*/
-header {
-  color:#333;
-  padding:10px 0;
-}
-
-header a {
-  color:#333;
-  border:0;
-}
-
-#site-header {
-  background:#fff;
-  border-bottom:1px #a18464;
-  padding:0px 30px 0px 20px;
-  margin-bottom:0;
-}
-
-  #site-header h1 {
-    font-size:24px;
-    font-weight:400;
-    display:inline;
-    float:left;
-  }
-
-  #site-header .tools {
-    text-align:right;
-    margin-top:15px;
-  }
-
-  #site-header .tools a {
-    border: 0px none;
-  }
-
-  #site-header h1 a {
-    color:#333;
-    border:0px none;
-  }
-
-  #topnav {
-    font-size:14px;
-    float:right;
-  }
-
-    .mysurveys {
-      background:#f39379;
-      padding:4px 12px 4px 12px;
-      border-radius:15px;
-      color:#fff;
-      line-height:20px;
-    }
-
-    #userbar-container {
-      display:none;
-    }
-
-      .userbar {
-        display:inline-block;
-        color:#fff;
-        padding:4px 12px 4px 14px;
-        border-radius:15px;
-        margin-right:10px;
-        background:#666;
-        line-height:20px;
-      }
-
-
-.survey-header h2 {
-  color:#fefefe;
-  font-size:36px;
-  font-weight:600;
-  letter-spacing:1px;
-  padding:20px;
-}
-
-
-/* Nav .....................................................................*/
-#nav {
-  background:#fff;
-  border-width: 1px 1px 0 1px;
-}
-
-  .nav-tabs li {
-    color: #666;
-    font-size:16px;
-    text-align:center;
-    border:0px none;
-  }
-
-    .nav-tabs li.active {
-      background:#fff;
-
-      -webkit-box-shadow: 0 0 7px rgba(0, 124, 129, 0.4);
-      -mozbox-shadow: 0 0 7px rgba(0, 124, 129, 0.4);
-      box-shadow: 0 0 7px rgba(0, 124, 129, 0.4);
-    }
-
-    .nav-tabs li a,
-    .nav-tabs li a:hover {
-      cursor:pointer;
-      border: 0px none;
-      color: #666;
-      background:transparent;
-    }
-
-    .nav-tabs li.active a,
-    .nav-tabs li.active a:hover {
-      color: #ef6d4a;
-      border:0px none;
-    }
-
-/* Subnav .................................................................. */
-.subnav {
-  padding-bottom:10px;
-  margin-bottom:10px;
-  border-bottom:1px solid #ddd;
-  overflow:auto;
-  line-height:30px;
-}
-
-  .subnav li {
-    display:inline-block;
-    float:left;
-    margin-right:15px;
-  }
-
-  .subnav a {
-    cursor: pointer;
-    background:#39abb7;
-    color:#fff;
-    padding:4px 8px;
-    border-radius:15px;
-    margin-right:5px;
-    border:0px none;
-  }
-
-
-/* Surveys ................................................................. */
-.survey-list .survey {
-  border:1px solid #c7d3e5;
-  border-radius:10px;
-  padding:20px;
-  margin-bottom:20px;
-  margin-right:10px;
-  color:#ddd;
-}
-
-.survey-list h2 {
-  font-weight:700;
-  font-size:24px;
-  margin:0;
-}
-
-.survey-list h2 a {
-  border:0;
-  display:block;
-}
-
-.loading {
-  text-align:center;
-  margin:0px auto;
-  width:150px;
-  background:#eee;
-  border-radius:20px;
-  border:2px solid #ddd;
-  padding:20px;
-}
-
-.loading h2 {
-  text-transform: none;
-
-}
-
-/* Filtering .................................................................*/
-#subfilter h2 {
-  font-size:16px;
-}
-
-#subfilter ul {
-  margin-left: 0;
-}
-
-#subfilter li {
-  list-style:none;
-  line-height:2;
-  border-bottom: 1px solid #ddd;
-}
-
-  #subfilter li a {
-    text-decoration:none;
-    border:0px none;
-    font-size:.9em;
-    cursor:pointer;
-    padding:4px;
-  }
-
-  #subfilter li a.selected {
-    color:red;
-  }
-
-/* Responses .................................................................*/
-
-.response-list {
-  overflow:auto;
-}
-
-  .response-list > h2 {
-    text-transform:uppercase;
-    font-size:24px;
-    font-weight:800;
-    color:#96c4b2;
-    border-bottom:1px dotted #86bba6;
-    text-align:center;
-    margin-bottom:10px;
-    padding-bottom:10px;
-  }
-
-  .response {
-    border-bottom:1px dotted #86bba6;
-    margin-bottom:15px;
-    padding-bottom:15px;
-  }
-
-  .response h2 {
-    font-size:16px;
-    font-weight:600;
-    line-height:1;
-  }
-
-  .response .created,
-  .response .collector  {
-    color: #589c81;
-  }
-
-  .response .answers {
-    margin-bottom:10px;
-  }
-
-  .response i {
-    color:#999;
-  }
-
-  .response img {
-    display:block;
-    margin:10px 0;
-    width:100%;
-  }
-
-  .response .confirm-delete {
-    display:none;
-  }
-
-.answers {
-  margin-top:10px;
-}
-
-.key {
-  color:#999;
-  wwidth:300px;
-  wposition:absolute;
-  wtext-align:right;
-  wleft:-310px;
-}
-
-.key, .value {
-  margin-bottom:4px;
-}
-
-/* Map .....................................................................*/
-
-#map {
-  height:550px;
-  margin-bottom:20px;
-}
-
-#map-controls {
-  padding:10px 10px 0 10px;
-  background:#39abb7;
-}
-
-  #map-controls a {
-    color:#fefefe;
-    border-radius:8px;
-    padding:0px 5px;
-  }
-
-  #map-controls #address-search {
-    background:transparent;
-    color:#fefefe;
-    border:1px solid #fefefe;
-    min-width:300px;
-    max-width:400px;
-  }
-
-  #map-controls .icon-search:before {
-    padding-right:5px;
-  }
-
-.leaflet-control-attribution {
-  display:none;
-}
-
-/*  Note that we can't combine these two rules because they're
-    browser-specific */
-#address-search::-webkit-input-placeholder {
-    color: #fefefe;
-    font-weight:300;
-    text-transform:uppercase;
-    font-size:12px;
-    line-height:25px;
-}
-
-#address-search:-moz-placeholder {
-    color: #93a9cd;
-    font-weight:300;
-    text-align:center;
-    text-transform:uppercase;
-    font-size:12px;
-    line-height:25px;
-}
-
-
-
-/* Settings ................................................................*/
-#settings-view-container textarea {
-  display:block;
-  width:90%;
-  font-family:Courier New, Courier, monospace;
-  font-size:16px;
-  height:15em;
-}
-
-#settings-view-container #preview-view-container {
-}
-
-#send-survey-container {
-
-}
-
-  #send-survey-container h3 {
-    margin-bottom:10px;
-  }
-
-  #send-survey-container p {
-    margin-bottom:1.2em;
-  }
-
-
-/* Export ..................................................................*/
-.export-block {
-  overflow:auto;
-  padding:50px;
-  width:45%;
-}
-
-
-/* New survey ..............................................................*/
-#newsurvey {
-  font-size:16px;
-  border:0px none;
-  text-shadow:none;
-  font-weight:normal;
-  letter-spacing: 0;
-}
-
-.new-survey h2 {
-  text-align:center;
-}
-
-
-/* Builder .................................................................*/
-#new-survey-form {
-    width:400px;
-    border: 1px solid #39abb7;
-    border-radius: 10px;
-    padding:20px;
-    margin:0px auto;
-    margin-top:-20px;
-
-    -moz-box-shadow: inset 0 0 24px rgba(0, 148,155, 0.5);
-    -webkit-box-shadow: inset 0 0 24px rgba(0, 148,155, 0.5);
-    box-shadow: inset 0 0 24px rgba(0, 148,155, 0.5);
-
-    background:#fff;
-}
-
-  #new-survey-form input[type='text'] {
-    margin-bottom:10px;
-    width:350px;
-  }
-
-.survey-designer {
-
-}
-
-  .survey-designer p {
-    text-align: center;
-  }
-
-  .survey-designer h2 {
-    text-align:center;
-    font-size:3em;
-  }
-
-  .survey-designer h2.getting-started {
-    font-size:1em;
-    text-transform:uppercase;
-    font-weight:bold;
-    letter-spacing:1px;
-    color:#ef6d4a;
-  }
-
-  .survey-designer h3 {
-    text-align:center;
-    font-size:2em;
-  }
-
-  .survey-designer .advanced {
-    text-align:center;
-  }
-
-.choice-boxes {
-  text-align:center;
-  padding: 20px 0;
-}
-
-  .choice-box {
-    display: inline-block;
-
-    width:250px;
-    border: 1px solid #faf6ad;
-    border-radius: 10px;
-    padding:20px;
-    margin:15px;
-
-    -moz-box-shadow: inset 0 0 24px rgba(250, 246, 143, 0.5);
-    -webkit-box-shadow: inset 0 0 24px rgba(250, 246, 143, 0.5);
-    box-shadow: inset 0 0 24px rgba(250, 246, 143, 0.5);
-
-    text-align:center;
-
-  }
-    .choice-box h3 {
-      padding-top:10px;
-      font-weight:bold;
-      font-size:24px;
-    }
-
-    .choice-box p {
-      font-size:14px;
-      line-height:1.2;
-      text-align:left;
-      margin-top:10px;
-    }
-
-    .choice-box .time-estimate {
-      padding-top:20px;
-      padding-bottom:5px;
-      text-align:center;
-      color:#666;
-    }
-
-/* Editor ....................................................................*/
-#builder-view-container {
-}
-
-  #builder-view-container .done {
-    float:right;
-  }
-
-  .editor .question-input {
-    font-weight:600;
-  }
-
-  .eeditor .question,
-  .eeditor .answers {
-    border-bottom:1px dotted #ddd;
-  }
-    .editor .question {
-      padding:10px 0 0 10px;
-      border-bottom:1px dotted #ddd;
-    }
-
-      .editor .question .title {
-        text-transform: uppercase;
-        font-size:.9em;
-        color:#999;
-        margin-top:10px;
-        margin-bottom:0;
-        padding:10px 0 0 25px;
-        border-top:1px dotted #ddd;
-      }
-
-    .question .question {
-      margin-left:20px;
-    }
-
-  .editor .answers,
-  .editor .question-tools-container {
-    padding:0 0 0 20px;
-    margin-bottom:10px;
-  }
-
-    .editor .remove {
-      color: #db6a6e;
-    }
-
-  .input-append {
-    display:block;
-  }
-
-/* Toolbar ...................................................................*/
+  color: #f15a24; }
+
+form .question {
+  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif; }
+
+input {
+  font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif; }
+
+input[type=text],
+input[type=password] {
+  display: block;
+  font-size: 16px;
+  color: #6e6663;
+  border: 4px solid #ccc;
+  line-height: 24px;
+  padding: 0px 8px;
+  margin-bottom: 1.5em; }
+
+input.error {
+  color: #f15a24;
+  border-color: #f15a24; }
+
+label {
+  cursor: pointer; }
+
+label.radio {
+  max-width: 75%;
+  display: block;
+  margin-bottom: 1em; }
+
+form input[type=submit] {
+  margin-top: 1em;
+  cursor: pointer;
+  border: 6px solid #58aeff;
+  font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
+  background: #fff;
+  width: auto;
+  height: auto; }
+
+form p {
+  margin-top: 1em;
+  margin-bottom: 0; }
+
+input.large,
+#login input[type=text],
+#login input[type=password],
+#register input[type=text],
+#register input[type=password] {
+  display: block;
+  font-size: 26px;
+  ffont-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
+  border: 4px solid #ffad00;
+  line-height: 32px;
+  padding: 4px 10px;
+  margin-bottom: 1em;
+  width: 12em; }
+
+input.large {
+  width: 18em; }
+
+.preview-q-box {
+  padding-left: 20px; }
+
+.preview-q-box .depth-0,
+.preview-q-box .depth-1,
+.preview-q-box .depth-2,
+.preview-q-box .depth-3 {
+  margin-left: 15px; }
+
+.preview-question {
+  border-left: 5px solid #58aeff;
+  padding-left: 10px;
+  margin: 5px 5px 20px 5px; }
+
+.question-prompt {
+  padding: 5px;
+  font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif; }
+
+.preview-answer {
+  padding: 2px 0 2px 20px; }
+
+/* Editor --------------------------------------------------------------------*/
 .saved {
-    color: #8db100;
-    display: none;
-}
+  display: none; }
 
-.error {
-    color: #df455d;
-    display: none;
-}
-
-.actionbar {
-
-}
-  .actionbar div {
+.editor {
+  /* Question & answer tools*/ }
+  .editor input[type=text] {
     display: inline-block;
-  }
-
-  .actionbar .saved {
-    color: #8db100;
+    width: 450px;
+    border-width: 0;
+    border-bottom-width: 3px;
+    background: white;
+    border-color: white;
+    padding: 5px 15px;
+    margin-bottom: 0.5em; }
+  .editor .question input[type=text] {
+    width: 450px; }
+  .editor .question .answers input[type=text] {
+    width: 450px; }
+  .editor .question .answers .question input[type=text] {
+    width: 450px; }
+  .editor .question .answers .question .answers input[type=text] {
+    width: 450px; }
+  .editor .remove,
+  .editor .show-add-sub-question,
+  .editor .btn-group {
+    display: none; }
+  .editor .remove {
+    padding-left: 8px; }
+  .editor .input-append:hover > .btn-group,
+  .editor .input-append:focus > .btn-group {
+    ddisplay: inline-block; }
+  .editor .add-on {
+    display: inline-block;
+    float: left;
+    line-height: 40px;
+    width: 40px;
+    text-align: center; }
+  .editor .add-on-light {
+    color: #fff; }
+  .editor input[type=text].question-input {
+    font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
+    color: #6e6663;
+    font-size: 16px; }
+  .editor input:focus,
+  .editor input:hover {
+    outline: none;
+    border-color: #ffad00;
+    background: #fff;
+    position: relative; }
+  .editor .question .question,
+  .editor .answers {
+    border-left: 2px solid white;
+    margin-left: 40px; }
+  .editor .answers {
+    margin-left: 0px; }
+  .editor .question .question {
+    padding-left: 35px; }
+  .editor .add-question,
+  .editor .question-tools-container {
+    padding-bottom: 8px; }
+    .editor .add-question a,
+    .editor .question-tools-container a {
+      padding-left: 45px; }
+  .editor .question-tools-container,
+  .editor .show-add-sub-question,
+  .editor .add-question,
+  .editor .question-choices .choice {
+    font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif; }
+  .editor .show-add-sub-question {
+    padding-left: 10px; }
+  .editor .show-add-sub-question span {
+    display: none; }
+  .editor .question-choices {
     display: none;
-  }
-
-
-/* Preview ...................................................................*/
-
-#preview-dimmer {
-  background: #fff;
-  opacity: 0.95;
-  position: fixed;
-  left: 0px;
-  top: 0px;
-  width: 100%;
-  height: 100%;
-  display: none;
-}
-
-  #preview-dimmer.popup {
-    display:block;
-  }
-
-#preview {
-  padding-bottom: 20px;
-  background: #fff;
-  float:left;
-}
-
-  #preview.popup {
-    background:#fff;
-    display:block;
-    padding:10px 0 20px 20px;
-    width: 700px;
-    position: absolute;
-    left: 25%;
-    margin:50px auto 50px auto;
-    border: 1px solid #eee;
-    -moz-box-shadow: 0 0 20px rgba(0,0,0, 0.25);
-    -webkit-box-shadow: 0 0 20px rgba(0,0,0, 0.25);
-    box-shadow: 0 0 20px rgba(0,0,0, 0.25);
-    z-index:1000;
-  }
-
-  #preview-close {
-    display:none;
-
-    height:34px;
-    width:34px;
-    background:transparent url(../img/icons/close.png) no-repeat center center;
-    position:absolute;
-    top:-15px;
-    left:-15px;
-    float:left;
-    cursor:pointer;
-  }
-
-  #preview.popup #preview-close {
-    display:inline;
-  }
-
-  #preview-survey-title {
-    text-align:center;
-  }
-
-    #preview h3 {
-      padding: 30px 10px 0px 10px;
-    }
-
-  .preview-q-box {
-    padding-left: 20px;
-  }
-
-  .preview-q-box .depth-0,
-  .preview-q-box .depth-1,
-  .preview-q-box .depth-2,
-  .preview-q-box .depth-3 {
-    margin-left: 15px;
-  }
-
-  .preview-question {
-    border-left: 5px solid #44A9BA;
-    padding-left: 10px;
-    margin: 5px 5px 20px 5px;
-  }
-
-    .question-prompt {
-      padding: 5px;
-      font-weight: bold;
-    }
-
-    .preview-answer {
-      padding: 2px 0 2px 20px;
-    }
-
-  .condition {
-    padding: 5px;
-    font-style: italic;
-    color: #777;
-  }
+    overflow: auto;
+    margin-bottom: 1em;
+    margin-left: 40px; }
+  .editor .question-choices .choice {
+    max-width: 150px;
+    padding: 10px;
+    float: left;
+    background: #fff;
+    margin-right: 10px;
+    cursor: pointer;
+    border: 3px solid #fff; }
+    .editor .question-choices .choice .title {
+      color: #58aeff;
+      font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
+      display: block; }
+    .editor .question-choices .choice .example {
+      display: none; }
+  .editor .question-choices .choice:hover {
+    border: 3px solid #58aeff; }

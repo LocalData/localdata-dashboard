@@ -37,8 +37,8 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
   AllViews.DesignView = DesignViews.DesignView;
 
   AllViews.LoginView = UserViews.LoginView;
+  AllViews.RegisterView = UserViews.RegisterView;
   AllViews.UserBarView = UserViews.UserBarView;
-  AllViews.ResetView = UserViews.ResetView;
 
   // The singleton view which manages all others.
   // Essentially, a "controller".
@@ -104,11 +104,12 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
       });
     },
 
-    goto_password_reset: function (resetInfo) {
-      this.currentContentView = this.getOrCreateView('ResetView', 'ResetView', {
-        resetInfo: resetInfo
+    goto_register: function() {
+      this.currentContentView = this.getOrCreateView("RegisterView", "RegisterView", {
+        'user': this.user
       });
     },
+
 
     // Survey dashboard routes .................................................
     goto_survey: function(tab) {
@@ -132,6 +133,9 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
           break;
         case "settings":
           this.currentContentView.showSettings();
+          break;
+        case "filters":
+          this.currentContentView.showFilters();
           break;
       }
     },
@@ -158,11 +162,15 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
       this.goto_survey("export");
     },
 
+    goto_filters: function() {
+      _kmq.push(['record', "FilterVIew"]);
+      this._router.navigate("surveys/" + settings.slug + "/dive");
+      this.goto_survey("filters");
+    },
+
     goto_design: function() {
       console.log("Going to design");
       this.currentContentView = this.getOrCreateView("DesignView", "DesignView", {id: settings.surveyId});
-
-      // this.currentContentView = this.getOrCreateView("DesignView", "DesignView");
     }
 
   });

@@ -8,15 +8,18 @@ define([
 
   // LocalData
   'settings',
-  'api'
+  'api',
+
+  // Templates
+  'text!templates/surveys/settings.html',
 ],
 
-function($, _, Backbone, settings, api) {
+function($, _, Backbone, settings, api, template) {
   'use strict';
 
   var SettingsView = Backbone.View.extend({
-
     el: '#settings-view-container',
+    template: _.template(template),
 
     events: {
       'click .save': 'save'
@@ -50,6 +53,8 @@ function($, _, Backbone, settings, api) {
         return memo;
       }, {});
 
+      console.log(fields);
+
       this.survey.set(fields);
       this.survey.save({}, {
         success: this.success,
@@ -62,7 +67,7 @@ function($, _, Backbone, settings, api) {
         survey: this.survey.toJSON(),
       };
 
-      this.$el.html(_.template($('#settings-view').html(), context));
+      this.$el.html(this.template(context));
     }
   });
 

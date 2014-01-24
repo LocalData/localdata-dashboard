@@ -1,0 +1,30 @@
+<!--         <h3>Please stand by.</h3>
+        <p>We're loading your deep-dive data.</p>
+ -->
+
+<h3>Filter responses</h3>
+
+<div class="questions">
+
+  <% _.each(_.keys(questions), function(question) {%>
+    <% if(! _.has(questions, question)) { return; } %>
+    <% if(question === 'id') { return; } %>
+
+    <div class="question">
+      <label class="" data-question="<%- question %>">
+        <div class="circle"></div> <%- mapping[question] || question %>
+      </label>
+
+      <div class="answers">
+        <% _.each(_.keys(questions[question]), function(answer) {%>
+          <div class="answer" data-answer="<%- answer %>" data-question="<%- question %>">
+            <div class="circle" style="background-color: <%- questions[question][answer].color %>"></div> <%- answer %> <%- questions[question][answer].val %>
+          </div>
+        <% }); %>
+
+        <button href="" class="button mini flex clear">Clear filter</button>
+      </div>
+
+    </div>
+  <% }); %>
+</div>

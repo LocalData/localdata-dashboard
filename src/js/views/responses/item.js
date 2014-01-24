@@ -32,19 +32,15 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       'click .cancel': 'cancel'
     },
 
-    initialize: function(options) {
+    initialize: function() {
       this.listenTo(this.model, "change", this.render);
       this.listenTo(this.model, "destroy", this.remove);
-
-      this.labels = options.labels;
     },
 
     render: function() {
       var $el = $(this.el);
-      $el.html(this.template({
-        r: this.model.toJSON(),
-        labels: this.labels
-      }));
+      console.log(this.model);
+      $el.html(this.template({r: this.model.toJSON() }));
       return this;
     },
 
@@ -64,12 +60,13 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       event.preventDefault();
 
       function success(model, repsonse) {
-        // No-op for now.
-        // TODO: We might want to show a success message.
+        console.log("Success!", model, repsonse);
+        this.trigger('delete');
       }
 
       function error(model, xhr, options) {
         console.log("Error destroying", xhr, options);
+        console.log($('.error'));
         $('.error').show();
       }
 

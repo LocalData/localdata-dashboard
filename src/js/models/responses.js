@@ -35,69 +35,25 @@ function($, _, Backbone, moment, settings, api) {
     filters: null,
     unfilteredModels: null,
 
-    initialize: function(models, options) {
-      // Ugly -- we'll need to find a nicer way to init this thing
-      // Maybe: function(models, options)
-      if(! _.isEmpty(models)) {
-        this.models = models;
-      }
-
-      if(options !== undefined) {
-        console.log("Getting responses");
+    initialize: function(options) {
+      if (options !== undefined) {
+        console.log("Getting responses", options);
         this.surveyId = options.surveyId;
-        this.fetchChunks();
+        this.objectId = options.objectId;
+        this.fetch();
       }
     },
 
     url: function() {
-      return settings.api.baseurl + '/surveys/' + this.surveyId + '/responses';
-    },
-
-    fetchChunks: function(start) {
-      // TODO: If we've set a filter but are still receiving data chunks, we
-      // need to separately deal with filtered and unfiltered data.
-      var self = this;
-      function getChunk(start, count) {
-        api.getResponses({
-            startIndex: start,
-            count: count,
-            sort: 'asc'
-          }, function (error, responses) {
-          if (error) {
-            console.log(error);
-            return;
-          }
-
-          // If we found 0 responses, start checking for updates
-          // if(responses.length === 0) {
-          //   _.delay(_.bind(self.autoUpdate, self), 1000);
-          //   return;
-          // }
-
-          // If we got as many entries as we requested, then request another
-          // chunk of data.
-          if (responses.length === count) {
-            getChunk(start + count, count);
-          }
-
-          // Turn the entries into models and add them to the collection.
-          var models = _.map(responses, function (item) { return new self.model(item); });
-          self.add(models, { silent: true });
-          self.trigger('addSet', models);
-
-          // Start autoUpdate if we are at the end of the responses.
-          // if (responses.length < count){
-          //   _.delay(_.bind(self.autoUpdate, self), 1000);
-          // }
-        });
+      var url = settings.api.baseurl + '/surveys/' + this.surveyId + '/responses';
+      if (this.objectId) {
+        return url + '?objectId=' + this.objectId;
       }
-
-      // Get the first chunk.
-      start = start || 0;
-      getChunk(start, 500);
+      return url;
     },
 
     parse: function(response) {
+      console.log("Parsing", response);
       return response.responses;
     },
 
@@ -203,7 +159,7 @@ function($, _, Backbone, moment, settings, api) {
         answer: answer
       };
 
-      if(answer === 'no answer') {
+      if(answer === 'no response') {
         answer = undefined;
       }
 
@@ -217,9 +173,7 @@ function($, _, Backbone, moment, settings, api) {
     clearFilter: function (options) {
       console.log("Clearing filter");
       this.filters = null;
-      if (this.unfilteredModels === null) {
-        this.reset();
-      } else {
+      if (this.unfilteredModels !== null) {
         this.reset(this.unfilteredModels, options);
       }
     }

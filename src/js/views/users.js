@@ -17,21 +17,15 @@ define([
   'models/users',
 
   // Templates
-  'text!templates/reset.html'
+  'text!templates/login.html',
+  'text!templates/register.html'
+
 ],
 
-function($, _, Backbone, events, _kmq, router, settings, api, UserModels, resetTemplate) {
+function($, _, Backbone, events, _kmq, router, settings, api, UserModels, loginTemplate, registerTemplate) {
   'use strict';
 
   var UserViews = {};
-
-  function deserializeResetInfo(serialized) {
-    var data = JSON.parse(window.atob(serialized));
-    return {
-      email: data[0],
-      token: data[1]
-    }
-  }
 
   UserViews.UserBarView = Backbone.View.extend({
     el: "#userbar-container",
@@ -46,8 +40,6 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels, resetT
     },
 
     render: function() {
-      _kmq.push(['identify', this.user.get('email')]);
-
       var context = {
         user: this.user.toJSON()
       };
@@ -63,20 +55,18 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels, resetT
   });
 
 
-  UserViews.LoginView = Backbone.View.extend({
-    el: "#container",
+  UserViews.RegisterView = Backbone.View.extend({
+    el: '#container',
+
+    template: _.template(registerTemplate),
 
     events: {
-      "click #login button": "logIn",
-      "click #create-account button": "createUser"
+      "click #register .button": "createUser"
     },
 
     initialize: function(options) {
       console.log("Initialize login view");
-      _.bindAll(this, 'render', 'update', 'createUser', 'createUserCallback', 'logIn', 'logInCallback');
-
-      this.redirectTo = options.redirectTo || "/";
-      this.redirectTo = this.redirectTo.replace("?redirectTo=", "");
+      _.bindAll(this, 'render', 'update', 'createUser', 'createUserCallback');
 
       this.user = options.user;
 
@@ -84,10 +74,7 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels, resetT
     },
 
     render: function() {
-      var context = {
-        redirectTo: this.redirectTo
-      };
-      this.$el.html(_.template($('#login-view').html(), context));
+      this.$el.html(this.template({}));
       return this;
     },
 
@@ -95,29 +82,9 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels, resetT
       this.render();
     },
 
-    logInCallback: function(error, user) {
-      if(error) {
-        _kmq.push(['record', 'Login error: ' + error]);
-        $('#login .error').html(error).fadeIn();
-        return;
-      }
-
-      this.user.fetch();
-      events.publish('navigate', [this.redirectTo]);
-    },
-
-    logIn: function(event) {
-      event.preventDefault();
-      _kmq.push(['record', 'User logging in']);
-      $('#login .error').fadeOut();
-
-      var user = $(event.target).parent().serializeArray();
-      api.logIn(user, this.logInCallback);
-    },
-
     createUserCallback: function(error, user) {
       if(error) {
-        $("#create-account .error").html(error.message).fadeIn();
+        $("#register .error").html(error.message).fadeIn();
         return;
       }
 
@@ -133,47 +100,50 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels, resetT
 
       _kmq.push(['record', 'Creating user account']);
       var user = $(event.target).parent().serializeArray();
-      $('#create-account .error').fadeOut();
+      $('#register .error').fadeOut();
 
       api.createUser(user, this.createUserCallback);
     }
   });
 
-  UserViews.ResetView = Backbone.View.extend({
-    el: '#container',
+
+  UserViews.LoginView = Backbone.View.extend({
+    el: "#container",
+
+    template: _.template(loginTemplate),
 
     events: {
-      'click #change-password button': 'changePassword'
+      "click #login button": "logIn"
     },
 
-    initialize: function (options) {
-      console.log('Initialize password reset view');
-      _.bindAll(this, 'render', 'update', 'changePassword', 'changeDone');
+    initialize: function(options) {
+      console.log("Initialize login view");
+      _.bindAll(this, 'render', 'update', 'logIn', 'logInCallback');
 
-      this.redirectTo = '/';
+      this.redirectTo = options.redirectTo || "/";
+      this.redirectTo = this.redirectTo.replace("?redirectTo=", "");
 
-      var resetInfo = deserializeResetInfo(options.resetInfo);
-      this.token = resetInfo.token;
-      this.user = new UserModels.Model({
-        email: resetInfo.email
-      });
+      this.user = options.user;
 
       this.render();
     },
 
-    render: function () {
-      this.$el.html(resetTemplate);
+    render: function() {
+      var context = {
+        redirectTo: this.redirectTo
+      };
+      this.$el.html(this.template(context));
       return this;
     },
 
-    update: function () {
+    update: function() {
       this.render();
     },
 
-    changeDone: function (error, user) {
-      if (error) {
-        _kmq.push(['record', 'Password reset error: ' + error]);
-        this.$('.error').html(error.message).fadeIn();
+    logInCallback: function(error, user) {
+      if(error) {
+        _kmq.push(['record', error]);
+        $('#login .error').html(error).fadeIn();
         return;
       }
 
@@ -181,16 +151,13 @@ function($, _, Backbone, events, _kmq, router, settings, api, UserModels, resetT
       events.publish('navigate', [this.redirectTo]);
     },
 
-    changePassword: function(event) {
+    logIn: function(event) {
       event.preventDefault();
-      _kmq.push(['record', 'User reset password']);
-      this.$('.error').fadeOut();
+      _kmq.push(['record', 'User logging in']);
+      $('#login .error').fadeOut();
 
-      var user = {
-        email: this.$('input[name=email]').val(),
-        password: this.$('input[name=password]').val()
-      };
-      api.resetPassword(user, this.token, this.changeDone);
+      var user = $(event.target).parent().serializeArray();
+      api.logIn(user, this.logInCallback);
     }
   });
 

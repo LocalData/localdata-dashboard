@@ -1,0 +1,130 @@
+.survey-head .in {
+  padding-bottom: 0;
+}
+
+.first-run {
+  display: none;
+}
+
+/* Designer ---------------------------------------------------------------- */
+.choice-boxes {
+  overflow: auto;
+}
+
+.choice-box-wrap {
+  float: left;
+  width: 250px;
+  background: #fff;
+  margin-right: 20px;
+
+  .choice-box {
+    padding: 20px;
+  }
+
+  h3 {
+    font-size: 24px;
+    line-height: 30px;
+  }
+
+  button {
+    width: 100%;
+    margin: 0;
+  }
+}
+
+
+/* Survey List -------------------------------------------------------------- */
+
+.survey-list-item .in {
+  padding: 0;
+}
+
+.survey-list-item .in .a {
+  padding: 50px 0 0 0;
+}
+
+.survey-list-item h2 {
+  font-family: $font;
+
+  a:link,
+  a:visited {
+    color: $body-med;
+  }
+
+  a:hover,
+  a:active {
+    color: $blue;
+  }
+}
+
+.survey-list-item.even {
+  background: #fff;
+}
+
+/* Survey and Map ----------------------------------------------------------- */
+.survey .in {
+  padding-bottom: 10px;
+}
+
+#survey-tabs .in {
+  padding-top: 0;
+}
+
+#response-view-container .in {
+  padding: 0;
+}
+
+.map-loading {
+  text-align: center;
+  background: url(../img/preloader.gif) no-repeat center center;
+  height: 128px;
+  position: relative;
+  top: 220px;
+  left: 50%;
+  width: 50%;
+}
+
+.checking {
+  display: none;
+}
+
+/* Responses ---------------------------------------------------------------- */
+.map-list-view {
+  position: relative;
+}
+
+.responses-list {
+  position: absolute;
+  width: 50%;
+  background: #fff;
+  border: 8px solid $thinpink;
+  padding: 20px;
+  top: 20px;
+  margin-left: 10%;
+  z-index: 10000;
+
+  button {
+    float: right;
+    margin-right: 0;
+    margin-bottom: 0;
+  }
+
+  button.close {
+    float: none;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+  }
+
+  .time, .collector {
+    color: $body-accent;
+  }
+
+  .collector {
+    padding-right: 2em;
+  }
+}
+
+.confirm-delete {
+  display: none;
+}

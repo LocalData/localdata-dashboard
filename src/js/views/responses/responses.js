@@ -18,71 +18,68 @@ define([
 
   // Views
   'views/map',
-  'views/responses/list'
+  'views/responses/filter',
+  'views/responses/list',
+  'views/surveys/count',
+
+  // Templates
+  'text!templates/responses/map-list.html'
 ],
 
-function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView, ResponseListView) {
+function($, _, Backbone, moment, events, _kmq, settings, api,
+  Responses,
+  MapView,
+  FilterView,
+  ResponseListView,
+  ResponseCountView,
+  mapListTemplate) {
+
   'use strict';
 
   var ResponseViews = {};
 
-
   ResponseViews.MapAndListView = Backbone.View.extend({
-    responses: null,
-    firstRun: true,
-    survey: null,
     filters: {},
+    firstRun: true,
     mapView: null,
     listView: null,
+    responses: null,
+    survey: null,
 
-    template: _.template($('#response-view').html()),
+    template: _.template(mapListTemplate),
 
     el: '#response-view-container',
 
     events: {
-      "change #filter":  "filter",
-      "click #subfilter a": "subFilter",
-      "click #clear": "reset",
-      "click #refresh": "getNew"
+      'click .refresh': 'getNew'
     },
 
     initialize: function(options) {
       _.bindAll(this,
         'render',
         'update',
+
+        // Filtering
+        'showFilters',
+        'hideFilters',
+
+        // Updating
         'getNew',
-        'filter',
-        'subFilter',
-        'updateFilterView',
-        'updateFilterChoices',
         'lastUpdated',
-        'details'
+
+        'mapClickHandler'
       );
 
       this.responses = options.responses;
-      this.responses.on('reset', this.update, this);
-      this.responses.on('add', this.update, this);
-      this.responses.on('addSet', this.updateFilterChoices, this);
-      this.responses.on('addSet', this.update, this);
-      // this.responses.on('updated', this.lastUpdated, this);
 
       this.forms = options.forms;
       this.forms.on('reset', this.updateFilterChoices, this);
 
       this.survey = options.survey;
 
-      // Make sure we have forms available
       this.render();
-
-      // If we already have some responses, then we can display the
-      // count/filter text. We need to have rendered first, though, otherwise
-      // we won't have any place to put the filter controls!
-      if (this.responses.length > 0) {
-        this.updateFilterChoices();
-      }
     },
 
-    // TODO: merge update and render
     render: function() {
       console.log("Rendering response view");
       if (this.firstRun) {
@@ -98,50 +95,61 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
 
       // Actually render the page
       var context = {
-        responses: this.responses
+        survey: this.survey.toJSON()
       };
       this.$el.html(this.template(context));
 
-      // If the data has been filtered, show that on the page.
-      // TODO: This should be done in a view.
       // Set up the map view, now that the root exists.
       if (this.mapView === null) {
         this.mapView = new MapView({
           el: $('#map-view-container'),
-          responses: this.responses,
           survey: this.survey,
-          handleSelect: this.details
+          clickHandler: this.mapClickHandler
         });
       }
 
       // Render the map
       this.mapView.render();
 
-      this.updateFilterView();
+      this.filterView = new FilterView({
+        collection: this.responses,
+        survey: this.survey,
+        forms: this.forms,
+        map: this.mapView
+      });
+      $("#filter-view-container").html(this.filterView.$el);
+
+      // Set up the response count view.
+      this.countView = new ResponseCountView({
+        model: this.survey
+      }).render();
+      $("#response-count-container").html(this.countView.$el);
+
+      // Listen for new responses
+      this.survey.on('change', this.mapView.update);
     },
 
-
-    /**
-     * Show details for a particular feature.
-     *
-     * @param  {Object} options An object with a parcelId or id property
-     */
-    details: function(feature) {
-      // Find out if we're looking up a set of parcels, or one point
-      if(feature.parcelId !== undefined && feature.parcelId !== '') {
-        this.sel = new Responses.Collection(this.responses.where({'parcel_id': feature.parcelId}));
-      }else {
-        this.sel = new Responses.Collection(this.responses.where({'id': feature.id}));
+    mapClickHandler: function(event) {
+      if (_.isUndefined(event.data) || _.isUndefined(event.data.object_id)) {
+        return;
       }
 
-      var selectedItemListView = new ResponseListView({
-        collection: this.sel,
-        labels: this.forms.getQuestions()
+      var rc = new Responses.Collection({
+        surveyId: this.survey.get('id'),
+        objectId: event.data.object_id
       });
-      $("#result-container").html(selectedItemListView.render().$el);
+
+      var selectedItemListView = new ResponseListView({
+        el: '#responses-list-container',
+        collection: rc
+      });
+
+      selectedItemListView.on('delete', function() {
+        this.mapView.deselectObject();
+      }.bind(this));
     },
 
-    update: function (event) {
+    update: function() {
       if (this.firstRun) {
         this.render();
       }
@@ -149,120 +157,25 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
       // Update the count
       // TODO: Use a template
       this.$('#count').html(_.template('<%= _.size(responses) %> Response<% if(_.size(responses) != 1) { %>s<% } %>', {responses: this.responses}));
-
-      // TODO:
-      // Update the filters
     },
 
-    /**
-     * Get new responses
-     */
-    getNew: function(event) {
-      event.preventDefault();
-      this.responses.update();
+    showFilters: function() {
+      $('.factoid').hide();
+      this.$el.addClass('bigb');
+      this.mapView.map.invalidateSize();
+
+      // Render the filter
+      $("#filter-view-container").show();
     },
 
-    /**
-     * Show the time of the last response collection update
-     */
-    lastUpdated: function () {
-      if(this.responses.lastUpdate !== undefined) {
-        var time = moment(this.responses.lastUpdate).format("Do h:mma");
-        $('#last-updated').html('Last updated: ' + time);
-      }
+    hideFilters: function() {
+      $('.factoid').show();
+      this.$el.removeClass('bigb');
+      this.mapView.map.invalidateSize();
+      this.update();
+
+      $("#filter-view-container").hide();
     },
-
-    /**
-     * Update the first-level choices for filtering responses
-     */
-    updateFilterChoices: function() {
-      var flattenedForm = this.forms.getFlattenedForm();
-      $("#filter-view-container").html(_.template($('#filter-results').html(), {
-        responses: this.responses,
-        flattenedForm: flattenedForm
-      }));
-    },
-
-
-    /**
-     * If the data has already been filtered, show that on the page
-     */
-    updateFilterView: function () {
-      if (_.has(this.filters, 'answer')) {
-        return;
-      } else {
-        console.log("Clear sub filter");
-        // Clear the filter selections.
-        $('#subfilter').html('');
-        $('#filter').val('');
-      }
-    },
-
-    /**
-     * Reset any filters
-     */
-    reset: function(event) {
-      console.log("Clearing filter");
-      this.filters = {};
-
-      this.responses.clearFilter();
-      this.updateFilterView();
-    },
-
-
-    /**
-     * Show possible answers to a given question
-     */
-    filter: function(e) {
-      _kmq.push(['record', "Question filter selected"]);
-      var $question = $(e.target);
-      var question = $question.val();
-
-      // Get the list of distinct options
-      var answers = this.responses.getUniqueAnswersForQuestion(question);
-      $("#subfilter").html(_.template($('#filter-results-answer').html(), { choices: answers }));
-
-      // Distinguish the responses visually on the map
-      this.mapView.setFilter(question, answers);
-    },
-
-
-    /**
-     * Show only responses with a specific answer
-     */
-    subFilter: function(event) {
-      _kmq.push(['record', "Answer filter selected"]);
-      var $answer = $(event.target);
-
-      // Clear the current filter, if there is one.
-      if(_.has(this.filters, 'answer')) {
-        this.responses.clearFilter({ silent: true });
-      }
-
-      // Mark the answer as selected
-      $('#subfilter a').removeClass('selected');
-      $answer.addClass('selected');
-
-      // Notify the user we're working on it
-      // (it can take a while to filter a lot of items)
-      // events.publish('loading', [true]);
-      $('#loadingsmg').show();
-      console.log("Loading");
-
-      // Filter the responses
-      this.filters.answer = $answer.text();
-      this.filters.question = $("#filter").val();
-      this.responses.setFilter(this.filters.question, this.filters.answer);
-
-      // Note that we're done loading
-      events.publish('loading', [false]);
-      $('#loadingsmg').hide();
-      console.log("Done loading");
-
-
-      this.updateFilterView();
-    },
-
 
     remove: function () {
       this.$el.remove();
@@ -277,10 +190,31 @@ function($, _, Backbone, moment, events, _kmq, settings, api, Responses, MapView
         this.listView.remove();
       }
       return this;
+    },
+
+    /**
+     * Get new responses
+     */
+    getNew: function(event) {
+      console.log("Getting new responses");
+      event.preventDefault();
+      this.survey.fetch();
+      // This is a hack because it's hard to watch .fetch
+      // if there are no changes.
+      $('.checking').fadeIn(500).fadeOut(750);
+    },
+
+    /**
+     * Show the time of the last response collection update
+     */
+    lastUpdated: function () {
+      if(this.responses.lastUpdate !== undefined) {
+        var time = moment(this.responses.lastUpdate).format("Do h:mma");
+        $('#last-updated').html('Last updated: ' + time);
+      }
     }
 
   });
-
 
 
   /**

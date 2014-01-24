@@ -1,0 +1,79 @@
+
+form label {
+  font-size: 16px;
+  line-height: 20px;
+}
+
+form .error {
+  color: $red;
+}
+
+form .question {
+  font-family: $bold;
+}
+
+input {
+  font-family: $font;
+}
+
+input[type=text],
+input[type=password] {
+  display: block;
+  font-size: 16px;
+  color: $body-color;
+  border: 4px solid #ccc;
+  line-height: 24px;
+  padding: 0px 8px;
+  margin-bottom: 1.5em;
+}
+
+input.error {
+  color: $red;
+  border-color: $red;
+}
+
+label {
+  cursor: pointer;
+}
+
+label.radio {
+  max-width: 75%;
+  display: block;
+  margin-bottom: 1em;
+}
+
+form input[type=submit] {
+  margin-top: 1em;
+  cursor: pointer;
+  border: 6px solid #58aeff;
+  font-family: $font;
+  background: #fff;
+  width: auto;
+  height: auto;
+}
+
+form p {
+  margin-top: 1em;
+  margin-bottom: 0;
+}
+
+input.large,
+#login input[type=text],
+#login input[type=password],
+#register input[type=text],
+#register input[type=password] {
+  display: block;
+  font-size: 26px;
+  ffont-family: $bold;
+  border: 4px solid $orange;
+  line-height: 32px;
+  padding: 4px 10px;
+  margin-bottom: 1em;
+  width: 12em;
+}
+
+input.large {
+  width: 18em;
+}
+
+

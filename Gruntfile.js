@@ -101,7 +101,10 @@ module.exports = function(grunt) {
               'img/**',
               '**/*.png', // Leaflet looks for PNGs in a funny spot
               '**/*.gif',
-              'css/font/**'
+              'font/**',
+              'css/font/**',
+              'fonts/**',
+              'css/fonts/**'
             ],
             dest: '<%= dirs.staging %>'
           }
@@ -121,7 +124,10 @@ module.exports = function(grunt) {
               'img/**',
               '**/*.png',
               '**/*.gif',
-              'css/font/**'
+              'css/font/**',
+              'font/**',
+              'css/fonts/**',
+              'fonts/**'
             ],
             dest: '<%= dirs.build %>'
           }

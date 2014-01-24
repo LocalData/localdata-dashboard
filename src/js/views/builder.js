@@ -35,18 +35,38 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
       answer: _.template($('#answer-edit-template').html())
     },
 
+    events: {
+      'click .save': 'save'
+    },
+
     initialize: function(options) {
-      _.bindAll(this, 'render', 'save', 'done', 'makeBlankQuestion', 'renderForm',
-        'suffix', 'editQuestion', 'setQuestionType', 'deleteQuestion',
-        'createQuestion', 'createPhotoQuestion', 'createAnswer', 'addSubQuestion',
-        'renderQuestion', 'editAnswer', 'deleteAnswer', 'slugify', 'updatePreview');
+      _.bindAll(this,
+        'render',
+        'save',
+
+        'makeBlankQuestion',
+        'renderForm',
+        'suffix',
+        'slugify',
+
+        'editQuestionFactory',
+        'setQuestionType',
+        'deleteQuestion',
+        'createQuestionFactory',
+        'createPhotoQuestion',
+        'addSubQuestionFactory',
+        'renderQuestion',
+
+        'createAnswer',
+        'editAnswer',
+        'deleteAnswer'
+      );
 
       this.forms = options.forms;
     },
 
     render: function() {
       this.renderForm();
-      this.updatePreview();
     },
 
     save: function(event) {
@@ -58,14 +78,6 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
         console.log('Form successfully saved');
         $(".saved").fadeIn().css("display","inline-block").delay(2000).fadeOut();
       });
-    },
-
-    done: function(event) {
-      event.preventDefault();
-      console.log('Done editing');
-      _kmq.push(['record', 'Done editing survey questions']);
-
-      this.trigger("done");
     },
 
     // The blank question template.
@@ -94,10 +106,6 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
       this.formQuestions = $('#editor');
       this.formQuestions.html('');
 
-      // Handle save events
-      $(this.el).find('.save').click(this.save);
-      $(this.el).find('.done').click(this.done);
-
       // Default to a blank question if the form is empty
       if (settings.formData === undefined) {
         settings.formData = {};
@@ -108,10 +116,7 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
       // Render form
       _.each(settings.formData.questions, function (question, questionIndex) {
         this.renderQuestion(question, undefined, undefined, undefined, undefined, questionIndex, settings.formData.questions);
-
-        // last param was settings.formData.questions
       }, this);
-      this.updatePreview();
     },
 
     suffix: function(name) {
@@ -124,13 +129,7 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
       return '';
     },
 
-    editQuestion: function(question) {
-      // TODO:
-      // What if we do:
-      // view = this;
-      // return function(event) {
-      //  view.slugify(text)
-      //  ...
+    editQuestionFactory: function(question) {
       return function(event) {
         console.log('Updating question');
         _kmq.push(['record', 'Question edited']);
@@ -146,8 +145,6 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
             answer.value = 'yes';
           }.bind(this));
         }
-
-        this.updatePreview();
       };
     },
 
@@ -186,19 +183,18 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
         console.log("removing question");
         _kmq.push(['record', 'Question deleted']);
 
-        // Remove it from the DON.
+        // Remove it from the DOM.
         $question.remove();
 
         // Remove it from the json
         parent.splice(questionIndex, 1);
-        this.updatePreview();
       };
     },
 
-    createQuestion: function(parent, questionIndex) {
+    createQuestionFactory: function(parent, questionIndex) {
       return function(event) {
         event.preventDefault();
-        var type = $(event.target).attr('data-type');
+        var type = $(event.currentTarget).attr('data-type');
 
         console.log("Adding a new question");
         _kmq.push(['record', 'Question added']);
@@ -207,7 +203,6 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
         this.setQuestionType(newQuestion, type);
         parent.splice(questionIndex + 1, 0, newQuestion);
 
-        this.updatePreview();
         this.renderForm();
       };
     },
@@ -222,7 +217,6 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
         delete newQuestion.answers;
         parent.splice(questionIndex + 1, 0, newQuestion);
 
-        this.updatePreview();
         this.renderForm();
       };
     },
@@ -236,15 +230,14 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
         });
         this.setQuestionLayout(question);
 
-        this.updatePreview();
         this.renderForm();
       };
     },
 
-    addSubQuestion: function(question, index) {
+    addSubQuestionFactory: function(question, index) {
       return function(event) {
         event.preventDefault();
-        var type = $(event.target).attr('data-type');
+        var type = $(event.currentTarget).attr('data-type');
 
         console.log("Adding sub-question", type);
         _kmq.push(['record', 'Sub-question added']);
@@ -259,7 +252,6 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
           question.answers[index].questions = [newQuestion];
         }
 
-        this.updatePreview();
         this.renderForm();
       };
     },
@@ -277,7 +269,6 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
           question.answers[index].value = 'yes';
         }
 
-        this.updatePreview();
       };
     },
 
@@ -288,7 +279,6 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
 
         // Remove it from the json
         question.answers.splice(index, 1);
-        this.updatePreview();
 
         this.setQuestionLayout(question);
 
@@ -312,6 +302,14 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
       // TODO:
       // This should pass around a well-document options object
       // Instead of 30 different parameters
+      // var options = {
+      //   visible:
+      //   parentId:
+      //   triggerId:
+      //   appendTo:
+      //   questionIndex:
+      //   parent:
+      // }
 
       // Set default values for questions
       if (visible === undefined) {
@@ -340,20 +338,40 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
       // TODO: make it less verbose
 
       // Listen for changes to the question text
-      var editQuestionProxy = $.proxy(this.editQuestion(question), this);
+      var editQuestionProxy = $.proxy(this.editQuestionFactory(question), this);
       $question.find('> div input').keyup(editQuestionProxy);
 
       // Listen for a request to remove a question
+      // TODO: confirm delete
       var deleteQuestionProxy = $.proxy(this.deleteQuestion($question, parent, questionIndex), this);
       $question.find('> div .remove').click(deleteQuestionProxy);
 
-      // Listen for a request to add a question
-      var createQuestionProxy = $.proxy(this.createQuestion(parent, questionIndex), this);
-      $question.find('.add-question').click(createQuestionProxy);
 
-      // Listen for a request to add a photo question
-      var createPhotoQuestionProxy = $.proxy(this.createPhotoQuestion(parent, questionIndex), this);
-      $question.find('.add-photo-question').click(createPhotoQuestionProxy);
+      // Add a question
+      // Show add sub-question
+      $question.find('.add-question').click(function(event) {
+        event.preventDefault();
+        $(this).parent().find('> .question-choices').slideDown();
+      });
+
+      // Hide add sub-question
+      $question.find('.close-add-sub-question').click(function(event) {
+        event.preventDefault();
+        $(this).parents('.question-choices').slideUp();
+      });
+
+      // Listen for a request to add a question
+      var createQuestionProxy = $.proxy(this.createQuestionFactory(parent, questionIndex), this);
+      $question.find('.add-sub-question').click(createQuestionProxy);
+
+      // // Add a sub-question
+      // var $addSubQuestion = $answer.find('.add-sub-question');
+      // var addSubQuestionProxy = $.proxy(this.addSubQuestionFactory(question, index), this);
+      // $addSubQuestion.click(addSubQuestionProxy);
+
+      // // Listen for a request to add a photo question
+      // var createPhotoQuestionProxy = $.proxy(this.createPhotoQuestion(parent, questionIndex), this);
+      // $question.find('.add-photo-question').click(createPhotoQuestionProxy);
 
       // Listen for a request to add an answer
       var createAnswerProxy = $.proxy(this.createAnswer(question), this);
@@ -380,6 +398,15 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
       // if(question.info !== undefined) {
       // }
 
+      // Show question tools on hover
+      // TODO: this selector sucks. Let's try to make it generic.
+      $question.hover(function(event) {
+        // if (event.currentTarget !== event.target) return;
+        $(this).find('> .input-append .remove').fadeIn(150);
+      }, function() {
+        $(this).find('> .input-append.remove').fadeOut(150);
+      });
+
       // Deal with answers ....................................................
       var questionID = id;
 
@@ -390,13 +417,14 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
 
         if(question.type === "checkbox") {
           suffixed_name = answer.name + this.suffix(answer.name);
-          triggerID = suffixed_name; //_.uniqueId(answer.name);
-          id = suffixed_name; //_.uniqueId(answer.name);
+          triggerID = suffixed_name;
+          id = suffixed_name;
         }
 
         // Set the data used to render the answer
-        var data = {
+        var answerData = {
           questionName: suffixed_name,
+          question: question,
           id: triggerID,
           theme: (answer.theme || "c"),
           value: answer.value,
@@ -407,7 +435,7 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
         var $answer;
         var referencesToAnswersForQuestion;
 
-        $answer = $(this.templates.answer(data));
+        $answer = $(this.templates.answer(answerData));
         referencesToAnswersForQuestion = this.boxAnswersByQuestionId[questionID];
         if (referencesToAnswersForQuestion === undefined) {
           referencesToAnswersForQuestion = [];
@@ -424,9 +452,34 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
         var editAnswerProxy = $.proxy(this.editAnswer(question, index), this);
         $input.keyup(editAnswerProxy);
 
+        // Show tools on hover
+        $answer.hover(function() {
+          $(this).find('> .btn').fadeIn(150);
+        }, function() {
+          $(this).find('> .btn').fadeOut(150);
+        });
+
+        $answer.find('> .show-add-sub-question').hover(function() {
+          $(this).find('span').fadeIn(150);
+        }, function() {
+          $(this).find('span').fadeOut(150);
+        });
+
+        // Show add sub-question
+        $answer.find('.show-add-sub-question').click(function(event) {
+          event.preventDefault();
+          $(this).parent().find('> .question-choices').slideDown();
+        });
+
+        // Hide add sub-question
+        $answer.find('.close-add-sub-question').click(function(event) {
+          event.preventDefault();
+          $(this).parents('.question-choices').slideUp();
+        });
+
         // Add a sub-question
         var $addSubQuestion = $answer.find('.add-sub-question');
-        var addSubQuestionProxy = $.proxy(this.addSubQuestion(question, index), this);
+        var addSubQuestionProxy = $.proxy(this.addSubQuestionFactory(question, index), this);
         $addSubQuestion.click(addSubQuestionProxy);
 
         // Remove an answer
@@ -457,10 +510,6 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
       text = text.replace(/\s/gi, "-");
       text = text.replace(/,/gi, '');
       return text;
-    },
-
-    updatePreview: function() {
-      this.trigger("formUpdated");
     }
 
   }); // end BuilderView{}

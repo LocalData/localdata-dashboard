@@ -1,0 +1,30 @@
+<div class="out contrast new-survey">
+  <div class="in">
+    <h2>Create a new survey</h2>
+
+    <form action="" id="new-survey-form">
+      <input type="text" placeholder="Survey name" name="name"  class="large survey-name">
+      <input type="text" placeholder="Survey city and state" name="location" class="large survey-location">
+
+      <h3>What data are you collecting?</h3>
+
+      <label class="radio">
+        <input type="radio" value="point" name="type">
+        Points on a map (for example, potholes, trees, data that doesn&apos;t correspond to an address)
+      </label>
+
+      <label class="radio">
+        <input type="radio" value="parcel" name="type">
+        Data using a parcel map (for example, property, homes, businesses with an address)
+      </label>
+
+      <label class="radio">
+        <input type="radio" value="pointandparcel" name="type">
+        We need to collect information about points and parcels
+      </label>
+
+      <button class="submit flex">Create new survey</button>
+      <span class="error">Please make sure you've filled out all the fields above.</span>
+    </form>
+  </div>
+</div>

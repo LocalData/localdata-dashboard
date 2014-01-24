@@ -5,6 +5,7 @@ define([
   'jquery',
   'lib/lodash',
   'backbone',
+  'lib/leaflet/leaflet',
   'lib/tinypubsub',
   'lib/async',
   'lib/kissmetrics',
@@ -23,16 +24,22 @@ define([
   'views/settings',
   'views/responses/responses',
   'views/forms',
+  'views/maps/map',
+
+  // Templates
+  'text!templates/surveys/new.html',
+  'text!templates/surveys/item.html',
+  'text!templates/surveys/list-item.html',
 
   // Misc
   'misc/exampleform'
-
 ],
 
 function(
   $,
   _,
   Backbone,
+  L,
   events,
   async,
   _kmq,
@@ -51,6 +58,12 @@ function(
   SettingsView,
   ResponseViews,
   FormViews,
+  MapView,
+
+  // Templates
+  newSurveyTemplate,
+  surveyTemplate,
+  surveyListItemTemplate,
 
   // Misc
   exampleForm
@@ -65,24 +78,94 @@ function(
     };
   }
 
+  function flip(a) {
+    return [a[1], a[0]];
+  }
+
   SurveyViews.ListItemView = Backbone.View.extend({
+    template: _.template(surveyListItemTemplate),
+
     initialize: function() {
-      _.bindAll(this, 'render');
+      _.bindAll(this, 'render', 'addTileLayer');
       this.model.bind('change', this.render);
     },
 
+    addTileLayer: function(tilejson) {
+      // Disabled for now
+      // On long lists, this adds too many tile requests.
+      return;
+
+      if (this.tileLayer) {
+        this.map.removeLayer(this.tileLayer);
+      }
+      this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
+
+      // Listen to see if we're loading the map
+      // this.tileLayer.on('loading', this.loading);
+      // this.tileLayer.on('load', this.done);
+
+      this.map.addLayer(this.tileLayer);
+      this.tileLayer.bringToFront();
+    },
+
     render: function() {
-      this.$el.html(_.template($('#survey-list-item-view').html(), {survey: this.model }));
+
+      this.$el.html(this.template({
+        survey: this.model.toJSON(),
+        count: this.model.getCount()
+      }));
+
+      var map = this.map = L.map(this.$('.map')[0], {
+        zoom: 15,
+        center: [37.77585785035733, -122.41362811351655],
+        scrollWheelZoom: false,
+        zoomControl: false,
+        attributionControl: false
+      });
+
+      // Center the map
+      var bounds = this.model.get('responseBounds');
+      if (bounds) {
+        bounds = [flip(bounds[0]), flip(bounds[1])];
+        if (bounds[0][0] === bounds[1][0] || bounds[0][1] === bounds[1][1]) {
+          map.setView(bounds[0], 15);
+        } else {
+          map.fitBounds(bounds);
+        }
+      }
+
+      // Add our baselayer
+      var baseLayer = L.tileLayer(settings.baseLayer);
+      map.addLayer(baseLayer);
+
+      // Add the survey data
+      var url = '/tiles/' + this.model.get('id');
+      url = url + '/tile.json';
+      // Get TileJSON
+      $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json'
+      }).done(this.addTileLayer);
+
+      // Fix over-zoom from fitBounds
+      if (map.getZoom() > baseLayer.options.maxZoom) {
+        map.setZoom(18);
+      }
       return this;
     }
   });
 
-
   SurveyViews.NewSurveyView = Backbone.View.extend({
+    template: _.template(newSurveyTemplate),
+
     el: $("#container"),
 
+    events: {
+      'submit #new-survey-form': 'submit'
+    },
+
     initialize: function(options) {
-      console.log("Init new survey view");
     },
 
     update: function() {
@@ -90,87 +173,81 @@ function(
     },
 
     render: function() {
-      console.log("Rendering new survey view");
-
       // Set the context & render the page
       var context = {};
-      this.$el.html(_.template($('#new-survey-view').html(), context));
+      this.$el.html(this.template(context));
+    },
 
-      $('#new-survey-form .show-advanced').click(function() {
-        $('#new-survey-form .advanced').show();
-      });
+    submit: function(event) {
+      event.preventDefault();
 
-      // TODO: This should be unnecessary.
-      $("#new-survey-form .submit").click(function(){
-        $("#new-survey-form").submit();
-      });
+      // Hide the submit button so it doesn't get over-clicked
+      $("#new-survey-form .submit").hide();
+      $("#new-survey-form .error").hide();
 
-      // When the new survey form is submitted:
-      $("#new-survey-form").submit(function(event){
-        event.preventDefault();
+      // Get the name and other basic details
+      // TODO: this should probably be a new Survey model?
+      var survey = {
+        "type": $('input[name=type]:checked', '#new-survey-form').val(),
+        "name": $("#new-survey-form input.survey-name").val(),
+        "location": $("#new-survey-form input.survey-location").val()
+      };
 
-        // Hide the submit button so it doesn't get over-clicked
-        $("#new-survey-form .submit").hide();
+      // Get some of the optional parameters
+      // Custom geoObjectSource
+      var geoObjectSource = $(".survey-geoObjectSource").val();
+      if(geoObjectSource) {
+        survey.geoObjectSource = $.parseJSON(geoObjectSource);
+      }
 
-        // Get the name and other basic details
-        // TODO: this should probably be a new Survey model?
-        var survey = {
-          "type": $('input[name=type]:checked', '#new-survey-form').val(),
-          "name": $("#new-survey-form input.survey-name").val(),
-          "location": $("#new-survey-form input.survey-location").val()
-        };
+      // Custom survey type
+      // (Right now, only "point" is a real option)
+      var type = $("input[name=type]:checked").val();
+      if(type) {
+        survey.type = type;
+      }
 
-        // Get some of the optional parameters
-        // Custom geoObjectSource
-        var geoObjectSource = $(".survey-geoObjectSource").val();
-        if(geoObjectSource) {
-          survey.geoObjectSource = $.parseJSON(geoObjectSource);
+      // Submit the details as a new survey.
+      api.createSurvey(survey, function(error, survey) {
+        // LD.router._router.navigate("surveys/" + survey.slug, {trigger: true});
+        if(error) {
+          $("#new-survey-form .submit").fadeIn();
+          $("#new-survey-form .error").fadeIn();
+          return;
         }
 
-        // Custom survey type
-        // (Right now, only "point" is a real option)
-        var type = $("input[name=type]:checked").val();
-        if(type) {
-          survey.type = type;
-        }
-
-        console.log("Survey form submitted");
-        console.log(survey);
-
-        // Submit the details as a new survey.
-        api.createSurvey(survey, function(survey) {
-          _kmq.push(['record', "Survey created"]);
-
-          console.log("Survey created");
-          console.log(survey);
-
-          // LD.router._router.navigate("surveys/" + survey.slug, {trigger: true});
-
-          // TODO -- use the router
-          location.href = "/#surveys/" + survey.slug + "/form";
-        });
+        // TODO -- use the router
+        location.href = "/#surveys/" + survey.slug + "/form";
       });
-
     }
-
   });
+
 
   SurveyViews.SurveyView = Backbone.View.extend({
     el: $("#container"),
 
     activeTab: undefined,
+    filters: false,
     survey: null,
-    bodyView: null,
+    template: _.template(surveyTemplate),
 
     initialize: function(options) {
-      _.bindAll(this, 'update', 'render', 'show', 'showResponses', 'showUpload', 'showForm', 'showSettings');
+      _.bindAll(this,
+        'update',
+        'render',
+        'show',
+        'showResponses',
+        'showForm',
+        'showSettings',
+        'showFilters'
+      );
 
       // Set up the page and show the given survey
       this.surveyId = options.id;
       this.survey = new SurveyModels.Model({id: this.surveyId});
 
       // Get the relevant responses
-      this.responses = new ResponseModels.Collection([], {surveyId: this.surveyId});
+      // this.responses = new ResponseModels.Collection([], {surveyId: this.surveyId});
 
       // Get the forms
       this.forms = new FormModels.Collection({surveyId: this.surveyId});
@@ -195,28 +272,27 @@ function(
     },
 
     render: function (model) {
-      console.log("Rendering survey view");
-      _kmq.push(['record', "Survey view displayed"]);
+      var $el = $(this.el);
 
       // Remove old sub-views
-      if (this.responseListView !== undefined) {
-        this.responseListView.remove();
+      if (this.mapAndListView !== undefined) {
+        this.mapAndListView.remove();
       }
 
-      // Set the context & render the page
-      console.log("SURVEY", this.survey.toJSON());
-      var context = {
+      $el.html(this.template({
         survey: this.survey.toJSON()
-      };
-      this.$el.html(_.template($('#survey-view').html(), context));
+      }));
 
-      // List the responses
-      this.responseListView = new ResponseViews.MapAndListView({
-        el: $("#response-view-container"),
-        responses: this.responses,
+      // Map the responses
+      this.mapAndListView = new ResponseViews.MapAndListView({
+        // responses: this.responses,
         forms: this.forms,
         survey: this.survey
       });
+
+      if(this.filters) {
+        this.mapAndListView.showFilters();
+      }
 
       // Form view
       this.formView = new FormViews.FormView({
@@ -224,27 +300,23 @@ function(
         forms: this.forms
       });
 
-      // Nav, Export, Settings views
+      // Export, Settings views
       this.exportView = new ExportView({surveyId: this.surveyId});
       this.settingsView = new SettingsView({
         survey: this.survey,
         forms: this.forms
       });
 
-      // Render navigation, export, and settings views
       this.exportView.render();
       this.formView.render();
       this.settingsView.render();
 
       if(this.activeTab !== undefined) {
-        //this.show.apply(this.activeTab);
         this.show(this.activeTab[0], this.activeTab[1]);
       }
     },
 
     show: function(id, tab) {
-      _kmq.push(['record', "Survey tab selected"]);
-
       // This is a really bad way to show the right tab
       this.activeTab = [id, tab];
 
@@ -257,6 +329,10 @@ function(
 
     showResponses: function() {
       this.show('#response-view-container', '#tab-survey-home');
+      this.filters = false;
+      if (this.mapAndListView) {
+        this.mapAndListView.hideFilters();
+      }
     },
 
     showExport: function() {
@@ -268,18 +344,16 @@ function(
     },
 
     showSettings: function() {
-      this.show('#settings-view-container', '#tab-survey-settings');
+        this.show('#settings-view-container', '#tab-survey-settings');
     },
 
-    // Not yet implemented
-    showUpload: function() {
-      console.log("[not] Using upload view");
-    },
-
-    showScans: function() {
-      console.log("[not] Using scans view");
+    showFilters: function() {
+      this.show('#response-view-container', '#tab-survey-filters');
+      this.filters = true;
+      if (this.mapAndListView) {
+        this.mapAndListView.showFilters();
+      }
     }
-
   });
 
   return SurveyViews;

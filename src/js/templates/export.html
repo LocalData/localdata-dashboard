@@ -1,0 +1,23 @@
+<div class="out contrast">
+  <div class="in">
+
+    <h3>Export your data</h3>
+
+    <p>Export your all your survey data with one click. These export options include all responses.</p>
+    <p>Working in Excel or Access? Download the CSV file to see all your results.</p>
+
+    <div class="button-container">
+      <a class="button ok shapefile flex"><span class="fa fa-globe"></span> <% if (loading) {%>Exporting...<%} else {%>Download Shapefile<%}%></a>
+
+      <a href="<%= baseurl %>/surveys/<%= surveyId %>/responses.csv" class="button ok flex"><span class="fa fa-table"></span> Download CSV</a>
+
+      <a href="<%= baseurl %>/surveys/<%= surveyId %>/responses.kml" class="button ok flex"><span class="button-in"><span class="fa fa-map-marker"></span> Download KML (points) </span></a>
+
+      <div class="error">Error exporting data. Please try again later or contact LocalData for help.</div>
+
+      <!--
+      <a href="<%= baseurl %>/surveys/<%= surveyId %>/kml" class="box ok flex"><span class="btn-in"><span class="icon-globe"></span> Download KML (parcels)</span></a>
+      -->
+    </div>
+  </div>
+</div>

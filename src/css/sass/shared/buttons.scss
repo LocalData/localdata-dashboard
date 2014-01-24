@@ -1,0 +1,108 @@
+.box,
+.button,
+button,
+form input[type=submit] {
+  background: #fff;
+  border: 6px solid $body-color;
+  display: inline-block;
+  margin-right: 10px;
+  margin-bottom: 11px;
+  width: 90px;
+  height: 62px;
+
+  font-family: $font;
+  font-size: 20px;
+  text-align: center;
+  line-height: 62px;
+
+  cursor: pointer;
+}
+
+.mini {
+  height: 32px;
+
+  border-width: 3px;
+  font-family: $font;
+  font-size: 15px;
+  text-align: center;
+  line-height: 15px;
+  letter-spacing: 0px;
+}
+
+
+.flex {
+  width: auto;
+  padding: 0px 15px;
+}
+
+.small {
+  font-size: 16px;
+}
+
+.danger {
+  border-color: $red;
+  color: $red;
+}
+
+.warn {
+  border-color: $orange;
+  color: $orange;
+}
+
+.confirm,
+.ok {
+  border-color: $blue;
+  color: white;
+}
+
+button,
+.button {
+  cursor: pointer;
+  background: $blue;
+  border-color: $blue;
+  color: #fff;
+  line-height: inherit;
+}
+
+a.button {
+  line-height: 60px;
+}
+
+button:hover,
+.button:hover {
+  background: #daedff;
+  border-color: #daedff;
+  color: $blue;
+}
+
+button.danger {
+  border-color: $red;
+  background-color: $red;
+  color: white;
+}
+
+button.disabled {
+  background-color: $disabled;
+  border-color: $disabled;
+}
+
+/* Tabs --------------------------------------------------------------------- */
+.tabs {
+  overflow: auto;
+  margin-bottom: 24px;
+
+  .tab {
+    font-family: $bold;
+    font-size: 24px;
+
+    line-height: 2em;
+    float: left;
+    width: 40%;
+    padding: 5px 15px;
+    background: $disabled;
+  }
+
+  .tab:last-child {
+    float: right;
+  }
+}

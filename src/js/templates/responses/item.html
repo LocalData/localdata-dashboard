@@ -1,21 +1,20 @@
-<h2>
+<span class="collector">
+  <i class="fa fa-user"></i>
   <% if(r.geo_info != undefined) { %>
-    <%- r.geo_info.humanReadableName %><br />
-  <% }else { %>
-    <%- r.parcel_id %>
-  <% }; %>
-</h2>
-
-<div class="collector">
-  <i class="icon-user"></i>
-  <% if(r.geo_info != undefined) { %>
-    <%- r.source.collector %>
-  <% } else{ %>
+    <% if(r.source.collector) { %>
+      <%- r.source.collector %>
+    <% } else { %>
+      No name given
+    <% } %>
+  <% } else { %>
     <%- r.responses.collector %>
   <% } %>
-  &nbsp;&nbsp;&nbsp;&nbsp;<i class="icon-time"></i>
+</span>
+
+<span class="time">
+  <i class="fa fa-clock-o"></i>
   <%- r.createdHumanized %>
-</div>
+</span>
 
 <% if(r.files != undefined) { %>
   <% _.each(r.files, function(file){ %>
@@ -26,23 +25,17 @@
 <div class="answers">
 <% _.each(r.responses, function(resp, key) { %>
   <div class="answer">
-    <span class="key">
-      <% if(labels[key]) { %>
-        <%- labels[key] %>
-      <% } else { %>
-        <%- key %>
-      <% } %>
-    </span>
+    <span class="key"><%- key %>:</span>
     <span class="value"><%- resp %>&nbsp;</span>
   </div>
 <% }); %>
 </div>
 
-<button class="btn btn-mini confirm"><i class="icon-trash"></i> Delete</button>
+<button class="mini danger confirm"><i class="icon-trash"></i> Delete</button>
 
 <div class="confirm-delete">
-  <button class="btn btn-mini cancel">Cancel</button>
-  <button class="btn btn-mini delete"><i class="icon-trash"></i> Confirm delete</button>
+  <button class="mini cancel">Cancel</button>
+  <button class="mini danger flex delete"><i class="icon-trash"></i> Confirm delete</button>
 </div>
 
 <div class="error">Sorry, there was a problem deleting this record</div>

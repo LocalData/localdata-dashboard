@@ -38,24 +38,35 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
       'click .close': 'remove'
     },
 
-    initialize: function(options) {
+    initialize: function() {
       this.listenTo(this.collection, 'add', this.render);
       this.listenTo(this.collection, 'reset', this.render);
+    },
 
-      this.labels = options.labels;
+    remove: function() {
+      this.$el.empty();
+      this.stopListening();
+      this.trigger('delete');
+      return this;
     },
 
     render: function() {
+      var first = this.collection.at(0);
+      var name;
+
+      if(first.get('geo_info') !== undefined) {
+        name = first.get('geo_info').humanReadableName;
+      }else {
+        name = first.get('parcel_id');
+      }
+
       var $el = $(this.el);
-      $el.html(this.template());
+      $el.html(this.template({ name: name }));
 
       this.collection.each(function(response) {
-        var item = new ResponseView({
-          model: response,
-          labels: this.labels
-        });
-        $el.prepend(item.render().el);
-      }.bind(this));
+        var item = new ResponseView({ model: response });
+        $el.find('.responses-list').append(item.render().el);
+      });
 
       return this;
     }
