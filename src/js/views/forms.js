@@ -1,5 +1,5 @@
 /*jslint nomen: true */
-/*globals define: true, window: true */
+/*globals define: true */
 
 define([
   'jquery',
@@ -90,14 +90,12 @@ function($, _, Backbone, settings, api, template, DesignViews, BuilderViews, Pre
 
       this.$el.html(this.template(context));
 
-      this.showDesigner();
-
       // old: Make sure we have up-to-date form data before showing the design view
       api.getForm(function() {
         if (settings.formData === undefined) {
-          // this.showDesigner();
+          this.showDesigner();
         }else {
-          // this.showBuilder();
+          this.showBuilder();
         }
       }.bind(this));
 

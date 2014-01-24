@@ -703,8 +703,7 @@ button.disabled {
 
 /* Tabs --------------------------------------------------------------------- */
 .tabs {
-  overflow: auto;
-  position: relative; }
+  overflow: auto; }
   .tabs .t {
     font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
     font-size: 24px;
