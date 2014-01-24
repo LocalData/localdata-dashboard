@@ -12,15 +12,19 @@ define([
   'settings',
   'api',
 
+  // Templates
+  'text!templates/surveys/form.html',
+
   'views/forms'
 ],
 
-function($, _, Backbone, _kmq, settings, api, FormViews) {
+function($, _, Backbone, _kmq, settings, api, template, FormViews) {
   'use strict';
 
   var Builder = {};
 
   Builder.BuilderView = Backbone.View.extend({
+    template: _.template(template),
 
     el: '#builder-view-container',
 
@@ -100,7 +104,8 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
 
     renderForm: function() {
       // Render the editor template
-      $(this.el).html(_.template($('#form-editor-template').html(), {}));
+
+      this.$el.html(this.template({}));
 
       // Clear out the editor, just in case.
       this.formQuestions = $('#editor');
