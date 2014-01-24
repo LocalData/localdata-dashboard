@@ -15,7 +15,9 @@ function($, _, Backbone, settings, api) {
   var IndexRouter = Backbone.Router.extend({
     routes: {
       "": "home",
+
       "register": "register",
+      "reset/:resetInfo": "reset_password",
 
       "surveys/new": "new_survey",
       "surveys/:slug/dive": "dive",
@@ -47,8 +49,8 @@ function($, _, Backbone, settings, api) {
       this.controller.goto_login(redirectTo);
     },
 
-    register: function() {
-      this.controller.goto_register();
+    reset_password: function (resetInfo) {
+      this.controller.goto_password_reset(resetInfo);
     },
 
     new_survey: function() {

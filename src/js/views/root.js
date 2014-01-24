@@ -37,7 +37,7 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
   AllViews.DesignView = DesignViews.DesignView;
 
   AllViews.LoginView = UserViews.LoginView;
-  AllViews.RegisterView = UserViews.RegisterView;
+  AllViews.ResetView = UserViews.ResetView;
   AllViews.UserBarView = UserViews.UserBarView;
 
   // The singleton view which manages all others.
@@ -73,7 +73,7 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
 
     // Register each view as it is created and never create more than one.
     getOrCreateView: function(viewClass, viewName, options) {
-      _kmq.push(['record', name]);
+      _kmq.push(['record', viewName]);
 
       // If the view already exists, use it.
       // If it doesn't exist, create it.
@@ -104,12 +104,11 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
       });
     },
 
-    goto_register: function() {
-      this.currentContentView = this.getOrCreateView("RegisterView", "RegisterView", {
-        'user': this.user
+    goto_password_reset: function (resetInfo) {
+      this.currentContentView = this.getOrCreateView('ResetView', 'ResetView', {
+        resetInfo: resetInfo
       });
     },
-
 
     // Survey dashboard routes .................................................
     goto_survey: function(tab) {

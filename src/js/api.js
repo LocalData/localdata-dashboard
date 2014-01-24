@@ -14,7 +14,7 @@ define(function (require) {
   // Return the current hostname.
   // TODO: Should be in util
   api.getBaseURL = function() {
-    if (window.location.protocol != "https:") {
+    if (window.location.protocol !== "https:") {
       return "https://" + window.location.host;
     }
 
@@ -85,6 +85,29 @@ define(function (require) {
       callback(jqXHR.responseText, null);
     });
 
+  };
+
+  api.resetPassword = function resetPassword(user, token, done) {
+    var url = settings.api.baseurl + '/user/reset';
+    var data = {
+      reset: {
+        email: user.email,
+        token: token,
+        password: user.password
+      }
+    };
+
+    $.ajax({
+      url: url,
+      type: 'POST',
+      data: data,
+      dataType: 'json'
+    }).done(function (response) {
+      api.logIn(user, done);
+    }).fail(function (jqXHR, textStatus, errorThrown) {
+      console.log('Password reset failed.');
+      done(JSON.parse(jqXHR.responseText));
+    });
   };
 
   // Create a new survey
