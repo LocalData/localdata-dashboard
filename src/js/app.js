@@ -56,7 +56,9 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
       // Don't keep redirecting to login
       var isLogin = Backbone.history.fragment.indexOf("login") !== -1;
       var isRegister = Backbone.history.fragment.indexOf("register") !== -1;
-      if (isLogin || isRegister) {
+      var isReset = Backbone.history.fragment.indexOf("reset") !== -1;
+
+      if (isLogin || isRegister || isReset) {
         return;
       }
 
