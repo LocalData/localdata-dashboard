@@ -84,6 +84,11 @@ p {
   margin-bottom: 1em;
 }
 
+strong {
+  font-weight: normal;
+  font-family: $bold;
+}
+
 li {
   list-style: circle;
 }

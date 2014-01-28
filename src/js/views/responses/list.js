@@ -38,9 +38,10 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
       'click .close': 'remove'
     },
 
-    initialize: function() {
+    initialize: function(options) {
       this.listenTo(this.collection, 'add', this.render);
       this.listenTo(this.collection, 'reset', this.render);
+      this.labels = options.labels;
     },
 
     remove: function() {
@@ -64,9 +65,12 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
       $el.html(this.template({ name: name }));
 
       this.collection.each(function(response) {
-        var item = new ResponseView({ model: response });
+        var item = new ResponseView({
+          model: response,
+          labels: this.labels
+        });
         $el.find('.responses-list').append(item.render().el);
-      });
+      }.bind(this));
 
       return this;
     }
