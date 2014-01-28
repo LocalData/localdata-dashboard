@@ -132,19 +132,8 @@ function($, _, Backbone, settings) {
         questions[question.name] = question.text;
       });
       return questions;
-    },
-
-    // map: function() {
-    //   var names = this.getFlattenedForm();
-    //   var mapping = {};
-    //   _.each(names, function(name) {
-    //     mapping[name.name] = name.text;
-    //   });
-    //   return mapping;
-    // }
-
+    }
   });
-
 
   return Forms;
 
