@@ -48,6 +48,10 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews) {
       }
 
       var parity = 0;
+      var render = false;
+      if (this.surveys.length <= 5) {
+        render = true;
+      }
       this.surveys.each(function(survey) {
         if (parity === 0) {
           survey.set('parity', 'odd');
@@ -56,6 +60,7 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews) {
           survey.set('parity', 'even');
           parity = 0;
         }
+        survey.set('render', render);
         self.appendSurvey(survey);
       });
     },

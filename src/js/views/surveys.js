@@ -91,18 +91,10 @@ function(
     },
 
     addTileLayer: function(tilejson) {
-      // Disabled for now
-      // On long lists, this adds too many tile requests.
-      return;
-
       if (this.tileLayer) {
         this.map.removeLayer(this.tileLayer);
       }
       this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
-
-      // Listen to see if we're loading the map
-      // this.tileLayer.on('loading', this.loading);
-      // this.tileLayer.on('load', this.done);
 
       this.map.addLayer(this.tileLayer);
       this.tileLayer.bringToFront();
@@ -139,14 +131,17 @@ function(
       map.addLayer(baseLayer);
 
       // Add the survey data
-      var url = '/tiles/' + this.model.get('id');
-      url = url + '/tile.json';
-      // Get TileJSON
-      $.ajax({
-        url: url,
-        type: 'GET',
-        dataType: 'json'
-      }).done(this.addTileLayer);
+      if(this.model.get('render')) {
+        var url = '/tiles/' + this.model.get('id');
+        url = url + '/tile.json';
+        // Get TileJSON
+        $.ajax({
+          url: url,
+          type: 'GET',
+          dataType: 'json'
+        }).done(this.addTileLayer)
+        .fail(function(error) {console.log(error);});
+      }
 
       // Fix over-zoom from fitBounds
       if (map.getZoom() > baseLayer.options.maxZoom) {
