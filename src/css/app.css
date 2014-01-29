@@ -273,7 +273,6 @@ h2, h3 {
 
 h2 {
   font-size: 65px;
-  margin-top: 0.2em;
   line-height: 1em;
   letter-spacing: -2px; }
 
@@ -329,14 +328,12 @@ body {
   padding: 0; }
 
 .out {
-  overflow: hidden;
   background: #fff; }
 
 .in {
   width: 1528px;
   margin: 0px auto;
-  padding: 50px 0 50px 0;
-  overflow: auto; }
+  padding: 50px 0 50px 0; }
   @media all and (max-width: 1999px) {
     .in {
       width: 1112px; } }
@@ -353,6 +350,11 @@ body {
     .in {
       width: auto;
       padding: 0 30px; } }
+
+.in:after {
+  content: "";
+  clear: both;
+  display: table; }
 
 header .in {
   padding-top: 20px;
