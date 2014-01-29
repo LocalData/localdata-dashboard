@@ -89,20 +89,23 @@ button.disabled {
 /* Tabs --------------------------------------------------------------------- */
 .tabs {
   overflow: auto;
-  margin-bottom: 24px;
 
-  .tab {
+  .t {
     font-family: $bold;
     font-size: 24px;
 
-    line-height: 2em;
     float: left;
     width: 40%;
-    padding: 5px 15px;
-    background: $disabled;
+    padding: 14px 15px;
+    background: $gray;
   }
 
-  .tab:last-child {
+  .t:last-child {
     float: right;
+  }
+
+  .contrast {
+    background: $orange;
+    color: #fff;
   }
 }

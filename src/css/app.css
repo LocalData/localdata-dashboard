@@ -507,6 +507,9 @@ header .b {
 .contrast {
   background: #fcf5f0; }
 
+.gray {
+  background: #eeebe9; }
+
 .contrast + .contrast .in {
   padding-top: 0; }
 
@@ -706,18 +709,19 @@ button.disabled {
 
 /* Tabs --------------------------------------------------------------------- */
 .tabs {
-  overflow: auto;
-  margin-bottom: 24px; }
-  .tabs .tab {
+  overflow: auto; }
+  .tabs .t {
     font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
     font-size: 24px;
-    line-height: 2em;
     float: left;
     width: 40%;
-    padding: 5px 15px;
-    background: #cbc8c7; }
-  .tabs .tab:last-child {
+    padding: 14px 15px;
+    background: #eeebe9; }
+  .tabs .t:last-child {
     float: right; }
+  .tabs .contrast {
+    background: #ffad00;
+    color: #fff; }
 
 nav a,
 nav a:hover {
@@ -841,7 +845,7 @@ header .nav a:visited {
     padding: 20px; }
   .choice-box-wrap h3 {
     font-size: 24px;
-    line-height: 30px; }
+    line-height: 28px; }
   .choice-box-wrap button {
     width: 100%;
     margin: 0; }
@@ -1192,3 +1196,13 @@ input.large {
       display: none; }
   .editor .question-choices .choice:hover {
     border: 3px solid #58aeff; }
+
+/* Designer --------------------------------------------------------------------*/
+.survey-designer {
+  padding-top: 30px; }
+
+#survey-design-container .contrast .in {
+  padding-bottom: 0; }
+
+.use-blank-survey {
+  cursor: pointer; }

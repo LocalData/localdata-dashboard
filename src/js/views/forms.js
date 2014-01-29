@@ -10,25 +10,28 @@ define([
   'settings',
   'api',
 
+  // Templates
+  'text!templates/surveys/form.html',
+
   // Views
   'views/design',
   'views/builder',
   'views/preview'
 ],
 
-function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) {
+function($, _, Backbone, settings, api, template, DesignViews, BuilderViews, PreviewView) {
   'use strict';
 
   var FormViews = {};
 
   FormViews.FormView = Backbone.View.extend({
+    template: _.template(template),
 
     el: '#form-view-container',
 
     initialize: function(options) {
       _.bindAll(this, 'render', 'showDesigner', 'showBuilder');
       console.log('Initializing forms view');
-      this.el = options.el || '#form-view-container';
 
       this.survey = options.survey;
       this.forms = options.forms;
@@ -84,7 +87,8 @@ function($, _, Backbone, settings, api, DesignViews, BuilderViews, PreviewView) 
         forms: this.forms.toJSON(),
         mobile: 'http://' + window.location.host + '/mobile/#' + this.survey.get('slug')
       };
-      this.$el.html(_.template($('#form-view').html(), context));
+
+      this.$el.html(this.template(context));
 
       // old: Make sure we have up-to-date form data before showing the design view
       api.getForm(function() {

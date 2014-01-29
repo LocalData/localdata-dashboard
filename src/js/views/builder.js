@@ -12,15 +12,19 @@ define([
   'settings',
   'api',
 
+  // Templates
+  'text!templates/surveys/form-editor.html',
+
   'views/forms'
 ],
 
-function($, _, Backbone, _kmq, settings, api, FormViews) {
+function($, _, Backbone, _kmq, settings, api, template, FormViews) {
   'use strict';
 
   var Builder = {};
 
   Builder.BuilderView = Backbone.View.extend({
+    template: _.template(template),
 
     el: '#builder-view-container',
 
@@ -100,7 +104,10 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
 
     renderForm: function() {
       // Render the editor template
-      $(this.el).html(_.template($('#form-editor-template').html(), {}));
+      console.log("Rendering", this.$el);
+
+      this.$el.html(this.template({}));
+      console.log(this.$el);
 
       // Clear out the editor, just in case.
       this.formQuestions = $('#editor');
@@ -300,7 +307,7 @@ function($, _, Backbone, _kmq, settings, api, FormViews) {
 
     renderQuestion: function(question, visible, parentID, triggerID, appendTo, questionIndex, parent) {
       // TODO:
-      // This should pass around a well-document options object
+      // This should pass around a well-documented options object
       // Instead of 30 different parameters
       // var options = {
       //   visible:
