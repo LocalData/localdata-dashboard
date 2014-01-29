@@ -298,6 +298,10 @@ h3 {
 p {
   margin-bottom: 1em; }
 
+strong {
+  font-weight: normal;
+  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif; }
+
 li {
   list-style: circle; }
 

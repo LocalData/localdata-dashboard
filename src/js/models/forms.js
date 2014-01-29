@@ -122,21 +122,18 @@ function($, _, Backbone, settings) {
           }
         });
       }
-
       return distinctQuestions;
     },
 
-    map: function() {
-      var names = this.getFlattenedForm();
-      var mapping = {};
-      _.each(names, function(name) {
-        mapping[name.name] = name.text;
+    getQuestions: function() {
+      var flattenedForm = this.getFlattenedForm();
+      var questions = {};
+      _.each(flattenedForm, function(question) {
+        questions[question.name] = question.text;
       });
-      return mapping;
+      return questions;
     }
-
   });
-
 
   return Forms;
 

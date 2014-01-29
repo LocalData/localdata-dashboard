@@ -141,7 +141,8 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
 
       var selectedItemListView = new ResponseListView({
         el: '#responses-list-container',
-        collection: rc
+        collection: rc,
+        labels: this.forms.getQuestions()
       });
 
       selectedItemListView.on('delete', function() {
