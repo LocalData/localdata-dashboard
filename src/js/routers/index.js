@@ -22,6 +22,7 @@ function($, _, Backbone, settings, api) {
       "surveys/new": "new_survey",
       "surveys/:slug/dive": "dive",
       "surveys/:slug/export": "survey_export",
+      "surveys/:slug/reports": "reports",
       "surveys/:slug/design": "design",
       "surveys/:slug": "survey",
 
@@ -73,6 +74,10 @@ function($, _, Backbone, settings, api) {
 
     form: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_form);
+    },
+
+    reports: function(slug) {
+      api.setSurveyIdFromSlug(slug, this.controller.goto_reports);
     },
 
     survey_export: function(slug) {

@@ -127,6 +127,9 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
         case "export":
           this.currentContentView.showExport();
           break;
+        case "reports":
+          this.currentContentView.showReports();
+          break;
         case "form":
           this.currentContentView.showForm();
           break;
@@ -159,6 +162,12 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
       _kmq.push(['record', "ExportView"]);
       this._router.navigate("surveys/" + settings.slug + "/export");
       this.goto_survey("export");
+    },
+
+    goto_reports: function() {
+      _kmq.push(['record', "ReportView"]);
+      this._router.navigate("surveys/" + settings.slug + "/reports");
+      this.goto_survey("reports");
     },
 
     goto_filters: function() {

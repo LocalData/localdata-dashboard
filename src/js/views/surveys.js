@@ -21,6 +21,7 @@ define([
 
   // Views
   'views/export',
+  'views/reports',
   'views/settings',
   'views/responses/responses',
   'views/forms',
@@ -55,6 +56,7 @@ function(
 
   // Views
   ExportView,
+  ReportsView,
   SettingsView,
   ResponseViews,
   FormViews,
@@ -302,7 +304,12 @@ function(
         forms: this.forms
       });
 
+      this.reportsView = new ReportsView({
+        surveyId: this.surveyId
+      });
+
       this.exportView.render();
+      this.reportsView.render();
       this.formView.render();
       this.settingsView.render();
 
@@ -332,6 +339,10 @@ function(
 
     showExport: function() {
       this.show('#export-view-container', '#tab-survey-export');
+    },
+
+    showReports: function() {
+      this.show('#reports-view-container', '#tab-survey-reports');
     },
 
     showForm: function() {
