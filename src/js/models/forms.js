@@ -13,6 +13,8 @@ function($, _, Backbone, settings) {
 
   var Forms = {};
 
+  var NOANSWER = 'no response';
+
   // Forms model
   Forms.Model = Backbone.Model.extend({
     initialize: function(options) {
@@ -24,6 +26,96 @@ function($, _, Backbone, settings) {
         return settings.api.baseurl + '/surveys/' + this.surveyId + '/forms';
       }
       return settings.api.baseurl + '/surveys/' + this.surveyId + '/forms';
+    },
+
+    // Flatten the most recent form into a mapping of question names to
+    // immediate question info (text and possible answers)
+    // { 'are-you-cool': {text: 'Are you cool?', answers: [{value: 'yes', text: 'Yes'}, {value: 'no', text: 'No'}]}}
+    // TODO: It may be better to return an array of questions.
+    getFlattenedForm: function getFlattenedForm() {
+      var result = {};
+
+      function makeUnique(name) {
+        if (result[name] === undefined) {
+          return name;
+        }
+        // The question name is not unique.
+        var i = 1;
+        while (result[name + '-' + i] !== undefined) {
+          i += 1;
+        }
+        return name + '-' + i;
+      }
+
+      function flattenHelper(question) {
+        if (question.type === 'checkbox') {
+          _.each(question.answers, function (answer) {
+            var name = makeUnique(answer.name);
+            result[name] = {
+              text: question.text + ': ' + answer.text,
+              answers: [
+                {
+                  value: answer.value,
+                  text: answer.value
+                },
+                {
+                  value: NOANSWER,
+                  text: NOANSWER
+                }
+              ]
+            };
+
+            if (answer.questions) {
+              _.each(answer.questions, flattenHelper);
+            }
+          });
+          return;
+        }
+
+        var name = question.name;
+        var answerInfo = [];
+        if (question.answers && question.answers.length > 0) {
+          _.each(question.answers, function (answer) {
+            answerInfo.push({
+              value: answer.value,
+              text: answer.text
+            });
+          });
+        }
+
+        answerInfo.push({
+          value: NOANSWER,
+          text: NOANSWER
+        });
+
+        var questionInfo = {
+          text: question.text,
+          answers: answerInfo
+        };
+
+        if (result[name] === undefined) {
+          result[name] = questionInfo;
+        } else {
+          // The question name is not unique.
+          var i = 1;
+          while (result[name + '-' + i] !== undefined) {
+            i += 1;
+          }
+          result[name + '-' + i] = questionInfo;
+        }
+
+        if (question.answers) {
+          _.each(question.answers, function (answer) {
+            if (answer.questions) {
+              _.each(answer.questions, flattenHelper);
+            }
+          });
+        }
+      }
+
+      _.each(this.get('questions'), flattenHelper);
+
+      return result;
     }
   });
 
@@ -66,70 +158,18 @@ function($, _, Backbone, settings) {
       }
     },
 
-    // Helper method used by the recursive getFlattenedForm
-    flattenForm: function(question, flattenedForm) {
-
-      // Add the question to the list of questions
-      // Naive -- takes more space than needed (because it includes subquestions)
-      if(question.type !== 'checkbox') {
-        flattenedForm.push(question);
-      }
-
-      // Check if there are sub-questions associated with any of the answers
-      _.each(question.answers, function(answer){
-
-        // Add each checkbox answer as a separate question
-        if(question.type === 'checkbox') {
-          flattenedForm.push({
-            name: answer.name,
-            answers: ['yes'],
-            text: question.text + ': ' + answer.text
-          });
-        }
-
-        if (answer.questions !== undefined) {
-          _.each(answer.questions, function(question) {
-            // Recusively call flattenForm to process those questions.
-            return this.flattenForm(question, flattenedForm);
-
-          }, this);
-        }
-      }, this);
-
-      return flattenedForm;
-    },
-
-    // Returns the most recent form as a flat list of question objects
-    // Objects have name (functions as id), text (label of the question)
-    getFlattenedForm: function() {
-      var mostRecentForm = this.getMostRecentForm();
-
-      var flattenedForm = [];
-      var distinctQuestions = [];
-
-      // Process the form if we have one
-      if (mostRecentForm !== undefined) {
-        _.each(mostRecentForm.get("questions"), function(question) {
-          flattenedForm = flattenedForm.concat(this.flattenForm(question, flattenedForm));
-        }, this);
-
-        // Make sure there's only one question per ID.
-        var questionNames = [];
-        _.each(flattenedForm, function(question) {
-          if (! _.contains(questionNames, question.name)) {
-            questionNames.push(question.name);
-            distinctQuestions.push(question);
-          }
-        });
-      }
-      return distinctQuestions;
+    // Flatten the most recent form into a mapping of question names to
+    // immediate question info.
+    // { 'are-you-cool': {text: 'Are you cool?', answers: [{value: 'yes', text: 'Yes'}, {value: 'no', text: 'No'}]}}
+    getFlattenedForm: function getFlattenedForm() {
+      return this.getMostRecentForm().getFlattenedForm();
     },
 
     getQuestions: function() {
       var flattenedForm = this.getFlattenedForm();
       var questions = {};
-      _.each(flattenedForm, function(question) {
-        questions[question.name] = question.text;
+      _.each(_.keys(flattenedForm), function (name) {
+        questions[name] = flattenedForm[name].text;
       });
       return questions;
     }

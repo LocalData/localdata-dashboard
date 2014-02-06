@@ -57,10 +57,36 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
     },
 
     render: function() {
-      console.log("Rendering the filters", this.stats.toJSON());
-      console.log(this.$el);
+      console.log('Rendering the filters');
+
+      // Match the question names and answer values from the form with stats and colors.
+      var questions = this.forms.getFlattenedForm();
+      var stats = this.stats;
+
+      _.each(_.keys(questions), function (question) {
+        var answers = questions[question].answers;
+        var answerObjects = {};
+        var questionStats = stats.get(question);
+        _.each(answers, function (answer, index) {
+          if (!questionStats) {
+            answer.count = 0;
+          } else {
+            // Get the count from the stats object.
+            answer.count = questionStats[answer.value];
+            if (answer.count === undefined) {
+              answer.count = 0;
+            }
+          }
+
+          // Get the color.
+          // The last "answer" is the no-response placeholder, which gets the
+          // zero-index color.
+          answer.color = settings.colorRange[(index + 1) % answers.length];
+        });
+      });
+
       var context = {
-        questions: this.stats.toJSON(),
+        questions: questions,
         mapping: this.forms.map()
       };
       this.$el.html(this.template(context));
