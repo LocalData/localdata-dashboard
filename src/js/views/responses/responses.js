@@ -130,7 +130,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
     },
 
     mapClickHandler: function(event) {
-      if (_.isUndefined(event.data) || _.isUndefined(event.data.object_id)) {
+      if (!event.data || !event.data.object_id) {
         return;
       }
 
