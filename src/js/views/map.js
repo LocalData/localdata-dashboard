@@ -152,7 +152,10 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         if (bounds[0][0] === bounds[1][0] || bounds[0][1] === bounds[1][1]) {
           this.map.setView(bounds[0], 15);
         } else {
-          this.map.fitBounds(bounds, { reset: true });
+          this.map.fitBounds(bounds, {
+            reset: true,
+            maxZoom: 18
+          });
         }
       }
     },
