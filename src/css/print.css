@@ -1,0 +1,20 @@
+body {
+
+}
+
+.factoid .number {
+  display: inline;
+  font-size: 75%;
+}
+
+.print {
+  display:block;
+}
+
+nav,
+.nav,
+button.refresh,
+.button,
+.refresh {
+  display: none;
+}
