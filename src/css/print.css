@@ -1,0 +1,36 @@
+body {
+
+}
+
+.factoid .number {
+  display: inline;
+  font-size: 75%;
+}
+
+.print {
+  display: block;
+}
+
+.a,
+.b {
+  float: none;
+  width: 100%;
+}
+
+#map {
+  width: 100%;
+}
+
+#container {
+  min-height: auto!important;
+}
+
+header,
+footer,
+nav,
+.nav,
+button.refresh,
+.button,
+.refresh {
+  display: none;
+}
