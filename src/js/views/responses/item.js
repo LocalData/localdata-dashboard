@@ -65,8 +65,6 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       event.preventDefault();
 
       function success(model, repsonse) {
-        console.log("Success!", model, repsonse);
-        this.trigger('delete');
       }
 
       function error(model, xhr, options) {

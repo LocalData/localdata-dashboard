@@ -13,16 +13,10 @@ define([
 
   // LocalData
   'settings',
-  'api',
-
-  // Views
-  'views/responses/list',
-
-  // Models
-  'models/responses'
+  'api'
 ],
 
-function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListView, Responses) {
+function($, _, Backbone, L, moment, events, _kmq, settings, api) {
   'use strict';
 
   function flip(a) {
@@ -152,13 +146,19 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, ResponseListVie
         if (bounds[0][0] === bounds[1][0] || bounds[0][1] === bounds[1][1]) {
           this.map.setView(bounds[0], 15);
         } else {
-          this.map.fitBounds(bounds, { reset: true });
+          this.map.fitBounds(bounds, {
+            reset: true,
+            maxZoom: 18
+          });
         }
       }
     },
 
+    // Updates the map. Triggered when we know there are changes to the data.
+    // Usually, we'd use Leaflet's redraw() function rather than removing
+    // and re-adding layers. In this case, we can't do that, because gridLayer
+    // doesn't have redraw().
     update: function() {
-      // A hack because gridLayer doesn't have redraw:
       this.map.removeLayer(this.tileLayer);
       this.map.removeLayer(this.gridLayer);
       this.selectDataMap();

@@ -148,6 +148,10 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
       selectedItemListView.on('delete', function() {
         this.mapView.deselectObject();
       }.bind(this));
+
+      rc.on('destroy', function() {
+        this.mapView.update();
+      }.bind(this));
     },
 
     update: function() {
