@@ -6,6 +6,7 @@ define([
   'lib/lodash',
   'backbone',
   'lib/tinypubsub',
+  'lib/kissmetrics',
 
   // LocalData
   'settings',
@@ -19,7 +20,7 @@ define([
   'text!templates/filters/filter.html'
 ],
 
-function($, _, Backbone, events, settings, api, Responses, Stats, template) {
+function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template) {
   'use strict';
 
   /**
@@ -132,6 +133,10 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
 
       var $question = $(event.target);
       var question = $question.attr('data-question');
+      if(!question) {
+        $question = $question.parent();
+        question = $question.attr('data-question');
+      }
       this.filters.question = question;
       var answers = this.stats.get(question);
 
@@ -152,10 +157,12 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
       _kmq.push(['record', "Answer filter selected"]);
       var $answer = $(event.target);
       this.filters.answer = $answer.attr('data-answer');
-      console.log($answer);
+      if(!this.filters.answer) {
+        $answer = $answer.parent();
+        this.filters.answer = $answer.attr('data-answer');
+      }
 
       // Mark the answer as selected
-      console.log($('.answers .circle'));
       $('.answers .circle').removeClass('selected');
       $('.answers .circle').addClass('inactive');
 
