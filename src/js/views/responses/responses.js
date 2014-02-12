@@ -150,7 +150,6 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
       }.bind(this));
 
       rc.on('destroy', function() {
-        console.log("Object destroyed!", this, this.mapView);
         this.mapView.update();
       }.bind(this));
     },
