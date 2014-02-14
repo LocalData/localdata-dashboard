@@ -145,7 +145,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
         labels: this.forms.getQuestions()
       });
 
-      selectedItemListView.on('delete', function() {
+      selectedItemListView.on('remove', function() {
         this.mapView.deselectObject();
       }.bind(this));
 
