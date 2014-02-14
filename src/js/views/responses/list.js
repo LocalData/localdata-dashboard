@@ -46,6 +46,7 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
 
     remove: function() {
       this.$el.empty();
+      this.trigger('remove');
       this.stopListening();
       return this;
     },
