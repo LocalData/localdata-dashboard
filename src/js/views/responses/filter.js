@@ -34,6 +34,7 @@ function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template
     filters: {},
 
     template: _.template(template),
+    loadingTemplate: _.template(loadingTemplate),
 
     events: {
       "click .question label": "selectQuestion",
