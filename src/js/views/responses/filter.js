@@ -17,10 +17,11 @@ define([
   'models/stats',
 
   // Templates
-  'text!templates/filters/filter.html'
+  'text!templates/filters/filter.html',
+  'text!templates/filters/loading.html'
 ],
 
-function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template) {
+function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template, loadingTemplate) {
   'use strict';
 
   /**
@@ -51,8 +52,7 @@ function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template
         id: this.survey.get('id')
       });
       this.stats.on('change', this.render);
-
-      // this.survey.on('change', this.stats.fetch);
+      this.$el.html(this.loadingTemplate({}));
     },
 
     render: function() {
