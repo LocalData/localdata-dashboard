@@ -955,13 +955,15 @@ header .nav a:visited {
   margin-top: 10px; }
 
 .answer {
+  position: relative;
+  padding-left: 32px;
   overflow: auto;
   clear: both;
   margin-top: 10px; }
 
 .filters .circle {
   position: absolute;
-  left: -0;
+  left: 0;
   border-radius: 50%;
   width: 20px;
   height: 20px;
