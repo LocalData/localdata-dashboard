@@ -50,7 +50,6 @@ function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template
 
       this.stats = new Stats.Model({
         id: this.survey.get('id')
-        // forms: this.forms
       });
       this.stats.on('change', this.render);
 

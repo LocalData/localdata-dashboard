@@ -940,12 +940,15 @@ header .nav a:visited {
 .filters label {
   font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
   line-height: 1.2;
-  display: block; }
+  display: block;
+  position: relative;
+  padding-left: 32px; }
 
 .filters .question {
   margin-bottom: 2em; }
 
-.filters .answers {
+.filters .answers .circle,
+.filters .answers button {
   display: none; }
 
 .answers button {
@@ -957,16 +960,19 @@ header .nav a:visited {
   margin-top: 10px; }
 
 .filters .circle {
-  float: left;
-  margin-right: 12px;
+  position: absolute;
+  left: -0;
   border-radius: 50%;
   width: 20px;
   height: 20px;
   border: 3px solid #fff;
   background: transparent; }
 
-.filters .circle.selected {
-  background: #6e6663; }
+.filters .selected .circle {
+  background: #6e6663;
+  display: block; }
+.filters .selected .answers button {
+  display: block; }
 
 .filters .circle.inactive {
   background: transparent !important; }
