@@ -158,13 +158,10 @@ function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template
       var $answer = $(event.target);
       this.filters.answer = $answer.attr('data-answer');
 
-      // Handle a click directly on the answer
-      // (aka the question hasn't been selected yet)
-      if(!this.filters.question) {
-        this.filters.question = $answer.attr('data-question');
-        var $question = $('label[data-question=' + this.filters.question + ']');
-        this.markQuestionSelected($question);
-      }
+      // Make sure we have the right question selected
+      this.filters.question = $answer.attr('data-question');
+      var $question = $('label[data-question=' + this.filters.question + ']');
+      this.markQuestionSelected($question);
 
       if(!this.filters.answer) {
         $answer = $answer.parent();
