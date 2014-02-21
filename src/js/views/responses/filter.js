@@ -17,10 +17,11 @@ define([
   'models/stats',
 
   // Templates
-  'text!templates/filters/filter.html'
+  'text!templates/filters/filter.html',
+  'text!templates/filters/loading.html'
 ],
 
-function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template) {
+function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template, loadingTemplate) {
   'use strict';
 
   /**
@@ -33,28 +34,26 @@ function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template
     filters: {},
 
     template: _.template(template),
+    loadingTemplate: _.template(loadingTemplate),
 
     events: {
-      "click .question label": "bin",
-      "click .answer": "filter",
+      "click .question label": "selectQuestion",
+      "click .answer": "selectAnswer",
       "click .clear": "reset"
     },
 
     initialize: function(options) {
       _.bindAll(this, 'render', 'reset');
 
-      console.log("init filters");
       this.survey = options.survey;
       this.forms = options.forms;
       this.map = options.map;
 
       this.stats = new Stats.Model({
         id: this.survey.get('id')
-        // forms: this.forms
       });
       this.stats.on('change', this.render);
-
-      // this.survey.on('change', this.stats.fetch);
+      this.$el.html(this.loadingTemplate({}));
     },
 
     render: function() {
@@ -117,12 +116,18 @@ function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template
       this.filters = {};
       this.map.clearFilter();
 
-      $('.questions .circle').removeClass('selected');
+      $('.question').removeClass('selected');
       $('.answers .circle').removeClass('inactive');
-      $('.answers').hide();
     },
 
-    bin: function(event) {
+    markQuestionSelected: function($question) {
+      // Mark this filter as selected and show answers
+      $('.filters .question').removeClass('selected');
+      $question.parent().addClass('selected');
+      $question.parent().find('.answers').show();
+    },
+
+    selectQuestion: function(event) {
       _kmq.push(['record', "Question filter selected"]);
       console.log("Another filter selected", event);
 
@@ -140,11 +145,7 @@ function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template
       this.filters.question = question;
       var answers = this.stats.get(question);
 
-      // Mark this filter as selected and show answers
-      $('.filters .circle').removeClass('selected');
-      $question.find('.circle').addClass('selected');
-      $('.answers').hide();
-      $question.parent().find('.answers').show();
+      this.markQuestionSelected($question);
 
       // Color the responses on the map
       this.map.setFilter(question);
@@ -153,17 +154,23 @@ function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template
     /**
      * Show only responses with a specific answer
      */
-    filter: function(event) {
+    selectAnswer: function(event) {
       _kmq.push(['record', "Answer filter selected"]);
       var $answer = $(event.target);
       this.filters.answer = $answer.attr('data-answer');
+
+      // Make sure we have the right question selected
+      this.filters.question = $answer.attr('data-question');
+      var $question = $('label[data-question=' + this.filters.question + ']');
+      this.markQuestionSelected($question);
+
       if(!this.filters.answer) {
         $answer = $answer.parent();
         this.filters.answer = $answer.attr('data-answer');
       }
 
       // Mark the answer as selected
-      $('.answers .circle').removeClass('selected');
+      $('.answers').removeClass('selected');
       $('.answers .circle').addClass('inactive');
 
       $answer.find('.circle').addClass('selected');
