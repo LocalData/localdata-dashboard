@@ -1,5 +1,21 @@
-body {
+header,
+footer,
+nav,
+.nav,
 
+button.refresh,
+.button,
+
+.filters .question,
+.filters button.button,
+.filters h3,
+
+.refresh {
+  display: none;
+}
+
+button.clear {
+  display: none!important;
 }
 
 .factoid .number {
@@ -9,6 +25,10 @@ body {
 
 .print {
   display: block;
+}
+
+#survey-name {
+  font-size: 24px;
 }
 
 .a,
@@ -25,12 +45,10 @@ body {
   min-height: auto!important;
 }
 
-header,
-footer,
-nav,
-.nav,
-button.refresh,
-.button,
-.refresh {
-  display: none;
+.filters .question.selected {
+  display: block;
+}
+
+.filters .answer {
+  margin-top: 0;
 }
