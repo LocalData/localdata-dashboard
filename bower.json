@@ -1,0 +1,19 @@
+{
+  "name": "localdata-dashboard",
+  "version": "0.2.0",
+  "homepage": "https://github.com/LocalData/localdata-dashboard",
+  "authors": [
+    "Matt Hampel <matth@localdata.com>"
+  ],
+  "description": "The LocalData Dashboard",
+  "main": "src/js/main.js",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
