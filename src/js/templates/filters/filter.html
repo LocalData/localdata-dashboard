@@ -1,7 +1,3 @@
-<!--         <h3>Please stand by.</h3>
-        <p>We're loading your deep-dive data.</p>
- -->
-
 <h3>Filter responses</h3>
 
 <div class="questions">
@@ -17,7 +13,9 @@
       <div class="answers">
         <% _.each(questions[name].answers, function (answer) {%>
           <div class="answer" data-answer="<%- answer.value %>" data-question="<%- name %>">
-            <div class="circle" style="background-color: <%- answer.color %>"></div> <%- answer.text %> <%- answer.count %>
+            <div class="circle" style="background-color: <%- answer.color %>;"></div>
+            <div class="print circle" style="border-color:<%- answer.color %>;"></div>
+            <%- answer.text %> <%- answer.count %>
           </div>
         <% }); %>
 

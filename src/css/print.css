@@ -2,14 +2,13 @@ header,
 footer,
 nav,
 .nav,
-
 button.refresh,
+.circle,
 .button,
-
+.small-factoid,
 .filters .question,
 .filters button.button,
 .filters h3,
-
 .refresh {
   display: none;
 }
@@ -25,6 +24,10 @@ button.clear {
 
 .print {
   display: block;
+}
+
+.filters .selected .print.circle {
+  display: inline-block;
 }
 
 #survey-name {
@@ -50,5 +53,5 @@ button.clear {
 }
 
 .filters .answer {
-  margin-top: 0;
+  margin-top: 5px;
 }
