@@ -87,8 +87,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
       // TODO: use geocoded center
       this.map.setView([42.374891,-83.069504], 17);
 
-      return;
-
       // Initialize the FeatureGroup to store editable layers
       this.drawnItems = new L.FeatureGroup();
       this.map.addLayer(this.drawnItems);
@@ -158,7 +156,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
       }
 
       // Show the form for the zones
-      $('#map-zones').html(_.template($('#map-zones-view').html(), {
+      $('#map-zones').html(this.MapZonesTemplate({
         zones: this.zones.toJSON()
       }));
     },
