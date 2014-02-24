@@ -1,3 +1,28 @@
+/*jslint nomen: true */
+/*globals define: true */
+
+define([
+  // Libraries
+  'jquery',
+  'lib/lodash',
+  'backbone',
+  'lib/leaflet.draw/leaflet.draw',
+  'moment',
+  'lib/tinypubsub',
+  'lib/kissmetrics',
+
+  // LocalData
+  'settings',
+  'api',
+
+  // Models
+  'models/responses',
+  'models/zones'
+],
+
+function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses, Zones) {
+  'use strict';
+
   MapViews.MapDrawView = Backbone.View.extend({
     map: null,
     el: "#map-draw-view-container",
@@ -163,3 +188,5 @@
     }
 
   });
+
+});
