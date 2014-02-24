@@ -11,7 +11,7 @@ define([
   'api',
 
   // Views
-  'views/map/draw',
+  'views/maps/draw',
 
   // Templates
   'text!templates/surveys/settings.html'
@@ -71,6 +71,10 @@ function($, _, Backbone, settings, api, MapDrawView, template) {
       };
 
       this.$el.html(this.template(context));
+
+      this.mapDrawView = new MapDrawView({
+        survey: this.survey
+      });
     }
   });
 

@@ -16,17 +16,26 @@ define([
   'api',
 
   // Models
-  'models/zones'
+  'models/zones',
+
+  // Templates
+  'text!templates/surveys/settings-map.html',
+  'text!templates/surveys/settings-map-zones.html'
 ],
 
 // https://github.com/LocalData/localdata-dashboard/compare/map-draw?expand=1
 
-function($, _, Backbone, L, moment, events, _kmq, settings, api, Zones) {
+function($, _, Backbone, L, moment, events, _kmq, settings, api,
+  Zones, MapDrawTemplate, MapZonesTemplate) {
   'use strict';
 
   var MapDrawView = Backbone.View.extend({
     map: null,
+
     el: "#map-draw-view-container",
+
+    template: _.template(MapDrawTemplate),
+    zonesTemplate: _.template(MapZonesTemplate),
 
     events: {
       'click .draw': 'drawZone',
@@ -35,9 +44,14 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Zones) {
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'renderZones', 'drawZone', 'removeZone',
-        'doneDrawingZone', 'save');
-
+      _.bindAll(this,
+        'render',
+        'renderZones',
+        'drawZone',
+        'removeZone',
+//        'doneDrawingZone',
+        'save'
+      );
 
       this.survey = options.survey;
       this.survey.on('change', this.render);
@@ -45,6 +59,8 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Zones) {
       this.zones = new Zones.Collection();
       this.zones.on('add', this.renderZones);
       this.zones.on('reset', this.renderZones);
+
+      this.render();
     },
 
     render: function() {
@@ -54,7 +70,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Zones) {
       }
 
       console.log("Rendering map draw view");
-      this.$el.html(_.template($('#map-draw-view').html(), {
+      this.$el.html(this.template({
         zones: this.survey.get('zones')
       }));
 
@@ -62,7 +78,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Zones) {
       this.map = new L.map('map-draw', {
         maxZoom: 19
       });
-
 
       // Set up the base map
       this.baseLayer = new L.tileLayer(settings.baseLayer);
