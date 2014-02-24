@@ -165,7 +165,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
     },
 
     showFilters: function() {
-      $('.factoid').hide();
+      $('.factoid').addClass('small-factoid');
       this.$el.addClass('bigb');
       this.mapView.map.invalidateSize();
 
@@ -174,7 +174,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
     },
 
     hideFilters: function() {
-      $('.factoid').show();
+      $('.factoid').removeClass('small-factoid');
       this.$el.removeClass('bigb');
       this.mapView.map.invalidateSize();
       this.update();
