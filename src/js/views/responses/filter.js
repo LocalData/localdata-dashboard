@@ -90,6 +90,7 @@ function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template
         mapping: this.forms.map()
       };
       this.$el.html(this.template(context));
+      $($('.question label')[0]).trigger('click');
     },
 
     /**
