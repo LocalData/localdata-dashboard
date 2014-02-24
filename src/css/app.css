@@ -385,6 +385,10 @@ header .b {
 .a, .b {
   width: 708px;
   margin-right: 56px;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
   /* column sizing */
   float: left; }
   @media all and (max-width: 1999px) {
@@ -982,7 +986,11 @@ header .nav a:visited {
 .factoid {
   font-size: 36px;
   margin-bottom: 50px;
-  color: #58aeff; }
+  color: #58aeff;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease; }
 
 .factoid .number {
   font-size: 150px;
@@ -991,6 +999,17 @@ header .nav a:visited {
 
 .factoid.orange {
   color: #ffad00; }
+
+.factoid.small-factoid {
+  margin-bottom: 10px; }
+
+.factoid.small-factoid,
+.factoid.small-factoid .number {
+  font-size: 20px;
+  line-height: 0.9; }
+
+.factoid.small-factoid .number {
+  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif; }
 
 /* General app ---------------------------------------------------------------*/
 .error {
