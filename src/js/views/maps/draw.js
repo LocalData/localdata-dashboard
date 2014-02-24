@@ -20,6 +20,8 @@ define([
   'models/zones'
 ],
 
+// https://github.com/LocalData/localdata-dashboard/compare/map-draw?expand=1
+
 function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses, Zones) {
   'use strict';
 

@@ -1,0 +1,10 @@
+<h2>Survey Zones</h2>
+
+<div id="survey-zone-form">
+<% _.each(zones, function(zone) {  %>
+  <div>
+    <input type="text" value="<%= zone.name %>" />
+    <div class="zone-color" style="background-color:<%= zone.color %>; border-color:<%= zone.color %>;"></div>
+  </div>
+<% }); %>
+</div>
