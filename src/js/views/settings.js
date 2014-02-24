@@ -10,11 +10,14 @@ define([
   'settings',
   'api',
 
+  // Views
+  'views/map/draw',
+
   // Templates
-  'text!templates/surveys/settings.html',
+  'text!templates/surveys/settings.html'
 ],
 
-function($, _, Backbone, settings, api, template) {
+function($, _, Backbone, settings, api, MapDrawView, template) {
   'use strict';
 
   var SettingsView = Backbone.View.extend({
@@ -64,7 +67,7 @@ function($, _, Backbone, settings, api, template) {
 
     render: function() {
       var context = {
-        survey: this.survey.toJSON(),
+        survey: this.survey.toJSON()
       };
 
       this.$el.html(this.template(context));

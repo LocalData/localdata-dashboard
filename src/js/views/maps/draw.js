@@ -16,16 +16,15 @@ define([
   'api',
 
   // Models
-  'models/responses',
   'models/zones'
 ],
 
 // https://github.com/LocalData/localdata-dashboard/compare/map-draw?expand=1
 
-function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses, Zones) {
+function($, _, Backbone, L, moment, events, _kmq, settings, api, Zones) {
   'use strict';
 
-  MapViews.MapDrawView = Backbone.View.extend({
+  var MapDrawView = Backbone.View.extend({
     map: null,
     el: "#map-draw-view-container",
 
@@ -48,7 +47,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses, Zone
       this.zones.on('reset', this.renderZones);
     },
 
-
     render: function() {
       // Don't re-render
       if(this.map) {
@@ -67,7 +65,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses, Zone
 
 
       // Set up the base map
-      this.baseLayer = new L.tileLayer('http://a.tiles.mapbox.com/v3/matth.map-zmpggdzn/{z}/{x}/{y}.png');
+      this.baseLayer = new L.tileLayer(settings.baseLayer);
       this.map.addLayer(this.baseLayer);
 
       // Center on the survey
@@ -190,5 +188,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, Responses, Zone
     }
 
   });
+
+  return MapDrawView;
 
 });
