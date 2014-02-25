@@ -321,6 +321,10 @@ a:active {
 .skiplink {
   line-height: 100px; }
 
+.print,
+.filters .selected .print.circle {
+  display: none; }
+
 /*******************************************************************************
  * _layout.scss
  *
@@ -934,9 +938,6 @@ header .nav a:visited {
 .filters label,
 .filters .question {
   cursor: pointer; }
-
-.filters .question {
-  overflow: auto; }
 
 .filters h3 {
   font-size: 24px; }
