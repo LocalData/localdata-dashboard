@@ -159,8 +159,12 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api) {
     // and re-adding layers. In this case, we can't do that, because gridLayer
     // doesn't have redraw().
     update: function() {
-      this.map.removeLayer(this.tileLayer);
-      this.map.removeLayer(this.gridLayer);
+      if(this.tileLayer) {
+        this.map.removeLayer(this.tileLayer);
+      }
+      if(this.gridLayer) {
+        this.map.removeLayer(this.gridLayer);
+      }
       this.selectDataMap();
       this.fitBounds();
     },
