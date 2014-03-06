@@ -57,6 +57,7 @@ function($, _, Backbone, settings, api, MapDrawView, template) {
       }, {});
 
       console.log(fields);
+      console.log("Survey I'm saving", this.survey);
 
       this.survey.set(fields);
       this.survey.save({}, {
