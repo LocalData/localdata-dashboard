@@ -47,6 +47,7 @@
 @import "components/header";
 @import "components/surveys";
 @import "components/filters";
+@import "components/settings";
 
 /* Factoids ----------------------------------------------------------------- */
 .factoid {
@@ -95,14 +96,6 @@
 .map {
   height: 500px;
 }
-
-
-/* Settings ----------------------------------------------------------------- */
-
-#map-draw {
-  height: 300px;
-}
-
 
 /* Tabs --------------------------------------------------------------------- */
 .nav-tabs .in {
