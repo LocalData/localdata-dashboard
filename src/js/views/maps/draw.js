@@ -117,7 +117,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
         // Style zones with a unique color
         // TODO: we only have 6 colors right now.
         var zoneNumber = this.zones.length;
-        var color = settings.colorRange[zoneNumber];
+        var color = settings.colorRange[zoneNumber + 1];
         layer.setStyle({
           color: color,
           fillColor: color
