@@ -40,7 +40,8 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
     events: {
       'click .draw': 'drawZone',
       'click .remove': 'removeZone',
-      'click .done': 'doneDrawingZone'
+      'click .done': 'doneDrawingZone',
+      'keyup #survey-zone-form input': 'updateName'
     },
 
     initialize: function(options) {
@@ -48,7 +49,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
         'render',
         'renderZones',
         'removeZone',
-        'save',
+        'updateSurvey',
         'updateNames'
       );
 
@@ -58,6 +59,9 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
       this.zones = new Zones.Collection();
       this.zones.on('add', this.renderZones);
       this.zones.on('reset', this.renderZones);
+
+      // TODO: listen to name changes
+      this.zones.on('add', this.saveZones);
 
       this.render();
     },
@@ -161,25 +165,33 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
       $('input[type=text]').on('keyup', this.updateNames);
     },
 
+    updateName: function(event) {
+      // TODO: Update name
+      this.updateSurvey();
+    },
+
     updateNames: function() {
       // Update the zone names
+      // TODO: just listen to each input
       $('#survey-zone-form input').each(function(index, $input) {
         console.log(this.zones, this.zones.at(index), index);
         this.zones.at(index).attributes.properties.name = $input.value;
       }.bind(this));
+      this.updateSurvey();
     },
 
     /**
      * Save the zones that are on the map
      */
-    saveZones: function() {
-      // Save the zone to the survey
-      console.log(this.survey);
-      this.survey.save();
-    },
+    // saveZones: function() {
+    //   // Save the zone to the survey
+    //   console.log(this.survey);
+    //   this.survey.save();
+    // },
 
     /**
      * Remove a zone from the survey
+     * TODO
      */
     removeZone: function(event) {
       // Delete it from the survey
@@ -189,8 +201,19 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
       // Save the survey
     },
 
-    save: function() {
-      console.log("NOOP");
+    /**
+     * Remove a zone from the survey
+     */
+    updateSurvey: function() {
+      var zones = this.survey.get('zones');
+      console.log("Got zones", zones);
+      zones.features = this.zones.toJSON();
+      this.survey.set('zones', zones);
+      console.log("Set zones", this.survey);
+    },
+
+    getZones: function() {
+      return this.zones.toJSON();
     }
 
   });
