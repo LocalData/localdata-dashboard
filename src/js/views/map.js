@@ -162,7 +162,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api) {
       this.map.removeLayer(this.tileLayer);
       this.map.removeLayer(this.gridLayer);
       this.selectDataMap();
-      this.fitBounds();
     },
 
     render: function() {
