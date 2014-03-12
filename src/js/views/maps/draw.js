@@ -53,7 +53,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
         'fitBounds',
         'addZone',
         'renderZones',
-        'removeZone',
         'getZones'
       );
 
@@ -120,7 +119,9 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
 
       this.map.on('draw:created', this.addZone);
 
-      if(this.survey.zones) {
+      // Show zones, if there are any
+      if(this.survey.get('zones')) {
+        console.log("WE HAVE ZONES", this.survey.get('zones'));
         this.renderZones();
       }
     },
@@ -171,9 +172,16 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
      * Render surveyor zones on the map
      */
     renderZones: function() {
+      var zones, layer;
+
       // If the survey already has zones, render them
-      if(_.has(this.survey, 'zones')) {
-        this.zones.reset(this.survey.zones.features);
+      if(this.survey.get('zones')) {
+        zones = this.survey.get('zones');
+        _.each(zones, function(zone) {
+          layer = L.geoJson(zone);
+          console.log(this);
+          this.drawnItems.addLayer(layer);
+        }.bind(this));
       }
 
       // Show the form for the zones
@@ -181,18 +189,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
       $('#map-zones').html(this.zonesTemplate({
         zones: this.zones.toJSON()
       }));
-    },
-
-    /**
-     * Remove a zone from the survey
-     * TODO
-     */
-    removeZone: function(event) {
-      // Delete it from the survey
-
-      // Delete it from the map
-
-      // Save the survey
     },
 
     getZones: function() {
