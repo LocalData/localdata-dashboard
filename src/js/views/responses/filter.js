@@ -90,6 +90,10 @@ function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template
         mapping: this.forms.map()
       };
       this.$el.html(this.template(context));
+
+      // TODO: This is a cheap hack to show the first stat
+      // We should do this in a more robust way so HTML changes don't break it.
+      $($('.question label')[0]).trigger('click');
     },
 
     /**
