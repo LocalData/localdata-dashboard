@@ -29,6 +29,10 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
   Zones, MapDrawTemplate, MapZonesTemplate) {
   'use strict';
 
+  function flip(a) {
+    return [a[1], a[0]];
+  }
+
   var MapDrawView = Backbone.View.extend({
     map: null,
 
@@ -40,17 +44,17 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
     events: {
       'click .draw': 'drawZone',
       'click .remove': 'removeZone',
-      'click .done': 'doneDrawingZone',
-      'keyup #survey-zone-form input': 'updateName'
+      'click .done': 'doneDrawingZone'
     },
 
     initialize: function(options) {
       _.bindAll(this,
         'render',
+        'fitBounds',
+        'addZone',
         'renderZones',
         'removeZone',
-        'updateSurvey',
-        'updateNames'
+        'getZones'
       );
 
       this.survey = options.survey;
@@ -88,7 +92,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
 
       // Center on the survey
       // TODO: use geocoded center
-      this.map.setView([42.374891,-83.069504], 17);
+      this.fitBounds();
 
       // Initialize the FeatureGroup to store editable layers
       this.drawnItems = new L.FeatureGroup();
@@ -96,62 +100,78 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
 
       // Initialize the draw control and pass it the FeatureGroup of editable layers
       var drawControl = new L.Control.Draw({
-          draw: {
-            polyline: false,
-            rectangle: false,
-            circle: false,
-            marker:false,
-            polygon: {
-              shapeOptions: {
-                  color: '#ef6d4a',
-                  fillColor: '#ef6d4a'
-              }
+        draw: {
+          polyline: false,
+          rectangle: false,
+          circle: false,
+          marker:false,
+          polygon: {
+            shapeOptions: {
+                color: '#ef6d4a',
+                fillColor: '#ef6d4a'
             }
-          },
-          edit: {
-              featureGroup: this.drawnItems
           }
+        },
+        edit: {
+          featureGroup: this.drawnItems
+        }
       });
       this.map.addControl(drawControl);
 
-      this.map.on('draw:created', function (e) {
-        var type  = e.layerType,
-            layer = e.layer;
-
-        // Style zones with a unique color
-        // TODO: we only have 6 colors right now.
-        var zoneNumber = this.zones.length;
-        var color = settings.colorRange[zoneNumber + 1];
-        layer.setStyle({
-          color: color,
-          fillColor: color
-        });
-
-        // Create a new zone model
-        var geoJSON = layer.toGeoJSON();
-        console.log("GeoJSON", geoJSON);
-        geoJSON.properties = {
-          layer: layer,
-          name: 'Zone ' + (this.zones.length + 1),
-          color: color
-        };
-        var zone = new Zones.Model(geoJSON);
-        this.zones.push(zone);
-
-        // Add the zone layer to the layerGroup
-        this.drawnItems.addLayer(layer);
-      }.bind(this));
+      this.map.on('draw:created', this.addZone);
 
       if(this.survey.zones) {
         this.renderZones();
       }
     },
 
+    fitBounds: function() {
+      var bounds = this.survey.get('responseBounds');
+      if (bounds) {
+        bounds = [flip(bounds[0]), flip(bounds[1])];
+        if (bounds[0][0] === bounds[1][0] || bounds[0][1] === bounds[1][1]) {
+          this.map.setView(bounds[0], 15);
+        } else {
+          this.map.fitBounds(bounds, {
+            reset: true,
+            maxZoom: 18
+          });
+        }
+      }
+    },
+
+    addZone: function(event) {
+      var type  = event.layerType,
+          layer = event.layer;
+
+      // Style zones with a unique color
+      // TODO: Add more colors.
+      // We only have 6 colors right now.
+      var zoneNumber = this.zones.length;
+      var color = settings.colorRange[zoneNumber + 1];
+      layer.setStyle({
+        color: color,
+        fillColor: color
+      });
+
+      // Create a new zone model
+      var geoJSON = layer.toGeoJSON();
+      geoJSON.properties = {
+        name: 'Zone ' + (this.zones.length + 1),
+        color: color
+      };
+      var zone = new Zones.Model(geoJSON);
+      this.zones.push(zone);
+
+      // Add the zone layer to the layerGroup
+      this.drawnItems.addLayer(layer);
+    },
+
     /**
      * Render surveyor zones on the map
      */
     renderZones: function() {
-      console.log("Zone added!");
+      // If the survey already has zones, render them
       if(_.has(this.survey, 'zones')) {
         this.zones.reset(this.survey.zones.features);
       }
@@ -161,33 +181,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
       $('#map-zones').html(this.zonesTemplate({
         zones: this.zones.toJSON()
       }));
-
-      $('input[type=text]').on('keyup', this.updateNames);
     },
-
-    updateName: function(event) {
-      // TODO: Update name
-      this.updateSurvey();
-    },
-
-    updateNames: function() {
-      // Update the zone names
-      // TODO: just listen to each input
-      $('#survey-zone-form input').each(function(index, $input) {
-        console.log(this.zones, this.zones.at(index), index);
-        this.zones.at(index).attributes.properties.name = $input.value;
-      }.bind(this));
-      this.updateSurvey();
-    },
-
-    /**
-     * Save the zones that are on the map
-     */
-    // saveZones: function() {
-    //   // Save the zone to the survey
-    //   console.log(this.survey);
-    //   this.survey.save();
-    // },
 
     /**
      * Remove a zone from the survey
@@ -201,18 +195,13 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
       // Save the survey
     },
 
-    /**
-     * Remove a zone from the survey
-     */
-    updateSurvey: function() {
-      var zones = this.survey.get('zones');
-      console.log("Got zones", zones);
-      zones.features = this.zones.toJSON();
-      this.survey.set('zones', zones);
-      console.log("Set zones", this.survey);
-    },
-
     getZones: function() {
+      // Update the names
+      $('#survey-zone-form input').each(function(index, $input) {
+        console.log(this.zones, this.zones.at(index), index);
+        this.zones.at(index).attributes.properties.name = $input.value;
+      }.bind(this));
+
       return this.zones.toJSON();
     }
 
