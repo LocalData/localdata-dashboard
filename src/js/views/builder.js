@@ -104,10 +104,7 @@ function($, _, Backbone, _kmq, settings, api, template, FormViews) {
 
     renderForm: function() {
       // Render the editor template
-      console.log("Rendering", this.$el);
-
       this.$el.html(this.template({}));
-      console.log(this.$el);
 
       // Clear out the editor, just in case.
       this.formQuestions = $('#editor');

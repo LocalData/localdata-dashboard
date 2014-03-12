@@ -17,7 +17,6 @@ function($, _, Backbone, settings) {
     urlRoot: settings.api.baseurl + "/surveys/",
 
     url: function() {
-      console.log("URL", this.urlRoot + this.id + '/stats/');
       return this.urlRoot + this.id + '/stats/';
     },
 
