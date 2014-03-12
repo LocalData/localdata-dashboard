@@ -60,8 +60,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
       this.survey.on('change', this.render);
 
       this.zones = new Zones.Collection();
-      this.zones.on('add', this.renderZones);
-      this.zones.on('reset', this.renderZones);
 
       // TODO: listen to name changes
       this.zones.on('add', this.saveZones);
@@ -76,9 +74,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
       }
 
       console.log("Rendering map draw view");
-      this.$el.html(this.template({
-        zones: this.survey.get('zones')
-      }));
+      this.$el.html(this.template());
 
       // Initialize the map
       this.map = new L.map('map-draw', {
@@ -119,11 +115,9 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
 
       this.map.on('draw:created', this.addZone);
 
-      // Show zones, if there are any
-      if(this.survey.get('zones')) {
-        console.log("WE HAVE ZONES", this.survey.get('zones'));
-        this.renderZones();
-      }
+      // Add existing zones
+      this.zones.reset(this.survey.get('zones'));
+      this.renderZones();
     },
 
     fitBounds: function() {
@@ -141,6 +135,14 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
       }
     },
 
+    style: function(feature) {
+      return {
+        color: feature.properties.color,
+        opacity: 1,
+        fillColor: feature.properties.color
+      };
+    },
+
     addZone: function(event) {
       var type  = event.layerType,
           layer = event.layer;
@@ -152,6 +154,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
       var color = settings.colorRange[zoneNumber + 1];
       layer.setStyle({
         color: color,
+        opacity: 1,
         fillColor: color
       });
 
@@ -166,6 +169,11 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
 
       // Add the zone layer to the layerGroup
       this.drawnItems.addLayer(layer);
+
+      // Render the form
+      $('#map-zones').html(this.zonesTemplate({
+        zones: this.zones.toJSON()
+      }));
     },
 
     /**
@@ -178,14 +186,16 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
       if(this.survey.get('zones')) {
         zones = this.survey.get('zones');
         _.each(zones, function(zone) {
-          layer = L.geoJson(zone);
+          layer = L.geoJson(zone, {
+            style: this.style
+          });
           console.log(this);
           this.drawnItems.addLayer(layer);
         }.bind(this));
+        this.zones.reset(zones);
       }
 
       // Show the form for the zones
-      console.log(this.zones.toJSON());
       $('#map-zones').html(this.zonesTemplate({
         zones: this.zones.toJSON()
       }));
