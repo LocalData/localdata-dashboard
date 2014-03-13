@@ -1,10 +1,10 @@
 <h2>Survey Zones</h2>
 
 <div id="survey-zone-form">
-<% _.each(zones, function(zone) {  %>
+<% _.each(zones, function(zone, index) {  %>
     <div>
         <input type="text" value="<%= zone.properties.name %>" class="large question-input" style="border-color:<%= zone.properties.color %>;" />
-        <a class="btn remove"><i class="fa fa-trash-o"></i> Remove</a>
+        <a class="btn remove" data-index="<%= index %>"><i class="fa fa-trash-o"></i> Remove</a>
     </div>
 <% }); %>
 </div>

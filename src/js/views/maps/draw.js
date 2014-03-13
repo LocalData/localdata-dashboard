@@ -63,6 +63,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
 
       // TODO: listen to name changes
       this.zones.on('add', this.saveZones);
+      this.zones.on('remove', this.unmapZone);
 
       this.render();
     },
@@ -73,7 +74,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
         return;
       }
 
-      console.log("Rendering map draw view");
       this.$el.html(this.template());
 
       // Initialize the map
@@ -164,11 +164,13 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
         name: 'Zone ' + (this.zones.length + 1),
         color: color
       };
-      var zone = new Zones.Model(geoJSON);
-      this.zones.push(zone);
-
       // Add the zone layer to the layerGroup
       this.drawnItems.addLayer(layer);
+
+      // Save the layer to the model
+      geoJSON.layer = layer;
+      var zone = new Zones.Model(geoJSON);
+      this.zones.push(zone);
 
       // Render the form
       $('#map-zones').html(this.zonesTemplate({
@@ -185,29 +187,40 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
       // If the survey already has zones, render them
       if(this.survey.get('zones')) {
         zones = this.survey.get('zones');
+
+        // Add each zone to the map
         _.each(zones, function(zone) {
           layer = L.geoJson(zone, {
             style: this.style
           });
-          console.log(this);
           this.drawnItems.addLayer(layer);
+          zone.layer = layer;
         }.bind(this));
+
         this.zones.reset(zones);
       }
 
-      // Show the form for the zones
+      // Renter the form for the zones
       $('#map-zones').html(this.zonesTemplate({
         zones: this.zones.toJSON()
       }));
     },
 
+    removeZone: function(event) {
+      var index = $(event.target).attr('data-index');
+      var model = this.zones.at(index);
+
+      // TODO: Remove the layer
+      this.drawnItems.removeLayer(model.get('layer'));
+      this.zones.remove(model);
+      $(event.target).parent().remove();
+    },
+
     getZones: function() {
       // Update the names
       $('#survey-zone-form input').each(function(index, $input) {
-        console.log(this.zones, this.zones.at(index), index);
         this.zones.at(index).attributes.properties.name = $input.value;
       }.bind(this));
-
       return this.zones.toJSON();
     }
 

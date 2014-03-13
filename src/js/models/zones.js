@@ -14,6 +14,11 @@ function($, _, Backbone, settings) {
   var Zones = {};
 
   Zones.Model = Backbone.Model.extend({
+    blacklist: ['layer'],
+
+    toJSON: function(options) {
+      return _.omit(this.attributes, this.blacklist);
+    }
   });
 
   Zones.Collection = Backbone.Collection.extend({
