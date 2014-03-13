@@ -997,6 +997,10 @@ header .nav a:visited {
     height: 24px;
     width: 24px;
     border-radius: 12px; }
+  #survey-zone-form .remove {
+    padding-left: 8px;
+    font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
+    line-height: 30px; }
 
 /* Factoids ----------------------------------------------------------------- */
 .factoid {

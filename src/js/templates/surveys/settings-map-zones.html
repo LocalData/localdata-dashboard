@@ -2,9 +2,10 @@
 
 <div id="survey-zone-form">
 <% _.each(zones, function(zone) {  %>
-  <div>
-    <input type="text" value="<%= zone.properties.name %>" class="large" style="border-color:<%= zone.properties.color %>;" />
-<!--     <div class="zone-color" style="background-color:<%= zone.properties.color %>; border-color:<%= zone.properties.color %>;"></div>
- -->  </div>
+    <div>
+        <input type="text" value="<%= zone.properties.name %>" class="large question-input" style="border-color:<%= zone.properties.color %>;" />
+        <a class="btn remove"><i class="fa fa-trash-o"></i> Remove</a>
+    </div>
 <% }); %>
 </div>
+
