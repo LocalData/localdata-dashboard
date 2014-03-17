@@ -61,7 +61,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
 
       this.zones = new Zones.Collection();
 
-      // TODO: listen to name changes
       this.zones.on('add', this.saveZones);
       this.zones.on('remove', this.unmapZone);
 
@@ -210,7 +209,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
       var index = $(event.target).attr('data-index');
       var model = this.zones.at(index);
 
-      // TODO: Remove the layer
       this.drawnItems.removeLayer(model.get('layer'));
       this.zones.remove(model);
       $(event.target).parent().remove();
