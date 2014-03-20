@@ -127,6 +127,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
 
       // Listen for new responses
       this.survey.on('change', this.mapView.update);
+      this.survey.on('change', this.mapView.fitBounds);
     },
 
     mapClickHandler: function(event) {
