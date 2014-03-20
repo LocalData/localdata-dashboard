@@ -10,11 +10,14 @@ define([
   'settings',
   'api',
 
+  // Views
+  'views/maps/draw',
+
   // Templates
-  'text!templates/surveys/settings.html',
+  'text!templates/surveys/settings.html'
 ],
 
-function($, _, Backbone, settings, api, template) {
+function($, _, Backbone, settings, api, MapDrawView, template) {
   'use strict';
 
   var SettingsView = Backbone.View.extend({
@@ -53,9 +56,9 @@ function($, _, Backbone, settings, api, template) {
         return memo;
       }, {});
 
-      console.log(fields);
-
       this.survey.set(fields);
+      var zones = this.mapDrawView.getZones();
+      this.survey.attributes.zones = zones;
       this.survey.save({}, {
         success: this.success,
         error: this.error
@@ -64,10 +67,14 @@ function($, _, Backbone, settings, api, template) {
 
     render: function() {
       var context = {
-        survey: this.survey.toJSON(),
+        survey: this.survey.toJSON()
       };
 
       this.$el.html(this.template(context));
+
+      this.mapDrawView = new MapDrawView({
+        survey: this.survey
+      });
     }
   });
 

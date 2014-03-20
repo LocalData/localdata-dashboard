@@ -32,6 +32,11 @@ require.config({
       exports: 'L'
     },
 
+    'lib/leaflet.draw/leaflet.draw': {
+      deps: ['lib/leaflet/leaflet'],
+      exports: 'L'
+    },
+
     'lib/leaflet/leaflet.tilejson': {
       deps: ['lib/leaflet/leaflet', 'lib/leaflet/leaflet.utfgrid'],
       exports: 'L'

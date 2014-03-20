@@ -983,6 +983,26 @@ header .nav a:visited {
 .filters .circle.inactive {
   background: transparent !important; }
 
+/* Settings CSS ------------------------------------------------------------- */
+#map-draw {
+  height: 300px; }
+
+#survey-zone-form {
+  /* legend for the zones editor */ }
+  #survey-zone-form input[type=text],
+  #survey-zone-form input.large {
+    display: inline-block;
+    border-color: #eeebe9; }
+  #survey-zone-form .zone-color {
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    border-radius: 12px; }
+  #survey-zone-form .remove {
+    padding-left: 8px;
+    font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
+    line-height: 30px; }
+
 /* Factoids ----------------------------------------------------------------- */
 .factoid {
   font-size: 36px;
@@ -1064,7 +1084,7 @@ input[type=password] {
   display: block;
   font-size: 16px;
   color: #6e6663;
-  border: 4px solid #ccc;
+  border: 4px solid #eeebe9;
   line-height: 24px;
   padding: 0px 8px;
   margin-bottom: 1.5em; }
