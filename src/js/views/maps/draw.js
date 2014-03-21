@@ -196,7 +196,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
           zone.layer = layer;
         }.bind(this));
 
-        this.zones.reset(zones);
+        this.zones.reset(zones.features);
       }
 
       // Renter the form for the zones
