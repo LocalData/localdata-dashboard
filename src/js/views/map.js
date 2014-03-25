@@ -65,6 +65,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api) {
     gridLayer: null,
 
     initialize: function(options) {
+      L.Icon.Default.imagePath = '/js/lib/leaflet/images';
       console.log("Init map view");
       _.bindAll(this,
         'render',
@@ -89,7 +90,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api) {
 
       this.defaultStyle = settings.farZoomStyle;
       this.defaultPointToLayer = function (feature, latlng) {
-        return new L.circleMarker(latlng, settings.farZoomStyle);
+        return L.circleMarker(latlng, settings.circleMarker);
       };
 
       this.delayFitBounds = _.debounce(this.fitBounds, 250);
@@ -396,8 +397,11 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api) {
       this.deselectObject();
 
       // Add a layer
-      this.selectedLayer = new L.GeoJSON(event.data.geometry);
-      this.selectedLayer.setStyle(settings.selectedStyle);
+      this.selectedLayer = new L.GeoJSON(event.data.geometry, {
+        pointToLayer: this.defaultPointToLayer,
+        style: settings.selectedStyle
+      });
+
       this.map.addLayer(this.selectedLayer);
       this.selectedLayer.bringToFront();
     },
