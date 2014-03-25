@@ -104,8 +104,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api) {
      * @param  {Object} tilejson
      */
     addTileLayer: function(tilejson) {
-      console.log("Got the tilejson", tilejson);
-
       if (this.tileLayer) {
         this.map.removeLayer(this.tileLayer);
       }
@@ -125,7 +123,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api) {
       // Make sure the grid layer is on top.
       this.map.addLayer(this.gridLayer);
 
-      console.log("Gridlayer", this.gridLayer);
       this.gridLayer.on('click', this.selectObject);
       if (this.clickHandler) {
         this.gridLayer.on('click', this.clickHandler);
@@ -160,10 +157,13 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api) {
     // and re-adding layers. In this case, we can't do that, because gridLayer
     // doesn't have redraw().
     update: function() {
-      this.map.removeLayer(this.tileLayer);
-      this.map.removeLayer(this.gridLayer);
+      if(this.tileLayer) {
+        this.map.removeLayer(this.tileLayer);
+      }
+      if(this.gridLayer) {
+        this.map.removeLayer(this.gridLayer);
+      }
       this.selectDataMap();
-      this.fitBounds();
     },
 
     render: function() {
