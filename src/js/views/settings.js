@@ -57,8 +57,7 @@ function($, _, Backbone, settings, api, MapDrawView, template) {
       }, {});
 
       this.survey.set(fields);
-      var zones = this.mapDrawView.getZones();
-      this.survey.attributes.zones = zones;
+      this.survey.attributes.zones = this.mapDrawView.getZones();
       this.survey.save({}, {
         success: this.success,
         error: this.error
