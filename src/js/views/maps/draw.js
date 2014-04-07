@@ -178,7 +178,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
     },
 
     /**
-     * Render surveyor zones on the map
+     * Render survey zones on the map
      */
     renderZones: function() {
       var zones, layer;
@@ -186,9 +186,8 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
       // If the survey already has zones, render them
       if(this.survey.get('zones')) {
         zones = this.survey.get('zones');
-
         // Add each zone to the map
-        _.each(zones, function(zone) {
+        _.each(zones.features, function(zone) {
           layer = L.geoJson(zone, {
             style: this.style
           });
@@ -214,12 +213,20 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
       $(event.target).parent().remove();
     },
 
+    /**
+     * Get all zones
+     * @return {Object} geoJSON FeatureCollection
+     */
     getZones: function() {
       // Update the names
       $('#survey-zone-form input').each(function(index, $input) {
         this.zones.at(index).attributes.properties.name = $input.value;
       }.bind(this));
-      return this.zones.toJSON();
+
+      return {
+        type: "FeatureCollection",
+        features: this.zones.toJSON()
+      };
     }
 
   });
