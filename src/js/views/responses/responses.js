@@ -205,6 +205,8 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
       console.log("Getting new responses");
       event.preventDefault();
       this.survey.fetch();
+      this.mapView.update();
+
       // This is a hack because it's hard to watch .fetch
       // if there are no changes.
       $('.checking').fadeIn(500).fadeOut(750);
