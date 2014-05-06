@@ -87,8 +87,14 @@ strong {
   font-family: $bold;
 }
 
+ul {
+  padding-bottom: 1em;
+  margin-bottom: 1em;
+}
+
 li {
   list-style: circle;
+  list-style-position: inside;
 }
 
 img.responsive {
@@ -116,4 +122,3 @@ a:active {
 .filters .selected .print.circle {
   display: none;
 }
-
