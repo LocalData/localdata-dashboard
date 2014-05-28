@@ -1,27 +1,27 @@
 /*jslint nomen: true */
 /*globals define: true */
 
-define([
-  'jquery',
-  'lib/lodash',
-  'backbone',
+define(function(require, exports, module) {
+  'use strict';
+
+  // Libs
+  var $ = require('jquery');
+  var _ = require('lib/lodash');
+  var Backbone = require('backbone');
 
   // LocalData
-  'settings',
-  'api',
+  var settings = require('settings');
+  var api = require('api');
 
   // Models
-  'models/Users',
+  var Users = require('models/users');
 
-  // Views
-  'views/surveys/user-list-item',
+  // Models
+  var UserListItemView = require('views/surveys/user-list-item');
 
   // Templates
-  'text!templates/surveys/users.html'
-],
+  var template = require('text!templates/surveys/users.html');
 
-function($, _, Backbone, settings, api, Users, UserListItemView, template) {
-  'use strict';
 
   var UsersView = Backbone.View.extend({
     el: '#sharing-view-container',
