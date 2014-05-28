@@ -67,13 +67,10 @@ define(function (require) {
   api.addUserToSurvey = function(options) {
     var url = settings.api.baseurl + '/surveys/' + options.surveyId + '/users/' + options.email;
 
-    var request = $.ajax({
+    return $.ajax({
       url: url,
       type: 'PUT'
     });
-
-    request.done(options.done);
-    request.fail(options.fail);
   };
 
 
@@ -87,13 +84,10 @@ define(function (require) {
   api.removeUserFromSurvey = function(options) {
     var url = settings.api.baseurl + '/surveys/' + options.surveyId + '/users/' + options.email;
 
-    var request = $.ajax({
+    return $.ajax({
       url: url,
       type: 'DELETE'
     });
-
-    request.done(options.done);
-    request.fail(options.fail);
   };
 
 

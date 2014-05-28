@@ -1,24 +1,23 @@
 /*jslint nomen: true */
 /*globals define: true */
 
-define([
-  'jquery',
-  'lib/lodash',
-  'backbone',
+define(function(require, exports, module) {
+  'use strict';
 
-  // LocalData
-  'settings',
-  'api',
+  // Libs
+  var $ = require('jquery');
+  var _ = require('lib/lodash');
+  var Backbone = require('backbone');
+
+  // App
+  var settings = require('settings');
+  var api = require('api');
 
   // Models
-  'models/Users',
+  var Users = require('models/users');
 
   // Templates
-  'text!templates/surveys/users-list-item.html'
-],
-
-function($, _, Backbone, settings, api, Users, template) {
-  'use strict';
+  var template = require('text!templates/surveys/users-list-item.html');
 
   var UserListItemView = Backbone.View.extend({
     template: _.template(template),
@@ -59,12 +58,13 @@ function($, _, Backbone, settings, api, Users, template) {
     removeUser: function(event) {
       event.preventDefault();
 
-      api.removeUserFromSurvey({
+      var request = api.removeUserFromSurvey({
         surveyId: this.survey.get('id'),
-        email: this.model.get('email'),
-        done: this.done,
-        fail: this.fail
+        email: this.model.get('email')
       });
+
+      request.done(this.done);
+      request.fail(this.fail);
     },
 
     render: function() {

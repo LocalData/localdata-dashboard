@@ -76,12 +76,13 @@ function($, _, Backbone, settings, api, Users, UserListItemView, template) {
       var email = form[0].value;
 
       // Find the user by email
-      api.addUserToSurvey({
+      var request = api.addUserToSurvey({
         surveyId: this.survey.get('id'),
-        email: email || undefined,
-        done: this.done,
-        fail: this.fail
+        email: email || undefined
       });
+
+      request.done(this.done);
+      request.fail(this.fail);
     },
 
     renderUser: function(user) {

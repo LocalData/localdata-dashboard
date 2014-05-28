@@ -30,8 +30,6 @@ function($, _, Backbone, settings) {
     model: Users.Model,
 
     initialize: function(options) {
-      _.bindAll(this, 'parse');
-
       // If we initialize with a survey ID,
       // only get users for that survey
       this.surveyId = options.surveyId;
@@ -49,4 +47,5 @@ function($, _, Backbone, settings) {
   return Users;
 
 }); // End Surveys module
+
 
