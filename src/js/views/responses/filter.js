@@ -24,6 +24,9 @@ define([
 function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template, loadingTemplate) {
   'use strict';
 
+  var ANSWER = 'response';
+  var NOANSWER = 'no response';
+
   /**
    * Intended for shorter lists of responses (arbitrarily <25)
    * Doesn't include pagination, which isn't relevant in this case.
@@ -64,25 +67,59 @@ function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template
       var stats = this.stats;
 
       _.each(_.keys(questions), function (question) {
-        var answers = questions[question].answers;
         var answerObjects = {};
         var questionStats = stats.get(question);
-        _.each(answers, function (answer, index) {
-          if (!questionStats) {
-            answer.count = 0;
-          } else {
-            // Get the count from the stats object.
-            answer.count = questionStats[answer.value];
-            if (answer.count === undefined) {
-              answer.count = 0;
-            }
-          }
+        var type = questions[question].type;
+        if (type === 'text') {
+          var total = _.reduce(questionStats, function (sum, count) {
+            return sum + count;
+          }, 0);
 
-          // Get the color.
-          // The last "answer" is the no-response placeholder, which gets the
-          // zero-index color.
-          answer.color = settings.colorRange[(index + 1) % answers.length];
-        });
+          questions[question].answers = [{
+            text: ANSWER,
+            value: ANSWER,
+            count: total - questionStats[NOANSWER],
+            color: settings.colorRange[1]
+          }, {
+            text: NOANSWER,
+            value: NOANSWER,
+            count: questionStats[NOANSWER],
+            color: settings.colorRange[0]
+          }];
+        } else if (type === 'file') {
+          // TODO: We need to see photo upload numbers in the stats (or
+          // somewhere) to report them in the UI.
+
+          questions[question].answers = [{
+            text: ANSWER,
+            value: ANSWER,
+            count: '',
+            color: settings.colorRange[1]
+          }, {
+            text: NOANSWER,
+            value: NOANSWER,
+            count: '',
+            color: settings.colorRange[0]
+          }];
+        } else {
+          var answers = questions[question].answers;
+          _.each(answers, function (answer, index) {
+            if (!questionStats) {
+              answer.count = 0;
+            } else {
+              // Get the count from the stats object.
+              answer.count = questionStats[answer.value];
+              if (answer.count === undefined) {
+                answer.count = 0;
+              }
+            }
+
+            // Get the color.
+            // The last "answer" is the no-response placeholder, which gets the
+            // zero-index color.
+            answer.color = settings.colorRange[(index + 1) % answers.length];
+          });
+        }
       });
 
       var context = {
