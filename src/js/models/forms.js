@@ -13,6 +13,7 @@ function($, _, Backbone, settings) {
 
   var Forms = {};
 
+  var ANSWER = 'response';
   var NOANSWER = 'no response';
 
   // Forms model
@@ -73,6 +74,7 @@ function($, _, Backbone, settings) {
         }
 
         var name = question.name;
+        var type;
         var answerInfo = [];
         if (question.answers && question.answers.length > 0) {
           _.each(question.answers, function (answer) {
@@ -80,6 +82,12 @@ function($, _, Backbone, settings) {
               value: answer.value,
               text: answer.text
             });
+          });
+        } else {
+          type = question.type;
+          answerInfo.push({
+            value: ANSWER,
+            text: ANSWER
           });
         }
 
@@ -92,6 +100,10 @@ function($, _, Backbone, settings) {
           text: question.text,
           answers: answerInfo
         };
+
+        if (type) {
+          questionInfo.type = type;
+        }
 
         if (result[name] === undefined) {
           result[name] = questionInfo;
