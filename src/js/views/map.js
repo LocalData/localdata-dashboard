@@ -177,9 +177,23 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api) {
           center: [37.77585785035733, -122.41362811351655]
         });
 
-        // Set up the base map; add the parcels and done markers
+        // Set up the base maps
         this.baseLayer = L.tileLayer(settings.baseLayer);
+        this.satelliteLayer = L.tileLayer(settings.satelliteLayer);
         this.map.addLayer(this.baseLayer);
+        var baseMaps = {
+          "Streets": this.baseLayer,
+          "Satellite": this.satelliteLayer
+        };
+
+        // Add the layer control
+        // Make sure the layer stays in the background
+        L.control.layers(baseMaps).addTo(this.map);
+        this.baseLayer.bringToBack();
+        this.map.on('baselayerchange', function(event) {
+          event.layer.bringToBack();
+        });
+
 
         // FIXME: This is a hack. The map element doesn't have a size yet, so
         // Leaflet doesn't know how to set the view properly. If we wait until
