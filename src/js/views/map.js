@@ -192,6 +192,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api) {
         this.baseLayer.bringToBack();
         this.map.on('baselayerchange', function(event) {
           event.layer.bringToBack();
+          _kmq.push(['record', "Baselayer changed to " + event.name]);
         });
 
 
