@@ -22,13 +22,14 @@ define(function (require) {
   };
 
   // Check if the user is authenticated
-  api.getUser = function(callback) {
+  api.getCurrentUser = function(callback) {
     var url = settings.api.baseurl + "/user";
 
     $.getJSON(url, function(data) {
       callback(data);
     });
   };
+
 
   // Create a new user
   //
@@ -52,6 +53,40 @@ define(function (require) {
     request.fail(function(jqXHR, textStatus, errorThrown) {
       console.log("Request failed: ", jqXHR);
       callback($.parseJSON(jqXHR.responseText), null);
+    });
+  };
+
+
+  /**
+   * Give a user access to a survey
+   * Fails if the user doesn't exist
+   * @param {String}   surveyId
+   * @param {String}   email
+   * @param {Function} callback params error, response
+   */
+  api.addUserToSurvey = function(options) {
+    var url = settings.api.baseurl + '/surveys/' + options.surveyId + '/users/' + options.email;
+
+    return $.ajax({
+      url: url,
+      type: 'PUT'
+    });
+  };
+
+
+  /**
+   * Remove a user's access to a survey
+   * Fails if the user doesn't exist
+   * @param {String}   surveyId
+   * @param {String}   email
+   * @param {Function} callback params error, response
+   */
+  api.removeUserFromSurvey = function(options) {
+    var url = settings.api.baseurl + '/surveys/' + options.surveyId + '/users/' + options.email;
+
+    return $.ajax({
+      url: url,
+      type: 'DELETE'
     });
   };
 
@@ -84,8 +119,8 @@ define(function (require) {
       console.log("Request failed: ", jqXHR);
       callback(jqXHR.responseText, null);
     });
-
   };
+
 
   api.resetPassword = function resetPassword(user, token, done) {
     var url = settings.api.baseurl + '/user/reset';

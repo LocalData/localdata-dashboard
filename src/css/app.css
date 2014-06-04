@@ -301,8 +301,13 @@ strong {
   font-weight: normal;
   font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif; }
 
+ul {
+  padding-bottom: 1em;
+  margin-bottom: 1em; }
+
 li {
-  list-style: circle; }
+  list-style: circle;
+  list-style-position: inside; }
 
 img.responsive {
   max-width: 100%; }
@@ -524,7 +529,7 @@ header .b {
 .contrast + .contrast .in {
   padding-top: 0; }
 
-.contrast .rule {
+.contrast div.rule {
   margin-bottom: 50px; }
 
 .rule {
@@ -984,8 +989,29 @@ header .nav a:visited {
   background: transparent !important; }
 
 /* Settings CSS ------------------------------------------------------------- */
+.survey-settings h3 {
+  font-size: 24px;
+  letter-spacing: -0.5px;
+  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif; }
+
+/* Survey users */
+.survey-users li {
+  list-style: none;
+  margin-bottom: 0.5em;
+  overflow: auto; }
+.survey-users .remove {
+  cursor: pointer;
+  color: #ffad00;
+  float: right; }
+.survey-users .user-icon {
+  color: #cbc8c7; }
+
+/* Survey zones */
 #map-draw {
   height: 300px; }
+
+#map-draw-view-container {
+  margin-bottom: 2em; }
 
 #survey-zone-form {
   /* legend for the zones editor */ }
@@ -1129,7 +1155,7 @@ input.large,
   width: 12em; }
 
 input.large {
-  width: 18em; }
+  max-width: 18em; }
 
 .preview-q-box {
   padding-left: 20px; }

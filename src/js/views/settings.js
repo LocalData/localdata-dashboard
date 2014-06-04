@@ -12,12 +12,13 @@ define([
 
   // Views
   'views/maps/draw',
+  'views/surveys/users',
 
   // Templates
   'text!templates/surveys/settings.html'
 ],
 
-function($, _, Backbone, settings, api, MapDrawView, template) {
+function($, _, Backbone, settings, api, MapDrawView, UsersView, template) {
   'use strict';
 
   var SettingsView = Backbone.View.extend({
@@ -72,6 +73,9 @@ function($, _, Backbone, settings, api, MapDrawView, template) {
       this.$el.html(this.template(context));
 
       this.mapDrawView = new MapDrawView({
+        survey: this.survey
+      });
+      this.sharingView = new UsersView({
         survey: this.survey
       });
     }
