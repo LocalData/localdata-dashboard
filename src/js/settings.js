@@ -17,6 +17,7 @@ function(L) {
 
   settings.baseLayer = '//a.tiles.mapbox.com/v3/matth.map-n9bps30s/{z}/{x}/{y}.png';
   settings.satelliteLayer = '//a.tiles.mapbox.com/v3/matth.map-yyr7jb6r/{z}/{x}/{y}.png';
+  settings.printLayer = 'http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png';
 
   // Colors for option maps
   settings.colorRange = [

@@ -180,10 +180,12 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api) {
         // Set up the base maps
         this.baseLayer = L.tileLayer(settings.baseLayer);
         this.satelliteLayer = L.tileLayer(settings.satelliteLayer);
+        this.printLayer = L.tileLayer(settings.printLayer);
         this.map.addLayer(this.baseLayer);
         var baseMaps = {
           "Streets": this.baseLayer,
-          "Satellite": this.satelliteLayer
+          "Satellite": this.satelliteLayer,
+          "Print": this.printLayer
         };
 
         // Add the layer control
