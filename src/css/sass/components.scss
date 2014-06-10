@@ -97,6 +97,23 @@
   height: 500px;
 }
 
+#map-tools {
+  background: $body-accent;
+  padding: 5px 5px 0 5px;
+
+  input[type=text] {
+    display: inline;
+    margin-bottom: 0;
+  }
+
+  button {
+    margin-bottom: 5px;
+  }
+}
+
+
+
+
 /* Tabs --------------------------------------------------------------------- */
 .nav-tabs .in {
   padding-top: 0;
