@@ -8,7 +8,6 @@ define([
   'backbone',
   'lib/leaflet/leaflet.tilejson',
   'moment',
-  'lib/tinypubsub',
   'lib/kissmetrics',
 
   // LocalData
@@ -19,7 +18,7 @@ define([
   'text!templates/responses/map.html'
 ],
 
-function($, _, Backbone, L, moment, events, _kmq, settings, api, template) {
+function($, _, Backbone, L, moment, _kmq, settings, api, template) {
   'use strict';
 
   function flip(a) {
@@ -48,6 +47,10 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, template) {
     survey: null,
     template: _.template(template),
 
+    events: {
+      'click .address-search-button': 'search'
+    },
+
     initialize: function(options) {
       L.Icon.Default.imagePath = '/js/lib/leaflet/images';
       console.log("Init map view");
@@ -57,7 +60,9 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, template) {
         'fitBounds',
         'selectObject',
         'deselectObject',
-        'addTileLayer'
+        'addTileLayer',
+        'search',
+        'searchResults'
       );
 
       this.survey = options.survey;
@@ -320,8 +325,37 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api, template) {
         this.map.removeLayer(this.selectedLayer);
         delete this.selectedLayer;
       }
-    }
+    },
 
+
+    /**
+     * Search for an address
+     */
+    search: function(event) {
+      event.preventDefault();
+      var address = $('#address-search').val();
+      var location = this.survey.get('location');
+      api.codeAddress(address, location, this.searchResults);
+    },
+
+
+    searchResults: function(error, results) {
+      if(error) {
+        $('#map-tools .error').html(error.message);
+      }else {
+        $('#map-tools .error').html('');
+      }
+
+      // Remove any existing location marker
+      if(this.markers.location !== undefined) {
+        this.map.removeLayer(this.markers.location);
+      }
+
+      var latlng = results.coords;
+      this.map.setView(latlng, 18);
+      var marker = L.marker(latlng).addTo(this.map);
+      this.markers.location = marker;
+    }
   });
 
   return MapView;

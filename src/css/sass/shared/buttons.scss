@@ -64,7 +64,9 @@ button,
   line-height: inherit;
 }
 
-a.button {
+a.button,
+a:visited.button {
+  color: #fff;
   line-height: 60px;
 }
 

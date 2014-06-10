@@ -705,7 +705,9 @@ button,
   color: #fff;
   line-height: inherit; }
 
-a.button {
+a.button,
+a:visited.button {
+  color: #fff;
   line-height: 60px; }
 
 button:hover,
@@ -1067,6 +1069,15 @@ header .nav a:visited {
 #map,
 .map {
   height: 500px; }
+
+#map-tools {
+  background: #b7aba5;
+  padding: 5px 5px 0 5px; }
+  #map-tools input[type=text] {
+    display: inline;
+    margin-bottom: 0; }
+  #map-tools button {
+    margin-bottom: 5px; }
 
 /* Tabs --------------------------------------------------------------------- */
 .nav-tabs .in {
