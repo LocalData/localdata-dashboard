@@ -75,15 +75,23 @@ function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template
             return sum + count;
           }, 0);
 
+          var noResponseCount;
+          if (questionStats) {
+            noResponseCount = questionStats[NOANSWER];
+          }
+          if (noResponseCount === undefined) {
+            noResponseCount = 0;
+          }
+
           questions[question].answers = [{
             text: ANSWER,
             value: ANSWER,
-            count: total - questionStats[NOANSWER],
+            count: total - noResponseCount,
             color: settings.colorRange[1]
           }, {
             text: NOANSWER,
             value: NOANSWER,
-            count: questionStats[NOANSWER],
+            count: noResponseCount,
             color: settings.colorRange[0]
           }];
         } else if (type === 'file') {
