@@ -13,34 +13,17 @@ define([
 
   // LocalData
   'settings',
-  'api'
+  'api',
+
+  // Templates
+  'text!templates/responses/map.html'
 ],
 
-function($, _, Backbone, L, moment, events, _kmq, settings, api) {
+function($, _, Backbone, L, moment, events, _kmq, settings, api, template) {
   'use strict';
 
   function flip(a) {
     return [a[1], a[0]];
-  }
-
-  function indexToColor(index) {
-    if (index >= 0) {
-      return settings.colorRange[index + 1];
-    }
-    return settings.colorRange[0];
-  }
-
-  function getFeatureStyle(feature) {
-    if (feature.properties === undefined || feature.properties.color === undefined) {
-      return settings.styleTemplate;
-    }
-
-    var style = {};
-    _.extend(style, settings.styleTemplate, {
-      color: feature.properties.color,
-      fillColor: feature.properties.color
-    });
-    return style;
   }
 
   function zoneStyle(feature) {
@@ -57,12 +40,13 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api) {
 
     filtered: false,
     filter: null,
+    gridLayer: null,
     map: null,
     markers: {},
     responses: null,
     selectedLayer: null,
     survey: null,
-    gridLayer: null,
+    template: _.template(template),
 
     initialize: function(options) {
       L.Icon.Default.imagePath = '/js/lib/leaflet/images';
@@ -73,11 +57,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api) {
         'fitBounds',
         'selectObject',
         'deselectObject',
-        'renderObject',
-        'renderObjects',
-        'updateMapStyleBasedOnZoom',
-        'updateObjectStyles',
-        'styleFeature',
         'addTileLayer'
       );
 
@@ -129,13 +108,16 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api) {
       }
     },
 
+
     loading: function() {
       $('.map-loading').show();
     },
 
+
     done: function() {
       $('.map-loading').hide();
     },
+
 
     fitBounds: function() {
       var bounds = this.survey.get('responseBounds');
@@ -152,10 +134,14 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api) {
       }
     },
 
-    // Updates the map. Triggered when we know there are changes to the data.
-    // Usually, we'd use Leaflet's redraw() function rather than removing
-    // and re-adding layers. In this case, we can't do that, because gridLayer
-    // doesn't have redraw().
+
+    /**
+     * Updates the map.
+     * Triggered when we know there are changes to the data.
+     * Usually, we'd use Leaflet's redraw() function rather than removing
+     * and re-adding layers. In this case, we can't do that, because gridLayer
+     * doesn't have redraw().
+     */
     update: function() {
       if(this.tileLayer) {
         this.map.removeLayer(this.tileLayer);
@@ -166,10 +152,11 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api) {
       this.selectDataMap();
     },
 
+
     render: function() {
       if (this.map === null) {
         // Render the map template
-        this.$el.html(_.template($('#map-view').html(), {}));
+        this.$el.html(this.template({}));
 
         // Initialize the map
         this.map = new L.map('map', {
@@ -204,8 +191,6 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api) {
         // size.
         setTimeout(function () {
           this.map.addLayer(this.zoneLayer);
-          this.updateMapStyleBasedOnZoom();
-          this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
 
           // Center the map
           this.fitBounds();
@@ -218,12 +203,15 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api) {
         this.listenTo(this.survey, 'change', this.plotZones);
 
         this.selectDataMap();
-        this.map.on('zoomend', this.updateMapStyleBasedOnZoom);
       }
 
       return this;
     },
 
+
+    /**
+     * Get the appropriate survey tiles.
+     */
     selectDataMap: function () {
       // Build the appropriate TileJSON URL.
       var url = '/tiles/' + this.survey.get('id');
@@ -250,6 +238,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api) {
       });
     },
 
+
     /**
      * Set filter parameters for displaying results on the map
      * The response collection will activate this if we have an active filter
@@ -265,45 +254,16 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api) {
       this.selectDataMap();
     },
 
+
     clearFilter: function () {
       this.filter = null;
       this.selectDataMap();
     },
 
+
     /**
-     * Style a feature
-     * @param  {Object} feature
-     * @return {Object}         feature with style attributes
+     * Plot survey zones on the map
      */
-    styleFeature: function(data) {
-      // Set a default style
-      var style = this.defaultStyle;
-
-      // If there's no data, style this as blank
-      if(data === undefined || this.filter === null) {
-        return style;
-      }
-
-      // Set the default filter style
-      style = _.extend({
-        color: settings.colorRange[0],
-        fillColor: settings.colorRange[0]
-      }, settings.styleTemplate);
-
-      // Get the answer to the currently filtered question
-      var answer = data[this.filter.question];
-
-      // If there's no answer, style this as a blank answer
-      if (answer === undefined) {
-        return style;
-      }
-
-      // Set the line and fill colors, then return the style
-      style.color = this.filter.answers[answer].color;
-      style.fillColor = style.color;
-      return style;
-    },
-
     plotZones: function () {
       if (!this.survey.has('zones')) {
         return;
@@ -327,81 +287,9 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api) {
       this.objectsOnTheMap.bringToFront();
     },
 
-    updateObjectStyles: function(style) {
-      this.objectsOnTheMap.setStyle(style);
-    },
-
-    // Expects an object with properties
-    // obj.parcelId: ID of the given object
-    // obj.geometry: GeoJSON geometry object
-    renderObject: function(obj, style, pointToLayer) {
-
-      if (style === undefined) {
-        style = this.defaultStyle;
-      }
-
-      if (pointToLayer === undefined) {
-        pointToLayer = this.defaultPointToLayer;
-      }
-
-      // We don't want to re-draw parcels that are already on the map
-      // So we keep a hash map with the layers so we can unrender them
-      if(! _.has(this.parcelIdsOnTheMap, obj.parcelId) || obj.parcelId === ''){
-
-        // Make sure the format fits Leaflet's geoJSON expectations
-        obj.type = "Feature";
-
-        // Create a new geojson layer and style it.
-        var geojsonLayer = new L.geoJson(obj, {
-          pointToLayer: pointToLayer,
-          style: style
-        });
-        geojsonLayer.on('click', this.handleResponses);
-
-        // Add the layer to the layergroup and the hashmap
-        this.objectsOnTheMap.addLayer(geojsonLayer); // was (geojsonLayer);
-        this.parcelIdsOnTheMap[obj.parcelId] = geojsonLayer;
-      }
-    },
-
-    renderObjects: function(results) {
-      _.each(results, function(elt) {
-        this.renderObject(elt);
-      }, this);
-    },
-
-    updateMapStyleBasedOnZoom: function(e) {
-      // Don't update the styles if there's a filter in place
-      if (this.filter !== null) {
-        return;
-      }
-
-      _kmq.push(['record', "Map zoomed"]);
-      var zoom = this.map.getZoom();
-
-      // Objects should be more detailed close up (zoom 14+)
-      // And easier to see when zoomed out (zoom >= 16)
-      // With a transition state in the middle
-      if(zoom < 14 && this.defaultStyle !== settings.farZoomStyle) {
-        this.defaultStyle = settings.farZoomStyle;
-        this.updateObjectStyles(settings.farZoomStyle);
-      }else if (zoom < 16 && zoom > 13 && this.defaultStyle !== settings.midZoomStyle) {
-        this.defaultStyle = settings.midZoomStyle;
-        this.updateObjectStyles(settings.midZoomStyle);
-      }else if(zoom >= 16 && this.defaultStyle !== settings.closeZoomStyle) {
-        this.defaultStyle = settings.closeZoomStyle;
-        this.updateObjectStyles(settings.closeZoomStyle);
-      }
-
-      // If a parcel is selected, make sure it says visually selected
-      if (this.selectedLayer !== null) {
-        this.selectedLayer.setStyle(settings.selectedStyle);
-      }
-    },
-
 
     /**
-     * Hilight a selected object; un-hilight any previously selected object
+     * Highlight a selected object
      * @param  {Object} event
      */
     selectObject: function(event) {
@@ -413,7 +301,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api) {
 
       this.deselectObject();
 
-      // Add a layer
+      // Add a layer with a visual selection
       this.selectedLayer = new L.GeoJSON(event.data.geometry, {
         pointToLayer: this.defaultPointToLayer,
         style: settings.selectedStyle
@@ -423,6 +311,10 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api) {
       this.selectedLayer.bringToFront();
     },
 
+
+    /**
+     * Un-highlight any previously selected object
+     */
     deselectObject: function() {
       if (this.selectedLayer !== null) {
         this.map.removeLayer(this.selectedLayer);
