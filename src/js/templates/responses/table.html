@@ -1,0 +1,24 @@
+<table>
+<thead>
+    <tr>
+        <% _.each(labels, function(label, key){ %>
+            <td><%= label %> <%= key %></td>
+        <% }); %>
+    </tr>
+</thead>
+
+<% _.each(responses, function(response) { %>
+    <tr>
+        <td><%= response.created %></td>
+        <td><%= response.geo_info.humanReadableName %></td>
+        <td><%= response.object_id %></td>
+        <% _.each(labels, function(label, key){ %>
+            <td>
+                <% if (_.has(response.responses, key)) { %>
+                    <%= response.responses[key] %>
+                <% }; %>
+            </td>
+        <% }); %>
+    </tr>
+<% }); %>
+</table>

@@ -21,6 +21,7 @@ define([
   'views/responses/filter',
   'views/responses/list',
   'views/surveys/count',
+  'views/responses/table',
 
   // Templates
   'text!templates/responses/map-list.html'
@@ -32,6 +33,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
   FilterView,
   ResponseListView,
   ResponseCountView,
+  TableView,
   mapListTemplate) {
 
   'use strict';
@@ -128,6 +130,14 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
       // Listen for new responses
       this.survey.on('change', this.mapView.update);
       this.survey.on('change', this.mapView.fitBounds);
+
+      console.log("WHy no table view? ", this.tableView);
+      // Set up the response table view.
+        console.log("Creating a table view");
+        this.tableView = new TableView({
+          survey: this.survey,
+          labels: this.forms.getQuestions()
+        });
     },
 
     mapClickHandler: function(event) {

@@ -52,6 +52,8 @@ function($, _, Backbone, moment, settings, api) {
       var url = settings.api.baseurl + '/surveys/' + this.surveyId + '/responses';
       if (this.objectId) {
         return url + '?objectId=' + this.objectId;
+      }else {
+        return url + '?startIndex=0&count=20';
       }
       return url;
     },
