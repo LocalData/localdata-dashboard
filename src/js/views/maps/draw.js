@@ -196,6 +196,12 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
         }.bind(this));
 
         this.zones.reset(zones.features);
+
+        // Fit the map to the zone bounds
+        var bounds = this.drawnItems.getBounds();
+        if(bounds.isValid()) {
+          this.map.fitBounds(bounds);
+        }
       }
 
       // Renter the form for the zones
