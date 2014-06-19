@@ -8,15 +8,19 @@ define([
   'moment',
 
   'settings',
-  'api'
+  'api',
+
+  // Templates
+  'text!templates/pagination.html'
 ],
 
-function($, _, Backbone, moment, settings, api) {
+function($, _, Backbone, moment, settings, api, template) {
   'use strict';
 
 
   var PaginationView = Backbone.View.extend({
     el: "#result-pagination",
+    template: _.template(template),
 
     events: {
           'click .pagination-item a': 'goToPage'
@@ -29,14 +33,17 @@ function($, _, Backbone, moment, settings, api) {
     },
 
     render: function(options) {
-      var context = { pageCount: this.pageCount };
-      //$(this.el).html(_.template($('#pagination-view').html(), context));
-      // return this;
+      var context = {
+        pageCount: this.pageCount
+      };
+      $(this.el).html(this.template(context));
+       return this;
     },
 
-    goToPage: function(e) {3
+    goToPage: function(e) {
       e.preventDefault();
-      this.trigger('changePage', e.target.innerText);
+      console.log("Caught page change");
+      this.trigger('change', e.target.innerText);
     }
   });
 

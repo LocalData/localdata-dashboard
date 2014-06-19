@@ -1,0 +1,9 @@
+<div class="pagination">
+  <ul>
+    <li><a href="#">Prev</a></li>
+    <% _.each(_.range(1, pageCount + 1), function(page) { %>
+      <li class="pagination-item"><a href=""><%= page %></a></li>
+    <% }); %>
+    <li><a href="#">Next</a></li>
+  </ul>
+</div>

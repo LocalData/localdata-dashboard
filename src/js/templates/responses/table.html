@@ -1,8 +1,11 @@
 <table>
 <thead>
     <tr>
+        <th>Created</th>
+        <th>Location</th>
+        <th>ID</th>
         <% _.each(labels, function(label, key){ %>
-            <td><%= label %> <%= key %></td>
+            <th><%= label %> <%= key %></th>
         <% }); %>
     </tr>
 </thead>
@@ -22,3 +25,4 @@
     </tr>
 <% }); %>
 </table>
+<div id="result-pagination"></div>
