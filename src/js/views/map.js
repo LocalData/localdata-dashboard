@@ -100,6 +100,9 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
       this.map.addLayer(this.tileLayer);
 
       // Create the grid layer & handle clicks
+      if (this.gridLayer) {
+        this.map.removeLayer(this.gridLayer);
+      }
       this.gridLayer = new L.UtfGrid(tilejson.grids[0], {
         resolution: 4
       });
