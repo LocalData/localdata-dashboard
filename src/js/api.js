@@ -22,13 +22,14 @@ define(function (require) {
   };
 
   // Check if the user is authenticated
-  api.getUser = function(callback) {
+  api.getCurrentUser = function(callback) {
     var url = settings.api.baseurl + "/user";
 
     $.getJSON(url, function(data) {
       callback(data);
     });
   };
+
 
   // Create a new user
   //
@@ -52,6 +53,40 @@ define(function (require) {
     request.fail(function(jqXHR, textStatus, errorThrown) {
       console.log("Request failed: ", jqXHR);
       callback($.parseJSON(jqXHR.responseText), null);
+    });
+  };
+
+
+  /**
+   * Give a user access to a survey
+   * Fails if the user doesn't exist
+   * @param {String}   surveyId
+   * @param {String}   email
+   * @param {Function} callback params error, response
+   */
+  api.addUserToSurvey = function(options) {
+    var url = settings.api.baseurl + '/surveys/' + options.surveyId + '/users/' + options.email;
+
+    return $.ajax({
+      url: url,
+      type: 'PUT'
+    });
+  };
+
+
+  /**
+   * Remove a user's access to a survey
+   * Fails if the user doesn't exist
+   * @param {String}   surveyId
+   * @param {String}   email
+   * @param {Function} callback params error, response
+   */
+  api.removeUserFromSurvey = function(options) {
+    var url = settings.api.baseurl + '/surveys/' + options.surveyId + '/users/' + options.email;
+
+    return $.ajax({
+      url: url,
+      type: 'DELETE'
     });
   };
 
@@ -84,8 +119,8 @@ define(function (require) {
       console.log("Request failed: ", jqXHR);
       callback(jqXHR.responseText, null);
     });
-
   };
+
 
   api.resetPassword = function resetPassword(user, token, done) {
     var url = settings.api.baseurl + '/user/reset';
@@ -250,25 +285,72 @@ define(function (require) {
     return settings.api.geo + '/parcels?bbox=' + southwest.lng + "," + southwest.lat + "," + northeast.lng + "," + northeast.lat;
   };
 
-  // Geocode an address
-  // Take an address string.
-  // Add "Detroit" to the end.
-  // Return the first result as a lat-lng for convenience.
-  // Or Null if Bing is being a jerk / we're dumb.
-  api.codeAddress = function(address, callback) {
-    console.log("Coding an address");
-    console.log(address);
-    var detroitAddress = address + " Detroit, MI"; // for ease of geocoding
-    var geocodeEndpoint = "http://dev.virtualearth.net/REST/v1/Locations/" + detroitAddress + "?o=json&key=" + settings.bing_key + "&jsonp=?";
+  /**
+   * Geocode an address
+   * @param  {String}   address  eg "123 foo street"
+   * @param  {String}   region   A region to narrow the search. eg "Detroit, MI"
+   * @param  {Function} callback Takes params in the format error, {addressLine, latlng}
+   */
+  api.codeAddress = function(address, region, callback) {
+    // TODO: Can we get the locale from the geolocation feature?
+    // If the user-entered address does not include a city, append the survey location.
+    var addressWithLocale = address;
 
-    $.getJSON(geocodeEndpoint, function(data){
-      if(data.resourceSets.length > 0){
-        var point = data.resourceSets[0].resources[0].point;
-        var latlng = new L.LatLng(point.coordinates[0], point.coordinates[1]);
-        callback(latlng);
+    // If there is a comma in the address, assume the user added the city.
+    if (address.indexOf(',') === -1) {
+      // See if the survey location is part of the user-entered address.
+      // Assume survey location is of the form "City, State", "City, State, USA", or "City, State ZIP"
+      var addressLower = address.toLocaleLowerCase();
+      var locationComponents = region.split(',');
+      var containsLocale = false;
+
+      // TODO: Check the tail parts of the survey location.
+
+      // Check the first part of the survey location.
+      var city = locationComponents[0].toLocaleLowerCase().trim();
+      if (addressLower.length >= city.length && addressLower.substr(addressLower.length - city.length, city.length) === city) {
+        containsLocale = true;
+        // Add the remaining location components.
+        addressWithLocale = addressWithLocale + ', ' + locationComponents.slice(1).join(',');
+      }
+
+      if (!containsLocale) {
+        addressWithLocale = addressWithLocale + ', ' + region;
+      }
+    }
+
+    // Strip spaces
+    addressWithLocale = addressWithLocale.replace(/^\s+|\s+$/g, '');
+
+    var geocodeEndpoint = 'https://dev.virtualearth.net/REST/v1/Locations/' + addressWithLocale + '?o=json&key=' + settings.BingKey + '&jsonp=?';
+
+    $.ajax({
+      url: geocodeEndpoint,
+      dataType: 'json',
+      success: function (data) {
+        if (data.resourceSets.length > 0){
+          var result = data.resourceSets[0].resources[0];
+          callback(null, {
+            addressLine: result.address.addressLine,
+            coords: result.point.coordinates
+          });
+        } else {
+          callback({
+            type: 'GeocodingError',
+            message: 'No geocoding results found'
+          });
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR, textStatus, errorThrown);
+        callback({
+          type: 'GeocodingError',
+          message: 'Geocoding failed'
+        });
       }
     });
   };
+
 
   // Get a chunk of responses.
   // If startIndex or count are not provided, get all of the responses.

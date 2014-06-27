@@ -127,10 +127,11 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
 
       // Listen for new responses
       this.survey.on('change', this.mapView.update);
+      this.survey.on('change', this.mapView.fitBounds);
     },
 
     mapClickHandler: function(event) {
-      if (_.isUndefined(event.data) || _.isUndefined(event.data.object_id)) {
+      if (!event.data || !event.data.object_id) {
         return;
       }
 
@@ -145,8 +146,12 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
         labels: this.forms.getQuestions()
       });
 
-      selectedItemListView.on('delete', function() {
+      selectedItemListView.on('remove', function() {
         this.mapView.deselectObject();
+      }.bind(this));
+
+      rc.on('destroy', function() {
+        this.mapView.update();
       }.bind(this));
     },
 
@@ -161,7 +166,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
     },
 
     showFilters: function() {
-      $('.factoid').hide();
+      $('.factoid').addClass('small-factoid');
       this.$el.addClass('bigb');
       this.mapView.map.invalidateSize();
 
@@ -170,7 +175,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
     },
 
     hideFilters: function() {
-      $('.factoid').show();
+      $('.factoid').removeClass('small-factoid');
       this.$el.removeClass('bigb');
       this.mapView.map.invalidateSize();
       this.update();
@@ -200,6 +205,8 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
       console.log("Getting new responses");
       event.preventDefault();
       this.survey.fetch();
+      this.mapView.update();
+
       // This is a hack because it's hard to watch .fetch
       // if there are no changes.
       $('.checking').fadeIn(500).fadeOut(750);

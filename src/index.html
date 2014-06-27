@@ -6,10 +6,14 @@
 
     <!-- Styles -->
     <link href='//fonts.googleapis.com/css?family=Open+Sans:400,600,700,800,300|Pacifico' rel='stylesheet' type='text/css'>
-
-    <style type="text/css" media="screen">
-      @import url("js/lib/leaflet/leaflet.css");
+    <style type="text/css" media="all">
       @import url("css/app.css");
+      @import url("js/lib/leaflet/leaflet.css");
+      @import url("js/lib/leaflet.draw/leaflet.draw.css");
+    </style>
+
+    <style type="text/css" media="print">
+      @import url("css/print.css");
     </style>
 </head>
 
@@ -247,15 +251,6 @@
 
       <% }); %>
 
-    </script>
-
-
-    <!-- Map ..............................................................-->
-    <script type="text/template" id="map-view">
-      <div class="b nomargin">
-        <div id="map" ></div>
-      </div>
-      <div class="map-loading"></div>
     </script>
 
 

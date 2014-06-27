@@ -55,7 +55,7 @@ function($, _, Backbone, settings, api) {
     },
 
     new_survey: function() {
-      api.getUser(function(user) {
+      api.getCurrentUser(function(user) {
         this.controller.goto_new();
       }.bind(this));
     },

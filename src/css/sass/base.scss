@@ -87,12 +87,22 @@ strong {
   font-family: $bold;
 }
 
+ul {
+  padding-bottom: 1em;
+  margin-bottom: 1em;
+}
+
 li {
   list-style: circle;
+  list-style-position: inside;
 }
 
 img.responsive {
   max-width: 100%;
+}
+
+img.print {
+  display: none;
 }
 
 a,
@@ -108,5 +118,7 @@ a:active {
   line-height: 100px;
 }
 
-
-
+.print,
+.filters .selected .print.circle {
+  display: none;
+}

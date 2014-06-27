@@ -1,0 +1,57 @@
+header,
+footer,
+nav,
+.nav,
+button.refresh,
+.circle,
+.button,
+.small-factoid,
+.filters .question,
+.filters button.button,
+.filters h3,
+.refresh {
+  display: none;
+}
+
+button.clear {
+  display: none!important;
+}
+
+.factoid .number {
+  display: inline;
+  font-size: 75%;
+}
+
+.print {
+  display: block;
+}
+
+.filters .selected .print.circle {
+  display: inline-block;
+}
+
+#survey-name {
+  font-size: 24px;
+}
+
+.a,
+.b {
+  float: none;
+  width: 100%;
+}
+
+#map {
+  width: 100%;
+}
+
+#container {
+  min-height: auto!important;
+}
+
+.filters .question.selected {
+  display: block;
+}
+
+.filters .answer {
+  margin-top: 5px;
+}

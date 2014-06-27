@@ -8,7 +8,6 @@
 }
 
 .filters .question {
-  overflow: auto;
 }
 
 .filters h3 {
@@ -19,6 +18,8 @@
   font-family: $bold;
   line-height: 1.2;
   display: block;
+  position: relative;
+  padding-left: 32px;
 }
 
 .filters .question {
@@ -26,7 +27,10 @@
 }
 
 .filters .answers {
-  display: none;
+  .circle,
+  button {
+    display: none;
+  }
 }
 
 .answers button {
@@ -34,14 +38,15 @@
 }
 
 .answer {
-  overflow: auto;
+  position: relative;
+  padding-left: 32px;
   clear: both;
   margin-top: 10px
 }
 
 .filters .circle {
-  float: left;
-  margin-right: 12px;
+  position: absolute;
+  left: 0;
   border-radius: 50%;
   width: 20px;
   height: 20px;
@@ -49,9 +54,18 @@
   background: transparent;
 }
 
-.filters .circle.selected {
-  background: #6e6663;
+.filters .selected {
+  .circle {
+    background: #6e6663;
+    display: block;
+  }
+
+  .answers button {
+    display: block;
+  }
+
 }
+
 
 .filters .circle.inactive {
   background: transparent ! important;

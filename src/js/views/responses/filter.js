@@ -6,6 +6,7 @@ define([
   'lib/lodash',
   'backbone',
   'lib/tinypubsub',
+  'lib/kissmetrics',
 
   // LocalData
   'settings',
@@ -16,11 +17,15 @@ define([
   'models/stats',
 
   // Templates
-  'text!templates/filters/filter.html'
+  'text!templates/filters/filter.html',
+  'text!templates/filters/loading.html'
 ],
 
-function($, _, Backbone, events, settings, api, Responses, Stats, template) {
+function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template, loadingTemplate) {
   'use strict';
+
+  var ANSWER = 'response';
+  var NOANSWER = 'no response';
 
   /**
    * Intended for shorter lists of responses (arbitrarily <25)
@@ -32,35 +37,101 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
     filters: {},
 
     template: _.template(template),
+    loadingTemplate: _.template(loadingTemplate),
 
     events: {
-      "click .question label": "bin",
-      "click .answer": "filter",
+      "click .question label": "selectQuestion",
+      "click .answer": "selectAnswer",
       "click .clear": "reset"
     },
 
     initialize: function(options) {
       _.bindAll(this, 'render', 'reset');
 
-      console.log("init filters");
       this.survey = options.survey;
       this.forms = options.forms;
       this.map = options.map;
 
       this.stats = new Stats.Model({
         id: this.survey.get('id')
-        // forms: this.forms
       });
       this.stats.on('change', this.render);
-
-      // this.survey.on('change', this.stats.fetch);
+      this.$el.html(this.loadingTemplate({}));
     },
 
     render: function() {
-      console.log("Rendering the filters", this.stats.toJSON());
-      console.log(this.$el);
+      console.log('Rendering the filters');
+
+      // Match the question names and answer values from the form with stats and colors.
+      var questions = this.forms.getFlattenedForm();
+      var stats = this.stats;
+
+      _.each(_.keys(questions), function (question) {
+        var answerObjects = {};
+        var questionStats = stats.get(question);
+        var type = questions[question].type;
+        if (type === 'text') {
+          var total = _.reduce(questionStats, function (sum, count) {
+            return sum + count;
+          }, 0);
+
+          var noResponseCount;
+          if (questionStats) {
+            noResponseCount = questionStats[NOANSWER];
+          }
+          if (noResponseCount === undefined) {
+            noResponseCount = 0;
+          }
+
+          questions[question].answers = [{
+            text: ANSWER,
+            value: ANSWER,
+            count: total - noResponseCount,
+            color: settings.colorRange[1]
+          }, {
+            text: NOANSWER,
+            value: NOANSWER,
+            count: noResponseCount,
+            color: settings.colorRange[0]
+          }];
+        } else if (type === 'file') {
+          // TODO: We need to see photo upload numbers in the stats (or
+          // somewhere) to report them in the UI.
+
+          questions[question].answers = [{
+            text: ANSWER,
+            value: ANSWER,
+            count: '',
+            color: settings.colorRange[1]
+          }, {
+            text: NOANSWER,
+            value: NOANSWER,
+            count: '',
+            color: settings.colorRange[0]
+          }];
+        } else {
+          var answers = questions[question].answers;
+          _.each(answers, function (answer, index) {
+            if (!questionStats) {
+              answer.count = 0;
+            } else {
+              // Get the count from the stats object.
+              answer.count = questionStats[answer.value];
+              if (answer.count === undefined) {
+                answer.count = 0;
+              }
+            }
+
+            // Get the color.
+            // The last "answer" is the no-response placeholder, which gets the
+            // zero-index color.
+            answer.color = settings.colorRange[(index + 1) % answers.length];
+          });
+        }
+      });
+
       var context = {
-        questions: this.stats.toJSON(),
+        questions: questions,
         mapping: this.forms.map()
       };
       this.$el.html(this.template(context));
@@ -90,12 +161,18 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
       this.filters = {};
       this.map.clearFilter();
 
-      $('.questions .circle').removeClass('selected');
+      $('.question').removeClass('selected');
       $('.answers .circle').removeClass('inactive');
-      $('.answers').hide();
     },
 
-    bin: function(event) {
+    markQuestionSelected: function($question) {
+      // Mark this filter as selected and show answers
+      $('.filters .question').removeClass('selected');
+      $question.parent().addClass('selected');
+      $question.parent().find('.answers').show();
+    },
+
+    selectQuestion: function(event) {
       _kmq.push(['record', "Question filter selected"]);
       console.log("Another filter selected", event);
 
@@ -106,14 +183,14 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
 
       var $question = $(event.target);
       var question = $question.attr('data-question');
+      if(!question) {
+        $question = $question.parent();
+        question = $question.attr('data-question');
+      }
       this.filters.question = question;
       var answers = this.stats.get(question);
 
-      // Mark this filter as selected and show answers
-      $('.filters .circle').removeClass('selected');
-      $question.find('.circle').addClass('selected');
-      $('.answers').hide();
-      $question.parent().find('.answers').show();
+      this.markQuestionSelected($question);
 
       // Color the responses on the map
       this.map.setFilter(question);
@@ -122,15 +199,23 @@ function($, _, Backbone, events, settings, api, Responses, Stats, template) {
     /**
      * Show only responses with a specific answer
      */
-    filter: function(event) {
+    selectAnswer: function(event) {
       _kmq.push(['record', "Answer filter selected"]);
       var $answer = $(event.target);
       this.filters.answer = $answer.attr('data-answer');
-      console.log($answer);
+
+      // Make sure we have the right question selected
+      this.filters.question = $answer.attr('data-question');
+      var $question = $('label[data-question=' + this.filters.question + ']');
+      this.markQuestionSelected($question);
+
+      if(!this.filters.answer) {
+        $answer = $answer.parent();
+        this.filters.answer = $answer.attr('data-answer');
+      }
 
       // Mark the answer as selected
-      console.log($('.answers .circle'));
-      $('.answers .circle').removeClass('selected');
+      $('.answers').removeClass('selected');
       $('.answers .circle').addClass('inactive');
 
       $answer.find('.circle').addClass('selected');

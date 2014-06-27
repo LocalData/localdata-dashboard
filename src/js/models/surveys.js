@@ -18,6 +18,8 @@ function($, _, Backbone, settings) {
 
     namespace: 'survey',
 
+    blacklist: ['_id'],
+
     initialize: function(options) {
       _.bindAll(this, 'parse');
       this.fetch();
@@ -29,6 +31,10 @@ function($, _, Backbone, settings) {
 
     getCount: function() {
       return this.numberWithCommas(this.get('responseCount'));
+    },
+
+    toJSON: function(options) {
+        return _.omit(this.attributes, this.blacklist);
     },
 
     parse: function(response) {
