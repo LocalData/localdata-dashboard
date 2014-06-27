@@ -28,7 +28,7 @@ function($, _, Backbone, settings, api, Stats, template) {
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render');
+      _.bindAll(this, 'render', 'graph');
 
       // Show a given survey
       this.surveyId = options.surveyId;
@@ -51,11 +51,38 @@ function($, _, Backbone, settings, api, Stats, template) {
         questions: this.stats.toJSON()
       };
 
-      console.log("RENDERING REPORTS", this.$el);
+      console.log("RENDERING REPORTS", context.questions);
       this.$el.html(this.template(context));
+
+      _.each(context.questions, this.graph);
+    },
+
+    valuize: function(values) {
+      var data = [];
+      _.each(values, function(value, title) {
+        data.push({
+          x: title,
+          y: value
+        });
+      });
+      return data;
+    },
+
+    graph: function(question, title) {
+      console.log("Time to graph!", question, title);
+
+      var values = this.valuize(question);
+      var barChartData = [{
+        label: title,
+        values: values
+      }];
+      console.log(barChartData, $('#Collectors'));
+      $('#' + title).epoch({
+        type: 'bar',
+        orientation: 'vertical',
+        data: barChartData
+      });
     }
-
-
   });
 
   return ExportView;

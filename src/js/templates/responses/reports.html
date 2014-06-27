@@ -11,10 +11,12 @@
         <div class="circle"></div> <%- question %>
       </label>
 
+      <div id="<%- question %>" style="width: 800px; height: 200px"></div>
+
       <div class="answers">
         <% _.each(_.keys(questions[question]), function(answer) {%>
           <div class="answer" data-answer="<%- answer %>" data-question="<%- question %>">
-            <div class="circle" style="background-color: <%- questions[question][answer].color %>"></div> <%- answer %> <%- questions[question][answer].val %>
+            <div class="circle" style="background-color: <%- questions[question][answer].color %>"></div> <%- answer %> <%- questions[question][answer] %>
           </div>
         <% }); %>
       </div>
