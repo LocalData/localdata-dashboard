@@ -31,6 +31,23 @@ function(L) {
     "#ffad00"
   ];
 
+  settings.zoneColors = [
+    '#a743c3',
+    '#f15a24',
+    '#58aeff',
+    '#00ad00',
+    '#ffad00',
+    '#b7aba5',
+    '#cc4685',
+    '#666666',
+    '#8516a4',
+    '#ef152e',
+    '#0b89ff',
+    '#009300',
+    '#1e78c8',
+    '#14b85f'
+  ];
+
   settings.circleMarker = {
     radius: 8,
     fillColor: "#df455d",

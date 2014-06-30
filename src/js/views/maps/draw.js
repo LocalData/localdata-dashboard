@@ -150,7 +150,7 @@ function($, _, Backbone, L, moment, events, _kmq, settings, api,
       // TODO: Add more colors.
       // We only have 6 colors right now.
       var zoneNumber = this.zones.length;
-      var color = settings.colorRange[zoneNumber + 1];
+      var color = settings.zoneColors[zoneNumber];
       layer.setStyle({
         color: color,
         opacity: 1,
