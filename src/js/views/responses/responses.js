@@ -62,6 +62,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
         'update',
 
         // Filtering
+        'startFilterView',
         'showFilters',
         'hideFilters',
 
@@ -113,13 +114,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
       // Render the map
       this.mapView.render();
 
-      this.filterView = new FilterView({
-        collection: this.responses,
-        survey: this.survey,
-        forms: this.forms,
-        map: this.mapView
-      });
-      $("#filter-view-container").html(this.filterView.$el);
+      this.startFilterView();
 
       // Set up the response count view.
       this.countView = new ResponseCountView({
@@ -133,11 +128,21 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
 
       console.log("WHy no table view? ", this.tableView);
       // Set up the response table view.
-        console.log("Creating a table view");
-        this.tableView = new TableView({
-          survey: this.survey,
-          labels: this.forms.getQuestions()
-        });
+         // console.log("Creating a table view");
+         // this.tableView = new TableView({
+         //   survey: this.survey,
+         //   labels: this.forms.getQuestions()
+         // });
+    },
+
+    startFilterView() {
+      this.filterView = new FilterView({
+        collection: this.responses,
+        survey: this.survey,
+        forms: this.forms,
+        map: this.mapView
+      });
+      $("#filter-view-container").html(this.filterView.$el);
     },
 
     mapClickHandler: function(event) {
@@ -177,7 +182,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
 
     showFilters: function() {
       $('.factoid').addClass('small-factoid');
-      this.$el.addClass('bigb');
+//      this.$el.addClass('bigb');
       this.mapView.map.invalidateSize();
 
       // Render the filter

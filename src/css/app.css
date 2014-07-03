@@ -439,28 +439,32 @@ header .b {
       float: none; } }
 
 /* Same as .b above, but with no margins */
+.a.nomargin,
 .b.nomargin {
   width: 764px;
-  margin: 0;
-  /* column sizing */
-  float: left; }
+  margin: 0; }
   @media all and (max-width: 1999px) {
+    .a.nomargin,
     .b.nomargin {
       width: 556px;
       margin: 0; } }
   @media all and (max-width: 1279px) {
+    .a.nomargin,
     .b.nomargin {
       width: 543px;
       margin: 0; } }
   @media all and (max-width: 1119px) {
+    .a.nomargin,
     .b.nomargin {
       width: 420px;
       margin: 0; } }
   @media all and (max-width: 899px) {
+    .a.nomargin,
     .b.nomargin {
       width: 354px;
       margin: 0; } }
   @media all and (max-width: 768px) {
+    .a.nomargin,
     .b.nomargin {
       margin: 0;
       width: auto;
@@ -1066,6 +1070,11 @@ header .nav a:visited {
   color: #f15a24; }
 
 /* Table -------------------------------------------------------------------- */
+table {
+  margin-top: 30px;
+  border: 3px solid #6e6663;
+  border-width: 3px 3px 3px 0; }
+
 th, td {
   padding: 15px 20px 15px 0;
   line-height: 1.1; }
@@ -1089,7 +1098,7 @@ tr:nth-child(even) td {
   height: 500px; }
 
 #map-tools {
-  background: #b7aba5;
+  background: #f5ebe6;
   padding: 5px 5px 0 5px; }
   #map-tools input[type=text] {
     display: inline;

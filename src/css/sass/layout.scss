@@ -133,13 +133,13 @@ header .b {
   }
 }
 
+
+
 /* Same as .b above, but with no margins */
+.a.nomargin,
 .b.nomargin {
   width: 764px;
   margin: 0;
-
-  /* column sizing */
-  float:left;
 
   @media all and (max-width: 1999px) {
     width: 556px;
