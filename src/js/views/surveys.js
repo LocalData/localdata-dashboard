@@ -101,7 +101,6 @@ function(
     },
 
     render: function() {
-
       this.$el.html(this.template({
         survey: this.model.toJSON(),
         count: this.model.getCount()
@@ -212,7 +211,7 @@ function(
         }
 
         // TODO -- use the router
-        location.href = "/#surveys/" + survey.slug + "/form";
+        window.location.href = "/#surveys/" + survey.slug + "/form";
       });
     }
   });

@@ -114,6 +114,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
       // Render the map
       this.mapView.render();
 
+      // Set up the filters
       this.startFilterView();
 
       // Set up the response count view.
@@ -126,16 +127,20 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
       this.survey.on('change', this.mapView.update);
       this.survey.on('change', this.mapView.fitBounds);
 
-      console.log("WHy no table view? ", this.tableView);
-      // Set up the response table view.
-         // console.log("Creating a table view");
-         // this.tableView = new TableView({
-         //   survey: this.survey,
-         //   labels: this.forms.getQuestions()
-         // });
+
+      var rc = new Responses.Collection({
+        surveyId: this.survey.get('id')
+      });
+
+      var reponseListView = new ResponseListView({
+        el: '#list',
+        collection: rc,
+        labels: this.forms.getQuestions()
+      });
+
     },
 
-    startFilterView() {
+    startFilterView: function() {
       this.filterView = new FilterView({
         collection: this.responses,
         survey: this.survey,

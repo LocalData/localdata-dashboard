@@ -672,15 +672,6 @@ form input[type=submit] {
   line-height: 62px;
   cursor: pointer; }
 
-.mini {
-  height: 32px;
-  border-width: 3px;
-  font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
-  font-size: 15px;
-  text-align: center;
-  line-height: 15px;
-  letter-spacing: 0px; }
-
 .flex {
   width: auto;
   padding: 0px 15px; }
@@ -709,6 +700,26 @@ button,
   color: #fff;
   line-height: inherit; }
 
+button.danger {
+  border-color: #f15a24;
+  background-color: #f15a24;
+  color: white; }
+
+.mini {
+  height: 38px;
+  border-width: 0px;
+  font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
+  font-size: 15px;
+  text-align: center;
+  line-height: 15px;
+  letter-spacing: 0px;
+  color: #58aeff;
+  background: transparent; }
+
+.mini.danger {
+  color: #f15a24;
+  background: transparent; }
+
 a.button,
 a:visited.button {
   color: #fff;
@@ -719,11 +730,6 @@ button:hover,
   background: #daedff;
   border-color: #daedff;
   color: #58aeff; }
-
-button.danger {
-  border-color: #f15a24;
-  background-color: #f15a24;
-  color: white; }
 
 button.disabled {
   background-color: #cbc8c7;
@@ -918,23 +924,15 @@ header .nav a:visited {
   position: relative; }
 
 .responses-list {
-  position: absolute;
-  width: 50%;
   background: #fff;
   border: 8px solid #f5ebe6;
+  border-left: 0;
   padding: 20px;
-  top: 20px;
-  margin-left: 10%;
-  z-index: 10000; }
+  margin-top: 30px; }
   .responses-list button {
     float: right;
     margin-right: 0;
     margin-bottom: 0; }
-  .responses-list button.close {
-    float: none;
-    position: absolute;
-    right: 20px;
-    top: 20px; }
   .responses-list .time, .responses-list .collector {
     color: #b7aba5; }
   .responses-list .collector {

@@ -1,4 +1,13 @@
-<span class="collector">
+
+<h4>
+  <% if(r.geo_info != undefined) { %>
+    <%- r.geo_info.humanReadableName %>
+  <% } else { %>
+    <%- r.geo_info.object_id %>
+  <% } %>
+</h4>
+
+<div class="collector">
   <i class="fa fa-user"></i>
   <% if(r.geo_info != undefined) { %>
     <% if(r.source.collector) { %>
@@ -9,12 +18,12 @@
   <% } else { %>
     <%- r.responses.collector %>
   <% } %>
-</span>
+</div>
 
-<span class="time">
+<div class="time">
   <i class="fa fa-clock-o"></i>
   <%- r.createdHumanized %>
-</span>
+</div>
 
 <% if(r.files != undefined) { %>
   <% _.each(r.files, function(file){ %>

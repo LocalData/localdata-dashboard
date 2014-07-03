@@ -94,26 +94,16 @@
 }
 
 .responses-list {
-  position: absolute;
-  width: 50%;
   background: #fff;
   border: 8px solid $thinpink;
+  border-left: 0;
   padding: 20px;
-  top: 20px;
-  margin-left: 10%;
-  z-index: 10000;
+  margin-top: 30px;
 
   button {
     float: right;
     margin-right: 0;
     margin-bottom: 0;
-  }
-
-  button.close {
-    float: none;
-    position: absolute;
-    right: 20px;
-    top: 20px;
   }
 
   .time, .collector {
