@@ -1,19 +1,19 @@
 <table>
 <thead>
     <tr>
-        <th>Created</th>
         <th>Location</th>
+        <th>Created</th>
         <th>ID</th>
         <% _.each(labels, function(label, key){ %>
-            <th><%= label %> <%= key %></th>
+            <th><%= label %></th>
         <% }); %>
     </tr>
 </thead>
 
 <% _.each(responses, function(response) { %>
     <tr>
-        <td><%= response.created %></td>
         <td><%= response.geo_info.humanReadableName %></td>
+        <td><%= response.createdHumanized %></td>
         <td><%= response.object_id %></td>
         <% _.each(labels, function(label, key){ %>
             <td>

@@ -93,10 +93,27 @@
 
 
 /* Table -------------------------------------------------------------------- */
+th, td {
+  padding: 15px 20px 15px 0;
+  line-height: 1.1;
+}
+
 th {
   text-align: left;
   border-bottom: 3px solid $body-color;
+  vertical-align: bottom;
+  font-family: $bold;
+  padding-bottom: 0;
 }
+
+td {
+  border-bottom: 1px solid $thinpink;
+}
+
+tr:nth-child(even) td {
+  background-color: #fcf7f0;
+}
+
 
 /* Map ---------------------------------------------------------------------- */
 #map,

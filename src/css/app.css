@@ -1066,9 +1066,22 @@ header .nav a:visited {
   color: #f15a24; }
 
 /* Table -------------------------------------------------------------------- */
+th, td {
+  padding: 15px 20px 15px 0;
+  line-height: 1.1; }
+
 th {
   text-align: left;
-  border-bottom: 3px solid #6e6663; }
+  border-bottom: 3px solid #6e6663;
+  vertical-align: bottom;
+  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
+  padding-bottom: 0; }
+
+td {
+  border-bottom: 1px solid #f5ebe6; }
+
+tr:nth-child(even) td {
+  background-color: #fcf7f0; }
 
 /* Map ---------------------------------------------------------------------- */
 #map,
