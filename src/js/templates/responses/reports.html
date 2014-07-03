@@ -1,29 +1,5 @@
 <div class="out contrast">
   <div class="in">
-    <h3>Reports go here!</h3>
-
-  <% _.each(_.keys(questions), function(question) {%>
-    <% if(! _.has(questions, question)) { return; } %>
-    <% if(question === 'id') { return; } %>
-
-    <div class="question">
-      <label class="" data-question="<%- question %>">
-        <div class="circle"></div> <%- question %>
-      </label>
-
-      <div id="<%- question %>" style="width: 800px; height: 200px"></div>
-
-      <!--
-      <div class="answers">
-        <% _.each(_.keys(questions[question]), function(answer) {%>
-          <div class="answer" data-answer="<%- answer %>" data-question="<%- question %>">
-            <div class="circle" style="background-color: <%- questions[question][answer].color %>"></div> <%- answer %> <%- questions[question][answer] %>
-          </div>
-        <% }); %>
-      </div>
-      -->
-
-    </div>
-  <% }); %>
+    <div id="report-list"></div>
   </div>
 </div>

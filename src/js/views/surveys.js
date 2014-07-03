@@ -214,7 +214,7 @@ function(
         }
 
         // TODO -- use the router
-        location.href = "/#surveys/" + survey.slug + "/form";
+        window.location.href = "/#surveys/" + survey.slug + "/form";
       });
     }
   });
@@ -305,7 +305,8 @@ function(
       });
 
       this.reportsView = new ReportsView({
-        surveyId: this.surveyId
+        surveyId: this.surveyId,
+        forms: this.forms
       });
 
       this.exportView.render();

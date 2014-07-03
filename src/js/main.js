@@ -8,6 +8,7 @@ require.config({
     text: 'lib/text',
     jquery: 'lib/jquery-1.7.1',
     backbone: 'lib/backbone',
+    Chart: 'lib/Chart',
     d3: 'lib/d3.min',
     epoch: 'lib/epoch.0.5.2.min',
     moment: 'lib/moment.min',

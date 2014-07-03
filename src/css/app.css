@@ -1102,6 +1102,16 @@ header .nav a:visited {
   background: #fff;
   color: #ffad00; }
 
+/* Reports ----------------------------------------------------------------- */
+.report {
+  width: 40%;
+  padding: 0 10% 5% 0;
+  float: left; }
+  .report h3 {
+    font-size: 22px;
+    line-height: 1.2;
+    font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif; }
+
 /* Forms ------------------------------------------------------------------- */
 form label {
   font-size: 16px;
