@@ -21,7 +21,19 @@ define([
   'text!templates/filters/loading.html'
 ],
 
-function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template, loadingTemplate) {
+function($,
+  _,
+  Backbone,
+  events,
+  _kmq,
+  settings,
+  api,
+  Responses,
+  Stats,
+  template,
+  answersTemplate,
+  loadingTemplate
+) {
   'use strict';
 
   var ANSWER = 'response';
@@ -40,7 +52,7 @@ function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template
     loadingTemplate: _.template(loadingTemplate),
 
     events: {
-      "click .question label": "selectQuestion",
+      "click .question": "selectQuestion",
       "click .answer": "selectAnswer",
       "click .clear": "reset"
     },
@@ -67,7 +79,6 @@ function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template
       var stats = this.stats;
 
       _.each(_.keys(questions), function (question) {
-        var answerObjects = {};
         var questionStats = stats.get(question);
         var type = questions[question].type;
         if (type === 'text') {
@@ -183,17 +194,24 @@ function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template
 
       var $question = $(event.target);
       var question = $question.attr('data-question');
-      if(!question) {
-        $question = $question.parent();
-        question = $question.attr('data-question');
-      }
+      // if(!question) {
+      //   $question = $question.parent();
+      //   question = $question.attr('data-question');
+      // }
       this.filters.question = question;
       var answers = this.stats.get(question);
+      console.log("Got answers", answers);
 
-      this.markQuestionSelected($question);
+      this.showAnswers(answers);
+
+      // this.markQuestionSelected($question);
 
       // Color the responses on the map
       this.map.setFilter(question);
+    },
+
+    showAnswers: function(answers) {
+
     },
 
     /**

@@ -100,6 +100,12 @@
   padding: 20px;
   margin-top: 30px;
 
+  .response {
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid $thinpink;
+  }
+
   button {
     float: right;
     margin-right: 0;

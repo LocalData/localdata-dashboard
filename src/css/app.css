@@ -929,6 +929,10 @@ header .nav a:visited {
   border-left: 0;
   padding: 20px;
   margin-top: 30px; }
+  .responses-list .response {
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #f5ebe6; }
   .responses-list button {
     float: right;
     margin-right: 0;
@@ -944,36 +948,32 @@ header .nav a:visited {
 #filter-view-container {
   display: none; }
 
-.filters label,
 .filters .question {
-  cursor: pointer; }
-
+  cursor: pointer;
+  background: #fff;
+  padding: 5px 3px;
+  font-size: 24px;
+  line-height: 34px;
+  display: inline-block;
+  margin-bottom: 3px; }
 .filters h3 {
   font-size: 24px; }
-
 .filters label {
   font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
   line-height: 1.2;
   display: block;
   position: relative;
   padding-left: 32px; }
-
-.filters .question {
-  margin-bottom: 2em; }
-
-.filters .answers .circle,
-.filters .answers button {
-  display: none; }
-
-.answers button {
-  margin-top: 10px; }
-
-.answer {
+.filters .answers {
   position: relative;
   padding-left: 32px;
   clear: both;
   margin-top: 10px; }
-
+  .filters .answers .circle,
+  .filters .answers button {
+    display: none; }
+.filters button {
+  margin-top: 10px; }
 .filters .circle {
   position: absolute;
   left: 0;
@@ -982,13 +982,11 @@ header .nav a:visited {
   height: 20px;
   border: 3px solid #fff;
   background: transparent; }
-
 .filters .selected .circle {
   background: #6e6663;
   display: block; }
 .filters .selected .answers button {
   display: block; }
-
 .filters .circle.inactive {
   background: transparent !important; }
 

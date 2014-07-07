@@ -5,6 +5,14 @@
   <% } else { %>
     <%- r.geo_info.object_id %>
   <% } %>
+
+  <button class="mini danger confirm"><i class="icon-trash"></i> Delete</button>
+
+
+  <div class="confirm-delete">
+    <button class="mini cancel">Cancel</button>
+    <button class="mini danger flex delete"><i class="icon-trash"></i> Confirm delete</button>
+  </div>
 </h4>
 
 <div class="collector">
@@ -46,11 +54,5 @@
 <% }); %>
 </div>
 
-<button class="mini danger confirm"><i class="icon-trash"></i> Delete</button>
-
-<div class="confirm-delete">
-  <button class="mini cancel">Cancel</button>
-  <button class="mini danger flex delete"><i class="icon-trash"></i> Confirm delete</button>
-</div>
 
 <div class="error">Sorry, there was a problem deleting this record</div>

@@ -1,27 +1,18 @@
-<h3>Filter responses</h3>
+<h3>Show responses:</h3>
 
 <div class="questions">
-
+  <div>
+    <span class="question clear"><strong>All responses</strong></span>
+  </div>
   <% _.each(_.keys(questions), function (name) {%>
     <% if(! _.has(questions, name)) { return; } %>
-
-    <div class="question">
-      <label class="" data-question="<%- name %>">
-        <div class="circle"></div> <%- questions[name].text %>
-      </label>
-
-      <div class="answers">
-        <% _.each(questions[name].answers, function (answer) {%>
-          <div class="answer" data-answer="<%- answer.value %>" data-question="<%- name %>">
-            <div class="circle" style="background-color: <%- answer.color %>;"></div>
-            <div class="print circle" style="border-color:<%- answer.color %>;"></div>
-            <%- answer.text %> <%- answer.count %>
-          </div>
-        <% }); %>
-
-        <button href="" class="button mini flex clear">Clear filter</button>
-      </div>
-
+    <div>
+      <span class="question" data-question="<%- name %>">
+        <%- questions[name].text %>
+      </span>
     </div>
   <% }); %>
 </div>
+
+
+
