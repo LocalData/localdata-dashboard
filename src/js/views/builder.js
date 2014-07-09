@@ -513,7 +513,7 @@ function($, _, Backbone, _kmq, settings, api, template, FormViews) {
       text = text.replace(/[^-a-zA-Z0-9,&\s]+/ig, '');
       text = text.replace(/\s/gi, "-");
       text = text.replace(/,/gi, '');
-      text = text.replace(/&/gi, '');
+      text = text.replace(/&/g, 'and');
       return text;
     }
 
