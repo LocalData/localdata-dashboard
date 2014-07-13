@@ -65,7 +65,6 @@ function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template
       // Match the question names and answer values from the form with stats and colors.
       var questions = this.forms.getFlattenedForm();
       var stats = this.stats;
-      console.log('stats', this.stats);
 
       _.each(_.keys(questions), function (question) {
         var answerObjects = {};
