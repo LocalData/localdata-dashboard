@@ -65,6 +65,7 @@ function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template
       // Match the question names and answer values from the form with stats and colors.
       var questions = this.forms.getFlattenedForm();
       var stats = this.stats;
+      console.log('stats', this.stats);
 
       _.each(_.keys(questions), function (question) {
         var answerObjects = {};
@@ -109,6 +110,28 @@ function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template
             count: '',
             color: settings.colorRange[0]
           }];
+        } else if (type === 'number') {
+          questions[question].answers = [];
+
+          // Rework the numeric answers into the format we need for display
+          _.each(questionStats, function(count, answer) {
+            questions[question].answers.push({
+              text: answer,
+              value: answer,
+              count: count
+            });
+          });
+
+          // Assign each answer a color
+          var length = questions[question].answers.length;
+          _.each(questions[question].answers, function(answer, index) {
+            answer.color = settings.colorRange[(index + 1) % length];
+          });
+
+          // The last "answer" is the no-response placeholder, which gets the
+          // zero-index color.
+          // answer.color = settings.colorRange[(index + 1) % answers.length];
+
         } else {
           var answers = questions[question].answers;
           _.each(answers, function (answer, index) {
@@ -131,9 +154,9 @@ function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template
       });
 
       var context = {
-        questions: questions,
-        mapping: this.forms.map()
+        questions: questions
       };
+      console.log("Context", context);
       this.$el.html(this.template(context));
     },
 
