@@ -4,37 +4,47 @@
 
 .filters {
 
-  .question {
+  .select {
+    display: inline-block;
+  }
+
+  .question,
+  .select {
     cursor: pointer;
     background: #fff;
-    padding: 5px 3px;
+    padding: 5px 8px;
     font-size: 24px;
     line-height: 34px;
-    display: inline-block;
-    margin-bottom: 3px;
+  }
+
+  .options {
+    display: none;
+    background: #fff;
+    padding-bottom: 8px;
+    padding-top: 5px;
+
+    .question {
+      border-bottom: 1px dotted $gray;
+      margin: 5px 8px 8px;
+
+    }
   }
 
   h3 {
     font-size: 24px;
   }
 
-  label {
-    font-family: $bold;
-    line-height: 1.2;
-    display: block;
-    position: relative;
-    padding-left: 32px;
-  }
-
   .answers {
-    position: relative;
-    padding-left: 32px;
-    clear: both;
-    margin-top: 10px;
+    margin-bottom: 10px;
+    display: none;
+    font-size: 16px;
 
-    .circle,
-    button {
-      display: none;
+    .answer {
+      color: #fff;
+      padding: 7px;
+      display: inline-block;
+      margin-right: 7px;
+      cursor: pointer;
     }
   }
 

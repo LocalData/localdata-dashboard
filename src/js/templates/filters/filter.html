@@ -1,17 +1,28 @@
-<h3>Show responses:</h3>
-
 <div class="questions">
-  <div>
+  <div class="select">
+    Show:
     <span class="question clear"><strong>All responses</strong></span>
+    <i class="fa fa-angle-down"></i>
   </div>
+
+  <div class="options">
   <% _.each(_.keys(questions), function (name) {%>
     <% if(! _.has(questions, name)) { return; } %>
-    <div>
-      <span class="question" data-question="<%- name %>">
-        <%- questions[name].text %>
-      </span>
+    <div class="question" data-question="<%- name %>">
+      <span class="question-title"><%- questions[name].text %></span>
+      <i class="fa fa-angle-down"></i>
+
+      <div class="answers">
+        <% _.each(questions[name].answers, function (answer) {%>
+          <span class="answer" data-answer="<%- answer.value %>" data-question="<%- name %>" style="background-color: <%- answer.color %>;">
+            <%- answer.text %> (<%- answer.count %>)
+          </span>
+        <% }); %>
+      </div>
     </div>
+
   <% }); %>
+  </div>
 </div>
 
 

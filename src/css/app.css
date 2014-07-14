@@ -948,30 +948,35 @@ header .nav a:visited {
 #filter-view-container {
   display: none; }
 
-.filters .question {
+.filters .select {
+  display: inline-block; }
+.filters .question,
+.filters .select {
   cursor: pointer;
   background: #fff;
-  padding: 5px 3px;
+  padding: 5px 8px;
   font-size: 24px;
-  line-height: 34px;
-  display: inline-block;
-  margin-bottom: 3px; }
+  line-height: 34px; }
+.filters .options {
+  display: none;
+  background: #fff;
+  padding-bottom: 8px;
+  padding-top: 5px; }
+  .filters .options .question {
+    border-bottom: 1px dotted #eeebe9;
+    margin: 5px 8px 8px; }
 .filters h3 {
   font-size: 24px; }
-.filters label {
-  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
-  line-height: 1.2;
-  display: block;
-  position: relative;
-  padding-left: 32px; }
 .filters .answers {
-  position: relative;
-  padding-left: 32px;
-  clear: both;
-  margin-top: 10px; }
-  .filters .answers .circle,
-  .filters .answers button {
-    display: none; }
+  margin-bottom: 10px;
+  display: none;
+  font-size: 16px; }
+  .filters .answers .answer {
+    color: #fff;
+    padding: 7px;
+    display: inline-block;
+    margin-right: 7px;
+    cursor: pointer; }
 .filters button {
   margin-top: 10px; }
 .filters .circle {

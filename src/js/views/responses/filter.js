@@ -52,7 +52,8 @@ function($,
     loadingTemplate: _.template(loadingTemplate),
 
     events: {
-      "click .question": "selectQuestion",
+      "click .select": "showOptions",
+      "click .question-title": "selectQuestion",
       "click .answer": "selectAnswer",
       "click .clear": "reset"
     },
@@ -148,6 +149,11 @@ function($,
       this.$el.html(this.template(context));
     },
 
+    showOptions: function(event) {
+      event.preventDefault();
+      $('.options').slideToggle();
+    },
+
     /**
      * Associate a unqie color with each answer in a list
      */
@@ -184,60 +190,43 @@ function($,
     },
 
     selectQuestion: function(event) {
-      _kmq.push(['record', "Question filter selected"]);
-      console.log("Another filter selected", event);
+      console.log("Filter selected", event);
 
       // Clear out any filters
       if(this.filters.answer) {
         this.reset();
       }
 
+      // Set up handy shortcuts
       var $question = $(event.target);
       var question = $question.attr('data-question');
-      // if(!question) {
-      //   $question = $question.parent();
-      //   question = $question.attr('data-question');
-      // }
       this.filters.question = question;
-      var answers = this.stats.get(question);
-      console.log("Got answers", answers);
 
-      this.showAnswers(answers);
+      // Show the sub-answers
+      $('.options .answers').slideUp();
+      $question.find('.answers').slideDown();
 
-      // this.markQuestionSelected($question);
+      // Hide other questions
+      $('.options .question').not($question).slideUp();
 
-      // Color the responses on the map
       this.map.setFilter(question);
-    },
-
-    showAnswers: function(answers) {
-
     },
 
     /**
      * Show only responses with a specific answer
      */
     selectAnswer: function(event) {
-      _kmq.push(['record', "Answer filter selected"]);
       var $answer = $(event.target);
       this.filters.answer = $answer.attr('data-answer');
 
       // Make sure we have the right question selected
       this.filters.question = $answer.attr('data-question');
-      var $question = $('label[data-question=' + this.filters.question + ']');
-      this.markQuestionSelected($question);
+      var $question = $('div[data-question=' + this.filters.question + ']');
 
       if(!this.filters.answer) {
         $answer = $answer.parent();
         this.filters.answer = $answer.attr('data-answer');
       }
-
-      // Mark the answer as selected
-      $('.answers').removeClass('selected');
-      $('.answers .circle').addClass('inactive');
-
-      $answer.find('.circle').addClass('selected');
-      $answer.find('.circle').removeClass('inactive');
 
       // Color the responses on the map
       this.map.setFilter(this.filters.question, this.filters.answer);
