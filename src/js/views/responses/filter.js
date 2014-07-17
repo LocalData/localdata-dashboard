@@ -155,19 +155,6 @@ function($,
     },
 
     /**
-     * Associate a unqie color with each answer in a list
-     */
-    colors: function(keys) {
-      var answers = {};
-      _.each(keys, function(key, index) {
-        answers[key] = {
-          color: settings.colorRange[index + 1]
-        };
-      });
-      return answers;
-    },
-
-    /**
      * Reset any filters
      */
     reset: function(event) {
@@ -178,15 +165,11 @@ function($,
       this.filters = {};
       this.map.clearFilter();
 
-      $('.question').removeClass('selected');
-      $('.answers .circle').removeClass('inactive');
-    },
 
-    markQuestionSelected: function($question) {
-      // Mark this filter as selected and show answers
-      $('.filters .question').removeClass('selected');
-      $question.parent().addClass('selected');
-      $question.parent().find('.answers').show();
+      $('.options .question').slideDown();
+      $question.find('.options .clear').slideUp();
+      $question.find('.options .answers').slideUp();
+      $question.find('.toggle').show();
     },
 
     selectQuestion: function(event) {
@@ -198,13 +181,17 @@ function($,
       }
 
       // Set up handy shortcuts
-      var $question = $(event.target);
+      var $question = $(event.target).parent();
       var question = $question.attr('data-question');
+      console.log("Question", question);
       this.filters.question = question;
 
       // Show the sub-answers
       $('.options .answers').slideUp();
       $question.find('.answers').slideDown();
+      $question.find('.clear').slideDown();
+      $question.find('.toggle').slideUp();
+
 
       // Hide other questions
       $('.options .question').not($question).slideUp();
@@ -232,7 +219,21 @@ function($,
       this.map.setFilter(this.filters.question, this.filters.answer);
 
       console.log("Selected answer", $answer, this.filters.answer);
+    },
+
+    /**
+     * Associate a unqie color with each answer in a list
+     */
+    colors: function(keys) {
+      var answers = {};
+      _.each(keys, function(key, index) {
+        answers[key] = {
+          color: settings.colorRange[index + 1]
+        };
+      });
+      return answers;
     }
+
   });
 
   return FilterView;

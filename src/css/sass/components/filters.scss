@@ -17,6 +17,10 @@
     line-height: 34px;
   }
 
+  .clear {
+    display: none;
+  }
+
   .options {
     display: none;
     background: #fff;
@@ -45,6 +49,7 @@
       display: inline-block;
       margin-right: 7px;
       cursor: pointer;
+      border: 4px solid white;
     }
   }
 
