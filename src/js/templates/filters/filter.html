@@ -1,7 +1,7 @@
 <div class="questions">
-  <div class="select">
-    <strong>Filter responses</strong>
-    <i class="fa fa-angle-down"></i>
+  <div class="toolbar">
+    <strong class="select">Filter responses <i class="fa fa-angle-down"></i></strong>
+    <strong class="clear">Show all repsonses</strong>
   </div>
 
   <div class="options">
@@ -10,7 +10,6 @@
     <div class="question" data-question="<%- name %>">
       <span class="question-title"><%- questions[name].text %></span>
       <span class="toggle"><i class="fa fa-angle-down"></i></span>
-      <span class="clear"><i class="fa fa-times"></i></span>
 
       <div class="answers">
         <% _.each(questions[name].answers, function (answer) {%>

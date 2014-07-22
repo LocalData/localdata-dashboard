@@ -151,7 +151,7 @@ function($,
 
     showOptions: function(event) {
       event.preventDefault();
-      $('.options').slideToggle();
+      $('.filters .options').slideToggle();
     },
 
     /**
@@ -165,11 +165,9 @@ function($,
       this.filters = {};
       this.map.clearFilter();
 
-
-      $('.options .question').slideDown();
-      $question.find('.options .clear').slideUp();
-      $question.find('.options .answers').slideUp();
-      $question.find('.toggle').show();
+      $('.filters .clear').slideUp();
+      $('.filters .options .answers').slideUp();
+      $('.filters .options').slideUp();
     },
 
     selectQuestion: function(event) {
@@ -187,9 +185,9 @@ function($,
       this.filters.question = question;
 
       // Show the sub-answers
-      $('.options .answers').slideUp();
+      $('.filters .options .answers').slideUp();
       $question.find('.answers').slideDown();
-      $question.find('.clear').slideDown();
+      $('.filters .clear').slideDown();
       $question.find('.toggle').slideUp();
 
 
