@@ -19,7 +19,8 @@ define([
   // Templates
   'text!templates/login.html',
   'text!templates/register.html',
-  'text!templates/reset.html'
+  'text!templates/reset.html',
+  'text!templates/changePassword.html'
 
 ],
 
@@ -27,7 +28,8 @@ function($, _, Backbone, events, _kmq, router, settings, api,
   UserModels,
   loginTemplate,
   registerTemplate,
-  resetTemplate
+  resetPasswordTemplate,
+  changePasswordTemplate
 ) {
   'use strict';
 
@@ -176,7 +178,7 @@ function($, _, Backbone, events, _kmq, router, settings, api,
     }
   });
 
-  UserViews.ResetView = Backbone.View.extend({
+  UserViews.ChangePasswordView = Backbone.View.extend({
     el: '#container',
 
     events: {
@@ -184,7 +186,7 @@ function($, _, Backbone, events, _kmq, router, settings, api,
     },
 
     initialize: function (options) {
-      console.log('Initialize password reset view');
+      console.log('Initialize password change view');
       _.bindAll(this, 'render', 'update', 'changePassword', 'changeDone');
 
       this.redirectTo = '/';
@@ -199,7 +201,7 @@ function($, _, Backbone, events, _kmq, router, settings, api,
     },
 
     render: function () {
-      this.$el.html(resetTemplate);
+      this.$el.html(changePasswordTemplate);
       return this;
     },
 
@@ -234,7 +236,51 @@ function($, _, Backbone, events, _kmq, router, settings, api,
         email: this.$('input[name=email]').val(),
         password: this.$('input[name=password]').val()
       };
-      api.resetPassword(user, this.token, this.changeDone);
+      api.changePassword(user, this.token, this.changeDone);
+    }
+  });
+
+
+  UserViews.ResetPasswordView = Backbone.View.extend({
+    el: '#container',
+
+    events: {
+      'click #reset-password button': 'resetPassword'
+    },
+
+    initialize: function (options) {
+      console.log('Initialize password reset view');
+      _.bindAll(this, 'render', 'update', 'resetPassword', 'changeDone', 'changeFail');
+      this.render();
+    },
+
+    render: function () {
+      this.$el.html(resetPasswordTemplate);
+      return this;
+    },
+
+    update: function () {
+      this.render();
+    },
+
+    changeDone: function (error, user) {
+      this.$('.done').fadeIn();
+    },
+
+    changeFail: function (error) {
+      this.$('.error').html(error.message).fadeIn();
+    },
+
+    resetPassword: function(event) {
+      event.preventDefault();
+      this.$('.error').fadeOut();
+
+      var user = {
+        email: this.$('input[name=email]').val()
+      };
+      var reset = api.resetPassword(user);
+      reset.done(this.changeDone);
+      reset.fail(this.changeFail);
     }
   });
 

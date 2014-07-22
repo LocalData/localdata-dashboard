@@ -122,7 +122,7 @@ define(function (require) {
   };
 
 
-  api.resetPassword = function resetPassword(user, token, done) {
+  api.changePassword = function changePassword(user, token, done) {
     var url = settings.api.baseurl + '/user/reset';
     var data = {
       reset: {
@@ -144,6 +144,23 @@ define(function (require) {
       done(JSON.parse(jqXHR.responseText));
     });
   };
+
+
+  // Send a user a password reset email
+  api.resetPassword = function resetPassword(user) {
+    var url = settings.api.baseurl + '/user/forgot';
+    var data = {
+      email: user.email
+    };
+
+    return $.ajax({
+      url: url,
+      type: 'POST',
+      data: data,
+      dataType: 'json'
+    });
+  };
+
 
   // Create a new survey
   api.createSurvey = function(survey, callback) {
