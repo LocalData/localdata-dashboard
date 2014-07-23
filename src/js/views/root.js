@@ -37,7 +37,8 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
   AllViews.DesignView = DesignViews.DesignView;
 
   AllViews.LoginView = UserViews.LoginView;
-  AllViews.ResetView = UserViews.ResetView;
+  AllViews.ChangePasswordView = UserViews.ChangePasswordView;
+  AllViews.ResetPasswordView = UserViews.ResetPasswordView;
   AllViews.UserBarView = UserViews.UserBarView;
 
   // The singleton view which manages all others.
@@ -105,11 +106,16 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
       });
     },
 
-    goto_password_reset: function (resetInfo) {
-      this.currentContentView = this.getOrCreateView('ResetView', 'ResetView', {
+    goto_change_password: function (resetInfo) {
+      this.currentContentView = this.getOrCreateView('ChangePasswordView', 'ChangePasswordView', {
         resetInfo: resetInfo
       });
     },
+
+    goto_reset_password: function () {
+      this.currentContentView = this.getOrCreateView('ResetPasswordView', 'ResetPasswordView');
+    },
+
 
     // Survey dashboard routes .................................................
     goto_survey: function(tab) {

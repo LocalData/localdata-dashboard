@@ -17,7 +17,8 @@ function($, _, Backbone, settings, api) {
       "": "home",
 
       "register": "register",
-      "reset/:resetInfo": "reset_password",
+      "reset": "reset_password",
+      "reset/:resetInfo": "change_password",
 
       "surveys/new": "new_survey",
       "surveys/:slug/dive": "dive",
@@ -49,8 +50,12 @@ function($, _, Backbone, settings, api) {
       this.controller.goto_login(redirectTo);
     },
 
-    reset_password: function (resetInfo) {
-      this.controller.goto_password_reset(resetInfo);
+    change_password: function (resetInfo) {
+      this.controller.goto_change_password(resetInfo);
+    },
+
+    reset_password: function () {
+      this.controller.goto_reset_password();
     },
 
     new_survey: function() {

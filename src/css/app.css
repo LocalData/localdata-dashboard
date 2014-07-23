@@ -1065,6 +1065,9 @@ header .nav a:visited {
   display: none;
   color: #f15a24; }
 
+.done {
+  display: none; }
+
 /* Map ---------------------------------------------------------------------- */
 #map,
 .map {
