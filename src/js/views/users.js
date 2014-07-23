@@ -178,6 +178,7 @@ function($, _, Backbone, events, _kmq, router, settings, api,
     }
   });
 
+
   UserViews.ChangePasswordView = Backbone.View.extend({
     el: '#container',
 
@@ -264,14 +265,18 @@ function($, _, Backbone, events, _kmq, router, settings, api,
     },
 
     changeDone: function (error, user) {
-      this.$('.done').fadeIn();
+      console.log("CHANGE DONE");
+      this.$el.find('.done').fadeIn();
     },
 
     changeFail: function (error) {
-      this.$('.error').html(error.message).fadeIn();
+      console.log("Change fail", this, error);
+      var responseText = $.parseJSON(error.responseText);
+      this.$el.find('.error').html(responseText.message).fadeIn();
     },
 
     resetPassword: function(event) {
+      console.log("Resetting password");
       event.preventDefault();
       this.$('.error').fadeOut();
 
@@ -279,7 +284,7 @@ function($, _, Backbone, events, _kmq, router, settings, api,
         email: this.$('input[name=email]').val()
       };
       var reset = api.resetPassword(user);
-      reset.done(this.changeDone);
+      reset.success(this.changeDone);
       reset.fail(this.changeFail);
     }
   });
