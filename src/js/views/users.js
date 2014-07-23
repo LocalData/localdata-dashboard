@@ -264,7 +264,7 @@ function($, _, Backbone, events, _kmq, router, settings, api,
       this.render();
     },
 
-    changeDone: function (error, user) {
+    changeDone: function () {
       this.$el.find('.done').fadeIn();
     },
 
