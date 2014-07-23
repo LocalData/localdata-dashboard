@@ -265,18 +265,15 @@ function($, _, Backbone, events, _kmq, router, settings, api,
     },
 
     changeDone: function (error, user) {
-      console.log("CHANGE DONE");
       this.$el.find('.done').fadeIn();
     },
 
     changeFail: function (error) {
-      console.log("Change fail", this, error);
       var responseText = $.parseJSON(error.responseText);
       this.$el.find('.error').html(responseText.message).fadeIn();
     },
 
     resetPassword: function(event) {
-      console.log("Resetting password");
       event.preventDefault();
       this.$('.error').fadeOut();
 

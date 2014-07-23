@@ -148,7 +148,6 @@ define(function (require) {
 
   // Send a user a password reset email
   api.resetPassword = function resetPassword(user) {
-    console.log("API Reset", user);
     var url = settings.api.baseurl + '/user/forgot';
     var data = {
       user: user
