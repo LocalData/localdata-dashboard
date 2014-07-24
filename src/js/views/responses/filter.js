@@ -151,13 +151,16 @@ function($,
 
     showOptions: function(event) {
       event.preventDefault();
+      console.log("FO", $('.filters .options'));
       $('.filters .options').slideToggle();
+      $('.filters .options .question').show();
     },
 
     /**
      * Reset any filters
      */
     reset: function(event) {
+      console.log("Resetting filters");
       if(event) {
         event.preventDefault();
       }
@@ -168,6 +171,7 @@ function($,
       $('.filters .clear').slideUp();
       $('.filters .options .answers').slideUp();
       $('.filters .options').slideUp();
+      $('.filters .answer').removeClass('active');
     },
 
     selectQuestion: function(event) {
@@ -192,7 +196,7 @@ function($,
 
 
       // Hide other questions
-      $('.options .question').not($question).slideUp();
+      $('.filters .options .question').not($question).slideUp();
 
       this.map.setFilter(question);
     },
@@ -215,6 +219,9 @@ function($,
 
       // Color the responses on the map
       this.map.setFilter(this.filters.question, this.filters.answer);
+
+      $('.filters .answer').removeClass('active');
+      $answer.addClass('active');
 
       console.log("Selected answer", $answer, this.filters.answer);
     },
