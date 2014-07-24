@@ -22,6 +22,8 @@ define([
 function($, _, Backbone, Chart, settings, api, Stats, template, reportTemplate) {
   'use strict';
 
+  var MAX_LENGTH = 20;
+
   var ExportView = Backbone.View.extend({
     el: '#reports-view-container',
 
@@ -57,10 +59,9 @@ function($, _, Backbone, Chart, settings, api, Stats, template, reportTemplate) 
 
     // Make a shorter label for long questions
     labelize: function(labels) {
-      var maxLength = 10;
       _.each(labels, function(label, index) {
-        if (label.length > maxLength) {
-          labels[index] = label.substring(0, maxLength) + '...';
+        if (label.length > MAX_LENGTH) {
+          labels[index] = label.substring(0, MAX_LENGTH) + '...';
         }
       });
       return labels;
@@ -82,18 +83,7 @@ function($, _, Backbone, Chart, settings, api, Stats, template, reportTemplate) 
       $('#report-list').append(this.reportTemplate(context));
     },
 
-    // Graph the reports!
-    graph: function(question, title) {
-      console.log("Time to graph!", question, title);
-
-      // Skip unhelpful qustions,
-      // like those with lots of answers
-      if(title === 'id') { return; }
-      if(title === 'Collectors') { return; }
-      if(_.size(question) > 8) { return; }
-
-      this.report(question, title);
-
+    makeBarChart: function(question, title, ctx) {
       var data = {
         labels: this.labelize(_.keys(question)),
         datasets: [
@@ -108,16 +98,65 @@ function($, _, Backbone, Chart, settings, api, Stats, template, reportTemplate) 
         ]
       };
 
-      var elt = $('#' + title).get(0);
-      if (!elt) {
-        return;
-      }
-      var ctx = elt.getContext('2d');
       var myBarChart = new Chart(ctx).Bar(data, {
         scaleFontFamily: 'NeuzeitOfficeW01-Regula',
         tooltipFontFamily: 'NeuzeitOfficeW01-Regula',
         tooltipTitleFontFamily: 'NeuzeitOfficeW01-Regula'
       });
+    },
+
+    makePieChart: function(question, title, ctx) {
+      // Set up the colors for the pie chart
+      var colors = {};
+      _.each(_.keys(question), function(key, index ) {
+        colors[key] = settings.colorRange[index + 1];
+      });
+      colors.no = colors['no response'];
+
+      // Set up the data
+      var data = [];
+      _.each(question, function(value, answer) {
+        if (answer === 'no response') { answer = 'no'; }
+        data.push({
+          value: value,
+          color: colors[answer],
+          highlight: '#ffe000',
+          label: answer
+        });
+      });
+
+      var myPieChart = new Chart(ctx).Pie(data, {
+        animation: false
+      });
+    },
+
+    // Graph the reports!
+    graph: function(question, title) {
+      console.log("Time to graph!", question, title);
+      var chartType;
+
+      // Skip unhelpful qustions,
+      // like those with lots of answers
+      if(title === 'id') { return; }
+      if(title === 'Collectors') { return; }
+      if(_.size(question) > 8) { return; }
+
+      // Prep the HTML for the question
+      this.report(question, title);
+
+      var $elt = $('#' + title).get(0);
+      if (!$elt) {
+        return;
+      }
+      var ctx = $elt.getContext('2d');
+
+      // We'll use pie charts for yes / no questions
+      if(_.size(question) === 2) {
+        this.makePieChart(question, title, ctx);
+      }else {
+        this.makeBarChart(question, title, ctx);
+      }
+
     }
   });
 
