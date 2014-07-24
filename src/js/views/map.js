@@ -28,9 +28,9 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
   function zoneStyle(feature) {
     return {
       color: feature.properties.color,
-      opacity: 0.3,
+      opacity: 0.8,
       fillOpacity: 0.0,
-      weight: 2
+      weight: 3
     };
   }
 
@@ -280,7 +280,8 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
       var zones = this.survey.get('zones');
       this.zoneLayer.clearLayers();
       this.zoneLayer.addLayer(new L.geoJson(zones, {
-        style: zoneStyle
+        style: zoneStyle,
+        clickable: false
       }));
 
       // This is a leaflet workaround. Leaflet doesn't allow tiles on top of objects
