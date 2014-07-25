@@ -127,7 +127,7 @@ function($, _, Backbone, events, settings, api, SurveyModels, FormModels, Previe
     },
 
     render: function() {
-      console.log("Rendering design view", this.surveys);
+      console.log("Rendering design view");
       $("#preview-view-container").empty();
 
       // Set the context & render the page
