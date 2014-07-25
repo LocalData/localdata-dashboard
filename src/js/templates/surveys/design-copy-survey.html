@@ -1,0 +1,11 @@
+<div class="choice-box-wrap">
+  <div class="choice-box">
+    <h3>Copy an existing survey</h3>
+    <select>
+    <% _.each(surveys, function(survey) { %>
+        <option value="<%- survey.id %>"><%- survey.name %></option>
+    <% }); %>
+    </select>
+  </div>
+  <button class="btn flex copy-form">Copy questions</button>
+</div>
