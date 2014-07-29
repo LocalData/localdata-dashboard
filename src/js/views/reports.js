@@ -52,7 +52,7 @@ function($, _, Backbone, Chart, settings, api, Stats, template, reportTemplate) 
     },
 
     render: function() {
-      console.log("RENDERING REPORTS");
+      console.log("Rendering reports");
       this.$el.html(this.template({}));
       _.each(this.stats.toJSON(), this.graph);
     },
@@ -111,12 +111,11 @@ function($, _, Backbone, Chart, settings, api, Stats, template, reportTemplate) 
       _.each(_.keys(question), function(key, index ) {
         colors[key] = settings.colorRange[index + 1];
       });
-      colors.no = colors['no response'];
+      colors['no response'] = settings.colorRange[0];
 
       // Set up the data
       var data = [];
       _.each(question, function(value, answer) {
-        if (answer === 'no response') { answer = 'no'; }
         data.push({
           value: value,
           color: colors[answer],
@@ -152,9 +151,9 @@ function($, _, Backbone, Chart, settings, api, Stats, template, reportTemplate) 
 
       // We'll use pie charts for yes / no questions
       if(_.size(question) === 2) {
-        this.makePieChart(question, title, ctx);
-      }else {
         this.makeBarChart(question, title, ctx);
+      }else {
+        this.makePieChart(question, title, ctx);
       }
 
     }
