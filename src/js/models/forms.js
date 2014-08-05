@@ -79,6 +79,8 @@ function($, _, Backbone, settings) {
         //  return;
         //}
 
+        // console.log("Flattening question", question.text);
+
         var name = question.name;
         var type;
         var answerInfo = [];
@@ -86,11 +88,17 @@ function($, _, Backbone, settings) {
         // If the question has answers, let's get them out.
         if (question.answers && question.answers.length > 0) {
           _.each(question.answers, function (answer) {
-            answerInfo.push({
+            var details = {
               name: answer.name || undefined,
               value: answer.value,
               text: answer.text
-            });
+            };
+
+            if (question.type === 'checkbox') {
+              details.text = question.text + ': ' + answer.text;
+            }
+
+            answerInfo.push(details);
           });
         } else {
           // Some "questions", like Photo fields, don't have distinct answers
@@ -98,7 +106,6 @@ function($, _, Backbone, settings) {
           type = question.type;
           answerInfo.push({
             value: ANSWER,
-
             text: ANSWER
           });
         }
@@ -110,20 +117,19 @@ function($, _, Backbone, settings) {
         });
 
         // Start setting up the flattened question
+        name = makeUnique(name);
         var questionInfo = {
+          name: name,
           text: question.text,
           answers: answerInfo
         };
 
         // Some questions don't have a type -- legacy?
-        if (type) {
-          questionInfo.type = type;
-        }
+        questionInfo.type = question.type;
 
 
-        name = makeUnique(name);
         result[name] = questionInfo;
-        console.log("SAVED", name, questionInfo);
+        // console.log("SAVED", name, questionInfo);
 
         // If the answers to this question have subquestions, process them.
         if (question.answers) {
