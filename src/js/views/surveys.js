@@ -191,8 +191,13 @@ function(
       // Get some of the optional parameters
       // Custom geoObjectSource
       var geoObjectSource = $(".survey-geoObjectSource").val();
-      if(geoObjectSource) {
+      if (geoObjectSource) {
         survey.geoObjectSource = $.parseJSON(geoObjectSource);
+      } else {
+        survey.geoObjectSource = {
+          type: 'LocalData',
+          source: '/api/features?type=parcels&bbox={{bbox}}'
+        };
       }
 
       // Custom survey type
