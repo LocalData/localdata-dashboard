@@ -21,11 +21,13 @@ define([
   'views/design',
   'views/settings',
 
+  'views/upload',
+
   // Models
   'models/users'
 ],
 
-function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, UserViews, SurveyViews, DesignViews, SettingsViews, Users) {
+function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, UserViews, SurveyViews, DesignViews, SettingsViews, UploadView, Users) {
   'use strict';
 
   var AllViews = {};
@@ -40,6 +42,8 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
   AllViews.ChangePasswordView = UserViews.ChangePasswordView;
   AllViews.ResetPasswordView = UserViews.ResetPasswordView;
   AllViews.UserBarView = UserViews.UserBarView;
+
+  AllViews.UploadView = UploadView;
 
   // The singleton view which manages all others.
   // Essentially, a "controller".
@@ -144,6 +148,11 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
           this.currentContentView.showFilters();
           break;
       }
+    },
+
+    goto_upload: function() {
+      console.log("Going to upload view");
+      this.currentContentView = this.getOrCreateView("UploadView", "UploadView");
     },
 
     goto_new: function() {

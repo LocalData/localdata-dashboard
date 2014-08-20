@@ -51,7 +51,11 @@ require.config({
       exports: '_kmq'
     },
 
-    'lib/bootstrap' : ['jquery']
+    'lib/bootstrap' : ['jquery'],
+
+    'lib/papaparse': {
+      exports: 'Papa'
+    }
   }
 
 });

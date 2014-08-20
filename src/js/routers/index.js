@@ -20,6 +20,8 @@ function($, _, Backbone, settings, api) {
       "reset": "reset_password",
       "reset/:resetInfo": "change_password",
 
+      "upload": "upload",
+
       "surveys/new": "new_survey",
       "surveys/:slug/dive": "dive",
       "surveys/:slug/export": "survey_export",
@@ -56,6 +58,12 @@ function($, _, Backbone, settings, api) {
 
     reset_password: function () {
       this.controller.goto_reset_password();
+    },
+
+    upload: function() {
+      api.getCurrentUser(function(user) {
+        this.controller.goto_upload();
+      }.bind(this));
     },
 
     new_survey: function() {

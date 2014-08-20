@@ -116,6 +116,19 @@
 }
 
 
+/* Upload ------------------------------------------------------------------- */
+#upload-area {
+  max-width: 500px;
+  margin: 0px auto;
+  text-align: center;
+  line-height: 100px;
+  font-size: 28px;
+  background: $lightblue;
+}
+
+#upload-area.hover {
+  background: $blue;
+}
 
 
 /* Tabs --------------------------------------------------------------------- */
