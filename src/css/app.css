@@ -1,4 +1,3 @@
-@import url(font-awesome.min.css);
 /*******************************************************************************
  * style.scss
  *
@@ -30,6 +29,7 @@
    v2.0 | 20110126
    License: none (public domain)
 */
+@import url(font-awesome.min.css);
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -79,12 +79,10 @@ table {
   font-family: "NeuzeitOfficeW01-Regula";
   src: url("../fonts/673817/regular.eot?#iefix");
   src: url("../fonts/673817/regular.eot?#iefix") format("eot"), url("../fonts/673817/regular.woff") format("woff"), url("../fonts/673817/regular.ttf") format("truetype"), url("../fonts/673817/regular.svg#85050462-ab1f-4478-a289-36eed1d3c53f") format("svg"); }
-
 @font-face {
   font-family: "Neuzeit Office W01 Bold";
   src: url("../fonts/673808/bold.eot?#iefix");
   src: url("../fonts/673808/bold.eot?#iefix") format("eot"), url("../fonts/673808/bold.woff") format("woff"), url("../fonts/673808/bold.ttf") format("truetype"), url("../fonts/673808/bold.svg#d4cb246e-742d-4269-9f6a-901a050ff03f") format("svg"); }
-
 /* Animations ==============================================================  */
 .animated {
   -webkit-animation-fill-mode: both;
@@ -114,7 +112,6 @@ table {
 
   20%, 40%, 60%, 80% {
     -webkit-transform: translateX(10px); } }
-
 @-moz-keyframes shake {
   0%, 100% {
     -moz-transform: translateX(0); }
@@ -124,7 +121,6 @@ table {
 
   20%, 40%, 60%, 80% {
     -moz-transform: translateX(10px); } }
-
 @-o-keyframes shake {
   0%, 100% {
     -o-transform: translateX(0); }
@@ -134,7 +130,6 @@ table {
 
   20%, 40%, 60%, 80% {
     -o-transform: translateX(10px); } }
-
 @keyframes shake {
   0%, 100% {
     transform: translateX(0); }
@@ -144,7 +139,6 @@ table {
 
   20%, 40%, 60%, 80% {
     transform: translateX(10px); } }
-
 .shake {
   -webkit-animation-name: shake;
   -moz-animation-name: shake;
@@ -169,7 +163,6 @@ table {
 
   100% {
     -webkit-transform: rotate(0deg); } }
-
 @-moz-keyframes swing {
   20% {
     -moz-transform: rotate(15deg); }
@@ -185,7 +178,6 @@ table {
 
   100% {
     -moz-transform: rotate(0deg); } }
-
 @-o-keyframes swing {
   20% {
     -o-transform: rotate(15deg); }
@@ -201,7 +193,6 @@ table {
 
   100% {
     -o-transform: rotate(0deg); } }
-
 @keyframes swing {
   20% {
     transform: rotate(15deg); }
@@ -217,7 +208,6 @@ table {
 
   100% {
     transform: rotate(0deg); } }
-
 .swing {
   -webkit-transform-origin: top center;
   -moz-transform-origin: top center;
@@ -843,6 +833,11 @@ header .nav a:visited {
   font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
   color: #6e6663;
   padding-left: 30px; }
+
+header .mysurveys,
+header .login,
+header .logout {
+  display: none; }
 
 .survey-head .in {
   padding-bottom: 0; }
