@@ -53,3 +53,11 @@ header .nav a:visited {
   color: $body-color;
   padding-left: 30px;
 }
+
+header {
+  .mysurveys,
+  .login,
+  .logout {
+    display: none;
+  }
+}

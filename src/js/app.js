@@ -13,10 +13,13 @@ define([
 
   // Views
   'views/root',
-  'views/loading'
+  'views/loading',
+
+  // Models
+  'models/users'
 ],
 
-function($, _, Backbone, events, settings, api, RootView, LoadingView) {
+function($, _, Backbone, events, settings, api, RootView, LoadingView, Users) {
   'use strict';
 
   // Patch Backbone to support saving namespaced models
@@ -42,6 +45,12 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
   // Kick off the LocalData app
   LD.initialize = function() {
     console.log("Initalizing app");
+
+    // Set up the user and make it available across the app
+    settings.user = new Users.Model();
+    settings.user.fetch();
+
+    // Start routing
     LD.router = new RootView();
     LD.router.startRouting();
 
@@ -49,10 +58,9 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
     events.subscribe('loading', LD.setLoading);
     events.subscribe('navigate', LD.navigateTo);
 
-    // Handle authentication ...................................................
-    // If any request is returned with a 401, we want to redirect users to the
-    // login page
-    var redirectToLogin = function () {
+    // Handle redirecting to the login page
+    // Currently not used.
+    var redirectToLogin = function() {
       // Don't keep redirecting to login
       var isLogin = Backbone.history.fragment.indexOf("login") !== -1;
       var isRegister = Backbone.history.fragment.indexOf("register") !== -1;
@@ -65,10 +73,13 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
       LD.router._router.navigate("/login/?redirectTo=" + Backbone.history.fragment, {trigger: true});
     };
 
+    // Handle authentication errors, which indicate the user isn't logged in.
+    // Currently not used as we test a simple public survey mode.
     $(document).ajaxError(function (event, xhr) {
       console.log("Ajax error: " + xhr.status);
       if (xhr.status === 401) {
-        redirectToLogin();
+        // togglePublicMode();
+        // redirectToLogin();
       }
     });
   };
