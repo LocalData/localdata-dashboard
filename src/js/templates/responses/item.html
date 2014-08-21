@@ -27,14 +27,14 @@
 
 <% _.each(r.responses, function(resp, key) { %>
   <div class="answer">
-    <span class="key"><strong>
+    <span class="key">
       <% if(labels[key]) { %>
         <%- labels[key] %>
       <% } else { %>
         <%- key %>
-      <% } %></strong>
+      <% } %>
     </span>
-    <span class="value"><%- resp %>&nbsp;</span>
+    <span class="value"><strong><%- resp %></strong></span>
   </div>
 <% }); %>
 </div>
