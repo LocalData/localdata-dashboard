@@ -18,11 +18,13 @@
 
 <% if(r.files != undefined) { %>
   <% _.each(r.files, function(file){ %>
-    <img src="<%= file %>" alt="">
+    <img src="<%= file %>" alt="" style="width: 90%">
   <% });%>
 <% } %>
 
+
 <div class="answers">
+
 <% _.each(r.responses, function(resp, key) { %>
   <div class="answer">
     <span class="key"><strong>
