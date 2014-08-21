@@ -59,10 +59,8 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
       _.bindAll(this);
 
       // Keep track of the user.
-      this.user = new Users.Model();
-      this.user.fetch();
       this.userView = new AllViews.UserBarView({
-        user: this.user
+        user: settings.user // created on init in app.js
       });
 
       // Set up global router

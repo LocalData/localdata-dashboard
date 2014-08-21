@@ -209,7 +209,6 @@ function(
 
       // Submit the details as a new survey.
       api.createSurvey(survey, function(error, survey) {
-        // LD.router._router.navigate("surveys/" + survey.slug, {trigger: true});
         if(error) {
           $("#new-survey-form .submit").fadeIn();
           $("#new-survey-form .error").fadeIn();
@@ -313,6 +312,14 @@ function(
 
       if(this.activeTab !== undefined) {
         this.show(this.activeTab[0], this.activeTab[1]);
+      }
+
+      // Hide some of the tabs if the user isn't logged in
+      if(!settings.user.isLoggedIn()) {
+        $('#tab-survey-form').hide();
+        $('#tab-survey-export').hide();
+        $('#tab-survey-settings').hide();
+        $('#tab-survey-app').hide();
       }
     },
 

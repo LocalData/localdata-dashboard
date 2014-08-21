@@ -834,6 +834,11 @@ header .nav a:visited {
   color: #6e6663;
   padding-left: 30px; }
 
+header .mysurveys,
+header .login,
+header .logout {
+  display: none; }
+
 .survey-head .in {
   padding-bottom: 0; }
 
