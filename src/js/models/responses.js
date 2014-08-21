@@ -29,7 +29,7 @@ function($, _, Backbone, moment, settings, api) {
       // This is the backbone implementation, which does clone attributes.
       // We've added the date humanization.
       var json = _.clone(this.attributes);
-      json.createdHumanized = moment(json.created, "YYYY-MM-DDThh:mm:ss.SSSZ").format("MMM Do h:mma");
+      json.createdHumanized = moment(json.created, "YYYY-MM-DDThh:mm:ss.SSSZ").format("MMM Do YYYY - h:mma");
       return json;
     }
   });

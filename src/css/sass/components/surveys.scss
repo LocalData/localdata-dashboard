@@ -104,9 +104,9 @@
   z-index: 10000;
 
   button {
-    float: right;
-    margin-right: 0;
-    margin-bottom: 0;
+    position: absolute;
+    right: 0;
+    bottom: 10px;
   }
 
   button.close {
@@ -123,8 +123,18 @@
   .collector {
     padding-right: 2em;
   }
+
+  .response {
+    padding: 10px 0;
+    border-top: 4px solid $thinpink;
+    margin-top: 10px;
+  }
+
+  .confirm-delete {
+    display: none;
+    .delete {
+      right: 100px;
+    }
+  }
 }
 
-.confirm-delete {
-  display: none;
-}

@@ -918,9 +918,9 @@ header .logout {
   margin-left: 10%;
   z-index: 10000; }
   .responses-list button {
-    float: right;
-    margin-right: 0;
-    margin-bottom: 0; }
+    position: absolute;
+    right: 0;
+    bottom: 10px; }
   .responses-list button.close {
     float: none;
     position: absolute;
@@ -930,9 +930,14 @@ header .logout {
     color: #b7aba5; }
   .responses-list .collector {
     padding-right: 2em; }
-
-.confirm-delete {
-  display: none; }
+  .responses-list .response {
+    padding: 10px 0;
+    border-top: 4px solid #f5ebe6;
+    margin-top: 10px; }
+  .responses-list .confirm-delete {
+    display: none; }
+    .responses-list .confirm-delete .delete {
+      right: 100px; }
 
 #filter-view-container {
   display: none; }
@@ -958,10 +963,10 @@ header .logout {
 .filters .answers button {
   display: none; }
 
-.answers button {
+.filters .answers button {
   margin-top: 10px; }
 
-.answer {
+.filters .answer {
   position: relative;
   padding-left: 32px;
   clear: both;
