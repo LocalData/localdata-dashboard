@@ -8,13 +8,17 @@ define([
   'lib/tinypubsub',
   'lib/papaparse',
 
+  // LocalData
   'settings',
+  'api',
+  'util/schemaGenerator',
 
   // Models
   'models/responses',
 
   // Templates
-  'text!templates/upload.html'
+  'text!templates/upload.html',
+  'text!templates/upload/error-row.html'
 ],
 
 /**
@@ -24,17 +28,34 @@ define([
  * db.responses.remove({'properties.survey':'5b5d4510-294c-11e4-a3f5-614d41163435'});
  */
 
-function($, _, Backbone, events, Papa, settings, Responses, template) {
+function($, _, Backbone, events, Papa, settings, api, SchemaGenerator, Responses, template, errorTemplate) {
   'use strict';
 
   var UploadView = Backbone.View.extend({
     el: '#container',
     template: _.template(template),
+    errorTemplate: _.template(errorTemplate),
+    processedCount: 0,
 
-    LIMIT: 10000, // limit on the number of rows to process
+    events: {
+      'click .submit': 'createSurvey'
+    },
+
+    LIMIT: 100, // limit on the number of rows to process
 
     initialize: function() {
-      _.bindAll(this, 'render', 'setupDragDrop', 'readFile', 'handleFile', 'getParcelShape', 'gotParcel');
+      _.bindAll(this,
+        'render',
+        'setupDragDrop',
+        'readFile',
+        'handleFile',
+        'createSurvey',
+        'surveyCreated',
+        'getParcelShape',
+        'gotParcel',
+        'addError',
+        'saveFormToSurvey'
+      );
     },
 
     render: function() {
@@ -63,7 +84,7 @@ function($, _, Backbone, events, Papa, settings, Responses, template) {
     createResponse: function(feature, data) {
       // Set up the response
       var responseData = {
-        survey: '5b5d4510-294c-11e4-a3f5-614d41163435',
+        survey: settings.surveyId,
         source: {
           type: 'upload',
           collector: settings.user.get('name'),
@@ -81,12 +102,20 @@ function($, _, Backbone, events, Papa, settings, Responses, template) {
       };
 
       // And save it to the server.
-      console.log("Created response", responseData );
+      //console.log("Created response", responseData );
       var response = new Responses.Model(responseData);
       response.on('error', function saveError(error) {
-        console.log("Error saving", error);
+        //console.log("Error saving", error);
       });
       response.save();
+
+      this.processedCount++;
+      console.log(this.processedCount, this.totalCount);
+      if(this.processedCount === this.totalCount) {
+        $("#upload-processing").fadeOut();
+        $("#upload-processing-done").fadeIn();
+        $("#upload-processing-done a").attr('href', '/#/surveys/' + this.surveySlug);
+      }
     },
 
 
@@ -97,7 +126,7 @@ function($, _, Backbone, events, Papa, settings, Responses, template) {
      */
     gotParcel: function(featureCollection, data) {
       if(featureCollection.features.length === 0) {
-        console.log("none found");
+        this.addError(data, 'Parcel not found');
         return;
       }
       var feature = featureCollection.features[0];
@@ -105,14 +134,29 @@ function($, _, Backbone, events, Papa, settings, Responses, template) {
     },
 
     /**
+     * Note an import error
+     * @param {Object} data  The row that was supposed to be added
+     * @param {String} error What went wrong
+     */
+    addError: function(data, error) {
+      this.totalCount--; // decrement the total number we need to process
+      $("#upload-errors").show();
+
+      data.error = error;
+      $('#upload-errors table').append(this.errorTemplate({
+        error: data
+      }));
+    },
+
+    /**
      * Given the ID of a parcel, attempt to get the shape from the API.
      * @param  {Ojbect} data With objectid property
      */
     getParcelShape: function(data) {
-      var parcelid = data.objectid; // TODO make this user-selectable.
+      var parcelid = data.objectid; // TODO make this field user-selectable.
 
       if(!parcelid) {
-        console.log("Skipping -- no id");
+        this.addError(data, 'No parcel ID');
         return;
       }
       var url = settings.api.baseurl + '/parcels/' + parcelid;
@@ -123,9 +167,28 @@ function($, _, Backbone, events, Papa, settings, Responses, template) {
       req.fail(this.failedToGetParcel);
     },
 
+    saveFormToSurvey: function() {
+      var questions = this.schema.getSchema();
+      var formToSave = {
+        questions: questions,
+        type: 'mobile'
+      };
+      api.createForm(formToSave, $.proxy(function() {
+        this.trigger('formAdded');
+      },this));
+    },
+
     handleFile: function(file) {
+      $("#upload-area").fadeOut();
+      $("#upload-processing").fadeIn();
+
       var slice = file.data.slice(0, this.LIMIT);
+      this.totalCount = slice.length;
+      console.log("Handling file", file.meta);
+      this.schema.setFields(file.meta.fields);
       _.each(slice, this.getParcelShape);
+      _.each(slice, this.schema.addRow);
+      this.saveFormToSurvey();
     },
 
     readFile: function(event) {
@@ -133,10 +196,42 @@ function($, _, Backbone, events, Papa, settings, Responses, template) {
       var file = event.dataTransfer.files[0];
       var reader = new FileReader();
 
+      this.schema = new SchemaGenerator();
       Papa.parse(file, {
         header: true,
         complete: this.handleFile
       });
+    },
+
+    surveyCreated: function(error, survey) {
+      console.log("CREATED SURVEY", error, survey);
+      settings.surveyId = survey.id;
+      this.surveySlug = survey.slug;
+      if(error) {
+        $("#new-survey-form .submit").fadeIn();
+        $("#new-survey-form .error").fadeIn();
+        return;
+      }
+
+      $("#new-survey-form").fadeOut();
+      $("#upload-area").fadeIn();
+    },
+
+    createSurvey: function(event) {
+      event.preventDefault();
+
+      var survey = {
+        "name": $("#new-survey-form input.survey-name").val(),
+        "location": $("#new-survey-form input.survey-location").val()
+      };
+
+      survey.geoObjectSource = {
+        type: 'LocalData',
+        source: '/api/features?type=parcels&bbox={{bbox}}'
+      };
+
+      // Submit the details as a new survey.
+      api.createSurvey(survey, this.surveyCreated);
     },
 
     update: function() {

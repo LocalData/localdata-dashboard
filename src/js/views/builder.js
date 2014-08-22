@@ -11,6 +11,7 @@ define([
   // LocalData
   'settings',
   'api',
+  'util/util',
 
   // Templates
   'text!templates/surveys/form-editor.html',
@@ -18,7 +19,7 @@ define([
   'views/forms'
 ],
 
-function($, _, Backbone, _kmq, settings, api, template, FormViews) {
+function($, _, Backbone, _kmq, settings, api, Util, template, FormViews) {
   'use strict';
 
   var Builder = {};
@@ -51,7 +52,6 @@ function($, _, Backbone, _kmq, settings, api, template, FormViews) {
         'makeBlankQuestion',
         'renderForm',
         'suffix',
-        'slugify',
 
         'editQuestionFactory',
         'setQuestionType',
@@ -138,14 +138,14 @@ function($, _, Backbone, _kmq, settings, api, template, FormViews) {
         console.log('Updating question');
         _kmq.push(['record', 'Question edited']);
         var text = $(event.target).val(); //$(this).val();
-        var name = this.slugify(text);
+        var name = Util.slugify(text);
 
         question.text = text;
         question.name = name;
 
         if(question.type === 'checkbox') {
           _.each(question.answers, function(answer){
-            answer.name = question.name + '-' + this.slugify(answer.text);
+            answer.name = question.name + '-' + Util.slugify(answer.text);
             answer.value = 'yes';
           }.bind(this));
         }
@@ -158,7 +158,7 @@ function($, _, Backbone, _kmq, settings, api, template, FormViews) {
       if (dataRole === 'radio-question') {
         delete question.type;
         _.each(question.answers, function(answer){
-          answer.value = this.slugify(answer.text);
+          answer.value = Util.slugify(answer.text);
         }.bind(this));
       }
 
@@ -166,7 +166,7 @@ function($, _, Backbone, _kmq, settings, api, template, FormViews) {
         question.type = "checkbox";
         // Make sure each answer has a name
         _.each(question.answers, function(answer){
-          answer.name = question.name + '-' + this.slugify(answer.text);
+          answer.name = question.name + '-' + Util.slugify(answer.text);
           answer.value = 'yes';
         }.bind(this));
       }
@@ -265,11 +265,11 @@ function($, _, Backbone, _kmq, settings, api, template, FormViews) {
         _kmq.push(['record', 'Answer edited']);
         var text = $(event.target).val();
         question.answers[index].text = text;
-        question.answers[index].value = this.slugify(text);
+        question.answers[index].value = Util.slugify(text);
 
         this.setQuestionLayout(question);
         if(question.type === 'checkbox') {
-          question.answers[index].name = question.name + '-' + this.slugify(text);
+          question.answers[index].name = question.name + '-' + Util.slugify(text);
           question.answers[index].value = 'yes';
         }
 
@@ -505,19 +505,9 @@ function($, _, Backbone, _kmq, settings, api, template, FormViews) {
         } // end check for sub-answers
 
       }, this);
-    }, // end renderQuestion
+    } // end renderQuestion
 
-    // Slugify a string
-    // Used to generate the name attribute of forms
-    slugify: function(text) {
-      text = text.replace(/[^-a-zA-Z0-9,&\s]+/ig, '');
-      text = text.replace(/\s/gi, "-");
-      text = text.replace(/,/gi, '');
-      text = text.replace(/&/g, 'and');
-      return text;
-    }
-
-  }); // end BuilderView{}
+  }); // end BuilderView
 
   return Builder;
 

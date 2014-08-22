@@ -122,3 +122,12 @@ a:active {
 .filters .selected .print.circle {
   display: none;
 }
+
+table {
+  width: 100%;
+  th {
+    text-align: left;
+    border-bottom: 4px solid $thinpink;
+    font: $bold;
+  }
+}

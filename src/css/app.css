@@ -320,6 +320,13 @@ a:active {
 .filters .selected .print.circle {
   display: none; }
 
+table {
+  width: 100%; }
+  table th {
+    text-align: left;
+    border-bottom: 4px solid #f5ebe6;
+    font: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif; }
+
 /*******************************************************************************
  * _layout.scss
  *
@@ -1080,14 +1087,18 @@ header .logout {
 /* Upload ------------------------------------------------------------------- */
 #upload-area {
   max-width: 500px;
-  margin: 0px auto;
   text-align: center;
   line-height: 100px;
   font-size: 28px;
-  background: #daedff; }
+  background: #daedff;
+  ddisplay: none; }
 
 #upload-area.hover {
   background: #58aeff; }
+
+.upload-hide,
+#upload-errors {
+  display: none; }
 
 /* Tabs --------------------------------------------------------------------- */
 .nav-tabs .in {
