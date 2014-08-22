@@ -12,6 +12,7 @@ define([
   'settings',
   'api',
   'util/schemaGenerator',
+  'util/rateLimiter',
 
   // Models
   'models/responses',
@@ -28,7 +29,7 @@ define([
  * db.responses.remove({'properties.survey':'5b5d4510-294c-11e4-a3f5-614d41163435'});
  */
 
-function($, _, Backbone, events, Papa, settings, api, SchemaGenerator, Responses, template, errorTemplate) {
+function($, _, Backbone, events, Papa, settings, api, SchemaGenerator, RateLimiter, Responses, template, errorTemplate) {
   'use strict';
 
   var UploadView = Backbone.View.extend({
@@ -188,7 +189,13 @@ function($, _, Backbone, events, Papa, settings, api, SchemaGenerator, Responses
       this.totalCount = slice.length;
       console.log("Handling file", file.meta);
       this.schema.setFields(file.meta.fields);
-      _.each(slice, this.getParcelShape);
+      var limiter = new RateLimiter({
+        list: slice,
+        fn: this.getParcelShape,
+        wait: 50
+      });
+
+
       _.each(slice, this.schema.addRow);
       this.saveFormToSurvey();
     },
