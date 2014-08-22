@@ -41,7 +41,7 @@ function($, _, Backbone, events, Papa, settings, api, SchemaGenerator, Responses
       'click .submit': 'createSurvey'
     },
 
-    LIMIT: 100, // limit on the number of rows to process
+    LIMIT: 10000, // limit on the number of rows to process
 
     initialize: function() {
       _.bindAll(this,
@@ -109,10 +109,12 @@ function($, _, Backbone, events, Papa, settings, api, SchemaGenerator, Responses
       });
       response.save();
 
+      // See if we're done yet
+      // (Gross way -- should use ASYNC)
+      // But with this, we can also do a counter.
       this.processedCount++;
-      console.log(this.processedCount, this.totalCount);
       if(this.processedCount === this.totalCount) {
-        $("#upload-processing").fadeOut();
+        $("#upload-processing").hide();
         $("#upload-processing-done").fadeIn();
         $("#upload-processing-done a").attr('href', '/#/surveys/' + this.surveySlug);
       }
@@ -179,7 +181,7 @@ function($, _, Backbone, events, Papa, settings, api, SchemaGenerator, Responses
     },
 
     handleFile: function(file) {
-      $("#upload-area").fadeOut();
+      $("#upload-area").hide();
       $("#upload-processing").fadeIn();
 
       var slice = file.data.slice(0, this.LIMIT);
@@ -213,7 +215,7 @@ function($, _, Backbone, events, Papa, settings, api, SchemaGenerator, Responses
         return;
       }
 
-      $("#new-survey-form").fadeOut();
+      $("#new-survey-form").hide();
       $("#upload-area").fadeIn();
     },
 

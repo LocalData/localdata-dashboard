@@ -62,7 +62,11 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
       }
 
       var $el = $(this.el);
-      $el.html(this.template({ name: name }));
+      $el.html(this.template({
+        name: name,
+        responses: this.collection.toJSON(),
+        googleKey: settings.GoogleKey
+      }));
 
       this.collection.each(function(response) {
         var item = new ResponseView({

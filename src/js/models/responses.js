@@ -33,7 +33,7 @@ function($, _, Backbone, moment, settings, api) {
       // We've added the date humanization.
       var json = _.clone(this.attributes);
       if(json.created !== undefined) {
-        json.createdHumanized = moment(json.created, "YYYY-MM-DDThh:mm:ss.SSSZ").format("MMM Do h:mma");
+        json.createdHumanized = moment(json.created, "YYYY-MM-DDThh:mm:ss.SSSZ").format("MMM Do YYYY - h:mma");
       }
 
       // If we're creating a new response, we need to wrap it.
