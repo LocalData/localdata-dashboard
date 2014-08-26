@@ -15,32 +15,37 @@ define([
 function($, _, Backbone, settings, api, exportTemplate) {
   'use strict';
 
+  var exportTimeout = 2 * 60 * 1000; // 2 minutes
+
   var ExportView = Backbone.View.extend({
     el: '#export-view-container',
 
     template: _.template(exportTemplate),
 
     events: {
-      'click .shapefile': 'getShapefile'
+      'click .shapefile': 'getShapefile',
+      'click .csv': 'getCSV'
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'pingAPI', 'pingS3');
+      _.bindAll(this, 'render', 'pingAPI', 'pingS3', 'pingExport');
 
       // Show a given survey
       this.surveyId = options.surveyId;
     },
 
-    render: function(loading) {
+    render: function() {
       // Set the context & render the page
       var context = {
         surveyId: this.surveyId,
         baseurl: settings.api.baseurl,
-        loading: loading
+        loading: this.loading
       };
 
       this.$el.html(this.template(context));
     },
+
+    loading: {},
 
     // When we're done with the shapefile export process, we should reset our
     // in-progress indication.
@@ -125,6 +130,55 @@ function($, _, Backbone, settings, api, exportTemplate) {
           self.exportDone(new Error('Shapefile export failed.'));
         });
       }, 500);
+    },
+
+    // Ping the API to see if an export is ready. When it's ready, download it.
+    pingExport: function pingExport(type, url) {
+      var expiration = Date.now() + exportTimeout;
+
+      var self = this;
+
+      this.loading[type] = true;
+      this.render();
+
+      var ping;
+
+      function pingRaw() {
+        if (Date.now() > expiration) {
+          self.loading[type] = false;
+          self.exportDone(new Error(type + 'export timed out.'));
+          return;
+        }
+
+        // See if the ping cycle has been stopped.
+        if (!self.loading[type]) {
+          return;
+        }
+
+        $.ajax({
+          url: url,
+          cache: false
+        }).done(function (data, textStatus, jqXHR) {
+          if (jqXHR.status === 202 && self.loading[type]) {
+            ping();
+            return;
+          }
+          self.loading[type] = false;
+          self.render();
+          window.location = data.href;
+        }).fail(function () {
+          self.exportDone(new Error(type + ' export failed.'));
+        });
+      }
+
+      ping = _.throttle(pingRaw, 500, { trailing: true });
+      ping();
+    },
+
+    // Ask the API to generate a CSV export.
+    getCSV: function getCSV() {
+      var url = settings.api.baseurl + '/surveys/' + this.surveyId + '/responses.csv';
+      this.pingExport('csv', url);
     },
 
     // Ask the API to generate a shapefile export and start checking to see if
