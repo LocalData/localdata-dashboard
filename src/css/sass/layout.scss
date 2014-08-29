@@ -18,10 +18,11 @@ body {
 }
 
 .in {
-  width: 1528px;
+  width: 100%;
   margin: 0px auto;
-  padding: 50px 0 50px 0;
+  ppadding: 50px 0 50px 0;
 
+  /*
   @media all and (max-width: 1999px) {
     width: 1112px;
   }
@@ -42,6 +43,7 @@ body {
     width: auto;
     padding: 0 30px;
   }
+  */
 }
 
 .in:after {
@@ -59,22 +61,9 @@ header .b {
   padding-top: 75px;
 }
 
-/*
-2000 = 236 708 56 56 708 236 = 1528px center
-1280 = 84 500 56 56 500 84 = 1112px center
-1120 = 30 500 30 30 500 30 = 1060px center
-900 = 30 390 30 30 390 30 = 840px center
-769 = 30 324 30 30 390 30 = 708px center
-768 = 30 708 30
-500 = 30 440 30
-320 = 30 260 30 (minimum responsive width)
-
-1200 = 57 500 43 43 500 57 = 1086px center
- */
-
-.a, .b {
-  width: 708px;
-  margin-right: 56px;
+.a, .b, .c {
+  width: 30%;
+  margin-right: 5%;
 
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
@@ -83,54 +72,16 @@ header .b {
 
   /* column sizing */
   float:left;
+}
 
-  @media all and (max-width: 1999px) {
-    width: 500px;
-  }
-
-  @media all and (max-width: 1279px) {
-    margin-right: 43px;
-  }
-
-  @media all and (max-width: 1119px) {
-    margin-right: 30px;
-    width: 390px;
-  }
-
-  @media all and (max-width: 899px) {
-    width: 324px;
-  }
-
-  @media all and (max-width: 768px) {
-    margin: 0;
-    width: auto;
-    float:none;
-  }
+.c {
+  width: 35%;
+  margin-right: 5px;
 }
 
 .b {
   margin-right: 0;
-  margin-left: 56px;
-
-  @media all and (max-width: 1999px) {
-    margin-left: 56px;
-  }
-
-  @media all and (max-width: 1279px) {
-    margin-left: 43px;
-  }
-
-  @media all and (max-width: 1119px) {
-    margin-left: 30px;
-  }
-
-
-  @media all and (max-width: 768px) {
-    margin-left: 30px;
-    margin: 0;
-    width: auto;
-    float: none;
-  }
+  margin-left: 5%;
 }
 
 
@@ -138,35 +89,14 @@ header .b {
 /* Same as .b above, but with no margins */
 .a.nomargin,
 .b.nomargin {
-  width: 764px;
+  width: 40%;
   margin: 0;
-
-  @media all and (max-width: 1999px) {
-    width: 556px;
-    margin: 0;
-  }
-
-  @media all and (max-width: 1279px) {
-    width: 543px;
-    margin: 0;
-  }
-
-  @media all and (max-width: 1119px) {
-    width: 420px;
-    margin: 0;
-  }
-
-  @media all and (max-width: 899px) {
-    width: 354px;
-    margin: 0;
-  }
-
-  @media all and (max-width: 768px) {
-    margin: 0;
-    width: auto;
-    float:none;
-  }
 }
+.c.nomargin {
+  width: 20%;
+  margin: 0;
+}
+
 
 .bigb .a {
   width: 326px;
