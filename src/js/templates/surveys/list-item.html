@@ -1,17 +1,11 @@
-<div class="out contrast <%= survey.parity %> survey-list-item">
-  <div class="in">
-    <div class="a">
-      <h2><a href='#surveys/<%= survey.slug %>'><%= survey.name %></a></h2>
+<div class="<%= survey.parity %> survey-list-item">
+  <h2><a href='#surveys/<%= survey.slug %>'><%= survey.name %></a></h2>
 
-      <div class="factoid">
-        <span class="number"><%= count %></span>
-        responses collected
-      </div>
+  <div class="factoid">
+    <span class="number"><%= count %></span>
+    responses collected
+  </div>
 
-    </div>
-    <div class="b">
-      <div class="map">
-      </div>
-    </div>
+  <div class="map">
   </div>
 </div>
