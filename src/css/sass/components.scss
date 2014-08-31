@@ -124,7 +124,7 @@ tr:nth-child(even) td {
 /* Map ---------------------------------------------------------------------- */
 #map,
 .map {
-  height: 500px;
+  height: 750px;
 }
 
 #map-tools {
@@ -140,35 +140,6 @@ tr:nth-child(even) td {
     margin-bottom: 5px;
   }
 }
-
-
-/* Tabs --------------------------------------------------------------------- */
-.nav-tabs .in {
-  padding-top: 0;
-  padding-bottom: 0;
-}
-
-.nav-tabs li {
-  float: left;
-  list-style: none;
-  display: inline;
-  padding: 0;
-  margin: 0;
-}
-
-.nav-tabs li a {
-  display: inline-block;
-  background: #ffad00;
-  color: #fff;
-  font-family: $bold;
-  padding: 15px 20px;
-}
-
-.nav-tabs li.active a {
-  background: #fff;
-  color: #ffad00;;
-}
-
 
 /* Forms ------------------------------------------------------------------- */
 @import "components/forms";

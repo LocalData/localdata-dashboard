@@ -57,12 +57,12 @@ header .b {
     min-height: 768px;
 
     .buffer {
-      padding: 10px;
+      padding: 16px;
     }
   }
 
   .a {
-    background: #b7aba5;
+    background: #fff;
   }
 }
 
@@ -157,6 +157,16 @@ header .b {
 
 #container {
   min-height: 500px;
+}
+
+.nav-tabs {
+  width: 10%;
+  float:left;
+}
+
+#survey-tabs {
+  width: 90%;
+  float: right;
 }
 
 .contrast {

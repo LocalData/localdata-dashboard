@@ -366,9 +366,9 @@ header .b {
 .map-list-view .a, .map-list-view .b, .map-list-view .c {
   min-height: 768px; }
   .map-list-view .a .buffer, .map-list-view .b .buffer, .map-list-view .c .buffer {
-    padding: 10px; }
+    padding: 16px; }
 .map-list-view .a {
-  background: #b7aba5; }
+  background: #fff; }
 
 .c {
   width: 35%;
@@ -441,6 +441,14 @@ header .b {
 
 #container {
   min-height: 500px; }
+
+.nav-tabs {
+  width: 10%;
+  float: left; }
+
+#survey-tabs {
+  width: 90%;
+  float: right; }
 
 .contrast {
   background: #fcf5f0; }
@@ -673,7 +681,7 @@ nav a,
 nav a:hover {
   font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
   color: #6e6663;
-  display: inline-block;
+  display: block;
   margin-right: 45px; }
   @media all and (max-width: 768px) {
     nav a,
@@ -721,6 +729,27 @@ nav a:hover {
 .subnav .selected a,
 .subnav .selected a:hover {
   color: #f15a24; }
+
+/* Tabs --------------------------------------------------------------------- */
+.nav-tabs .in {
+  padding-top: 0;
+  padding-bottom: 0; }
+
+.nav-tabs li {
+  list-style: none;
+  padding: 0;
+  margin: 0; }
+
+.nav-tabs li a {
+  display: block;
+  background: #ffad00;
+  color: #fff;
+  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
+  padding: 15px 20px; }
+
+.nav-tabs li.active a {
+  background: #fff;
+  color: #ffad00; }
 
 /* Components specific to the dashboard ------------------------------------- */
 header .in {
@@ -866,61 +895,62 @@ header .nav a:visited {
 #filter-view-container {
   display: none; }
 
-.filters .toolbar {
-  display: inline-block; }
-.filters .question,
-.filters .toolbar {
-  cursor: pointer;
-  background: #fff;
-  padding: 5px 8px;
-  font-size: 24px;
-  line-height: 34px; }
-.filters .clear {
-  cursor: pointer;
-  padding: 5px 8px;
-  display: none;
-  font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif; }
-.filters .options {
-  display: none;
-  background: #fff;
-  padding-bottom: 8px;
-  padding-top: 5px; }
-  .filters .options .question {
-    border-bottom: 1px dotted #eeebe9;
-    margin: 5px 8px 8px; }
-.filters h3 {
-  font-size: 24px; }
-.filters .answers {
-  margin-bottom: 10px;
-  display: none;
-  font-size: 16px; }
-  .filters .answers .answer {
-    color: #fff;
-    padding: 3px;
-    border-width: 4px;
-    border-style: solid;
-    display: inline-block;
-    margin-right: 7px;
-    cursor: pointer; }
-  .filters .answers .answer.active {
-    border-color: #ffe000 !important; }
-.filters button {
-  margin-top: 10px; }
-.filters .circle {
-  position: absolute;
-  left: 0;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  border: 3px solid #fff;
-  background: transparent; }
-.filters .selected .circle {
-  background: #6e6663;
-  display: block; }
-.filters .selected .answers button {
-  display: block; }
-.filters .circle.inactive {
-  background: transparent !important; }
+.filters {
+  background: #0062be;
+  color: #fcf5f0;
+  padding-top: 10px; }
+  .filters .toolbar {
+    display: block; }
+  .filters .question,
+  .filters .toolbar {
+    cursor: pointer;
+    padding: 5px 16px;
+    ffont-size: 1px; }
+  .filters .clear {
+    cursor: pointer;
+    padding: 5px 8px;
+    display: none;
+    font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif; }
+  .filters .options {
+    ddisplay: none;
+    padding-bottom: 8px;
+    padding-top: 5px; }
+    .filters .options .question {
+      border-bottom: 1px dotted #eeebe9;
+      mmargin: 5px 8px 8px; }
+  .filters h3 {
+    font-size: 24px; }
+  .filters .answers {
+    margin-bottom: 10px;
+    display: none;
+    font-size: 16px; }
+    .filters .answers .answer {
+      color: #fff;
+      padding: 3px;
+      border-width: 4px;
+      border-style: solid;
+      display: inline-block;
+      margin-right: 7px;
+      cursor: pointer; }
+    .filters .answers .answer.active {
+      border-color: #ffe000 !important; }
+  .filters button {
+    margin-top: 10px; }
+  .filters .circle {
+    position: absolute;
+    left: 0;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    border: 3px solid #fff;
+    background: transparent; }
+  .filters .selected .circle {
+    background: #6e6663;
+    display: block; }
+  .filters .selected .answers button {
+    display: block; }
+  .filters .circle.inactive {
+    background: transparent !important; }
 
 /* Settings CSS ------------------------------------------------------------- */
 .survey-settings h3 {
@@ -1023,7 +1053,7 @@ tr:nth-child(even) td {
 /* Map ---------------------------------------------------------------------- */
 #map,
 .map {
-  height: 500px; }
+  height: 750px; }
 
 #map-tools {
   background: #f5ebe6;
@@ -1033,29 +1063,6 @@ tr:nth-child(even) td {
     margin-bottom: 0; }
   #map-tools button {
     margin-bottom: 5px; }
-
-/* Tabs --------------------------------------------------------------------- */
-.nav-tabs .in {
-  padding-top: 0;
-  padding-bottom: 0; }
-
-.nav-tabs li {
-  float: left;
-  list-style: none;
-  display: inline;
-  padding: 0;
-  margin: 0; }
-
-.nav-tabs li a {
-  display: inline-block;
-  background: #ffad00;
-  color: #fff;
-  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
-  padding: 15px 20px; }
-
-.nav-tabs li.active a {
-  background: #fff;
-  color: #ffad00; }
 
 /* Forms ------------------------------------------------------------------- */
 form label {
