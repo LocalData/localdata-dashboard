@@ -4,7 +4,7 @@
  * This file shouldn't directly contain any SCSS code, instead it only serves to
  * combine the SCSS contained in other Sass partials through @import directives.
  *
- * BASE............Styling for common HTML and Drupal elements.
+ * BASE............Styling for common HTML elements.
  * LAYOUT..........Styles for the page structure that contain components.
  * COMPONENTS......Components, their modifiers and sub-components.
  ******************************************************************************/
@@ -331,7 +331,8 @@ a:active {
 html,
 body {
   margin: 0;
-  padding: 0; }
+  padding: 0;
+  height: 100%; }
 
 .out {
   background: #fff; }
@@ -372,7 +373,8 @@ header .b {
 
 .c {
   width: 35%;
-  margin-right: 5px; }
+  margin-right: 5px;
+  background: #0062be; }
 
 .b {
   margin-right: 0;
@@ -381,7 +383,7 @@ header .b {
 /* Same as .b above, but with no margins */
 .a.nomargin,
 .b.nomargin {
-  width: 40%;
+  width: 80%;
   margin: 0; }
 
 .c.nomargin {
@@ -440,7 +442,9 @@ header .b {
       float: none; } }
 
 #container {
-  min-height: 500px; }
+  min-height: 500px;
+  height: 100%;
+  background: #fcf5f0; }
 
 .nav-tabs {
   width: 10%;
@@ -762,44 +766,46 @@ header .b {
 
 header h1,
 footer h1 {
-  position: relative;
-  z-index: 100;
-  left: -53px;
   display: inline-block;
   height: 50px;
-  width: 382px;
+  width: 50%;
   overflow: auto;
-  margin-bottom: 0; }
+  margin-bottom: 0;
+  float: left; }
 
 header .logo,
 footer .logo {
   display: inline-block;
-  height: 112px;
-  width: 112px;
+  height: 50px;
+  width: 50px;
   background: transparent url(../img/logo.png) no-repeat left center;
-  background-size: auto 112px;
+  background-size: auto 50px;
   text-indent: -99999px;
   float: left; }
 
 header .logotype,
 footer .logotype {
   display: inline-block;
-  height: 112px;
+  height: 50px;
   width: 270px;
   background: transparent url(../img/logotype.png) no-repeat left center;
+  background-size: auto 50px;
   text-indent: -99999px;
   float: left; }
 
 header .nav {
-  padding-top: 45px;
-  text-align: right; }
+  text-align: right;
+  line-height: 50px; }
 
 header .nav,
 header .nav a:link,
 header .nav a:visited {
   font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
-  color: #6e6663;
-  padding-left: 30px; }
+  color: #6e6663; }
+
+header .nav a {
+  padding-left: 15px;
+  padding-right: 15px; }
 
 .survey-head .in {
   padding-bottom: 0; }
@@ -896,16 +902,32 @@ header .nav a:visited {
   display: none; }
 
 .filters {
-  background: #0062be;
+  height: 100%;
   color: #fcf5f0;
   padding-top: 10px; }
+  .filters .button {
+    display: block;
+    text-align: left;
+    line-height: 2em;
+    font-size: 1em;
+    height: auto;
+    font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
+    margin-top: 0;
+    margin-right: 0;
+    width: auto; }
+    .filters .button .fa {
+      float: right;
+      line-height: 2em; }
   .filters .toolbar {
     display: block; }
+    .filters .toolbar strong {
+      display: block;
+      padding: 4px 0 15px;
+      border-top: 1px dotted #daedff; }
   .filters .question,
   .filters .toolbar {
     cursor: pointer;
-    padding: 5px 16px;
-    ffont-size: 1px; }
+    padding: 5px 12px; }
   .filters .clear {
     cursor: pointer;
     padding: 5px 8px;
@@ -1056,13 +1078,70 @@ tr:nth-child(even) td {
   height: 750px; }
 
 #map-tools {
-  background: #f5ebe6;
-  padding: 5px 5px 0 5px; }
+  background: #f5ebe6; }
   #map-tools input[type=text] {
     display: inline;
     margin-bottom: 0; }
   #map-tools button {
     margin-bottom: 5px; }
+  #map-tools a {
+    color: #6e6663;
+    padding: 2px 9px;
+    border-radius: 16px;
+    margin: 10px 0px 10px 10px;
+    display: inline-block; }
+  #map-tools .selected {
+    background: #fff; }
+  #map-tools .right {
+    float: right; }
+    #map-tools .right a {
+      border-left: 1px solid #fff;
+      border-radius: 0px;
+      margin: 0;
+      padding: 12px; }
+
+/* Datasets ---------------------------------------------------------------- */
+#data-select-container {
+  background: #fff;
+  height: 100%; }
+  #data-select-container #map-tools {
+    padding: 10px; }
+
+.dataselect {
+  overflow: auto;
+  height: 100%; }
+
+.datanav {
+  width: 33%;
+  float: left;
+  background: #fff; }
+  .datanav .datanav-in {
+    border-right: 1px solid #ddd; }
+    .datanav .datanav-in .dataset {
+      padding: 15px;
+      border-bottom: 1px solid #ddd; }
+      .datanav .datanav-in .dataset .fa {
+        float: right;
+        line-height: 1.5em; }
+      .datanav .datanav-in .dataset .button {
+        display: block;
+        text-align: left;
+        line-height: 2em;
+        font-size: 1em;
+        height: auto;
+        font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
+        margin-top: 0;
+        margin-right: 0;
+        width: auto; }
+        .datanav .datanav-in .dataset .button .fa {
+          float: right;
+          line-height: 2em; }
+
+.details {
+  width: 34%; }
+
+.major {
+  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif; }
 
 /* Forms ------------------------------------------------------------------- */
 form label {

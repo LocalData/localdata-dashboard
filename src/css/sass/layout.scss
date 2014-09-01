@@ -11,6 +11,7 @@ html,
 body {
   margin: 0;
   padding: 0;
+  height: 100%;
 }
 
 .out {
@@ -69,6 +70,7 @@ header .b {
 .c {
   width: 35%;
   margin-right: 5px;
+  background: #0062be;
 }
 
 .b {
@@ -81,7 +83,7 @@ header .b {
 /* Same as .b above, but with no margins */
 .a.nomargin,
 .b.nomargin {
-  width: 40%;
+  width: 80%;
   margin: 0;
 }
 .c.nomargin {
@@ -157,6 +159,8 @@ header .b {
 
 #container {
   min-height: 500px;
+  height: 100%;
+  background: $pink;
 }
 
 .nav-tabs {

@@ -3,19 +3,40 @@
 }
 
 .filters {
-  background: #0062be;
+  height: 100%;
   color: #fcf5f0;
   padding-top: 10px;
 
+  .button {
+    display: block;
+    text-align: left;
+    line-height: 2em;
+    font-size: 1em;
+    height: auto;
+    font-family: $bold;
+    margin-top: 0;
+    margin-right: 0;
+    width: auto;
+    .fa {
+      float: right;
+      line-height: 2em;
+    }
+  }
+
   .toolbar {
     display: block;
+
+    strong {
+      display: block;
+      padding: 4px 0 15px;
+      border-top: 1px dotted $lightblue;
+    }
   }
 
   .question,
   .toolbar {
     cursor: pointer;
-    padding: 5px 16px;
-    ffont-size: 1px;
+    padding: 5px 12px;
   }
 
   .clear {

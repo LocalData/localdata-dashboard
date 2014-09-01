@@ -1,9 +1,32 @@
 <div class="questions">
   <div class="toolbar">
-    <strong class="select">Filter responses <!-- <i class="fa fa-angle-down"></i> --></strong>
+    <!--
+    <strong class="select">
+      Data layers Filter responses <i class="fa fa-angle-down"></i>
+    </strong>
     <strong class="clear">Show all repsonses</strong>
+    -->
+
+    <a class="button">Add data layer <i class="fa fa-chevron-right"></i></a>
+
+    <strong>
+      My survey layer<br>
+      [filters here]
+    </strong>
+
+    <strong>
+      Pedstrian accidents<br>
+      [CHART HERE]
+    </strong>
+
+    <strong>
+      Some other data<br>
+      [Aggregate here]
+    </strong>
+
   </div>
 
+  <!--
   <div class="options">
   <% _.each(_.keys(questions), function (name) {%>
     <% if(! _.has(questions, name)) { return; } %>
@@ -22,6 +45,7 @@
 
   <% }); %>
   </div>
+  -->
 </div>
 
 

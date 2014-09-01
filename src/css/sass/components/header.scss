@@ -10,23 +10,21 @@ header .b {
 
 header h1,
 footer h1 {
-  position: relative;
-  z-index: 100;
-  left: -53px;
   display: inline-block;
   height: 50px;
-  width: 382px;
+  width: 50%;
   overflow: auto;
   margin-bottom: 0;
+  float: left;
 }
 
 header .logo,
 footer .logo {
   display: inline-block;
-  height: 112px;
-  width: 112px;
+  height: 50px;
+  width: 50px;
   background: transparent url(../img/logo.png) no-repeat left center;
-  background-size: auto 112px;
+  background-size: auto 50px;
   text-indent: -99999px;
   float: left;
 }
@@ -34,16 +32,17 @@ footer .logo {
 header .logotype,
 footer .logotype {
   display: inline-block;
-  height: 112px;
+  height: 50px;
   width: 270px;
   background: transparent url(../img/logotype.png) no-repeat left center;
+  background-size: auto 50px;
   text-indent: -99999px;
   float: left;
 }
 
 header .nav {
-  padding-top: 45px;
   text-align: right;
+  line-height: 50px;
 }
 
 header .nav,
@@ -51,5 +50,9 @@ header .nav a:link,
 header .nav a:visited {
   font-family: $bold;
   color: $body-color;
-  padding-left: 30px;
+}
+
+header .nav a {
+  padding-left: 15px;
+  padding-right: 15px;
 }
