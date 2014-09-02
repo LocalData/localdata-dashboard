@@ -164,69 +164,6 @@ tr:nth-child(even) td {
   }
 }
 
-/* Datasets ---------------------------------------------------------------- */
-#data-select-container {
-  background: #fff;
-  height: 100%;
-
-  #map-tools {
-    padding: 10px;
-  }
-}
-
-.dataselect {
-  overflow: auto;
-  height: 100%;
-}
-
-.datanav {
-  width: 33%;
-  float: left;
-  background: #fff;
-
-  .datanav-in {
-    border-right: 1px solid #ddd;
-
-    .selected {
-      background: #fff3da;
-    }
-
-    .dataset {
-      padding: 15px;
-      border-bottom: 1px solid #ddd;
-
-      .fa {
-        float: right;
-        line-height: 1.5em;
-      }
-
-      .button {
-        display: block;
-        text-align: left;
-        line-height: 2em;
-        font-size: 1em;
-        height: auto;
-        font-family: $bold;
-        margin-top: 0;
-        margin-right: 0;
-        width: auto;
-        .fa {
-          float: right;
-          line-height: 2em;
-        }
-      }
-    }
-  }
-}
-
-.details {
-  width: 34%;
-}
-
-.major {
-  font-family: $bold;
-}
-
 /* Forms ------------------------------------------------------------------- */
 @import "components/forms";
 @import "components/preview";

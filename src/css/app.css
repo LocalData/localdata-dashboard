@@ -1016,7 +1016,8 @@ header .nav a {
     line-height: 30px; }
 
 #project {
-  /* Data selectors --------------------------------------------------------- */ }
+  /* Datasets ---------------------------------------------------------------- */
+  /* Layer selectors -------------------------------------------------------- */ }
   #project .c {
     position: absolute;
     top: 50px;
@@ -1037,6 +1038,57 @@ header .nav a {
     #project .button .fa {
       float: right;
       line-height: 2em; }
+  #project #data-select-container {
+    background: #fff;
+    height: 100%;
+    display: none; }
+    #project #data-select-container #map-tools {
+      padding: 10px; }
+  #project .dataselect {
+    overflow: auto;
+    height: 100%; }
+  #project .datanav {
+    width: 33%;
+    float: left;
+    background: #fff; }
+    #project .datanav .datanav-in {
+      border-right: 1px solid #ddd; }
+      #project .datanav .datanav-in .fa-chevron-right {
+        display: none; }
+      #project .datanav .datanav-in .dataset:hover,
+      #project .datanav .datanav-in .selected {
+        background: #fff3da; }
+        #project .datanav .datanav-in .dataset:hover .fa-chevron-right,
+        #project .datanav .datanav-in .selected .fa-chevron-right {
+          display: inline; }
+      #project .datanav .datanav-in .dataset {
+        padding: 15px;
+        border-bottom: 1px solid #ddd;
+        cursor: pointer; }
+        #project .datanav .datanav-in .dataset .fa {
+          float: right;
+          line-height: 1.5em; }
+        #project .datanav .datanav-in .dataset .button {
+          display: block;
+          text-align: left;
+          line-height: 2em;
+          font-size: 1em;
+          height: auto;
+          font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
+          margin-top: 0;
+          margin-right: 0;
+          width: auto; }
+          #project .datanav .datanav-in .dataset .button .fa {
+            float: right;
+            line-height: 2em; }
+  #project .datanav.categories {
+    font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif; }
+  #project .datanav.sources,
+  #project .datanav.details {
+    display: none; }
+  #project .datanav.details {
+    width: 34%;
+    background: #fff3da; }
   #project .layers {
     padding: 12px;
     color: #fff; }
@@ -1132,51 +1184,6 @@ tr:nth-child(even) td {
       border-radius: 0px;
       margin: 0;
       padding: 12px; }
-
-/* Datasets ---------------------------------------------------------------- */
-#data-select-container {
-  background: #fff;
-  height: 100%; }
-  #data-select-container #map-tools {
-    padding: 10px; }
-
-.dataselect {
-  overflow: auto;
-  height: 100%; }
-
-.datanav {
-  width: 33%;
-  float: left;
-  background: #fff; }
-  .datanav .datanav-in {
-    border-right: 1px solid #ddd; }
-    .datanav .datanav-in .selected {
-      background: #fff3da; }
-    .datanav .datanav-in .dataset {
-      padding: 15px;
-      border-bottom: 1px solid #ddd; }
-      .datanav .datanav-in .dataset .fa {
-        float: right;
-        line-height: 1.5em; }
-      .datanav .datanav-in .dataset .button {
-        display: block;
-        text-align: left;
-        line-height: 2em;
-        font-size: 1em;
-        height: auto;
-        font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
-        margin-top: 0;
-        margin-right: 0;
-        width: auto; }
-        .datanav .datanav-in .dataset .button .fa {
-          float: right;
-          line-height: 2em; }
-
-.details {
-  width: 34%; }
-
-.major {
-  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif; }
 
 /* Forms ------------------------------------------------------------------- */
 form label {
