@@ -47,9 +47,10 @@ function($, _, Backbone, settings, Surveys, template) {
     },
 
     showSources: function(event) {
-      console.log("Clicked category");
       this.$el.find('.categories .dataset').removeClass('selected');
-      $(event.target).addClass('selected');
+      this.$el.find('.sources .dataset').removeClass('selected');
+      this.$el.find('.details').hide();
+      $(event.target).closest('.dataset').addClass('selected');
       this.$el.find('.sources').show();
     },
 
@@ -62,7 +63,15 @@ function($, _, Backbone, settings, Surveys, template) {
 
     addLayer: function(event) {
       console.log("Adding layer");
-      this.trigger('addLayer');
+      this.trigger('addLayer', 'layer name here');
+      this.close();
+    },
+
+    close: function() {
+      this.$el.hide();
+      this.$el.find('.dataset').removeClass('selected');
+      this.$el.find('.details').hide();
+      this.$el.find('.sources').hide();
     }
 
   });

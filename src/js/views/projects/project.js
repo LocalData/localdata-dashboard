@@ -31,13 +31,14 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews, MapView, L
     template: _.template(template),
 
     events: {
-      'click .add-layer': 'showDataSelector'
+      'click .show-data-selector': 'showDataSelector'
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'setupMap', 'showDataSelector');
+      _.bindAll(this, 'render', 'setupMap', 'showDataSelector', 'addLayer');
       this.survey = new Surveys.Model({id: '85968dd0-98c2-11e2-ab9b-79cb9b3de46f'});
       this.selectorView = new DataSelector({});
+      this.selectorView.on('addLayer', this.addLayer);
     },
 
     update: function() {
@@ -63,7 +64,15 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews, MapView, L
       this.selectorView.show();
     },
 
-    /* Data selector ------------------------------------- */
+    addLayer: function(layerName) {
+      console.log("Add layer:", layerName);
+      var layer = new LayerControl({ });
+      console.log(layer);
+      this.$el.find('.layers').append(layer.render());
+
+    },
+
+    /* Map ------------------------------------------------ */
     setupMap: function() {
       this.mapView = new MapView({
         el: $('#project-map'),
@@ -71,13 +80,11 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews, MapView, L
         clickHandler: this.mapClickHandler
       });
 
-      this.setupLayers();
-    },
-
-    /* Layer controls ------------------------------------- */
-    setupLayers: function() {
-      this.layer = new LayerControl({ });
+      // this.setupLayers();
     }
+    /* Layer controls ------------------------------------- */
+    // setupLayers: function() {
+    // }
 
   });
 

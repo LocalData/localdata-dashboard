@@ -33,13 +33,15 @@ function($, _, Backbone, cartodb, Rickshaw, settings, IndexRouter, Surveys, Surv
   var LayerControl = Backbone.View.extend({
     template: _.template(template),
 
+    className: 'layer',
+
     initialize: function(options) {
       _.bindAll(this, 'render');
       this.sql = cartodb.SQL({ user: 'localdata' });
-      this.setupGraph();
     },
 
     setupGraph: function() {
+      console.log("Setup graph el", this.$el, this.$el.find('.graph'));
       // Graph for permit data
       this.sql.execute("SELECT to_char(approved_date, 'YYYY-MM'), count(*) FROM san_francisco_street_permits group by to_char(approved_date, 'YYYY-MM') ORDER BY to_char(approved_date, 'YYYY-MM') ASC")
         .done(function(data) {
@@ -58,7 +60,7 @@ function($, _, Backbone, cartodb, Rickshaw, settings, IndexRouter, Surveys, Surv
               color: '#daedff'
             }],
             renderer: 'area',
-            element: document.querySelector('.layer-permits .graph')
+            element: this.$el.find('.graph')[0] // document.querySelector('.layer-permits .graph')
           });
           graph.render();
 
@@ -69,13 +71,14 @@ function($, _, Backbone, cartodb, Rickshaw, settings, IndexRouter, Surveys, Surv
               return month + '<br>' + y + ' permits';
             }
           });
-      });
+      }.bind(this));
     },
 
     render: function() {
       console.log("Rendering layerControl", this.$el);
       var context = {};
       this.$el.html(this.template({}));
+      this.setupGraph();
       return this.$el;
     }
 
