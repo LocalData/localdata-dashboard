@@ -186,6 +186,10 @@ tr:nth-child(even) td {
   .datanav-in {
     border-right: 1px solid #ddd;
 
+    .selected {
+      background: #fff3da;
+    }
+
     .dataset {
       padding: 15px;
       border-bottom: 1px solid #ddd;

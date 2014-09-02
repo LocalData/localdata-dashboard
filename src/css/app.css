@@ -1117,6 +1117,8 @@ tr:nth-child(even) td {
   background: #fff; }
   .datanav .datanav-in {
     border-right: 1px solid #ddd; }
+    .datanav .datanav-in .selected {
+      background: #fff3da; }
     .datanav .datanav-in .dataset {
       padding: 15px;
       border-bottom: 1px solid #ddd; }
