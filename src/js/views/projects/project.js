@@ -15,7 +15,7 @@ define([
 
   // Views
   'views/surveys',
-  'views/map',
+  'views/maps/project-map',
   'views/projects/layerControl',
   'views/projects/dataSelector',
 
