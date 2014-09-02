@@ -1015,6 +1015,39 @@ header .nav a {
     font-family: NeuzeitOfficeW01-Regula, Open Sans, Helvetica, sans-serif;
     line-height: 30px; }
 
+#project {
+  /* Data selectors --------------------------------------------------------- */ }
+  #project .c {
+    position: absolute;
+    top: 50px;
+    bottom: 0;
+    background: #1d61a1; }
+  #project .b {
+    margin-left: 20%; }
+  #project .button {
+    display: block;
+    text-align: left;
+    line-height: 2em;
+    font-size: 1em;
+    height: auto;
+    font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
+    margin-top: 0;
+    margin-right: 0;
+    width: auto; }
+    #project .button .fa {
+      float: right;
+      line-height: 2em; }
+  #project .layers {
+    padding: 12px;
+    color: #fff; }
+  #project .layer {
+    border-bottom: 1px dotted #fff;
+    padding: 5px; }
+    #project .layer h3 {
+      font-size: 1em; }
+  #project .rickshaw_graph .detail .x_label {
+    display: none; }
+
 /* Factoids ----------------------------------------------------------------- */
 .factoid {
   font-size: 36px;

@@ -30,6 +30,9 @@ function($, _, Backbone, settings, api) {
 
       "surveys/:slug/settings": "settings",
 
+      "projects": "project",
+
+
       "*actions": "default_route"
     },
 
@@ -51,6 +54,10 @@ function($, _, Backbone, settings, api) {
 
     reset_password: function (resetInfo) {
       this.controller.goto_password_reset(resetInfo);
+    },
+
+    project: function() {
+      this.controller.goto_project();
     },
 
     new_survey: function() {

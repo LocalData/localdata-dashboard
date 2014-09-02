@@ -21,12 +21,15 @@ define([
   'views/design',
   'views/settings',
 
+  'views/projects/project',
+
   // Models
   'models/users'
 ],
 
-function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, UserViews, SurveyViews, DesignViews, SettingsViews, Users) {
+function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, UserViews, SurveyViews, DesignViews, SettingsViews, ProjectView, Users) {
   'use strict';
+
 
   var AllViews = {};
   AllViews.HomeView = HomeView;
@@ -39,6 +42,9 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
   AllViews.LoginView = UserViews.LoginView;
   AllViews.ResetView = UserViews.ResetView;
   AllViews.UserBarView = UserViews.UserBarView;
+
+  AllViews.ProjectView = ProjectView;
+
 
   // The singleton view which manages all others.
   // Essentially, a "controller".
@@ -95,7 +101,6 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
     goto_home: function() {
       // this.currentContentView = this.getOrCreateView("HomeView", "HomeView");
       this.currentContentView = this.getOrCreateView("DashboardView", "DashboardView");
-
     },
 
     goto_login: function(redirectTo) {
@@ -109,6 +114,11 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
       this.currentContentView = this.getOrCreateView('ResetView', 'ResetView', {
         resetInfo: resetInfo
       });
+    },
+
+    // Projects ................................................................
+    goto_project: function() {
+      this.currentContentView = this.getOrCreateView("ProjectView", "ProjectView");
     },
 
     // Survey dashboard routes .................................................

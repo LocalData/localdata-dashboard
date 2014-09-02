@@ -62,7 +62,7 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView) {
         return;
       }
 
-      LD.router._router.navigate("/login/?redirectTo=" + Backbone.history.fragment, {trigger: true});
+      //LD.router._router.navigate("/login/?redirectTo=" + Backbone.history.fragment, {trigger: true});
     };
 
     $(document).ajaxError(function (event, xhr) {
