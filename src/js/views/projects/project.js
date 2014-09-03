@@ -67,10 +67,11 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews, MapView, L
 
     addLayer: function(layerName) {
       console.log("Add layer:", layerName);
-      var layer = new LayerControl({ });
+      var layer = new LayerControl({
+        map: this.mapView.map
+      });
       console.log(layer);
       this.$el.find('.layers').append(layer.render());
-
     },
 
     /* Map ------------------------------------------------ */
@@ -81,8 +82,14 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews, MapView, L
         clickHandler: this.mapClickHandler
       });
 
+      this.mapView.on('zoneCreated', this.mapZoneSelected);
       // this.setupLayers();
     },
+
+    mapZoneSelected: function(data, json) {
+      console.log("Map zone created", data, json);
+    },
+
     /* Layer controls ------------------------------------- */
     // setupLayers: function() {
     // }
@@ -97,7 +104,7 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews, MapView, L
       $('body').append(dlTemplate({
         src: '//data-uri.herokuapp.com/reverse?uri=' + encodeURIComponent('data:text/plain;charset=utf-8;content-disposition=attachment;filename=export.csv;base64,' + data)
       }));
-                         
+
     }
 
   });

@@ -297,6 +297,7 @@ define(function (require) {
       var feature = layer.toGeoJSON();
       // We can use feature.geometry to filter the data
       console.log(JSON.stringify(feature.geometry)); // XXX
+      this.trigger('zoneCreated', feature.geometry, JSON.stringify(feature.geometry));
 
       // Invert the selection, so we have a hole.
       var bounds = this.map.getBounds().pad(3);
