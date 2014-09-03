@@ -102,8 +102,8 @@ define(function (require) {
     };
 
     return Promise.resolve($.ajax({
-      url: 'http://prashtx.cartodb.com/api/v1/map',
-      method: 'POST',
+      url: '//prashtx.cartodb.com/api/v1/map',
+      type: 'POST',
       crossOrigin: true,
       dataType: 'json',
       contentType: 'application/json',
