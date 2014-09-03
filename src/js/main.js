@@ -6,7 +6,9 @@
 require.config({
   paths: {
     text: 'lib/text',
-    jquery: 'lib/jquery-1.7.1',
+    jquery: 'lib/jquery-1.11.1',
+    jqueryUI: 'lib/jquery-ui.min',
+    rangeSlider: 'lib/jQAllRangeSliders-min',
     backbone: 'lib/backbone',
     d3: 'lib/d3',
     moment: 'lib/moment.min',
@@ -63,7 +65,12 @@ require.config({
       exports: '_kmq'
     },
 
-    'lib/bootstrap' : ['jquery']
+    'lib/bootstrap' : ['jquery'],
+
+    'rangeSlider': {
+      deps: ['jquery', 'jqueryUI'],
+      exports: "$"
+    }
   }
 
 });

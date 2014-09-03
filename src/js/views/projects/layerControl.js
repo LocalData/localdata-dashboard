@@ -37,24 +37,37 @@ function($, _, Backbone, cartodb, Rickshaw, settings, IndexRouter, Surveys, Surv
     className: 'layer',
 
     initialize: function(options) {
-      _.bindAll(this, 'render');
+      _.bindAll(this, 'setup', 'render', 'update');
+      this.setup(options);
+    },
 
-      // Add instagram data to the map
+    update: function(options) {
+      this.setup(options);
+    },
+
+    /**
+     * Set up the map and chart data
+     * @param  {Object} options
+     */
+    setup: function(options) {
+      // Add data to the map
       cdb.map = options.map;
-      cdb.updateCDBMap({
-        type: 'daterange',
-        data: {}
-      });
+      cdb.updateCDBMap(options);
 
-      var countsByDate = cdb.countsByDate();
+      // Default options for map:
+      // {
+      //   type: 'daterange',
+      //   data: {}
+      // }
+
+      // Set up the counts
+      var countsByDate = cdb.countsByDate(options.data);
       countsByDate.then(function (data) {
         console.log("Got data", data);
         this.setupGraph(data);
       }.bind(this)).catch(function (error) {
-        console.log(error);
+        console.log("Error getting chart from cartodb", error);
       });
-
-      // this.sql = cartodb.SQL({ user: 'localdata' });
     },
 
     setupGraph: function(data) {
@@ -62,69 +75,55 @@ function($, _, Backbone, cartodb, Rickshaw, settings, IndexRouter, Surveys, Surv
       var prepped = [];
       _.each(data.rows, function(row, index) {
         prepped.push({
-          x: index, // new Date(row.d),
+          x: new Date(row.d).getTime(), // index, // new Date(row.d),
           y: row.count
         });
       });
 
       console.log("Using prepped", prepped);
 
-      var graph = new Rickshaw.Graph({
-        series: [{
+      if(!this.graph) {
+        this.graph = new Rickshaw.Graph({
+          series: [{
+            data: prepped,
+            color: '#daedff'
+          }],
+          renderer: 'area',
+          height: 75,
+          element: this.$el.find('.graph')[0] // document.querySelector('.layer-permits .graph')
+        });
+
+        var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+          graph: this.graph,
+          formatter: function(series, x, y) {
+            var month = data.rows[x - 1].to_char;
+            return month + '<br>' + y + ' photos';
+          }
+        });
+
+        var xAxis = new Rickshaw.Graph.Axis.Time( {
+          graph: this.graph,
+         // ticksTreatment: ticksTreatment,
+          timeFixture: new Rickshaw.Fixtures.Time.Local()
+        });
+
+        this.graph.render();
+      } else {
+        // If the graph already exists, we just need to update the data.
+        console.log("UPDATING GRAPH", prepped);
+        var series = [{
           data: prepped,
           color: '#daedff'
-        }],
-        renderer: 'area',
-        height: 75,
-        element: this.$el.find('.graph')[0] // document.querySelector('.layer-permits .graph')
-      });
-      graph.render();
-
-      var hoverDetail = new Rickshaw.Graph.HoverDetail( {
-        graph: graph,
-        formatter: function(series, x, y) {
-          var month = data.rows[x - 1].to_char;
-          return month + '<br>' + y + ' photos';
-        }
-      });
-
-      // Graph for permit data
-      //this.sql.execute("SELECT to_char(approved_date, 'YYYY-MM'), count(*) FROM san_francisco_street_permits group by to_char(approved_date, 'YYYY-MM') ORDER BY to_char(approved_date, 'YYYY-MM') ASC")
-      //  .done(function(data) {
-      //    var prepped = [];
-      //    // console.log(data.rows);
-      //    _.each(data.rows, function(row, index) {
-      //      prepped.push({
-      //        x: index,
-      //        y: row.count
-      //      });
-      //    });
-//
-      //    var graph = new Rickshaw.Graph({
-      //      series: [{
-      //        data: prepped,
-      //        color: '#daedff'
-      //      }],
-      //      renderer: 'area',
-      //      element: this.$el.find('.graph')[0] // document.querySelector('.layer-permits .graph')
-      //    });
-      //    graph.render();
-//
-      //    var hoverDetail = new Rickshaw.Graph.HoverDetail( {
-      //      graph: graph,
-      //      formatter: function(series, x, y) {
-      //        var month = data.rows[x - 1].to_char;
-      //        return month + '<br>' + y + ' permits';
-      //      }
-      //    });
-      //}.bind(this));
+        }];
+        this.graph.series[0].data=series;
+        this.graph.update();
+      }
     },
 
     render: function() {
       console.log("Rendering layerControl", this.$el);
       var context = {};
       this.$el.html(this.template({}));
-      // this.setupGraph();
       return this.$el;
     }
 

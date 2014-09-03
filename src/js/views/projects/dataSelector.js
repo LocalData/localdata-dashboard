@@ -43,6 +43,7 @@ function($, _, Backbone, settings, Surveys, template) {
 
     show: function() {
       console.log(this);
+      $('#project-map').hide();
       this.$el.show();
     },
 
@@ -72,6 +73,39 @@ function($, _, Backbone, settings, Surveys, template) {
       this.$el.find('.dataset').removeClass('selected');
       this.$el.find('.details').hide();
       this.$el.find('.sources').hide();
+      $('#project-map').show();
+    },
+
+    data: {
+      'categories': [
+        {
+          name: 'My Surveys'
+        },
+        {
+          name: 'Social media'
+        },
+        {
+          name: 'Economic'
+        },
+        {
+          name: 'Transportation'
+        },
+        {
+          name: 'Crime & safety'
+        },
+        {
+          name: 'Upload data'
+        }
+      ],
+      'sources': {
+        'my': [ 'foo'
+        ],
+        'socialmedia': [],
+        'economic': [],
+        'transportation': [],
+        'crimeandsafety': [],
+        'upload': []
+      }
     }
 
   });

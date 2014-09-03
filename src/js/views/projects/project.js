@@ -2,7 +2,9 @@
 /*globals define, cartodb: true */
 
 define([
-  'jquery',
+  //'jquery',
+  'jqueryUI',
+  'rangeSlider',
   'lib/lodash',
   'backbone',
   'settings',
@@ -23,7 +25,7 @@ define([
   'text!templates/projects/project.html'
 ],
 
-function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews, MapView, LayerControl, DataSelector, template) {
+function(jqueryUI, $, _, Backbone, settings, IndexRouter, Surveys, SurveyViews, MapView, LayerControl, DataSelector, template) {
   'use strict';
 
   var ProjectView = Backbone.View.extend({
@@ -50,6 +52,7 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews, MapView, L
       console.log("Rendering ProjectView", this.$el);
       var context = {};
       this.$el.html(this.template({}));
+      this.setupSlider();
       this.setupDataSelector();
       this.setupMap();
     },
@@ -60,6 +63,57 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews, MapView, L
       this.$el.find('.b').prepend($el);
     },
 
+    setupSlider: function() {
+      var min = new Date(new Date().getTime() - (60*60*24*7*1000));
+      var max = new Date();
+      console.log("Min and max time", min.getTime(), max.getTime());
+
+      // Rangeslider -- too clunky
+      //
+      // $('#slider-range').dateRangeSlider({
+      //   // valueLabels: 'change',
+      //   bounds: {
+      //     min: new Date(2014, 8, 5),
+      //     max: new Date(2014, 9, 2)
+      //   },
+      //   step: {
+      //     days: 1
+      //   }
+      // });
+      // $("#slider-range").bind("valuesChanged", function(e, data) {
+      //   console.log("Values just changed. min: " + data.values.min + " max: " + data.values.max);
+      //   console.log(this.layer);
+      //   if(!this.layer) {return;}
+      //   this.layer.update({
+      //     type: 'daterange',
+      //     data: {
+      //       start: data.values.min,
+      //       end: data.values.max
+      //     }
+      //   });
+      // }.bind(this));
+
+      // This is the default Jquery UI slider:
+      $( "#slider-range" ).slider({
+        range: true,
+        min: min.getTime(),
+        max: max.getTime(),
+        step: 1000 * 60 * 60 * 24, // one day in ms
+        // values: [ 75, 300 ],
+        slide: function( event, ui ) {
+          console.log("slider", ui.values);
+          this.layer.update({
+            type: 'daterange',
+            data: {
+              start: new Date(ui.values[0]),
+              end: new Date(ui.values[1])
+            }
+          });
+          //$( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+        }.bind(this)
+      });
+    },
+
     showDataSelector: function(event) {
       event.preventDefault();
       this.selectorView.show();
@@ -67,11 +121,10 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews, MapView, L
 
     addLayer: function(layerName) {
       console.log("Add layer:", layerName);
-      var layer = new LayerControl({
+      this.layer = new LayerControl({
         map: this.mapView.map
       });
-      console.log(layer);
-      this.$el.find('.layers').append(layer.render());
+      this.$el.find('.layers').append(this.layer.render());
     },
 
     /* Map ------------------------------------------------ */
@@ -83,11 +136,10 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews, MapView, L
       });
 
       this.mapView.on('zoneCreated', this.mapZoneSelected);
-      // this.setupLayers();
     },
 
-    mapZoneSelected: function(data, json) {
-      console.log("Map zone created", data, json);
+    mapZoneSelected: function(geometry, json) {
+      console.log("Map zone created", geometry, json);
     },
 
     /* Layer controls ------------------------------------- */

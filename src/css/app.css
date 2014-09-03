@@ -1092,9 +1092,13 @@ header .nav a {
   #project .layers {
     padding: 12px;
     color: #fff; }
+    #project .layers #slider-range {
+      margin-top: 2.5em; }
   #project .layer {
     border-bottom: 1px dotted #fff;
     padding: 5px; }
+    #project .layer strong {
+      padding-bottom: 0.5em; }
     #project .layer h3 {
       font-size: 1em; }
   #project .rickshaw_graph .detail .x_label {

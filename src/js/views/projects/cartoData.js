@@ -124,6 +124,11 @@ define(function (require) {
 
   exports.sql = (new cartodb.SQL({ user: 'prashtx' }));
 
+  /**
+   * Get counts by dat
+   * @param  {Object} options With optional start and end parameters
+   * @return {Promise}
+   */
   exports.countsByDate = function (options) {
     if(!options) {
       options = {};
@@ -131,15 +136,19 @@ define(function (require) {
     var start;
     if (options.start) {
       start = (new Date(options.start)).toISOString();
+      console.log("Using custom start date", options.start, start);
     } else {
       start = (new Date(0)).toISOString();
     }
     var stop;
     if (options.stop) {
       stop = (new Date(options.stop)).toISOString();
+      console.log("Using custom stop date", options.stop, stop);
     } else {
       stop = (new Date()).toISOString();
     }
+
+    console.log("Running counts by date", options, start, stop);
 
     return new Promise(function (resolve, reject) {
       var promise;
