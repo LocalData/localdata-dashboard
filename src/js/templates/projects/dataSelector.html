@@ -3,15 +3,17 @@
 </div>
 
 <div class="dataselect">
+
+  <!-- Data categories  ///////////////////////////////////////////////// -->
   <div class="datanav categories">
     <div class="datanav-in">
-      <div class="dataset">
+      <div class="dataset" data-show="surveys">
         <span>My surveys <i class="fa fa-chevron-right"></i></span>
       </div>
-      <div class="dataset">
+      <div class="dataset" data-show="socialmedia">
         <span>Social media <i class="fa fa-chevron-right"></i></span>
       </div>
-      <div class="dataset">
+      <div class="dataset" data-show="economic">
         <span>Economic <i class="fa fa-chevron-right"></i></span>
       </div>
       <div class="dataset">
@@ -20,21 +22,22 @@
       <div class="dataset">
         <span>Crime &amp; safety <i class="fa fa-chevron-right"></i></span>
       </div>
-      <div class="dataset">
+      <div class="dataset" data-show="upload">
         <span>Upload data <i class="fa fa-chevron-right"></i></span>
       </div>
     </div>
   </div>
 
-  <div class="datanav sources">
+  <!-- Data sources ///////////////////////////////////////////////// -->
+  <div class="datanav sources socialmedia">
     <div class="datanav-in">
-      <div class="dataset">
+      <div class="dataset" data-show="twitter">
         <span>Twitter <i class="fa fa-twitter"></i></span>
       </div>
-      <div class="dataset">
+      <div class="dataset" data-show="foursquare">
         <span>Foursquare <i class="fa fa-foursquare"></i></span>
       </div>
-      <div class="dataset">
+      <div class="dataset" data-show="instagram">
         <span>Instagram <i class="fa fa-instagram"></i></span>
       </div>
       <div class="dataset">
@@ -49,17 +52,115 @@
     </div>
   </div>
 
-  <div class="datanav details">
+  <div class="datanav sources economic">
+    <div class="datanav-in">
+      <div class="dataset" data-show="foursquare-businesses">
+        <span>Retail locations</span>
+      </div>
+      <div class="dataset" data-show="permits-streetuse">
+        <span>Street use permits</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="datanav sources surveys">
+    <div class="datanav-in">
+      <div class="dataset" data-show="survey-parcel">
+        <span>Mission Bay parcel survey</span>
+
+      </div>
+      <div class="dataset" data-show="survey-business">
+        <span>Mission Bay business survey</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="datanav sources upload">
+    <div class="datanav-in">
+      <div class="dataset">
+        <span>Upload your data</span>
+        <a class="button add-layer">Select file <i class="fa fa-plus-circle"></i></a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Dataset details   ////////////////////////////////////////////////// -->
+
+  <!-- Social media data  ................................. -->
+  <div class="datanav details instagram">
     <div class="datanav-in">
       <div class="dataset">
         <strong><i class="fa fa-instagram"></i> Instagram</strong>
+        <a class="button add-layer" data-add="instagram">Add data layer <i class="fa fa-plus-circle"></i></a>
+        <p>Summary and density data on instagram activity, filterable by time
+        and location.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="datanav details twitter">
+    <div class="datanav-in">
+      <div class="dataset">
+        <strong><i class="fa fa-twitter"></i> Twitter</strong>
         <a class="button add-layer">Add data layer <i class="fa fa-plus-circle"></i></a>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-        quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-        cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-        proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+        <p>Summary and density data on Twitter activity, filterable by time
+        and location.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="datanav details foursquare">
+    <div class="datanav-in">
+      <div class="dataset">
+        <strong><i class="fa fa-foursquare"></i> Foursqaure</strong>
+        <a class="button add-layer">Add data layer <i class="fa fa-plus-circle"></i></a>
+        <p>Summary and density data on foursquare activity, and checkins,
+         filterable by time and location.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Economic activity data  ................................. -->
+  <div class="datanav details foursquare-business">
+    <div class="datanav-in">
+      <div class="dataset">
+        <strong><i class="fa fa-fa-bullseye"></i> Business locations</strong>
+        <a class="button add-layer" data-add="foursquare-business">Add data layer <i class="fa fa-plus-circle"></i></a>
+        <p>Nearby business locations sourced from Foursqaure.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="datanav details permits-streetuse">
+    <div class="datanav-in">
+      <div class="dataset">
+        <strong><i class="fa fa-bullseye"></i> Street use permits</strong>
+        <a class="button add-layer">Add data layer <i class="fa fa-plus-circle"></i></a>
+        <p>.</p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- "My surveys" data  ................................. -->
+  <div class="datanav details survey-parcel">
+    <div class="datanav-in">
+      <div class="dataset">
+        <strong><i class="fa fa-instagram"></i> Mission Bay parcel survey</strong>
+        <a class="button add-layer" data-add="survey-parcel">Add data layer <i class="fa fa-plus-circle"></i></a>
+        <p>Data you've collected on the Mission Bay.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="datanav details survey-business">
+    <div class="datanav-in">
+      <div class="dataset">
+        <strong><i class="fa fa-instagram"></i> Mission Bay business survey</strong>
+        <a class="button add-layer" data-add="survey-business">Add data layer <i class="fa fa-plus-circle"></i></a>
+        <p>Results of a door-to-door business sentiment survey run for the project
+        by Berkeley planning students.</p>
       </div>
     </div>
   </div>

@@ -51,20 +51,31 @@ function($, _, Backbone, settings, Surveys, template) {
       this.$el.find('.categories .dataset').removeClass('selected');
       this.$el.find('.sources .dataset').removeClass('selected');
       this.$el.find('.details').hide();
-      $(event.target).closest('.dataset').addClass('selected');
-      this.$el.find('.sources').show();
+      this.$el.find('.sources').hide();
+
+      var $dataset = $(event.target).closest('.dataset');
+      $dataset.addClass('selected');
+
+      var show = $dataset.attr('data-show');
+      this.$el.find('.sources.' + show).show();
     },
 
     showDetails: function(event) {
       console.log("Clicked datasource");
       this.$el.find('.sources .dataset').removeClass('selected');
-      $(event.target).addClass('selected');
-      this.$el.find('.details').show();
+      this.$el.find('.details').hide();
+
+      var $dataset = $(event.target).closest('.dataset');
+      $dataset.addClass('selected');
+
+      // Show the relevant details
+      var show = $dataset.attr('data-show');
+      this.$el.find('.details.' + show).show();
     },
 
     addLayer: function(event) {
-      console.log("Adding layer");
-      this.trigger('addLayer', 'layer name here');
+      var layerName = $(event.target).closest('a').attr('data-add');
+      this.trigger('addLayer', layerName);
       this.close();
     },
 
