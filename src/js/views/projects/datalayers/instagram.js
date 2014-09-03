@@ -124,7 +124,8 @@ function($, _, Backbone, cartodb, Rickshaw, settings, IndexRouter, Surveys, Surv
       console.log("Rendering layerControl", this.$el);
       var context = {
         name: 'Instagram',
-        icon: 'fa-instagram'
+        icon: 'fa-instagram',
+        meta: {}
       };
       this.$el.html(this.template(context));
       return this.$el;

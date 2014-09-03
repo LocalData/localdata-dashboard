@@ -22,9 +22,9 @@ define([
   'views/projects/dataSelector',
 
   // Data sources
-  'views/projects/datasources/instagram',
-  'views/projects/datasources/factual',
-  'views/projects/datasources/survey',
+  'views/projects/datalayers/instagram',
+  'views/projects/datalayers/factual',
+  'views/projects/datalayers/survey',
 
   // Templates
   'text!templates/projects/project.html'
