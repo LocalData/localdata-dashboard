@@ -37,7 +37,7 @@ function($, _, Backbone, L, cartodb, Rickshaw, settings, IndexRouter, Surveys, S
 
     className: 'layer',
     initialize: function(options) {
-      _.bindAll(this, 'setup', 'render', 'update', 'processData');
+      _.bindAll(this, 'setup', 'render', 'update', 'processData', 'getTileJSON', 'addTileLayer');
       console.log("Creating survey layer with options", options);
       this.map = options.map;
       this.surveyId = options.layerId;
@@ -62,6 +62,9 @@ function($, _, Backbone, L, cartodb, Rickshaw, settings, IndexRouter, Surveys, S
     processData: function(data) {
       console.log("Got survey data", data);
       this.render();
+
+      this.map.survey = this.survey;
+      this.getTileJSON();
       // TODO-- add tile layer
       // this.data = data;
       // this.layer = L.geoJson(data, {
@@ -71,6 +74,28 @@ function($, _, Backbone, L, cartodb, Rickshaw, settings, IndexRouter, Surveys, S
       // });
       // this.layer.addTo(this.map);
       // this.render();
+    },
+
+    getTileJSON: function() {
+      var url = '/tiles/' + this.survey.get('id');
+      url = url + '/tile.json';
+
+      console.log("Getting tilejson", url);
+      // Get TileJSON
+      $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        cache: false
+      }).done(this.addTileLayer)
+      .fail(function(jqXHR, textStatus, errorThrown) {
+        console.log("Error fetching tilejson", jqXHR, textStatus, errorThrown);
+      });
+    },
+
+    addTileLayer: function(tilejson) {
+      this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
+      this.map.addLayer(this.tileLayer);
     },
 
     render: function() {
