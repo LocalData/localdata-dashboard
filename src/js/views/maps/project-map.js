@@ -164,13 +164,13 @@ define(function (require) {
         // Initialize the map
         this.map = new L.map('map', {
           zoom: 15,
-          center: [37.77585785035733, -122.41362811351655]
+          center: [37.770888, -122.39409]
         });
 
         // Set up the base maps
         this.baseLayer = L.tileLayer(settings.baseLayer);
-        this.satelliteLayer = L.tileLayer(settings.satelliteLayer);
-        this.baseLayer =  this.printLayer = L.tileLayer(settings.printLayer);
+        this.baseLayer = this.satelliteLayer = L.tileLayer(settings.satelliteLayer);
+        this.printLayer = L.tileLayer(settings.printLayer);
         this.map.addLayer(this.baseLayer);
         var baseMaps = {
           "Streets": this.baseLayer,
@@ -195,8 +195,10 @@ define(function (require) {
         setTimeout(function () {
           this.map.addLayer(this.zoneLayer);
 
+          this.map.setCenter([37.770888,-122.39409]);
+
           // Center the map
-          this.fitBounds();
+          // this.fitBounds();
         }.bind(this), 0);
 
         // Handle zones

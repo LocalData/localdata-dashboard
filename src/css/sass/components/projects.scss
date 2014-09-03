@@ -1,0 +1,136 @@
+#project {
+  .c {
+    position: absolute;
+    top: 50px;
+    bottom: 0;
+    background: $darkblue;
+  }
+
+  .b {
+    margin-left: 20%;
+  }
+
+  .button {
+    display: block;
+    text-align: left;
+    line-height: 2em;
+    font-size: 1em;
+    height: auto;
+    font-family: $bold;
+    margin-top: 0;
+    margin-right: 0;
+    width: auto;
+    .fa {
+      float: right;
+      line-height: 2em;
+    }
+  }
+
+/* Datasets ---------------------------------------------------------------- */
+#data-select-container {
+  background: #fff;
+  height: 100%;
+  display: none;
+
+  #map-tools {
+    padding: 10px;
+  }
+}
+
+.dataselect {
+  overflow: auto;
+  height: 100%;
+}
+
+.datanav {
+  width: 33%;
+  float: left;
+  background: #fff;
+
+  .datanav-in {
+    border-right: 1px solid #ddd;
+
+    .fa-chevron-right {
+      display: none;
+    }
+
+    .dataset:hover,
+    .selected {
+      background: #fff3da;
+
+      .fa-chevron-right {
+        display: inline;
+      }
+    }
+
+    .dataset {
+      padding: 15px;
+      border-bottom: 1px solid #ddd;
+      cursor: pointer;
+
+      .fa {
+        float: right;
+        line-height: 1.5em;
+      }
+
+      .button {
+        display: block;
+        text-align: left;
+        line-height: 2em;
+        font-size: 1em;
+        height: auto;
+        font-family: $bold;
+        margin-top: 0;
+        margin-right: 0;
+        width: auto;
+        .fa {
+          float: right;
+          line-height: 2em;
+        }
+      }
+    }
+  }
+}
+
+.datanav.categories {
+  font-family: $bold;
+}
+
+.datanav.sources,
+.datanav.details {
+  display: none;
+}
+
+.datanav.details {
+  width: 34%;
+  background: #fff3da;
+}
+
+
+  /* Layer selectors -------------------------------------------------------- */
+  .layers {
+    padding: 12px;
+    color: #fff;
+
+    #slider-range {
+      margin-top: 2.5em;
+    }
+  }
+
+  .layer {
+    border-bottom: 1px dotted #fff;
+    padding: 5px;
+
+    strong {
+      padding-bottom: 0.5em;
+    }
+
+    h3 {
+      font-size: 1em;
+    }
+  }
+
+  .rickshaw_graph .detail .x_label {
+    display: none
+  }
+}

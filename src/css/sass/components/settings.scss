@@ -1,0 +1,60 @@
+/* Settings CSS ------------------------------------------------------------- */
+
+.survey-settings {
+  h3 {
+    font-size: 24px;
+    letter-spacing: -0.5px;
+    font-family: $bold;
+  }
+}
+
+/* Survey users */
+.survey-users {
+
+  li {
+    list-style: none;
+    margin-bottom: 0.5em;
+    overflow: auto;
+  }
+
+  .remove {
+    cursor: pointer;
+    color: $orange;
+    float: right;
+  }
+
+  .user-icon {
+    color: $disabled;
+  }
+}
+
+/* Survey zones */
+#map-draw {
+  height: 300px;
+}
+
+#map-draw-view-container {
+  margin-bottom: 2em;
+}
+
+#survey-zone-form {
+  input[type=text],
+  input.large {
+    display: inline-block;
+    border-color: $gray;
+  }
+
+  /* legend for the zones editor */
+  .zone-color {
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    border-radius:12px;
+  }
+
+  .remove {
+    padding-left: 8px;
+    font-family: $font;
+    line-height: 30px;
+  }
+}

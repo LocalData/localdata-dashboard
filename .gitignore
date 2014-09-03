@@ -7,4 +7,4 @@ temp
 .sass-cache/
 .sass-cache/*
 .DS_Store
-css
+/css
