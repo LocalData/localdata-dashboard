@@ -21,11 +21,29 @@ define([
   'views/projects/layerControl',
   'views/projects/dataSelector',
 
+  // Data sources
+  'views/projects/datasources/instagram',
+  'views/projects/datasources/factual',
+  'views/projects/datasources/survey',
+
   // Templates
   'text!templates/projects/project.html'
 ],
 
-function(jqueryUI, $, _, Backbone, settings, IndexRouter, Surveys, SurveyViews, MapView, LayerControl, DataSelector, template) {
+function(jqueryUI, $, _, Backbone, settings,
+  IndexRouter,
+  Surveys,
+  SurveyViews,
+  MapView,
+  LayerControl,
+  DataSelector,
+
+  instagramDataSource,
+  factualDataSource,
+  surveyDataSource,
+
+  template
+  ){
   'use strict';
 
   var ProjectView = Backbone.View.extend({
@@ -102,6 +120,9 @@ function(jqueryUI, $, _, Backbone, settings, IndexRouter, Surveys, SurveyViews, 
         // values: [ 75, 300 ],
         slide: function( event, ui ) {
           console.log("slider", ui.values);
+          if(!this.layer) {
+            return;
+          }
           this.layer.update({
             type: 'daterange',
             data: {
@@ -119,10 +140,19 @@ function(jqueryUI, $, _, Backbone, settings, IndexRouter, Surveys, SurveyViews, 
       this.selectorView.show();
     },
 
-    addLayer: function(layerName) {
-      console.log("Add layer:", layerName);
-      this.layer = new LayerControl({
-        map: this.mapView.map
+    layers: {
+      'instagram': instagramDataSource,
+      'factual-business': factualDataSource,
+      'survey': surveyDataSource
+    },
+
+    addLayer: function(layerName, layerId) {
+      console.log("Add layer", layerName, layerId);
+
+      // Dispatch the correct layers
+      this.layer = new this.layers[layerName]({
+        map: this.mapView.map,
+        layerId: layerId
       });
       this.$el.find('.layers').append(this.layer.render());
     },

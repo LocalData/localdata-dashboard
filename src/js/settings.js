@@ -32,10 +32,10 @@ function(L) {
   ];
 
   settings.circleMarker = {
-    radius: 8,
-    fillColor: "#df455d",
-    color: "#df455d",
-    weight: 1,
+    radius: 5,
+    fillColor: "#0062be",
+    color: "#fff",
+    weight: 2,
     opacity: 1,
     fillOpacity: 0.8
   };

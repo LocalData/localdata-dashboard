@@ -75,7 +75,8 @@ function($, _, Backbone, settings, Surveys, template) {
 
     addLayer: function(event) {
       var layerName = $(event.target).closest('a').attr('data-add');
-      this.trigger('addLayer', layerName);
+      var layerId = $(event.target).closest('a').attr('data-id');
+      this.trigger('addLayer', layerName, layerId);
       this.close();
     },
 
