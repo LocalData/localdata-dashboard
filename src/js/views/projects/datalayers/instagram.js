@@ -70,10 +70,11 @@ function($, _, Backbone, cartodb, Rickshaw, moment, settings, IndexRouter, Surve
         options.type = 'daterange';
         options.data = {
           start: new Date(options.daterange[0]),
-          end: new Date(options.daterange[1])
+          stop: new Date(options.daterange[1])
         };
       }
 
+      console.log("Using options", options, options.data);
       // Set up the counts
       var countsByDate = cdb.countsByDate(options.data);
       countsByDate.then(function (data) {

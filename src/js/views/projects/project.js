@@ -109,17 +109,17 @@ function($,
     updateDate: function() {
       var values = this.getDateRange();
       var start = new Date(values[0]);
-      var end = new Date(values[1]);
+      var stop = new Date(values[1]);
 
       $('.startend .start').html(moment(start).format("ddd, D/M"));
-      $('.startend .end').html(moment(end).format("ddd, D/M"));
+      $('.startend .end').html(moment(stop).format("ddd, D/M"));
 
       _.each(this.activeLayers, function(layer) {
         layer.update({
           type: 'daterange',
           data: {
-            start: new Date(values[0]),
-            end: new Date(values[1])
+            start: start,
+            stop: stop
           }
         });
       });
