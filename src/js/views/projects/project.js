@@ -74,7 +74,7 @@ function($,
         'updateDate'
       );
 
-      this.survey = new Surveys.Model({id: '85968dd0-98c2-11e2-ab9b-79cb9b3de46f'});
+      this.survey = new Surveys.Model({id: '5b51af30-3477-11e4-8466-37cd6d8f8d78'});
       this.selectorView = new DataSelector({});
       this.selectorView.on('addLayer', this.addLayer);
     },
