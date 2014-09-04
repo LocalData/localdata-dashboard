@@ -1104,6 +1104,40 @@ header .nav a {
   #project .rickshaw_graph .detail .x_label {
     display: none; }
 
+#table {
+  padding: 10px; }
+
+.project-table {
+  margin: 15px;
+  padding: 10px; }
+
+.project-table .title {
+  font-size: 26px;
+  margin-bottom: 5px; }
+
+.project-table .section {
+  padding: 5px;
+  margin-top: 10px; }
+
+.project-table .category {
+  font-family: "Neuzeit Office W01 Bold", Open Sans, Helvetica, sans-serif;
+  padding-bottom: 5px; }
+
+.project-table .entry {
+  width: 500px; }
+
+.project-table .name {
+  width: 200px;
+  text-align: left;
+  padding-right: 10px;
+  padding-left: 20px;
+  display: inline-block; }
+
+.project-table .value {
+  width: 250px;
+  text-align: left;
+  display: inline-block; }
+
 /* Factoids ----------------------------------------------------------------- */
 .factoid {
   font-size: 36px;
@@ -1328,7 +1362,7 @@ input.large {
     position: relative; }
   .editor .question .question,
   .editor .answers {
-    border-left: 2px solid white;
+    border-left: 2px solid #fff;
     margin-left: 40px; }
   .editor .answers {
     margin-left: 0px; }

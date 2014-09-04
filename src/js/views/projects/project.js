@@ -20,6 +20,7 @@ define([
   'views/maps/project-map',
   'views/projects/layerControl',
   'views/projects/dataSelector',
+  'views/projects/table',
 
   // Data sources
   'views/projects/datalayers/instagram',
@@ -37,6 +38,7 @@ function(jqueryUI, $, _, Backbone, settings,
   MapView,
   LayerControl,
   DataSelector,
+  TableView,
 
   instagramDataSource,
   factualDataSource,
@@ -52,7 +54,9 @@ function(jqueryUI, $, _, Backbone, settings,
 
     events: {
       'click .show-data-selector': 'showDataSelector',
-      'click #export-btn': 'downloadData'
+      'click #export-btn': 'downloadData',
+      'click #map-btn': 'showMap',
+      'click #table-btn': 'showTable'
     },
 
     initialize: function(options) {
@@ -155,6 +159,41 @@ function(jqueryUI, $, _, Backbone, settings,
         layerId: layerId
       });
       this.$el.find('.layers').append(this.layer.render());
+    },
+
+    /* Data views ----------------------------------------- */
+    showMap: function (e) {
+      e.preventDefault();
+      if (this.tableView) {
+        this.tableView.$el.hide();
+      }
+      if (!this.mapView) {
+        this.setupMap();
+      } else {
+        this.mapView.$el.show();
+      }
+      this.$('#map-tools a').removeClass('selected');
+      this.$('#map-btn').addClass('selected');
+    },
+
+    showTable: function (e) {
+      e.preventDefault();
+      if (this.mapView) {
+        this.mapView.$el.hide();
+      }
+      if (!this.tableView) {
+        this.setupTable();
+      } else {
+        this.tableView.$el.show();
+      }
+      this.$('#map-tools a').removeClass('selected');
+      this.$('#table-btn').addClass('selected');
+    },
+
+    setupTable: function() {
+      this.tableView = new TableView({
+        el: $('#project-table')
+      });
     },
 
     /* Map ------------------------------------------------ */
