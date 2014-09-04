@@ -37,7 +37,16 @@ function($, _, Backbone, L, cartodb, Rickshaw, settings, IndexRouter, Surveys, S
 
     className: 'layer',
     initialize: function(options) {
-      _.bindAll(this, 'setup', 'render', 'update', 'processData', 'getTileJSON', 'addTileLayer');
+      _.bindAll(this,
+        'setup',
+        'render',
+        'update',
+        'processData',
+        'doneLoading',
+        'getCount',
+        'getTileJSON',
+        'addTileLayer'
+      );
       console.log("Creating survey layer with options", options);
       this.map = options.map;
       this.surveyId = options.layerId;
@@ -98,20 +107,32 @@ function($, _, Backbone, L, cartodb, Rickshaw, settings, IndexRouter, Surveys, S
       this.map.addLayer(this.tileLayer);
     },
 
+    doneLoading: function() {
+      this.$el.find('.loading').hide();
+    },
+
+    getCount: function() {
+      if (this.survey.get('responseCount')) {
+        return this.survey.get('responseCount');
+      }
+      return '';
+    },
+
     render: function() {
       console.log("Rendering layerControl", this.$el);
       var context = {
         name: this.survey.get('name') || 'LocalData Survey',
         kind: 'responses',
-        meta: {}
+        meta: {
+          count: this.getCount()
+        }
       };
 
-      // Show a count
-      if(this.survey.get('count')) {
-        context.meta.count = this.survey.get('count');
+      this.$el.html(this.template(context));
+      if(this.survey.get('name')) {
+        this.doneLoading();
       }
 
-      this.$el.html(this.template(context));
       return this.$el;
     }
   });

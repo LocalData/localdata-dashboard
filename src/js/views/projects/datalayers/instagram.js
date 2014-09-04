@@ -7,6 +7,7 @@ define([
   'backbone',
   'cartodb',
   'Rickshaw',
+  'moment',
 
   // LocalData
   'settings',
@@ -26,7 +27,7 @@ define([
   'text!templates/projects/layerControl.html'
 ],
 
-function($, _, Backbone, cartodb, Rickshaw, settings, IndexRouter, Surveys, SurveyViews, MapView, cdb, template) {
+function($, _, Backbone, cartodb, Rickshaw, moment, settings, IndexRouter, Surveys, SurveyViews, MapView, cdb, template) {
   'use strict';
 
   cartodb = window.cartodb;
@@ -37,7 +38,12 @@ function($, _, Backbone, cartodb, Rickshaw, settings, IndexRouter, Surveys, Surv
     className: 'layer',
 
     initialize: function(options) {
-      _.bindAll(this, 'setup', 'render', 'update');
+      _.bindAll(this,
+        'setup',
+        'render',
+        'update',
+        'doneLoading'
+      );
       this.setup(options);
     },
 
@@ -59,6 +65,14 @@ function($, _, Backbone, cartodb, Rickshaw, settings, IndexRouter, Surveys, Surv
       //   type: 'daterange',
       //   data: {}
       // }
+      //
+      if(options.daterange) {
+        options.type = 'daterange';
+        options.data = {
+          start: new Date(options.daterange[0]),
+          end: new Date(options.daterange[1])
+        };
+      }
 
       // Set up the counts
       var countsByDate = cdb.countsByDate(options.data);
@@ -80,9 +94,8 @@ function($, _, Backbone, cartodb, Rickshaw, settings, IndexRouter, Surveys, Surv
         });
       });
 
-      console.log("Using prepped", prepped);
-
       if(!this.graph) {
+        console.log("Creating graph with data", prepped);
         this.graph = new Rickshaw.Graph({
           series: [{
             data: prepped,
@@ -96,18 +109,13 @@ function($, _, Backbone, cartodb, Rickshaw, settings, IndexRouter, Surveys, Surv
         var hoverDetail = new Rickshaw.Graph.HoverDetail( {
           graph: this.graph,
           formatter: function(series, x, y) {
-            var month = data.rows[x - 1].to_char;
-            return month + '<br>' + y + ' photos';
+            var date = moment(x).format("ddd, D/M");
+            return date + '<br>' + y + ' photos';
           }
         });
 
-        var xAxis = new Rickshaw.Graph.Axis.Time( {
-          graph: this.graph,
-         // ticksTreatment: ticksTreatment,
-          timeFixture: new Rickshaw.Fixtures.Time.Local()
-        });
-
         this.graph.render();
+        this.doneLoading();
       } else {
         // If the graph already exists, we just need to update the data.
         console.log("UPDATING GRAPH", prepped);
@@ -115,9 +123,14 @@ function($, _, Backbone, cartodb, Rickshaw, settings, IndexRouter, Surveys, Surv
           data: prepped,
           color: '#daedff'
         }];
-        this.graph.series[0].data=series;
+        this.graph.series[0].data=prepped;
         this.graph.update();
+        this.doneLoading();
       }
+    },
+
+    doneLoading: function() {
+      this.$el.find('.loading').hide();
     },
 
     render: function() {

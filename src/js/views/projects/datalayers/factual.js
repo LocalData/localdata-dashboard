@@ -40,7 +40,14 @@ function($, _, Backbone, L, cartodb, Rickshaw, settings, IndexRouter, Surveys, S
     BASEURL: 'https://databucket.herokuapp.com/api/places.geojson?category=123&bbox=',
 
     initialize: function(options) {
-      _.bindAll(this, 'setup', 'render', 'update', 'processData');
+      _.bindAll(this,
+        'setup',
+        'render',
+        'update',
+        'getCount',
+        'processData',
+        'doneLoading'
+      );
       this.map = options.map;
       this.setup();
     },
@@ -73,20 +80,37 @@ function($, _, Backbone, L, cartodb, Rickshaw, settings, IndexRouter, Surveys, S
       this.render();
     },
 
+    doneLoading: function() {
+      this.$el.find('.loading').hide();
+    },
+
+    /**
+     * Get the number of responses
+     * @return {String}
+     */
+    getCount: function() {
+      if(this.data) {
+        return this.data.features.length;
+      }
+      return '';
+    },
+
     render: function() {
       console.log("Rendering layerControl", this.$el);
       var context = {
         name: 'Businesses via Factual',
         kind: 'businesses',
-        data: {}
+        meta: {
+          count: this.getCount()
+        }
       };
 
-      // If we have data, display a count.
+      this.$el.html(this.template(context));
+
       if(this.data) {
-        context.data.count = this.data.length;
+        this.doneLoading();
       }
 
-      this.$el.html(this.template(context));
       return this.$el;
     }
   });

@@ -2,11 +2,11 @@
 /*globals define, cartodb: true */
 
 define([
-  //'jquery',
+  'jquery',
   'jqueryUI',
-  'rangeSlider',
   'lib/lodash',
   'backbone',
+  'moment',
   'settings',
 
   // Router
@@ -31,7 +31,13 @@ define([
   'text!templates/projects/project.html'
 ],
 
-function(jqueryUI, $, _, Backbone, settings,
+function($,
+  jqueryUI,
+  _,
+  Backbone,
+  moment,
+
+  settings,
   IndexRouter,
   Surveys,
   SurveyViews,
@@ -60,7 +66,14 @@ function(jqueryUI, $, _, Backbone, settings,
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'setupMap', 'showDataSelector', 'addLayer');
+      _.bindAll(this,
+        'render',
+        'setupMap',
+        'showDataSelector',
+        'addLayer',
+        'updateDate'
+      );
+
       this.survey = new Surveys.Model({id: '85968dd0-98c2-11e2-ab9b-79cb9b3de46f'});
       this.selectorView = new DataSelector({});
       this.selectorView.on('addLayer', this.addLayer);
@@ -85,35 +98,41 @@ function(jqueryUI, $, _, Backbone, settings,
       this.$el.find('.b').prepend($el);
     },
 
+    /**
+     * Iterate over all layers and change the date range
+     * @param  {Array} values start and end dates
+     *
+     * TODO:
+     * - Move this to a master layerController
+     * - Debounce, otherwise we get lots of requests!!
+     */
+    updateDate: function() {
+      var values = this.getDateRange();
+      var start = new Date(values[0]);
+      var end = new Date(values[1]);
+
+      $('.startend .start').html(moment(start).format("ddd, D/M"));
+      $('.startend .end').html(moment(end).format("ddd, D/M"));
+
+      _.each(this.activeLayers, function(layer) {
+        layer.update({
+          type: 'daterange',
+          data: {
+            start: new Date(values[0]),
+            end: new Date(values[1])
+          }
+        });
+      });
+    },
+
+    getDateRange: function() {
+      return $('#slider-range').slider('values');
+    },
+
     setupSlider: function() {
-      var min = new Date(new Date().getTime() - (60*60*24*7*1000));
+      var min = new Date(new Date().getTime() - (60*60*24*14*1000));
       var max = new Date();
       console.log("Min and max time", min.getTime(), max.getTime());
-
-      // Rangeslider -- too clunky
-      //
-      // $('#slider-range').dateRangeSlider({
-      //   // valueLabels: 'change',
-      //   bounds: {
-      //     min: new Date(2014, 8, 5),
-      //     max: new Date(2014, 9, 2)
-      //   },
-      //   step: {
-      //     days: 1
-      //   }
-      // });
-      // $("#slider-range").bind("valuesChanged", function(e, data) {
-      //   console.log("Values just changed. min: " + data.values.min + " max: " + data.values.max);
-      //   console.log(this.layer);
-      //   if(!this.layer) {return;}
-      //   this.layer.update({
-      //     type: 'daterange',
-      //     data: {
-      //       start: data.values.min,
-      //       end: data.values.max
-      //     }
-      //   });
-      // }.bind(this));
 
       // This is the default Jquery UI slider:
       $( "#slider-range" ).slider({
@@ -121,22 +140,11 @@ function(jqueryUI, $, _, Backbone, settings,
         min: min.getTime(),
         max: max.getTime(),
         step: 1000 * 60 * 60 * 24, // one day in ms
-        // values: [ 75, 300 ],
-        slide: function( event, ui ) {
-          console.log("slider", ui.values);
-          if(!this.layer) {
-            return;
-          }
-          this.layer.update({
-            type: 'daterange',
-            data: {
-              start: new Date(ui.values[0]),
-              end: new Date(ui.values[1])
-            }
-          });
-          //$( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
-        }.bind(this)
+        values: [ min, max ],
+        slide: this.updateDate
       });
+
+      this.updateDate();
     },
 
     showDataSelector: function(event) {
@@ -150,15 +158,20 @@ function(jqueryUI, $, _, Backbone, settings,
       'survey': surveyDataSource
     },
 
+    activeLayers: {
+
+    },
+
     addLayer: function(layerName, layerId) {
       console.log("Add layer", layerName, layerId);
 
       // Dispatch the correct layers
-      this.layer = new this.layers[layerName]({
+      this.activeLayers[layerName] = new this.layers[layerName]({
         map: this.mapView.map,
+        daterange: this.getDateRange(),
         layerId: layerId
       });
-      this.$el.find('.layers').append(this.layer.render());
+      this.$el.find('.layers').append(this.activeLayers[layerName].render());
     },
 
     /* Data views ----------------------------------------- */
