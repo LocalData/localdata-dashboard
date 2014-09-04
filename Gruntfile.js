@@ -38,19 +38,20 @@ module.exports = function(grunt) {
     },
 
     dirs: {
-      staging: 'temp',
+      staging: 'staging',
+      temp: 'temp',
       build: 'build'
     },
 
-    clean: ['<%= dirs.staging %>', '<%= dirs.build %>'],
+    clean: ['<%= dirs.staging %>', '<%= dirs.temp %>', '<%= dirs.build %>'],
 
     requirejs: {
       compile: {
         options: {
           name: 'main',
-          baseUrl: 'src/js',
+          baseUrl: '<%= dirs.staging %>/js',
           mainConfigFile: 'src/js/main.js',
-          out: '<%= dirs.staging %>/js/main.js',
+          out: '<%= dirs.temp %>/js/main.js',
           optimize: 'uglify2',
           uglify2: {
             // Preserve license/copyright comments
@@ -65,13 +66,22 @@ module.exports = function(grunt) {
       }
     },
 
+    sass: {
+      dist: {
+        files: [ {
+          src: ['src/css/sass/styles.scss'],
+          dest: '<%= dirs.staging %>/css/app.css'
+        } ]
+      }
+    },
+
     cssmin: {
       compress: {
         files: [ {
           expand: true,     // Enable dynamic expansion.
           cwd: 'src/',      // Src matches are relative to this path.
           src: ['**/*.css'], // Actual pattern(s) to match.
-          dest: '<%= dirs.staging %>'   // Destination path prefix.
+          dest: '<%= dirs.temp %>'   // Destination path prefix.
         } ]
       }
     },
@@ -82,7 +92,7 @@ module.exports = function(grunt) {
         banner: '/* v <%= version.toString() %> <%= grunt.template.today("isoDateTime") %> */\n'
       },
       build: {
-        src: ['<%= dirs.staging %>/js/main.js'],
+        src: ['<%= dirs.temp %>/js/main.js'],
         dest: '<%= dirs.build %>/js/main.js'
       }
     },
@@ -90,23 +100,38 @@ module.exports = function(grunt) {
     copy: {
       staging: {
         files: [
-          // TODO: combine main.js and require.js
           {
             expand: true,
             cwd: 'src/',
             src: [
+              '**/*',
+              '!**/*.scss',
+              '!**/sass/**'
+            ],
+            dest: '<%= dirs.staging %>'
+          }
+        ]
+      },
+      temp: {
+        files: [
+          // TODO: combine main.js and require.js
+          {
+            expand: true,
+            cwd: '<%= dirs.staging %>',
+            src: [
               'js/require.js',
               'js/lib/aight.js',
-              '*.html',
               'img/**',
               '**/*.png', // Leaflet looks for PNGs in a funny spot
               '**/*.gif',
               'font/**',
               'css/font/**',
               'fonts/**',
-              'css/fonts/**'
+              'css/fonts/**',
+              // CSS files for other components are likely raw CSS and not SCSS
+              '**/*.css'
             ],
-            dest: '<%= dirs.staging %>'
+            dest: '<%= dirs.temp %>'
           }
         ]
       },
@@ -114,7 +139,7 @@ module.exports = function(grunt) {
         files: [
           {
             expand: true,
-            cwd: '<%= dirs.staging %>',
+            cwd: '<%= dirs.temp %>',
             src: [
               'js/require.js',
               'js/lib/aight.js',
@@ -133,6 +158,14 @@ module.exports = function(grunt) {
           }
         ]
       }
+    },
+
+    watch: {
+      options: {
+        atBegin: true
+      },
+      files: ['src/**/*'],
+      tasks: ['stage']
     }
   });
 
@@ -142,6 +175,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-contrib-requirejs');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-sass');
 
   // Define the deploy task
   grunt.registerTask('deploy', 'Deploy the build directory to S3 using s3cmd', function (locname) {
@@ -233,10 +268,10 @@ module.exports = function(grunt) {
   // Run the version task, which only updates the configuration with the appropriate version number.
   grunt.task.run('setVersion');
 
-  grunt.registerTask('build', ['cssmin', 'requirejs', 'copy:staging', 'concat:build', 'copy:build']);
-
+  grunt.registerTask('build', ['copy:staging', 'sass', 'cssmin', 'requirejs', 'copy:temp', 'concat:build', 'copy:build']);
+  grunt.registerTask('stage', ['copy:staging', 'sass']);
 
   // Default task
-  grunt.registerTask('default', ['build']);
+  grunt.registerTask('default', ['watch']);
 
 };
