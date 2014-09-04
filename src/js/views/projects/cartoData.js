@@ -12,7 +12,8 @@ define(function (require) {
   var Promise = require('lib/bluebird');
   var L = require('lib/leaflet/leaflet.tilejson');
 
-  var dateRangeTemplate = _.template(require('text!templates/projects/carto-data-daterange.cartocss'));
+  var dateRangeStyleTemplate = _.template(require('text!templates/projects/carto-data-daterange.cartocss'));
+  var dateRangeSQLTemplate = _.template(require('text!templates/projects/carto-data-daterange.sql'));
 
   var exports = {};
 
@@ -54,13 +55,13 @@ define(function (require) {
 
 
   exports.queries = {
-    daterange: _.template('WITH hgrid AS (SELECT CDB_HexagonGrid(ST_Expand(!bbox!, greatest(!pixel_width!,!pixel_height!) * <%= size %>), greatest(!pixel_width!,!pixel_height!) * <%= size %>) as cell) SELECT hgrid.cell as the_geom_webmercator, count(i.cartodb_id) as points_count, count(i.cartodb_id)/power( <%= size %> * CDB_XYZ_Resolution(16), 2 ) as points_density, 1 as cartodb_id FROM hgrid, (SELECT * from fourweeks_missionbay WHERE ts > to_timestamp(<%= start / 1000 | 0 %>) AND ts <= to_timestamp(<%= stop / 1000 | 0 %>)) i where ST_Intersects(i.the_geom_webmercator, hgrid.cell) GROUP BY hgrid.cell'),
+    daterange: dateRangeSQLTemplate,
     day: _.template('WITH hgrid AS (SELECT CDB_HexagonGrid(ST_Expand(!bbox!, greatest(!pixel_width!,!pixel_height!) * <%= size %>), greatest(!pixel_width!,!pixel_height!) * <%= size %>) as cell) SELECT hgrid.cell as the_geom_webmercator, count(i.cartodb_id) as points_count, count(i.cartodb_id)/power( <%= size %> * CDB_XYZ_Resolution(16), 2 ) as points_density, 1 as cartodb_id FROM hgrid, (SELECT * from fourweeks_missionbay WHERE day >= <%= day_min %> AND day < <%= day_max %>) i where ST_Intersects(i.the_geom_webmercator, hgrid.cell) GROUP BY hgrid.cell'),
     hour: _.template('WITH hgrid AS (SELECT CDB_HexagonGrid(ST_Expand(!bbox!, greatest(!pixel_width!,!pixel_height!) * <%= size %>), greatest(!pixel_width!,!pixel_height!) * <%= size %>) as cell) SELECT hgrid.cell as the_geom_webmercator, count(i.cartodb_id) as points_count, count(i.cartodb_id)/power( <%= size %> * CDB_XYZ_Resolution(16), 2 ) as points_density, 1 as cartodb_id FROM hgrid, (SELECT * from fourweeks_missionbay WHERE hour > <%= hour_min %> AND hour < <%= hour_max %>) i where ST_Intersects(i.the_geom_webmercator, hgrid.cell) GROUP BY hgrid.cell')
   };
 
   exports.styles = {
-    daterange: dateRangeTemplate,
+    daterange: dateRangeStyleTemplate,
     hour: _.template('/** density visualization */\n\n#fourweeks_missionbay{\n  polygon-fill: #B10026;\n  polygon-opacity: 0.7;\n  line-color: #FFF;\n  line-width: 0;\n  line-opacity: 0;\n}\n#fourweeks_missionbay{\n  [points_density <= 0.886445633950329] { polygon-fill: #B10026;  }\n  [points_density <= 0.0101263560996083] { polygon-fill: #E31A1C;  }\n  [points_density <= 0.00545265328440448] { polygon-fill: #FC4E2A;  }\n  [points_density <= 0.00311580187680256] { polygon-fill: #FD8D3C;  }\n  [points_density <= 0.00233685140760192] { polygon-fill: #FEB24C;  }\n  [points_density <= 0.00155790093840128] { polygon-fill: #FED976;  }\n  [points_density <= 0.00077895046920064] { polygon-fill: #FFFFB2; polygon-opacity: 0; }\n\n}'),
     day: _.template('/** density visualization */\n\n#fourweeks_missionbay{\n  polygon-fill: #B10026;\n  polygon-opacity: 0.7;\n  line-color: #FFF;\n  line-width: 0;\n  line-opacity: 0;\n}\n#fourweeks_missionbay{\n  [points_density <= 0.95] { polygon-fill: #B10026;  }\n  [points_density <= 0.85] { polygon-fill: #E31A1C;  }\n  [points_density <= 0.7] { polygon-fill: #FC4E2A;  }\n  [points_density <= 0.5] { polygon-fill: #FD8D3C;  }\n  [points_density <= 0.3] { polygon-fill: #FEB24C;  }\n  [points_density <= 0.2] { polygon-fill: #FED976;  }\n  [points_density <= 0.1] { polygon-fill: #FFFFB2; polygon-opacity: 0.1; }\n\n}')
   };

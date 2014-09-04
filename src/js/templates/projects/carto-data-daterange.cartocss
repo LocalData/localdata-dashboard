@@ -1,6 +1,6 @@
 /** density visualization */
 
-#fourweeks_missionbay{
+#fourweeks{
   polygon-fill: #B10026;
   polygon-opacity: 0.7;
   line-color: #FFF;
@@ -8,7 +8,7 @@
   line-opacity: 0;
 }
 
-#fourweeks_missionbay{
+#fourweeks{
   [points_density <= 0.75] { polygon-fill: #B10026;  }
   [points_density <= 0.5] { polygon-fill: #E31A1C;  }
   [points_density <= 0.3] { polygon-fill: #FC4E2A;  }
