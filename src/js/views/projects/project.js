@@ -106,10 +106,46 @@ function($,
       this.wideGraph = new WideGraph();
       var $el = this.wideGraph.render();
       this.$el.find('#project').append($el);
-      this.wideGraph.setupGraph([
-        {x: 1, y: 2}, // REPLACE WITH SAMPLE DATA
-        {x: 2, y: 5}
-      ]);
+      this.wideGraph.setupGraph([[
+        {x: 1, y: 12}, // REPLACE WITH SAMPLE DATA
+        {x: 2, y: 13},
+        {x: 3, y: 8},
+        {x: 4, y: 15},
+        {x: 5, y: 17},
+        {x: 6, y: 15},
+        {x: 7, y: 5},
+        {x: 8, y: 13},
+        {x: 9, y: 6},
+        {x: 10, y: 12},
+        {x: 11, y: 17},
+        {x: 12, y: 11},
+        {x: 13, y: 8},
+        {x: 14, y: 15},
+        {x: 15, y: 13},
+        {x: 16, y: 17},
+        {x: 17, y: 6},
+        {x: 18, y: 12}
+      ],
+      [
+        {x: 1, y: 8}, // REPLACE WITH SAMPLE DATA
+        {x: 2, y: 4},
+        {x: 3, y: 5},
+        {x: 4, y: 9},
+        {x: 5, y: 3},
+        {x: 6, y: 4},
+        {x: 7, y: 2},
+        {x: 8, y: 6},
+        {x: 9, y: 7},
+        {x: 10, y: 12},
+        {x: 11, y: 5},
+        {x: 12, y: 9},
+        {x: 13, y: 10},
+        {x: 14, y: 15},
+        {x: 15, y: 13},
+        {x: 16, y: 7},
+        {x: 17, y: 4},
+        {x: 18, y: 6}
+      ]]);
     },
 
     /* Data selector ------------------------------------- */

@@ -36,9 +36,15 @@
     position:absolute;
     bottom: 0;
     right: 0;
-    height: 100px;
+    height: 150px;
+    padding-top: 20px;
     width: 80%;
     background: $thinpink;
+
+    .graph {
+      margin-left: 20px;
+      margin-right: 20px
+    }
   }
 
 /* Datasets ---------------------------------------------------------------- */
@@ -128,7 +134,7 @@
     color: #fff;
 
     #slider-range {
-      margin-top: 2.5em;
+      margin-top: 0;
     }
   }
 

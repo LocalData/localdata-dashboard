@@ -53,7 +53,7 @@ define(function (require) {
     var l = 0.5;
     return rgbString(hsl2rgb([360 * h, s, l]));
   }
-  
+
 
   var LayerControl = Backbone.View.extend({
     template: _.template(template),
@@ -147,10 +147,10 @@ define(function (require) {
     render: function() {
       console.log("Rendering layerControl", this.$el);
       var context = {
-        name: 'Businesses via Factual',
-        kind: 'businesses',
+        name: 'Traffic data',
+        kind: 'traffic',
         meta: {
-          count: this.getCount()
+          // count: this.getCount()
         }
       };
 
