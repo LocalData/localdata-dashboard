@@ -169,7 +169,8 @@ define(function (require) {
 
         // Set up the base maps
         this.baseLayer = L.tileLayer(settings.baseLayer);
-        this.baseLayer = this.satelliteLayer = L.tileLayer(settings.satelliteLayer);
+        //this.baseLayer = this.satelliteLayer = L.tileLayer(settings.satelliteLayer);
+        this.satelliteLayer = L.tileLayer(settings.satelliteLayer);
         this.printLayer = L.tileLayer(settings.printLayer);
         this.map.addLayer(this.baseLayer);
         var baseMaps = {
