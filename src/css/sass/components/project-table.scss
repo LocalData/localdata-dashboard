@@ -1,5 +1,7 @@
 #table {
   padding: 10px;
+  height: 650px;
+  overflow: scroll;
 }
 
 .project-table {
@@ -16,11 +18,6 @@
   padding: 5px;
   margin-top: 10px;
 }
-.project-table .category {
-  font-family: $bold;
-  padding-bottom: 5px;
-}
-
 .project-table .entry {
   width: 500px;
 }
@@ -39,3 +36,26 @@
   display: inline-block;
 }
 
+.project-table {
+  .category {
+    font-family: $bold;
+    margin-left: 15px;
+    margin-bottom: 10px;
+  }
+
+  table {
+    margin: 0 0 0 15px;
+    border-width: 2px;
+    width: 390px;
+  }
+  td {
+    padding: 10px 10px 10px 10px;
+  }
+  th {
+    padding: 10px 10px 10px 10px;
+    border-bottom-width: 2px;
+  }
+  th:first-child {
+    width: 145px;
+  }
+}

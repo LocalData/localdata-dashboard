@@ -207,6 +207,11 @@ function($,
       } else {
         this.mapView.$el.show();
       }
+      if (!this.wideGraph) {
+        this.setupGraph();
+      } else {
+        this.wideGraph.$el.show();
+      }
       this.$('#map-tools a').removeClass('selected');
       this.$('#map-btn').addClass('selected');
     },
@@ -215,6 +220,9 @@ function($,
       e.preventDefault();
       if (this.mapView) {
         this.mapView.$el.hide();
+      }
+      if (this.wideGraph) {
+        this.wideGraph.$el.hide();
       }
       if (!this.tableView) {
         this.setupTable();

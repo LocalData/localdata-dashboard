@@ -1,35 +1,64 @@
 <div id="table" class="project-table">
-  <div class="title">Warriors Stadium Feasibility Study</div>
+  <div class="title">Bicycle, Pedestrian, and Social for Mission Bay</div>
+
   <div class="section">
-    <div class="category">Social Media</div>
-    <div class="entry">
-      <span class="name">Density</span> <span class="value">50,000 interactions/sq mi</span>
-    </div>
-  </div>
-  <div class="section">
-    <div class="category">Pedestrian Counts - Northwest crossing</div>
-    <div class="entry">
-      <div class="name">Average daily count</div> <div class="value">3,872 crossings</div>
-    </div>
-    <div class="entry">
-      <div class="name">Minimum daily count</div> <div class="value">1,420 crossings</div>
-    </div>
-    <div class="entry">
-      <div class="name">Maximum daily count</div> <div class="value">5,517 crossings</div>
-    </div>
+    <div class="category">Bicycle Counts</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Number of Bicycles</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for (var i = 0; i < bikeCounts.length; i += 1) { %>
+        <tr>
+          <td><%= bikeCounts[i].date %></td>
+          <td><%= bikeCounts[i].count %></td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
   </div>
 
   <div class="section">
-    <div class="category">Pedestrian Counts - South crossing</div>
-    <div class="entry">
-      <div class="name">Average daily count</div> <div class="value">2,711 crossings</div>
-    </div>
-    <div class="entry">
-      <div class="name">Minimum daily count</div> <div class="value">820 crossings</div>
-    </div>
-    <div class="entry">
-      <div class="name">Maximum daily count</div> <div class="value">3,284 crossings</div>
-    </div>
+    <div class="category">Pedestrian Counts</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Number of Pedestrians</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for (var i = 0; i < pedestrian.length; i += 1) { %>
+        <tr>
+          <td><%= pedestrian[i].date %></td>
+          <td><%= pedestrian[i].count %></td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="category">Checkins</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Location</th>
+          <th>Number of checkins</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for (var i = 0; i < social.length; i += 1) { %>
+        <tr>
+          <td><%= social[i].location %></td>
+          <td><%= social[i].count %></td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
   </div>
 
 </div>

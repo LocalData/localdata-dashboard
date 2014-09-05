@@ -22,7 +22,52 @@ define(function (require) {
 
     render: function() {
       var context = {};
-      this.$el.html(template({}));
+      this.$el.html(template({
+        bikeCounts: [{
+          date: '01-Aug-2014',
+          count: 40
+        }, {
+          date: '02-Aug-2014',
+          count: 52
+        }, {
+          date: '03-Aug-2014',
+          count: 34
+        }, {
+          date: '04-Aug-2014',
+          count: 57
+        }, {
+          date: '05-Aug-2014',
+          count: 38
+        }],
+
+        pedestrian: [{
+          date: '01-Sep-2014',
+          count: 40
+        }, {
+          date: '02-Sep-2014',
+          count: 47
+        }, {
+          date: '03-Sep-2014',
+          count: 53
+        }, {
+          date: '04-Sep-2014',
+          count: 39
+        }],
+
+        social: [{
+          location: '3rd and 16th',
+          count: 358
+        }, {
+          location: 'Owens',
+          count: 247
+        }, {
+          location: '4th and King',
+          count: 866
+        }, {
+          location: 'Jackson Park',
+          count: 729
+        }]
+      }));
     }
   });
 
