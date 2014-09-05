@@ -38,9 +38,11 @@
     right: 0;
     height: 150px;
     padding-top: 20px;
+    padding-bottom: 10px;
     width: 80%;
     background: $thinpink;
 
+    .caption,
     .graph {
       margin-left: 20px;
       margin-right: 20px
@@ -55,6 +57,12 @@
 
   #map-tools {
     padding: 10px;
+
+    .close {
+      float: right;
+      cursor: pointer;
+      display: inline-block;
+    }
   }
 }
 

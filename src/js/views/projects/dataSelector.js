@@ -27,7 +27,8 @@ function($, _, Backbone, settings, Surveys, template) {
     events: {
       'click .categories .dataset': 'showSources',
       'click .sources .dataset': 'showDetails',
-      'click .add-layer': 'addLayer'
+      'click .add-layer': 'addLayer',
+      'click .close': 'close'
     },
 
     initialize: function(options) {
