@@ -8,6 +8,7 @@ define([
   'cartodb',
   'Rickshaw',
   'moment',
+  'highcharts',
 
   // LocalData
   'settings',
@@ -27,7 +28,22 @@ define([
   'text!templates/projects/wideGraph.html'
 ],
 
-function($, _, Backbone, cartodb, Rickshaw, moment, settings, IndexRouter, Surveys, SurveyViews, MapView, cdb, template) {
+function($,
+  _,
+  Backbone,
+  cartodb,
+  Rickshaw,
+  moment,
+  Highcharts,
+
+  // LD
+  settings,
+  IndexRouter,
+  Surveys,
+  SurveyViews,
+  MapView,
+  cdb,
+  template) {
   'use strict';
 
   cartodb = window.cartodb;
@@ -80,42 +96,93 @@ function($, _, Backbone, cartodb, Rickshaw, moment, settings, IndexRouter, Surve
 
     setupGraph: function(data) {
       console.log("Setup graph el", data);
-      //var prepped = [];
-      //_.each(data.rows, function(row, index) {
-      //  prepped.push({
-      //    x: new Date(row.d).getTime(), // index, // new Date(row.d),
-      //    y: row.count
-      //  });
-      //});
 
-      if(!this.graph) {
-        console.log("Creating wide graph with data", data);
-        this.graph = new Rickshaw.Graph({
-          series: [{
-            data: data,
-            color: '#0062be'
-          }],
-          renderer: 'line',
-          height: 100,
-          element: this.$el.find('.graph')[0] // document.querySelector('.layer-permits .graph')
-        });
+$('.widegraph .graph').highcharts({
+        chart: {
+            zoomType: 'x',
+            height: 170
+        },
 
-        var hoverDetail = new Rickshaw.Graph.HoverDetail( {
-          graph: this.graph,
-          formatter: function(series, x, y) {
-            var date = moment(x).format("ddd, D/M");
-            return date + '<br>' + y + ' checkins';
-          }
-        });
+        title: {
+            text: ''
+        },
+        /*
+        subtitle: {
+            text: document.ontouchstart === undefined ?
+              'Click and drag in the plot area to zoom in' :
+              'Pinch the chart to zoom in'
+        },*/
+        xAxis: {
+            type: 'datetime',
+            minRange: 2 // two hours
+        },
+        yAxis: {
+            title: {
+                text: 'Photos'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        plotOptions: {
+            area: {
+                fillColor: {
+                    linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1},
+                    stops: [
+                        [0, '#1d61a1'], //Highcharts.getOptions().colors[0]],
+                        [1, Highcharts.Color('#1d61a1').setOpacity(0).get('rgba')]
+                    ]
+                },
+                marker: {
+                    radius: 2
+                },
+                lineWidth: 1,
+                states: {
+                    hover: {
+                        lineWidth: 1
+                    }
+                },
+                threshold: null
+            }
+        },
 
-        this.graph.render();
-        this.doneLoading();
-      } else {
-        // If the graph already exists, we just need to update the data.
-        this.graph.series[0].data = data;
-        this.graph.update();
-        this.doneLoading();
-      }
+        series: [{
+          type: 'area',
+          name: 'activity over time',
+          pointInterval: 1, // hours
+          pointStart:1, //  Date.UTC(2006, 0, 1),
+          data: data
+        }]
+    });
+
+      // if(!this.graph) {
+      //   console.log("Creating wide graph with data", data);
+      //   this.graph = new Rickshaw.Graph({
+      //     series: [{
+      //       data: data,
+      //       color: '#0062be'
+      //     }],
+      //     renderer: 'line',
+      //     height: 100,
+      //     element: this.$el.find('.graph')[0] // document.querySelector('.layer-permits .graph')
+      //   });
+//
+      //   var hoverDetail = new Rickshaw.Graph.HoverDetail( {
+      //     graph: this.graph,
+      //     formatter: function(series, x, y) {
+      //       var date = moment(x).format("ddd, D/M");
+      //       return date + '<br>' + y + ' checkins';
+      //     }
+      //   });
+//
+      //   this.graph.render();
+      //   this.doneLoading();
+      // } else {
+      //   // If the graph already exists, we just need to update the data.
+      //   this.graph.series[0].data = data;
+      //   this.graph.update();
+      //   this.doneLoading();
+      // }
     },
 
     doneLoading: function() {

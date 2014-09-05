@@ -7,6 +7,9 @@ define([
   'lib/lodash',
   'backbone',
   'moment',
+  'highcharts',
+
+  // LD
   'settings',
 
   // Router
@@ -41,6 +44,7 @@ function($,
   _,
   Backbone,
   moment,
+  Highcharts,
 
   settings,
   IndexRouter,
@@ -150,6 +154,8 @@ function($,
         {x: 18, y: 6}
       ]]);
 */
+
+      /* WORKING LIVE INSTAGRAM DATA
       var self = this;
       cartoData.countsByHourOfWeek()
       .then(function (data) {
@@ -162,6 +168,20 @@ function($,
       }).catch(function (error) {
         console.log(error);
       });
+      */
+
+
+      // Highcarts setup
+      var self = this;
+      cartoData.countsByHourOfWeek()
+      .then(function (data) {
+        self.wideGraph.setupGraph(_.map(data.rows, function (row) {
+          return row.count;
+        }));
+      }).catch(function (error) {
+        console.log(error);
+      });
+
       //this.wideGraph.setupGraph([
       //  {x: 1, y: 2}, // REPLACE WITH SAMPLE DATA
       //  {x: 2, y: 5}

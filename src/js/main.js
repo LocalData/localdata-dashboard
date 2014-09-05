@@ -11,6 +11,7 @@ require.config({
     rangeSlider: 'lib/jQAllRangeSliders-min',
     backbone: 'lib/backbone',
     d3: 'lib/d3',
+    highcharts: 'lib/highcharts',
     moment: 'lib/moment.min',
     'lib/kissmetrics': '//doug1izaerwt3.cloudfront.net/' + '1f57015c5e8f46bdc07701e1aa74c6cbdf565383' + '.1',
     'lib/kmq': 'lib/kissmetrics',
@@ -70,6 +71,11 @@ require.config({
     'rangeSlider': {
       deps: ['jquery', 'jqueryUI'],
       exports: "$"
+    },
+
+    'highcharts': {
+      deps: ['jquery'],
+      exports: 'Highcharts'
     }
   }
 
