@@ -35,12 +35,17 @@ function($, _, Backbone, L, cartodb, Rickshaw, settings, IndexRouter, Surveys, S
   var LayerControl = Backbone.View.extend({
     template: _.template(template),
 
+    events: {
+      'click .close': 'close'
+    },
+
     className: 'layer',
     initialize: function(options) {
       _.bindAll(this,
         'setup',
         'render',
         'update',
+        'close',
         'processData',
         'doneLoading',
         'getCount',
@@ -134,7 +139,13 @@ function($, _, Backbone, L, cartodb, Rickshaw, settings, IndexRouter, Surveys, S
       }
 
       return this.$el;
+    },
+
+    close: function() {
+      // this.map.removeLayer(this.layer);
+      this.remove();
     }
+
   });
 
   return LayerControl;

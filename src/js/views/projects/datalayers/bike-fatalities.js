@@ -138,6 +138,7 @@ define(function (require) {
       _.bindAll(this,
         'setup',
         'render',
+        'close',
         'update',
         'getCount',
         'processData',
@@ -223,6 +224,11 @@ define(function (require) {
       }
 
       return this.$el;
+    },
+
+    close: function() {
+      this.map.removeLayer(this.layer);
+      this.remove();
     }
   });
 

@@ -39,10 +39,15 @@ function($, _, Backbone, L, cartodb, Rickshaw, settings, IndexRouter, Surveys, S
 
     BASEURL: 'https://databucket.herokuapp.com/api/places.geojson?category=123&bbox=',
 
+    events: {
+      'click .close': 'close'
+    },
+
     initialize: function(options) {
       _.bindAll(this,
         'setup',
         'render',
+        'close',
         'update',
         'getCount',
         'processData',
@@ -112,6 +117,11 @@ function($, _, Backbone, L, cartodb, Rickshaw, settings, IndexRouter, Surveys, S
       }
 
       return this.$el;
+    },
+
+    close: function() {
+      this.map.removeLayer(this.layer);
+      this.remove();
     }
   });
 

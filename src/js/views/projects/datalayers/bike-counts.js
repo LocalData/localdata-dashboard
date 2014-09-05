@@ -18,10 +18,15 @@ define(function (require) {
 
     className: 'layer',
 
+    events: {
+      'click .close': 'close'
+    },
+
     initialize: function(options) {
       _.bindAll(this,
         'setup',
         'render',
+        'close',
         'update',
         'getCount',
         'processData',
@@ -162,6 +167,11 @@ define(function (require) {
       }
 
       return this.$el;
+    },
+
+    close: function() {
+      this.map.removeLayer(this.layer);
+      this.remove();
     }
   });
 

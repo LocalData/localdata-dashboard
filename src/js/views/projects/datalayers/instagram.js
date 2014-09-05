@@ -37,10 +37,15 @@ function($, _, Backbone, cartodb, Rickshaw, moment, settings, IndexRouter, Surve
 
     className: 'layer',
 
+    events: {
+      'click .close': 'close'
+    },
+
     initialize: function(options) {
       _.bindAll(this,
         'setup',
         'render',
+        'close',
         'update',
         'doneLoading'
       );
@@ -144,8 +149,13 @@ function($, _, Backbone, cartodb, Rickshaw, moment, settings, IndexRouter, Surve
       };
       this.$el.html(this.template(context));
       return this.$el;
-    }
+    },
 
+    close: function() {
+      // this.map.removeLayer(this.layer);
+      // TODO: remove map layer
+      this.remove();
+    }
 
   });
 

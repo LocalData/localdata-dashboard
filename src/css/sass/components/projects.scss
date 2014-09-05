@@ -157,6 +157,13 @@
     h3 {
       font-size: 1em;
     }
+
+    .close {
+      cursor: pointer;
+      float: right;
+      color: #daedff;
+      line-height: 1.4;
+    }
   }
 
   .rickshaw_graph .detail .x_label {
