@@ -92,12 +92,8 @@ function($, _, Backbone, cartodb, Rickshaw, moment, settings, IndexRouter, Surve
         console.log("Creating wide graph with data", data);
         this.graph = new Rickshaw.Graph({
           series: [{
-            data: data[0],
+            data: data,
             color: '#0062be'
-          },
-          {
-            data: data[1],
-            color: '#f15a24'
           }],
           renderer: 'line',
           height: 100,
@@ -108,7 +104,7 @@ function($, _, Backbone, cartodb, Rickshaw, moment, settings, IndexRouter, Surve
           graph: this.graph,
           formatter: function(series, x, y) {
             var date = moment(x).format("ddd, D/M");
-            return date + '<br>' + y + ' photos';
+            return date + '<br>' + y + ' checkins';
           }
         });
 
