@@ -210,10 +210,8 @@ $('.widegraph .graph').highcharts({
       this.$el.find('.loading').hide();
     },
 
-    render: function() {
+    render: function(context) {
       console.log("Rendering wide graph view", this.$el);
-      var context = {
-      };
       this.$el.html(this.template(context));
       return this.$el;
     }

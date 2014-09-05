@@ -112,12 +112,15 @@ function($,
       //this.setupWideGraph();
     },
 
-    setupWideGraph: function(data) {
-      if (!this.$wideGraphEl) {
-        this.wideGraph = new WideGraph();
-        this.$wideGraphEl = this.wideGraph.render();
-        this.$el.find('#project').append(this.$wideGraphEl);
+    setupWideGraph: function(info) {
+      if (this.$wideGraphEl) {
+        this.$wideGraphEl.remove();
       }
+      this.wideGraph = new WideGraph();
+      this.$wideGraphEl = this.wideGraph.render({
+        title: info.title
+      });
+      this.$el.find('#project').append(this.$wideGraphEl);
 /*
       this.wideGraph.setupGraph([[
         {x: 1, y: 12}, // REPLACE WITH SAMPLE DATA
@@ -178,7 +181,7 @@ function($,
 
 
       //// Highcarts setup
-      this.wideGraph.setupGraph(data);
+      this.wideGraph.setupGraph(info.data);
       //var self = this;
       //cartoData.countsByHourOfWeek()
       //.then(function (data) {

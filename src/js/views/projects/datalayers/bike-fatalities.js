@@ -182,8 +182,11 @@ define(function (require) {
       this.layer = L.geoJson(this.data, {
         pointToLayer: function (feature, latlng) {
           return L.circleMarker(latlng, _.defaults({
-            fillColor: '#f14',
-            radius: 10
+            fillColor: '#f01040',
+            color: '#f01040',
+            radius: 10,
+            weight: 2,
+            opacity: 1
           }, settings.circleMarker));
         }
       });
