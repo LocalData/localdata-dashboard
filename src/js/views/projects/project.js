@@ -28,6 +28,7 @@ define([
   'views/projects/datalayers/factual',
   'views/projects/datalayers/ped-fatalities',
   'views/projects/datalayers/bike-fatalities',
+  'views/projects/datalayers/traffic',
   'views/projects/datalayers/survey',
 
   // Templates
@@ -54,6 +55,7 @@ function($,
   factualDataSource,
   pedFatalitiesDataSource,
   bikeFatalitiesDataSource,
+  traffic,
   surveyDataSource,
 
   template
@@ -175,6 +177,7 @@ function($,
       'factual-business': factualDataSource,
       'ped-fatalities': pedFatalitiesDataSource,
       'bike-fatalities': bikeFatalitiesDataSource,
+      'traffic': traffic,
       'survey': surveyDataSource
     },
 
