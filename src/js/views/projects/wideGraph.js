@@ -100,7 +100,8 @@ function($,
 $('.widegraph .graph').highcharts({
         chart: {
             zoomType: 'x',
-            height: 170
+            height: 170,
+            backgroundColor: '#f5ebe6'
         },
 
         title: {
@@ -114,41 +115,22 @@ $('.widegraph .graph').highcharts({
         },*/
         xAxis: {
           type: 'linear',
-          //categories: [
-          //  '12AM',
-          //  '1AM',
-          //  '2AM',
-          //  '3AM',
-          //  '4AM',
-          //  '5AM',
-          //  '6AM',
-          //  '7AM',
-          //  '8AM',
-          //  '9AM',
-          //  '10AM',
-          //  '11AM',
-          //  '12PM',
-          //  '1PM',
-          //  '2PM',
-          //  '3PM',
-          //  '4PM',
-          //  '5PM',
-          //  '6PM',
-          //  '7PM',
-          //  '8PM',
-          //  '9PM',
-          //  '10PM',
-          //  '11PM'
-          //],
           labels: {
             formatter: function () {
-              return '';
-              //return Math.floor(this.value) + 'AM';
+              var val = parseInt(this.value, 10);
+              if (val === 0) {
+                return '12AM';
+              }
+              if (val > 12) {
+                return (val % 12) + 'PM';
+              }
+              if (val === 12) {
+                return '12PM';
+              }
+              return val + 'AM';
             }
-          }
-          //tickInterval: 1
-            //type: 'datetime',
-            //minRange: 2 // two hours
+          },
+          tickInterval: 2
         },
         yAxis: {
             title: {
@@ -165,12 +147,15 @@ $('.widegraph .graph').highcharts({
                 fillColor: {
                     linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1},
                     stops: [
-                        [0, '#1d61a1'], //Highcharts.getOptions().colors[0]],
-                        [1, Highcharts.Color('#1d61a1').setOpacity(0).get('rgba')]
+                        //[0, '#1d61a1'], //Highcharts.getOptions().colors[0]],
+                        //[1, Highcharts.Color('#1d61a1').setOpacity(0).get('rgba')]
+                        [0, Highcharts.Color('#58aeff').setOpacity(0.8).get('rgba')], //Highcharts.getOptions().colors[0]],
+                        [1, Highcharts.Color('#58aeff').setOpacity(0.5).get('rgba')]
                     ]
                 },
                 marker: {
-                    radius: 2
+                    radius: 2,
+                    fillColor: '#58aeff'
                 },
                 lineWidth: 1,
                 states: {
