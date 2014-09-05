@@ -177,5 +177,53 @@ define(function (require) {
     });
   };
 
+  /**
+   * Get counts by day-hour
+   * @param  {Object} options With optional start and end parameters
+   * @return {Promise}
+   */
+  exports.countsByDate = function (options) {
+    if(!options) {
+      options = {};
+    }
+    var start;
+    console.log("Getting counts by date", options);
+    if (options.start) {
+      start = (new Date(options.start)).toISOString();
+      console.log("Using custom start date", options.start, start);
+    } else {
+      start = (new Date(0)).toISOString();
+    }
+    var stop;
+    console.log("IS THERE A STOP", options.stop);
+    if (options.stop) {
+      stop = (new Date(options.stop)).toISOString();
+      console.log("Using custom stop date", options.stop, stop);
+    } else {
+      stop = (new Date()).toISOString();
+    }
+
+    console.log("Running counts by date", options, start, stop);
+
+    return new Promise(function (resolve, reject) {
+      var promise;
+      if (options.geometry) {
+        promise = exports.sql.execute('SELECT extract(\'dow\' from ts) AS d, extract(\'hour\' from ts) as h, COUNT(*) FROM fourweeks WHERE ts > timestamp \'{{start}}\' AND ts <= timestamp \'{{stop}}\' AND ST_Intersects(the_geom, ST_SetSRID(ST_GeomFromGeoJSON(\'' + JSON.stringify(options.geometry) + '}}\'), 4326)) GROUP BY d, h ORDER BY d, h', {
+          start: start,
+          stop: stop,
+          geometry: options.geometry
+        });
+      } else {
+        promise = exports.sql.execute('SELECT extract(\'dow\' from ts) AS d, extract(\'hour\' from ts) as h, COUNT(*) FROM fourweeks WHERE ts > timestamp \'{{start}}\' AND ts <= timestamp \'{{stop}}\' GROUP BY d, h ORDER BY d, h', {
+          start: start,
+          stop: stop
+        });
+      }
+
+      promise.done(resolve)
+      .error(reject);
+    });
+  };
+
   return exports;
 });
