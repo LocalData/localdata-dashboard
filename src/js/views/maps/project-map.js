@@ -123,18 +123,18 @@ define(function (require) {
 
 
     fitBounds: function() {
-      var bounds = this.survey.get('responseBounds');
-      if (bounds) {
-        bounds = [flip(bounds[0]), flip(bounds[1])];
-        if (bounds[0][0] === bounds[1][0] || bounds[0][1] === bounds[1][1]) {
-          this.map.setView(bounds[0], 15);
-        } else {
-          this.map.fitBounds(bounds, {
-            reset: true,
-            maxZoom: 18
-          });
-        }
-      }
+      // var bounds = this.survey.get('responseBounds');
+      // if (bounds) {
+      //   bounds = [flip(bounds[0]), flip(bounds[1])];
+      //   if (bounds[0][0] === bounds[1][0] || bounds[0][1] === bounds[1][1]) {
+      //     this.map.setView(bounds[0], 15);
+      //   } else {
+      //     this.map.fitBounds(bounds, {
+      //       reset: true,
+      //       maxZoom: 18
+      //     });
+      //   }
+      // }
     },
 
 
@@ -264,7 +264,7 @@ define(function (require) {
         type: 'GET',
         dataType: 'json',
         cache: false
-      }).done(this.addTileLayer)
+      }).done(function() {}) //this.addTileLayer) // TODO - DISABLED FOR DEMO
       .fail(function(jqXHR, textStatus, errorThrown) {
         console.log("Error fetching tilejson", jqXHR, textStatus, errorThrown);
       });

@@ -45,7 +45,21 @@ function($, _, Backbone, settings, Surveys, template) {
     show: function() {
       console.log(this);
       $('#project-map').hide();
+      $('#project-hide').hide();
+      $('.widegraph').hide();
+      $('.datatools').hide();
       this.$el.show();
+    },
+
+    close: function() {
+      this.$el.hide();
+      this.$el.find('.dataset').removeClass('selected');
+      this.$el.find('.details').hide();
+      this.$el.find('.sources').hide();
+      $('#project-map').show();
+      $('#project-table').show();
+      $('.widegraph').show();
+      $('.datatools').show();
     },
 
     showSources: function(event) {
@@ -79,14 +93,6 @@ function($, _, Backbone, settings, Surveys, template) {
       var layerId = $(event.target).closest('a').attr('data-id');
       this.trigger('addLayer', layerName, layerId);
       this.close();
-    },
-
-    close: function() {
-      this.$el.hide();
-      this.$el.find('.dataset').removeClass('selected');
-      this.$el.find('.details').hide();
-      this.$el.find('.sources').hide();
-      $('#project-map').show();
     },
 
     data: {
