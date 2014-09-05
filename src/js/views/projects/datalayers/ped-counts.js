@@ -121,13 +121,19 @@ define(function (require) {
       this.layer = L.geoJson(this.data, {
         pointToLayer: function (feature, latlng) {
           return L.circleMarker(latlng, _.defaults({
-            fillColor: '#14f',
-            radius: 8
+            fillColor: '#58aeff',
+            color: '#58aeff',
+            radius: 8,
+            weight: 2,
+            opacity: 1
           }, settings.circleMarker));
         },
         onEachFeature: function (feature, layer) {
           layer.on('click', function () {
-            self.clickHandler(feature.properties.counts);
+            self.clickHandler({
+              title: 'Pedestrian activity',
+              data: feature.properties.counts
+            });
           });
         }
       });

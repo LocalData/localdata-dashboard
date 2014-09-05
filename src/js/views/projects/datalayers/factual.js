@@ -78,7 +78,13 @@ function($, _, Backbone, L, cartodb, Rickshaw, settings, IndexRouter, Surveys, S
       this.data = data;
       this.layer = L.geoJson(data, {
         pointToLayer: function (feature, latlng) {
-          return L.circleMarker(latlng, settings.circleMarker);
+          return L.circleMarker(latlng, _.defaults({
+            fillColor: '#1d61a1',
+            color: '#1d61a1',
+            radius: 5,
+            weight: 1,
+            opacity: 1
+          }, settings.circleMarker));
         }
       });
       this.layer.addTo(this.map);
