@@ -79,6 +79,7 @@ function($, _, Backbone, cartodb, Rickshaw, moment, settings, IndexRouter, Surve
       var countsByDate = cdb.countsByDate(options.data);
       countsByDate.then(function (data) {
         console.log("Got data", data);
+        this.doneLoading();
         this.setupGraph(data);
       }.bind(this)).catch(function (error) {
         console.log("Error getting chart from cartodb", error);
@@ -86,6 +87,7 @@ function($, _, Backbone, cartodb, Rickshaw, moment, settings, IndexRouter, Surve
     },
 
     setupGraph: function(data) {
+
       console.log("Setup graph el", data);
       var prepped = [];
       _.each(data.rows, function(row, index) {
@@ -94,6 +96,7 @@ function($, _, Backbone, cartodb, Rickshaw, moment, settings, IndexRouter, Surve
           y: row.count
         });
       });
+
 
       if(!this.graph) {
         console.log("Creating graph with data", prepped);
@@ -116,7 +119,6 @@ function($, _, Backbone, cartodb, Rickshaw, moment, settings, IndexRouter, Surve
         });
 
         this.graph.render();
-        this.doneLoading();
       } else {
         // If the graph already exists, we just need to update the data.
         console.log("UPDATING GRAPH", prepped);
@@ -126,7 +128,6 @@ function($, _, Backbone, cartodb, Rickshaw, moment, settings, IndexRouter, Surve
         }];
         this.graph.series[0].data=prepped;
         this.graph.update();
-        this.doneLoading();
       }
     },
 
