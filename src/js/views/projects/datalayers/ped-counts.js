@@ -28,6 +28,7 @@ define(function (require) {
         'doneLoading'
       );
       this.map = options.map;
+      this.clickHandler = options.clickHandler;
       this.setup();
     },
 
@@ -118,6 +119,9 @@ define(function (require) {
             fillColor: '#14f',
             radius: 8
           }, settings.circleMarker));
+        },
+        onEachFeature: function (feature, layer) {
+          self.clickHandler(feature.properties.counts);
         }
       });
       this.layer.addTo(this.map);

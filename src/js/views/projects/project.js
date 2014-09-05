@@ -109,13 +109,15 @@ function($,
       this.setupSlider();
       this.setupDataSelector();
       this.setupMap();
-      this.setupWideGraph();
+      //this.setupWideGraph();
     },
 
-    setupWideGraph: function() {
-      this.wideGraph = new WideGraph();
-      var $el = this.wideGraph.render();
-      this.$el.find('#project').append($el);
+    setupWideGraph: function(data) {
+      if (!this.$wideGraphEl) {
+        this.wideGraph = new WideGraph();
+        this.$wideGraphEl = this.wideGraph.render();
+        this.$el.find('#project').append(this.$wideGraphEl);
+      }
 /*
       this.wideGraph.setupGraph([[
         {x: 1, y: 12}, // REPLACE WITH SAMPLE DATA
@@ -175,16 +177,17 @@ function($,
       */
 
 
-      // Highcarts setup
-      var self = this;
-      cartoData.countsByHourOfWeek()
-      .then(function (data) {
-        self.wideGraph.setupGraph(_.map(data.rows, function (row) {
-          return row.count;
-        }));
-      }).catch(function (error) {
-        console.log(error);
-      });
+      //// Highcarts setup
+      this.wideGraph.setupGraph(data);
+      //var self = this;
+      //cartoData.countsByHourOfWeek()
+      //.then(function (data) {
+      //  self.wideGraph.setupGraph(_.map(data.rows, function (row) {
+      //    return row.count;
+      //  }));
+      //}).catch(function (error) {
+      //  console.log(error);
+      //});
 
       //this.wideGraph.setupGraph([
       //  {x: 1, y: 2}, // REPLACE WITH SAMPLE DATA
@@ -270,10 +273,14 @@ function($,
     addLayer: function(layerName, layerId) {
       console.log("Add layer", layerName, layerId);
 
+      var self = this;
       // Dispatch the correct layers
       this.activeLayers[layerName] = new this.layers[layerName]({
         map: this.mapView.map,
-        layerId: layerId
+        layerId: layerId,
+        clickHandler: function (data) {
+          self.setupWideGraph(data);
+        }
       });
       this.$el.find('.layers').append(this.activeLayers[layerName].render());
     },

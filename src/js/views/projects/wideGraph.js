@@ -113,13 +113,49 @@ $('.widegraph .graph').highcharts({
               'Pinch the chart to zoom in'
         },*/
         xAxis: {
-            type: 'datetime',
-            minRange: 2 // two hours
+          type: 'linear',
+          //categories: [
+          //  '12AM',
+          //  '1AM',
+          //  '2AM',
+          //  '3AM',
+          //  '4AM',
+          //  '5AM',
+          //  '6AM',
+          //  '7AM',
+          //  '8AM',
+          //  '9AM',
+          //  '10AM',
+          //  '11AM',
+          //  '12PM',
+          //  '1PM',
+          //  '2PM',
+          //  '3PM',
+          //  '4PM',
+          //  '5PM',
+          //  '6PM',
+          //  '7PM',
+          //  '8PM',
+          //  '9PM',
+          //  '10PM',
+          //  '11PM'
+          //],
+          labels: {
+            formatter: function () {
+              return '';
+              //return Math.floor(this.value) + 'AM';
+            }
+          }
+          //tickInterval: 1
+            //type: 'datetime',
+            //minRange: 2 // two hours
         },
         yAxis: {
             title: {
                 text: 'Photos'
-            }
+            },
+            min: 0,
+            minPadding: 0
         },
         legend: {
             enabled: false
@@ -148,7 +184,7 @@ $('.widegraph .graph').highcharts({
 
         series: [{
           type: 'area',
-          name: 'activity over time',
+          name: 'counts',
           pointInterval: 1, // hours
           pointStart:1, //  Date.UTC(2006, 0, 1),
           data: data
