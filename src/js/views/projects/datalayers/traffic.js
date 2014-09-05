@@ -98,15 +98,15 @@ define(function (require) {
       var self = this;
 
       function style(zoom) {
-        var weight = (3.33*zoom - 42.67);
+        var weight = (3.03*zoom - 42.67);
         function color(val) {
           if (val > 0.9) {
-            return '#f11';
+            return '#e32238';
           }
           if (val > 0.5) {
-            return '#ef3';
+            return '#ffe000';
           }
-          return '#1f1';
+          return '#00cc5d';
         }
         console.log('zoom: ' + zoom + ' weight: ' + weight);
         return function (feature) {
