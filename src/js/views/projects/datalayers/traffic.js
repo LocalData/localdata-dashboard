@@ -98,12 +98,22 @@ define(function (require) {
       var self = this;
 
       function style(zoom) {
-        var weight = 3 + (zoom * zoom / 28);
-        console.log('weight: ' + weight);
+        var weight = (3.33*zoom - 42.67);
+        function color(val) {
+          if (val > 0.9) {
+            return '#f11';
+          }
+          if (val > 0.5) {
+            return '#ef3';
+          }
+          return '#1f1';
+        }
+        console.log('zoom: ' + zoom + ' weight: ' + weight);
         return function (feature) {
           return {
-            color: getColor(feature.properties.a * feature.properties.a * feature.properties.a),
+            color: color(feature.properties.a),
             opacity: 0.8,
+            lineCap: 'butt',
             weight: weight
           };
         };
