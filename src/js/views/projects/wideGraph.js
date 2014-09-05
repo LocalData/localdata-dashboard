@@ -152,7 +152,7 @@ $('.widegraph .graph').highcharts({
         },
         yAxis: {
             title: {
-                text: 'Photos'
+                text: 'Count'
             },
             min: 0,
             minPadding: 0
