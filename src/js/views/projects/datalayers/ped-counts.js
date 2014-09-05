@@ -66,7 +66,7 @@ define(function (require) {
             coordinates: [-122.39039897918701, 37.77699026677441]
           },
           properties: {
-            counts: []
+            counts: [19, 15, 18, 40, 96, 176, 210, 244, 274, 293, 307, 312, 298, 318,  457, 430, 442, 391, 354, 307, 238, 139, 71, 38 ]
           }
         }, {
           type: 'Feature',
@@ -76,7 +76,7 @@ define(function (require) {
             coordinates: [-122.38958358764648, 37.77247872458732]
           },
           properties: {
-            counts: []
+            counts: [15, 12, 19, 45, 104, 175, 212, 228, 238, 282, 315, 312, 289, 289,  316, 354, 426, 440, 364, 304, 205, 123, 61, 31 ]
           }
         }, {
           type: 'Feature',
@@ -86,7 +86,7 @@ define(function (require) {
             coordinates: [-122.39683628082275, 37.770307658806495]
           },
           properties: {
-            counts: []
+            counts: [18, 13, 24, 47, 123, 205, 256, 296, 314, 305, 340, 394, 350, 350,  315, 350, 386, 410, 344, 316, 211, 125, 64, 41 ]
           }
         }, {
           type: 'Feature',
@@ -96,7 +96,7 @@ define(function (require) {
             coordinates: [-122.38936901092531, 37.766202813376644]
           },
           properties: {
-            counts: []
+            counts: [47, 26, 16, 24, 70, 150, 213, 294, 350, 408, 470, 491, 481, 441,  507, 516, 542, 503, 447, 393, 357, 248, 147, 85 ]
           }
         }, {
           type: 'Feature',
@@ -106,7 +106,7 @@ define(function (require) {
             coordinates: [-122.3939609527588, 37.766643840752764]
           },
           properties: {
-            counts: []
+            counts: [28, 13, 10, 17, 42, 109, 178, 189, 213, 236, 263, 269, 288, 266, 283,  331, 354, 407, 373, 312, 271, 188, 116, 59 ]
           }
         }]
       };
@@ -121,7 +121,9 @@ define(function (require) {
           }, settings.circleMarker));
         },
         onEachFeature: function (feature, layer) {
-          self.clickHandler(feature.properties.counts);
+          layer.on('click', function () {
+            self.clickHandler(feature.properties.counts);
+          });
         }
       });
       this.layer.addTo(this.map);
