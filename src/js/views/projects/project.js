@@ -21,6 +21,7 @@ define([
   'views/projects/layerControl',
   'views/projects/dataSelector',
   'views/projects/table',
+  'views/projects/wideGraph',
 
   // Data sources
   'views/projects/datalayers/instagram',
@@ -34,12 +35,12 @@ define([
 ],
 
 function($,
-  jqueryUI,		
-  _,		
-  Backbone,		
-  moment,		
- 	
-  settings,		
+  jqueryUI,
+  _,
+  Backbone,
+  moment,
+
+  settings,
   IndexRouter,
   Surveys,
   SurveyViews,
@@ -47,6 +48,7 @@ function($,
   LayerControl,
   DataSelector,
   TableView,
+  WideGraph,
 
   instagramDataSource,
   factualDataSource,
@@ -94,6 +96,17 @@ function($,
       this.setupSlider();
       this.setupDataSelector();
       this.setupMap();
+      this.setupWideGraph();
+    },
+
+    setupWideGraph: function() {
+      this.wideGraph = new WideGraph();
+      var $el = this.wideGraph.render();
+      this.$el.find('#project').append($el);
+      this.wideGraph.setupGraph([
+        {x: 1, y: 2}, // REPLACE WITH SAMPLE DATA
+        {x: 2, y: 5}
+      ]);
     },
 
     /* Data selector ------------------------------------- */
@@ -102,39 +115,39 @@ function($,
       this.$el.find('.b').prepend($el);
     },
 
-    /**		
-     * Iterate over all layers and change the date range		
-     * @param  {Array} values start and end dates		
-     *		
-     * TODO:		
-     * - Move this to a master layerController		
-     * - Debounce, otherwise we get lots of requests!!		
-     */		
-    updateDate: function() {		
-      var values = this.getDateRange();		
-      var start = new Date(values[0]);		
-      var stop = new Date(values[1]);		
-		
-      $('.startend .start').html(moment(start).format("ddd, D/M"));		
-      $('.startend .end').html(moment(stop).format("ddd, D/M"));		
-		
-      _.each(this.activeLayers, function(layer) {		
-        layer.update({		
-          type: 'daterange',		
-          data: {		
-            start: start,		
-            stop: stop		
-          }		
-        });		
-      });		
-    },		
-		
-    getDateRange: function() {		
-      return $('#slider-range').slider('values');		
-    },		
-		
+    /**
+     * Iterate over all layers and change the date range
+     * @param  {Array} values start and end dates
+     *
+     * TODO:
+     * - Move this to a master layerController
+     * - Debounce, otherwise we get lots of requests!!
+     */
+    updateDate: function() {
+      var values = this.getDateRange();
+      var start = new Date(values[0]);
+      var stop = new Date(values[1]);
+
+      $('.startend .start').html(moment(start).format("ddd, D/M"));
+      $('.startend .end').html(moment(stop).format("ddd, D/M"));
+
+      _.each(this.activeLayers, function(layer) {
+        layer.update({
+          type: 'daterange',
+          data: {
+            start: start,
+            stop: stop
+          }
+        });
+      });
+    },
+
+    getDateRange: function() {
+      return $('#slider-range').slider('values');
+    },
+
     setupSlider: function() {
-      var min = new Date(new Date().getTime() - (60*60*24*14*1000));		
+      var min = new Date(new Date().getTime() - (60*60*24*14*1000));
       var max = new Date();
       console.log("Min and max time", min.getTime(), max.getTime());
 
@@ -145,7 +158,7 @@ function($,
         max: max.getTime(),
         step: 1000 * 60 * 60 * 24, // one day in ms
         values: [ min, max ],
-        slide: this.updateDate		
+        slide: this.updateDate
       });
 
       this.updateDate();
@@ -164,10 +177,10 @@ function($,
       'survey': surveyDataSource
     },
 
-    activeLayers: {		
+    activeLayers: {
 
-    },		
-		
+    },
+
     addLayer: function(layerName, layerId) {
       console.log("Add layer", layerName, layerId);
 
@@ -216,6 +229,11 @@ function($,
 
     /* Map ------------------------------------------------ */
     setupMap: function() {
+      var startHeight = $('.b').height();
+      var mapHeight = startHeight - 50 - 100;
+      console.log("Setting height", mapHeight);
+      $('#map').height(mapHeight);
+
       this.mapView = new MapView({
         el: $('#project-map'),
         survey: this.survey,

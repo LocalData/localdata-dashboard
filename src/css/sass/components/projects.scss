@@ -1,5 +1,6 @@
-
 #project {
+  height: 100%;
+
   .c {
     position: absolute;
     top: 50px;
@@ -25,6 +26,19 @@
       float: right;
       line-height: 2em;
     }
+  }
+
+  #map {
+    height: 650px
+  }
+
+  .widegraph {
+    position:absolute;
+    bottom: 0;
+    right: 0;
+    height: 100px;
+    width: 80%;
+    background: $thinpink;
   }
 
 /* Datasets ---------------------------------------------------------------- */
