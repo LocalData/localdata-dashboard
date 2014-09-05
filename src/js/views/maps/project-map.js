@@ -195,7 +195,7 @@ define(function (require) {
         setTimeout(function () {
           this.map.addLayer(this.zoneLayer);
 
-          this.map.setCenter([37.770888,-122.39409]);
+          this.map.setView([37.770888,-122.39409]);
 
           // Center the map
           // this.fitBounds();
