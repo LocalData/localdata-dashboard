@@ -75,6 +75,7 @@ function($,
       _.bindAll(this,
         'render',
         'setupMap',
+        'setupWideGraph',
         'showDataSelector',
         'addLayer',
         'updateDate'
