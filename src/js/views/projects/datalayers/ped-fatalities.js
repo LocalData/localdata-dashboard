@@ -208,8 +208,8 @@ define(function (require) {
     render: function() {
       console.log("Rendering layerControl", this.$el);
       var context = {
-        name: 'Pedestrian fatalaties',
-        kind: 'total fatalaties',
+        name: 'Pedestrian fatalities',
+        kind: 'total fatalities',
         meta: {
           count: this.getCount()
         }
