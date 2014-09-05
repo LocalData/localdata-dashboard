@@ -19,7 +19,7 @@ function(L) {
 
   //settings.baseLayer = '//a.tiles.mapbox.com/v3/matth.map-n9bps30s/{z}/{x}/{y}.png';
   //settings.baseLayer = 'http://a.tiles.mapbox.com/v3/matth.i60j31k6/{z}/{x}/{y}.png';
-  settings.baseLayer = '//2.base.maps.cit.api.here.com/maptile/2.1/maptile/newest/normal.night.grey/{z}/{x}/{y}/256/png8?app_id=bcY173ntrZWClcXRW3Uh&app_code=zSczWHEAuJaFBJlkQ83Dhg';
+  settings.baseLayer = '//2.base.maps.cit.api.here.com/maptile/2.1/maptile/newest/reduced.night/{z}/{x}/{y}/256/png8?app_id=bcY173ntrZWClcXRW3Uh&app_code=zSczWHEAuJaFBJlkQ83Dhg';
   settings.satelliteLayer = '//a.tiles.mapbox.com/v3/matth.map-yyr7jb6r/{z}/{x}/{y}.png';
   settings.printLayer = 'http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png';
 
