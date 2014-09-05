@@ -30,6 +30,7 @@ define([
   'views/projects/datalayers/bike-fatalities',
   'views/projects/datalayers/traffic',
   'views/projects/datalayers/survey',
+  'views/projects/cartoData',
 
   // Templates
   'text!templates/projects/project.html'
@@ -57,6 +58,7 @@ function($,
   bikeFatalitiesDataSource,
   traffic,
   surveyDataSource,
+  cartoData,
 
   template
   ){
@@ -106,10 +108,23 @@ function($,
       this.wideGraph = new WideGraph();
       var $el = this.wideGraph.render();
       this.$el.find('#project').append($el);
-      this.wideGraph.setupGraph([
-        {x: 1, y: 2}, // REPLACE WITH SAMPLE DATA
-        {x: 2, y: 5}
-      ]);
+
+      var self = this;
+      cartoData.countsByHourOfWeek()
+      .then(function (data) {
+        self.wideGraph.setupGraph(_.map(data.rows, function (row) {
+          return {
+            x: row.d * 24 + row.h,
+            y: row.count
+          };
+        }));
+      }).catch(function (error) {
+        console.log(error);
+      });
+      //this.wideGraph.setupGraph([
+      //  {x: 1, y: 2}, // REPLACE WITH SAMPLE DATA
+      //  {x: 2, y: 5}
+      //]);
     },
 
     /* Data selector ------------------------------------- */

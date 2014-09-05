@@ -182,7 +182,7 @@ define(function (require) {
    * @param  {Object} options With optional start and end parameters
    * @return {Promise}
    */
-  exports.countsByDate = function (options) {
+  exports.countsByHourOfWeek = function (options) {
     if(!options) {
       options = {};
     }

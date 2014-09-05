@@ -104,7 +104,7 @@ function($, _, Backbone, cartodb, Rickshaw, moment, settings, IndexRouter, Surve
           graph: this.graph,
           formatter: function(series, x, y) {
             var date = moment(x).format("ddd, D/M");
-            return date + '<br>' + y + ' photos';
+            return date + '<br>' + y + ' checkins';
           }
         });
 
