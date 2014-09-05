@@ -2,11 +2,11 @@
 /*globals define, cartodb: true */
 
 define([
-  'jquery',
+  //'jquery',
   'jqueryUI',
+  'rangeSlider',
   'lib/lodash',
   'backbone',
-  'moment',
   'settings',
 
   // Router
@@ -25,19 +25,15 @@ define([
   // Data sources
   'views/projects/datalayers/instagram',
   'views/projects/datalayers/factual',
+  'views/projects/datalayers/ped-fatalities',
+  'views/projects/datalayers/bike-fatalities',
   'views/projects/datalayers/survey',
 
   // Templates
   'text!templates/projects/project.html'
 ],
 
-function($,
-  jqueryUI,
-  _,
-  Backbone,
-  moment,
-
-  settings,
+function(jqueryUI, $, _, Backbone, settings,
   IndexRouter,
   Surveys,
   SurveyViews,
@@ -48,6 +44,8 @@ function($,
 
   instagramDataSource,
   factualDataSource,
+  pedFatalitiesDataSource,
+  bikeFatalitiesDataSource,
   surveyDataSource,
 
   template
@@ -70,8 +68,7 @@ function($,
         'render',
         'setupMap',
         'showDataSelector',
-        'addLayer',
-        'updateDate'
+        'addLayer'
       );
 
       this.survey = new Surveys.Model({id: '5b51af30-3477-11e4-8466-37cd6d8f8d78'});
@@ -98,53 +95,73 @@ function($,
       this.$el.find('.b').prepend($el);
     },
 
-    /**
-     * Iterate over all layers and change the date range
-     * @param  {Array} values start and end dates
-     *
-     * TODO:
-     * - Move this to a master layerController
-     * - Debounce, otherwise we get lots of requests!!
-     */
-    updateDate: function() {
-      var values = this.getDateRange();
-      var start = new Date(values[0]);
-      var stop = new Date(values[1]);
-
-      $('.startend .start').html(moment(start).format("ddd, D/M"));
-      $('.startend .end').html(moment(stop).format("ddd, D/M"));
-
-      _.each(this.activeLayers, function(layer) {
-        layer.update({
-          type: 'daterange',
-          data: {
-            start: start,
-            stop: stop
-          }
-        });
-      });
-    },
-
-    getDateRange: function() {
-      return $('#slider-range').slider('values');
-    },
-
     setupSlider: function() {
-      var min = new Date(new Date().getTime() - (60*60*24*14*1000));
+      var min = new Date(new Date().getTime() - (60*60*24*7*1000));
       var max = new Date();
       console.log("Min and max time", min.getTime(), max.getTime());
+
+      // Rangeslider -- too clunky
+      //
+      // $('#slider-range').dateRangeSlider({
+      //   // valueLabels: 'change',
+      //   bounds: {
+      //     min: new Date(2014, 8, 5),
+      //     max: new Date(2014, 9, 2)
+      //   },
+      //   step: {
+      //     days: 1
+      //   }
+      // });
+      // $("#slider-range").bind("valuesChanged", function(e, data) {
+      //   console.log("Values just changed. min: " + data.values.min + " max: " + data.values.max);
+      //   console.log(this.layer);
+      //   if(!this.layer) {return;}
+      //   this.layer.update({
+      //     type: 'daterange',
+      //     data: {
+      //       start: data.values.min,
+      //       end: data.values.max
+      //     }
+      //   });
+      // }.bind(this));
 
       // This is the default Jquery UI slider:
       $( "#slider-range" ).slider({
         range: true,
-        min: min.getTime(),
-        max: max.getTime(),
-        step: 1000 * 60 * 60 * 24, // one day in ms
-        values: [ min, max ],
-        slide: this.updateDate
+        min: 0,
+        max: 6,
+        step: 1,
+        slide: function (event, ui) {
+          if (!this.layer) {
+            return;
+          }
+          this.layer.update({
+            type: 'hours',
+            data: {
+              min_hours: ui.values[0],
+              max_hours: ui.values[1] + 0.1
+            }
+          });
+        }.bind(this)
+        // min: min.getTime(),
+        // max: max.getTime(),
+        // step: 1000 * 60 * 60 * 24, // one day in ms
+        // // values: [ 75, 300 ],
+        // slide: function( event, ui ) {
+        //   console.log("slider", ui.values);
+        //   if(!this.layer) {
+        //     return;
+        //   }
+        //   this.layer.update({
+        //     type: 'daterange',
+        //     data: {
+        //       start: new Date(ui.values[0]),
+        //       end: new Date(ui.values[1])
+        //     }
+        //   });
+        //   //$( "#amount" ).val( "$" + ui.values[ 0 ] + " - $" + ui.values[ 1 ] );
+        // }.bind(this)
       });
-
-      this.updateDate();
     },
 
     showDataSelector: function(event) {
@@ -155,23 +172,20 @@ function($,
     layers: {
       'instagram': instagramDataSource,
       'factual-business': factualDataSource,
+      'ped-fatalities': pedFatalitiesDataSource,
+      'bike-fatalities': bikeFatalitiesDataSource,
       'survey': surveyDataSource
-    },
-
-    activeLayers: {
-
     },
 
     addLayer: function(layerName, layerId) {
       console.log("Add layer", layerName, layerId);
 
       // Dispatch the correct layers
-      this.activeLayers[layerName] = new this.layers[layerName]({
+      this.layer = new this.layers[layerName]({
         map: this.mapView.map,
-        daterange: this.getDateRange(),
         layerId: layerId
       });
-      this.$el.find('.layers').append(this.activeLayers[layerName].render());
+      this.$el.find('.layers').append(this.layer.render());
     },
 
     /* Data views ----------------------------------------- */

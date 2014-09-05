@@ -16,7 +16,7 @@
       <div class="dataset" data-show="economic">
         <span>Economic <i class="fa fa-chevron-right"></i></span>
       </div>
-      <div class="dataset">
+      <div class="dataset" data-show="transportation">
         <span>Transportation <i class="fa fa-chevron-right"></i></span>
       </div>
       <div class="dataset">
@@ -55,10 +55,21 @@
   <div class="datanav sources economic">
     <div class="datanav-in">
       <div class="dataset" data-show="factual-business">
-        <span>Retail locations <i class="fa fa-shopping-cart"></i></span>
+        <span>Retail locations</span>
       </div>
       <div class="dataset" data-show="permits-streetuse">
-        <span>Street use permits <i class="fa fa-thumb-tack"></i></span>
+        <span>Street use permits</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="datanav sources transportation">
+    <div class="datanav-in">
+      <div class="dataset" data-show="ped-fatalities">
+        <span>Pedestrian fatalities</span>
+      </div>
+      <div class="dataset" data-show="bike-fatalities">
+        <span>Bicyclist fatalities</span>
       </div>
     </div>
   </div>
@@ -66,11 +77,11 @@
   <div class="datanav sources surveys">
     <div class="datanav-in">
       <div class="dataset" data-show="survey-parcel">
-        <span>Mission Bay parcel survey <i class="fa fa-list-ol"></i></span>
+        <span>Mission Bay parcel survey</span>
 
       </div>
       <div class="dataset" data-show="survey-business">
-        <span>Mission Bay business survey <i class="fa fa-list-ol"></i></span>
+        <span>Mission Bay business survey</span>
       </div>
     </div>
   </div>
@@ -142,13 +153,35 @@
     </div>
   </div>
 
+  <!-- Transportation data ............................... -->
+
+  <div class="datanav details ped-fatalities">
+    <div class="datanav-in">
+      <div class="dataset">
+        <strong><i class="fa fa-fa-bullseye"></i> Pedestrian Fatalities</strong>
+        <a class="button add-layer" data-add="ped-fatalities">Add data layer <i class="fa fa-plus-circle"></i></a>
+        <p>Pedestrian fatality locations from the City and County of San Francisco.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="datanav details bike-fatalities">
+    <div class="datanav-in">
+      <div class="dataset">
+        <strong><i class="fa fa-fa-bullseye"></i> Bicyclist Fatalities</strong>
+        <a class="button add-layer" data-add="bike-fatalities">Add data layer <i class="fa fa-plus-circle"></i></a>
+        <p>Bicyclist fatality locations from the City and County of San Francisco.</p>
+      </div>
+    </div>
+  </div>
+
 
   <!-- "My surveys" data  ................................. -->
   <div class="datanav details survey-parcel">
     <div class="datanav-in">
       <div class="dataset">
         <strong><i class="fa fa-instagram"></i> Mission Bay parcel survey</strong>
-        <a class="button add-layer" data-add="survey" data-id="5b51af30-3477-11e4-8466-37cd6d8f8d78">Add data layer <i class="fa fa-plus-circle"></i></a>
+        <a class="button add-layer" data-add="survey" data-id="85968dd0-98c2-11e2-ab9b-79cb9b3de46f">Add data layer <i class="fa fa-plus-circle"></i></a>
         <p>Data you've collected on the Mission Bay.</p>
       </div>
     </div>
@@ -158,7 +191,7 @@
     <div class="datanav-in">
       <div class="dataset">
         <strong><i class="fa fa-instagram"></i> Mission Bay business survey</strong>
-        <a class="button add-layer" data-add="survey" data-id="5b51af30-3477-11e4-8466-37cd6d8f8d78">Add data layer <i class="fa fa-plus-circle"></i></a>
+        <a class="button add-layer" data-add="survey" data-id="85968dd0-98c2-11e2-ab9b-79cb9b3de46f">Add data layer <i class="fa fa-plus-circle"></i></a>
         <p>Results of a door-to-door business sentiment survey run for the project
         by Berkeley planning students.</p>
       </div>
