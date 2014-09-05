@@ -165,7 +165,15 @@ module.exports = function(grunt) {
         atBegin: true
       },
       files: ['src/**/*'],
-      tasks: ['stage']
+      tasks: ['stage', 'notify:watch']
+    },
+
+    notify: {
+      watch: {
+        options: {
+          message: 'SASS compiled'
+        }
+      }
     }
   });
 
@@ -177,6 +185,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-notify');
 
   // Define the deploy task
   grunt.registerTask('deploy', 'Deploy the build directory to S3 using s3cmd', function (locname) {
