@@ -1,40 +1,23 @@
 /*jslint nomen: true */
-/*globals define: true */
+/*globals define, cartodb, Rickshaw: true */
 
-define([
-  'jquery',
-  'lib/lodash',
-  'backbone',
-  'lib/tinypubsub',
-  'lib/kissmetrics',
+define(function (require) {
+  'use strict';
+
+  var $ = require('jquery');
+  var _ = require('lib/lodash');
+  var Backbone = require('backbone');
 
   // LocalData
-  'settings',
-  'api',
+  var settings = require('settings');
 
   // Models
-  'models/responses',
-  'models/stats',
+  var Responses = require('models/responses');
+  var Stats = require('models/stats');
 
   // Templates
-  'text!templates/filters/filter.html',
-  'text!templates/filters/loading.html'
-],
-
-function($,
-  _,
-  Backbone,
-  events,
-  _kmq,
-  settings,
-  api,
-  Responses,
-  Stats,
-  template,
-  answersTemplate,
-  loadingTemplate
-) {
-  'use strict';
+  var template = require('text!templates/filters/filter.html');
+  var loadingTemplate = require('text!templates/filters/loading.html');
 
   var ANSWER = 'response';
   var NOANSWER = 'no response';
@@ -63,7 +46,7 @@ function($,
 
       this.survey = options.survey;
       this.forms = options.forms;
-      this.mapView = options.map;
+      // this.mapView = options.map;
 
       this.stats = new Stats.Model({
         id: this.survey.get('id')
@@ -152,7 +135,6 @@ function($,
 
     showOptions: function(event) {
       event.preventDefault();
-      console.log("FO", $('.filters .options'));
       $('.filters .options').slideToggle();
       $('.filters .options .question').show();
     },
@@ -161,14 +143,12 @@ function($,
      * Reset any filters
      */
     reset: function(event) {
-      console.log("Resetting filters");
       if(event) {
         event.preventDefault();
       }
 
       this.filters = {};
-      console.log(this.mapView);
-      this.mapView.clearFilter();
+      this.trigger('filterReset');
 
       $('.filters .clear').slideUp();
       $('.filters .options .answers').slideUp();
@@ -177,8 +157,6 @@ function($,
     },
 
     selectQuestion: function(event) {
-      console.log("Filter selected", event);
-
       // Clear out any filters
       if(this.filters.answer) {
         this.reset();
@@ -187,7 +165,6 @@ function($,
       // Set up handy shortcuts
       var $question = $(event.target).parent();
       var question = $question.attr('data-question');
-      console.log("Question", question);
       this.filters.question = question;
 
       // Show the sub-answers
@@ -200,8 +177,7 @@ function($,
       // Hide other questions
       $('.filters .options .question').not($question).slideUp();
 
-      console.log(this.mapView);
-      this.mapView.setFilter(question);
+      this.trigger('filterSet', this.filters);
     },
 
     /**
@@ -220,14 +196,10 @@ function($,
         this.filters.answer = $answer.attr('data-answer');
       }
 
-      // Color the responses on the map
-      console.log('Trying to set filter', this.mapView);
-      this.mapView.setFilter(this.filters.question, this.filters.answer);
+      this.trigger('filterSet', this.filters);
 
       $('.filters .answer').removeClass('active');
       $answer.addClass('active');
-
-      console.log("Selected answer", $answer, this.filters.answer);
     },
 
     /**

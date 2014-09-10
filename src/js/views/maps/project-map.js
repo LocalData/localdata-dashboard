@@ -63,11 +63,10 @@ define(function (require) {
         'setZone'
       );
 
-      this.survey = options.survey;
       this.clickHandler = options.clickHandler;
 
-      this.parcelIdsOnTheMap = {};
-      this.objectsOnTheMap = new L.FeatureGroup();
+      this.surveys = {};
+      this.surveyLayers = {};
       this.zoneLayer = new L.FeatureGroup();
 
       this.defaultStyle = settings.farZoomStyle;
@@ -80,12 +79,22 @@ define(function (require) {
       this.render();
     },
 
+    /**
+     * Register a survey on the map
+     * @param {Object} survey A survey model
+     */
+    addSurvey: function(survey) {
+      var id = survey.get('id');
+      this.surveys[id] = survey;
+      this.selectDataMap(survey);
+    },
 
     /**
      * Given tilejson data, add the tiles and the UTFgrid
      * @param  {Object} tilejson
      */
     addTileLayer: function(tilejson) {
+      console.log("-----Got tilejosn", tilejson);
       if (this.tileLayer) {
         this.map.removeLayer(this.tileLayer);
       }
@@ -185,7 +194,6 @@ define(function (require) {
         this.baseLayer.bringToBack();
         this.map.on('baselayerchange', function(event) {
           event.layer.bringToBack();
-          _kmq.push(['record', "Baselayer changed to " + event.name]);
         });
 
 
@@ -194,8 +202,7 @@ define(function (require) {
         // the next tick and call invalidateSize, then the map will know its
         // size.
         setTimeout(function () {
-          this.map.addLayer(this.zoneLayer);
-
+          // this.map.addLayer(this.zoneLayer);
           this.map.setView([37.770888,-122.39409]);
 
           // Center the map
@@ -203,12 +210,12 @@ define(function (require) {
         }.bind(this), 0);
 
         // Handle zones
-        if (this.survey.has('zones')) {
-          this.plotZones();
-        }
-        this.listenTo(this.survey, 'change', this.plotZones);
+        // if (this.survey.has('zones')) {
+        //   this.plotZones();
+        // }
+        // this.listenTo(this.survey, 'change', this.plotZones);
 
-        this.selectDataMap();
+        // this.selectDataMap();
 
         // Initialize the FeatureGroup to store editable layers
         this.drawnItems = new L.FeatureGroup();
@@ -235,7 +242,6 @@ define(function (require) {
         this.map.addControl(drawControl);
 
         this.map.on('draw:created', this.setZone);
-
       }
 
       return this;
@@ -245,7 +251,12 @@ define(function (require) {
     /**
      * Get the appropriate survey tiles.
      */
-    selectDataMap: function () {
+    selectDataMap: function (survey) {
+      // Use a specific survey
+      if(survey) {
+        this.survey = survey;
+      }
+
       // Build the appropriate TileJSON URL.
       var url = '/tiles/' + this.survey.get('id');
       if (this.filter) {
@@ -265,7 +276,7 @@ define(function (require) {
         type: 'GET',
         dataType: 'json',
         cache: false
-      }).done(function() {}) //this.addTileLayer) // TODO - DISABLED FOR DEMO
+      }).done(this.addTileLayer)
       .fail(function(jqXHR, textStatus, errorThrown) {
         console.log("Error fetching tilejson", jqXHR, textStatus, errorThrown);
       });
@@ -278,7 +289,9 @@ define(function (require) {
      * @param {String} question Name of the question, eg 'vacant'
      * @param {Object} answers  Possible answers to the question
      */
-    setFilter: function (question, answer) {
+    setFilter: function (question, answer, survey) {
+
+
       this.filter = {
         question: question,
         answer: answer
@@ -286,7 +299,6 @@ define(function (require) {
       this.map.invalidateSize();
       this.selectDataMap();
     },
-
 
     clearFilter: function () {
       this.filter = null;
@@ -343,7 +355,6 @@ define(function (require) {
       }.bind(this));
 
       this.delayFitBounds();
-      this.objectsOnTheMap.bringToFront();
     },
 
 
@@ -352,7 +363,6 @@ define(function (require) {
      * @param  {Object} event
      */
     selectObject: function(event) {
-      _kmq.push(['record', "Map object selected"]);
       console.log("Selected object", event);
       if (!event.data) {
         return;
@@ -388,8 +398,8 @@ define(function (require) {
     search: function(event) {
       event.preventDefault();
       var address = $('#address-search').val();
-      var location = this.survey.get('location');
-      api.codeAddress(address, location, this.searchResults);
+      // var location = this.survey.get('location');
+      api.codeAddress(address, '', this.searchResults);
     },
 
 

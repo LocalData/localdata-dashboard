@@ -1,57 +1,53 @@
 /*jslint nomen: true */
 /*globals define, cartodb, Rickshaw: true */
 
-define([
-  'jquery',
-  'lib/lodash',
-  'backbone',
-  'lib/leaflet/leaflet.tilejson',
-  'cartodb',
-  'Rickshaw',
-
-  // LocalData
-  'settings',
-
-  // Router
-  'routers/index',
-
-  // Models
-  'models/surveys',
-
-  // Views
-  'views/surveys',
-  'views/map',
-  'views/projects/cartoData',
-
-  // Templates
-  'text!templates/projects/layerControl.html'
-],
-
-function($, _, Backbone, L, cartodb, Rickshaw, settings, IndexRouter, Surveys, SurveyViews, MapView, cdb, template) {
+define(function (require) {
   'use strict';
 
-  cartodb = window.cartodb;
+  var $ = require('jquery');
+  var _ = require('lib/lodash');
+  var Backbone = require('backbone');
+  var L = require('lib/leaflet/leaflet.tilejson');
 
+  // LocalData
+  var settings = require('settings');
+
+  // Models
+  var Surveys = require('models/surveys');
+  var Forms = require('models/forms');
+
+  // Views
+  var SettingsView = require('views/projects/datalayers/survey/settings-survey');
+
+  // Templates
+  var template = require('text!templates/projects/layerControl.html');
+
+
+  // The View
   var LayerControl = Backbone.View.extend({
     template: _.template(template),
 
     events: {
-      'click .close': 'close'
+      'click .close': 'close',
+      'click .open-settings': 'settings'
     },
 
     className: 'layer',
     initialize: function(options) {
       _.bindAll(this,
-        'setup',
         'render',
         'update',
         'close',
         'processData',
+        'getForms',
+        'setupSettings',
         'doneLoading',
-        'getCount',
         'getTileJSON',
-        'addTileLayer'
+        'addTileLayer',
+        'changeFilter',
+        'clearFilter'
       );
+
       console.log("Creating survey layer with options", options);
       this.map = options.map;
       this.surveyId = options.layerId;
@@ -59,42 +55,33 @@ function($, _, Backbone, L, cartodb, Rickshaw, settings, IndexRouter, Surveys, S
       this.survey = new Surveys.Model({ id: this.surveyId });
       this.survey.on('change', this.processData);
       this.survey.fetch();
-      this.setup();
-    },
-
-    update: function(options) {
-      this.survey.fetch();
-    },
-
-    /**
-     * Set up the map and chart data
-     * @param  {Object} options
-     */
-    setup: function() {
     },
 
     processData: function(data) {
-      console.log("Got survey data", data);
       this.render();
-
-      this.map.survey = this.survey;
       this.getTileJSON();
-      // TODO-- add tile layer
-      // this.data = data;
-      // this.layer = L.geoJson(data, {
-      //   pointToLayer: function (feature, latlng) {
-      //     return L.circleMarker(latlng, settings.circleMarker);
-      //   }
-      // });
-      // this.layer.addTo(this.map);
-      // this.render();
     },
 
-    getTileJSON: function() {
+    update: function() {
+
+    },
+
+    /**
+     * Set up and fetch the tilejson neede to add the survey to the map.
+     */
+    getTileJSON: function(filter) {
+      // Build the appropriate TileJSON URL.
       var url = '/tiles/' + this.survey.get('id');
+      if (filter) {
+        if(filter.question) {
+          url = url + '/filter/' + filter.question;
+        }
+        if(filter.answer) {
+          url = url + '/' + filter.answer;
+        }
+      }
       url = url + '/tile.json';
 
-      console.log("Getting tilejson", url);
       // Get TileJSON
       $.ajax({
         url: url,
@@ -108,6 +95,9 @@ function($, _, Backbone, L, cartodb, Rickshaw, settings, IndexRouter, Surveys, S
     },
 
     addTileLayer: function(tilejson) {
+      if(this.tileLayer) {
+        this.map.removeLayer(this.tileLayer);
+      }
       this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
       this.map.addLayer(this.tileLayer);
     },
@@ -116,20 +106,41 @@ function($, _, Backbone, L, cartodb, Rickshaw, settings, IndexRouter, Surveys, S
       this.$el.find('.loading').hide();
     },
 
-    getCount: function() {
-      if (this.survey.get('responseCount')) {
-        return this.survey.get('responseCount');
-      }
-      return '';
+    setupSettings: function() {
+      this.settings = new SettingsView({
+        survey: this.survey,
+        forms: this.forms
+      });
+
+      this.settings.on('filterSet', this.changeFilter);
+      this.settings.on('filterReset', this.clearFilter);
+
+      var $el = this.settings.render();
+      this.$el.find('.settings').html($el);
+    },
+
+    changeFilter: function(filter) {
+      this.getTileJSON(filter);
+    },
+
+    clearFilter: function() {
+      this.getTileJSON();
+    },
+
+    getForms: function() {
+      this.forms = new Forms.Collection({
+        surveyId: this.survey.get('id')
+      });
+      this.forms.on('reset', this.setupSettings);
+      this.forms.fetch({ reset: true });
     },
 
     render: function() {
-      console.log("Rendering layerControl", this.$el);
       var context = {
         name: this.survey.get('name') || 'LocalData Survey',
         kind: 'responses',
         meta: {
-          count: this.getCount()
+          count: this.survey.get('responseCount') //this.getCount()
         }
       };
 
@@ -138,6 +149,8 @@ function($, _, Backbone, L, cartodb, Rickshaw, settings, IndexRouter, Surveys, S
         this.doneLoading();
       }
 
+      this.getForms();
+
       return this.$el;
     },
 
@@ -145,7 +158,6 @@ function($, _, Backbone, L, cartodb, Rickshaw, settings, IndexRouter, Surveys, S
       // this.map.removeLayer(this.layer);
       this.remove();
     }
-
   });
 
   return LayerControl;

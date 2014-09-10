@@ -279,7 +279,8 @@ function($,
       var self = this;
       // Dispatch the correct layers
       this.activeLayers[layerName] = new this.layers[layerName]({
-        map: this.mapView.map,
+        map: this.mapView.map, // TODO -- deprecate use of map in layers.
+        mapView: this.mapView,
         layerId: layerId,
         clickHandler: function (data) {
           self.setupWideGraph(data);

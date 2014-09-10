@@ -165,7 +165,7 @@ module.exports = function(grunt) {
         atBegin: true
       },
       files: ['src/**/*'],
-      tasks: ['stage', 'notify:watch']
+      tasks: ['stage'] //, 'notify:watch']
     },
 
     notify: {
