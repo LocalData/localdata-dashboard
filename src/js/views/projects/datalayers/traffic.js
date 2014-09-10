@@ -88,7 +88,9 @@ define(function (require) {
     setup: function() {
       var self = this;
       $.ajax({
-        url: '//comfortless.herokuapp.com/?url=' + encodeURIComponent('https://s3.amazonaws.com/localdata-public/misc/tmp/ftraffic.geojson'),
+        //url: '//comfortless.herokuapp.com/?url=' + encodeURIComponent('https://s3.amazonaws.com/localdata-public/misc/tmp/ftraffic.geojson'),
+        //url: '//comfortless.herokuapp.com/?url=' + encodeURIComponent('https://geostash.herokuapp.com/api/datasets/chzuly0660000bi0ug8qsc9xs/features'),
+        url: '//geostash.herokuapp.com/api/datasets/chzuly0660000bi0ug8qsc9xs/features',
         dataType: 'json'
       }).done(function (data) {
         self.processData(data);
