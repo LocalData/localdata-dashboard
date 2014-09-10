@@ -24,33 +24,33 @@ define(function (require) {
       var context = {};
       this.$el.html(template({
         bikeCounts: [{
-          date: '01-Aug-2014',
+          date: '1-Aug-2014',
           count: 40
         }, {
-          date: '02-Aug-2014',
+          date: '2-Aug-2014',
           count: 52
         }, {
-          date: '03-Aug-2014',
+          date: '3-Aug-2014',
           count: 34
         }, {
-          date: '04-Aug-2014',
+          date: '4-Aug-2014',
           count: 57
         }, {
-          date: '05-Aug-2014',
+          date: '5-Aug-2014',
           count: 38
         }],
 
         pedestrian: [{
-          date: '01-Sep-2014',
+          date: '1-Sep-2014',
           count: 40
         }, {
-          date: '02-Sep-2014',
+          date: '2-Sep-2014',
           count: 47
         }, {
-          date: '03-Sep-2014',
+          date: '3-Sep-2014',
           count: 53
         }, {
-          date: '04-Sep-2014',
+          date: '4-Sep-2014',
           count: 39
         }],
 

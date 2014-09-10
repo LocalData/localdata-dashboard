@@ -5,7 +5,10 @@
     position: absolute;
     top: 50px;
     bottom: 0;
+    /*
     background: $darkblue;
+    */
+    background: $thinpink;
   }
 
   .b {
@@ -85,7 +88,10 @@
 
     .dataset:hover,
     .selected {
+      /*
       background: #fff3da;
+      */
+      background: #ffb62c;
 
       .fa-chevron-right {
         display: inline;
@@ -139,7 +145,10 @@
   /* Layer selectors -------------------------------------------------------- */
   .layers {
     padding: 12px;
+    /*
     color: #fff;
+    */
+    color: #000;
 
     #slider-range {
       margin-top: 0;
@@ -147,7 +156,10 @@
   }
 
   .layer {
+    /*
     border-bottom: 1px dotted #fff;
+    */
+    border-bottom: 1px dotted #000;
     padding: 8px 0px 20px;
 
     strong {
@@ -161,7 +173,10 @@
     .close {
       cursor: pointer;
       float: right;
+      /*
       color: #daedff;
+      */
+      color: #000;
       line-height: 1.4;
     }
   }

@@ -10,8 +10,11 @@
 }
 
 .project-table .title {
+  /*
   font-size: $medium-size;
-  margin-bottom: 5px;
+  */
+  font-size: 32px;
+  margin-bottom: 25px;
 }
 
 .project-table .section {
@@ -40,22 +43,33 @@
   .category {
     font-family: $bold;
     margin-left: 15px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    font-size: 28px;
   }
 
   table {
-    margin: 0 0 0 15px;
+    margin: 0 0 10px 15px;
     border-width: 2px;
-    width: 390px;
+    width: 450px;
+    font-size: 20px;
   }
   td {
+    /*
     padding: 10px 10px 10px 10px;
+    */
+    padding: 5px 5px 5px 10px;
   }
   th {
+    /*
     padding: 10px 10px 10px 10px;
+    */
+    padding: 5px 5px 5px 10px;
     border-bottom-width: 2px;
   }
   th:first-child {
     width: 145px;
+  }
+  tr:nth-child(even) td {
+    background-color: #ffeed5;
   }
 }
