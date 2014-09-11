@@ -170,10 +170,28 @@
       left: 100%;
       top: 0;
       height: 100%;
-      width: 200%;
+      width: 150%;
       z-index: 9999;
-      background: red;
+      background: #fcf5f0;
       overflow: scroll;
+      color: $body-color;
+
+      /* We're using the h2 as a toolbar in .settings */
+      h2 {
+        font-size: 1em;
+        font-family: $bold;
+        padding: 12px;
+        letter-spacing: 0;
+
+        .fa-close {
+          float: right;
+          cursor: pointer;
+        }
+      }
+
+      .filters {
+        color: #333;
+      }
     }
   }
 

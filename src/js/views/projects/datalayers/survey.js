@@ -29,7 +29,8 @@ define(function (require) {
 
     events: {
       'click .close': 'close',
-      'click .open-settings': 'settings'
+      'click': 'showSettings',
+      'click .close-settings': 'closeSettings'
     },
 
     className: 'layer',
@@ -39,11 +40,14 @@ define(function (require) {
         'update',
         'close',
         'processData',
-        'getForms',
-        'setupSettings',
         'doneLoading',
+        'getForms',
         'getTileJSON',
         'addTileLayer',
+
+        // Settings
+        'setupSettings',
+        'closeSettings',
         'changeFilter',
         'clearFilter'
       );
@@ -116,7 +120,11 @@ define(function (require) {
       this.settings.on('filterReset', this.clearFilter);
 
       var $el = this.settings.render();
-      this.$el.find('.settings').html($el);
+      this.$el.find('.settings').append($el);
+    },
+
+    closeSettings: function() {
+      this.$el.find('.settings').hide();
     },
 
     changeFilter: function(filter) {

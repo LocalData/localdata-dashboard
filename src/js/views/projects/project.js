@@ -1,76 +1,44 @@
 /*jslint nomen: true */
-/*globals define, cartodb: true */
+/*globals define, cartodb, Rickshaw: true */
 
-define([
-  'jquery',
-  'jqueryUI',
-  'lib/lodash',
-  'backbone',
-  'moment',
-  'highcharts',
+define(function (require) {
+  'use strict';
 
-  // LD
-  'settings',
+  var $ = require('jquery');
+  $ = require('rangeSlider');
+  var _ = require('lib/lodash');
+  var Backbone = require('backbone');
+  var L = require('lib/leaflet/leaflet.tilejson');
+  var moment = require('moment');
 
-  // Router
-  'routers/index',
+  // LocalData
+  var settings = require('settings');
 
   // Models
-  'models/surveys',
+  var Surveys = require('models/surveys');
 
   // Views
-  'views/surveys',
-  'views/maps/project-map',
-  'views/projects/layerControl',
-  'views/projects/dataSelector',
-  'views/projects/table',
-  'views/projects/wideGraph',
+  var MapView = require('views/maps/project-map');
+  var LayerControl = require('views/projects/layerControl');
+  var DataSelector = require('views/projects/dataSelector');
+  var TableView = require('views/projects/table');
+  var WideGraph = require('views/projects/wideGraph');
 
-  // Data sources
-  'views/projects/datalayers/instagram',
-  'views/projects/datalayers/factual',
-  'views/projects/datalayers/ped-fatalities',
-  'views/projects/datalayers/bike-fatalities',
-  'views/projects/datalayers/bike-counts',
-  'views/projects/datalayers/ped-counts',
-  'views/projects/datalayers/traffic',
-  'views/projects/datalayers/survey',
-  'views/projects/cartoData',
+  // Datasources
+  var instagramDataSource = require('views/projects/datalayers/instagram');
+  var factualDataSource = require('views/projects/datalayers/factual');
+  var pedFatalitiesDataSource = require('views/projects/datalayers/ped-fatalities');
+  var bikeFatalitiesDataSource = require('views/projects/datalayers/bike-fatalities');
+  var bikeCountsDataSource = require('views/projects/datalayers/bike-counts');
+  var pedCountsDataSource = require('views/projects/datalayers/ped-counts');
+  var traffic = require('views/projects/datalayers/traffic');
+  var surveyDataSource = require('views/projects/datalayers/survey');
+
 
   // Templates
-  'text!templates/projects/project.html'
-],
+  var template = require('text!templates/projects/project.html');
+  var surveyTemplate = require('text!templates/projects/surveyDataSelector.html');
 
-function($,
-  jqueryUI,
-  _,
-  Backbone,
-  moment,
-  Highcharts,
-
-  settings,
-  IndexRouter,
-  Surveys,
-  SurveyViews,
-  MapView,
-  LayerControl,
-  DataSelector,
-  TableView,
-  WideGraph,
-
-  instagramDataSource,
-  factualDataSource,
-  pedFatalitiesDataSource,
-  bikeFatalitiesDataSource,
-  bikeCountsDataSource,
-  pedCountsDataSource,
-  traffic,
-  surveyDataSource,
-  cartoData,
-
-  template
-  ){
-  'use strict';
 
   var ProjectView = Backbone.View.extend({
     el: '#container',
@@ -93,7 +61,6 @@ function($,
         'updateDate'
       );
 
-      this.survey = new Surveys.Model({id: '5b51af30-3477-11e4-8466-37cd6d8f8d78'});
       this.selectorView = new DataSelector({});
       this.selectorView.on('addLayer', this.addLayer);
     },
@@ -109,7 +76,6 @@ function($,
       this.setupSlider();
       this.setupDataSelector();
       this.setupMap();
-      //this.setupWideGraph();
     },
 
     setupWideGraph: function(info) {
@@ -121,87 +87,23 @@ function($,
         title: info.title
       });
       this.$el.find('#project').append(this.$wideGraphEl);
-/*
-      this.wideGraph.setupGraph([[
-        {x: 1, y: 12}, // REPLACE WITH SAMPLE DATA
-        {x: 2, y: 13},
-        {x: 3, y: 8},
-        {x: 4, y: 15},
-        {x: 5, y: 17},
-        {x: 6, y: 15},
-        {x: 7, y: 5},
-        {x: 8, y: 13},
-        {x: 9, y: 6},
-        {x: 10, y: 12},
-        {x: 11, y: 17},
-        {x: 12, y: 11},
-        {x: 13, y: 8},
-        {x: 14, y: 15},
-        {x: 15, y: 13},
-        {x: 16, y: 17},
-        {x: 17, y: 6},
-        {x: 18, y: 12}
-      ],
-      [
-        {x: 1, y: 8}, // REPLACE WITH SAMPLE DATA
-        {x: 2, y: 4},
-        {x: 3, y: 5},
-        {x: 4, y: 9},
-        {x: 5, y: 3},
-        {x: 6, y: 4},
-        {x: 7, y: 2},
-        {x: 8, y: 6},
-        {x: 9, y: 7},
-        {x: 10, y: 12},
-        {x: 11, y: 5},
-        {x: 12, y: 9},
-        {x: 13, y: 10},
-        {x: 14, y: 15},
-        {x: 15, y: 13},
-        {x: 16, y: 7},
-        {x: 17, y: 4},
-        {x: 18, y: 6}
-      ]]);
-*/
 
-      /* WORKING LIVE INSTAGRAM DATA
-      var self = this;
-      cartoData.countsByHourOfWeek()
-      .then(function (data) {
-        self.wideGraph.setupGraph(_.map(data.rows, function (row) {
-          return {
-            x: row.d * 24 + row.h,
-            y: row.count
-          };
-        }));
-      }).catch(function (error) {
-        console.log(error);
-      });
-      */
-
-
-      //// Highcarts setup
+      // Highcarts setup
       this.wideGraph.setupGraph(info.data);
-      //var self = this;
-      //cartoData.countsByHourOfWeek()
-      //.then(function (data) {
-      //  self.wideGraph.setupGraph(_.map(data.rows, function (row) {
-      //    return row.count;
-      //  }));
-      //}).catch(function (error) {
-      //  console.log(error);
-      //});
-
-      //this.wideGraph.setupGraph([
-      //  {x: 1, y: 2}, // REPLACE WITH SAMPLE DATA
-      //  {x: 2, y: 5}
-      //]);
     },
 
     /* Data selector ------------------------------------- */
     setupDataSelector: function() {
       var $el = this.selectorView.render();
       this.$el.find('.b').prepend($el);
+
+      // Now add those surveys
+      this.surveys = new Surveys.Collection();
+      this.surveys.fetch({ reset: true });
+      this.surveys.on('reset', function() {
+        var t = _.template(surveyTemplate);
+        this.$el.find('.dataselect').append(t({ surveys: this.surveys.toJSON() }));
+      }.bind(this));
     },
 
     /**
@@ -352,10 +254,6 @@ function($,
       console.log("Map zone created", geometry, json);
     },
 
-    /* Layer controls ------------------------------------- */
-    // setupLayers: function() {
-    // }
-
     /* Tools ---------------------------------------------- */
     downloadData: function (e) {
       e.preventDefault();
@@ -366,7 +264,6 @@ function($,
       $('body').append(dlTemplate({
         src: '//data-uri.herokuapp.com/reverse?uri=' + encodeURIComponent('data:text/plain;charset=utf-8;content-disposition=attachment;filename=export.csv;base64,' + data)
       }));
-
     }
 
   });

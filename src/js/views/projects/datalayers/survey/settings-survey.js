@@ -135,7 +135,6 @@ define(function (require) {
 
     showOptions: function(event) {
       event.preventDefault();
-      $('.filters .options').slideToggle();
       $('.filters .options .question').show();
     },
 
@@ -152,7 +151,6 @@ define(function (require) {
 
       $('.filters .clear').slideUp();
       $('.filters .options .answers').slideUp();
-      $('.filters .options').slideUp();
       $('.filters .answer').removeClass('active');
     },
 
@@ -172,10 +170,6 @@ define(function (require) {
       $question.find('.answers').slideDown();
       $('.filters .clear').slideDown();
       $question.find('.toggle').slideUp();
-
-
-      // Hide other questions
-      $('.filters .options .question').not($question).slideUp();
 
       this.trigger('filterSet', this.filters);
     },

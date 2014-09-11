@@ -1,0 +1,20 @@
+<div class="datanav sources surveys">
+  <div class="datanav-in">
+    <% _.each(surveys, function(survey) { %>
+      <div class="dataset" data-show="survey-<%= survey.id %>">
+        <span><%= survey.name %> <i class="fa fa-bullseye"></i></span>
+      </div>
+    <% }); %>
+  </div>
+</div>
+
+<% _.each(surveys, function(survey) { %>
+  <div class="datanav details survey-<%= survey.id %>">
+    <div class="datanav-in">
+      <div class="dataset">
+        <strong><%= survey.name %> <i class="fa fa-bullseye"></i></strong>
+        <a class="button add-layer" data-add="survey" data-id="<%= survey.id %>">Add data layer <i class="fa fa-plus-circle"></i></a>
+      </div>
+    </div>
+  </div>
+<% }); %>
