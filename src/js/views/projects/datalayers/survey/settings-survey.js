@@ -13,7 +13,6 @@ define(function (require) {
 
   // Models
   var Responses = require('models/responses');
-  var Stats = require('models/stats');
 
   // Templates
   var template = require('text!templates/filters/filter.html');
@@ -48,10 +47,9 @@ define(function (require) {
       this.forms = options.forms;
       // this.mapView = options.map;
 
-      this.stats = new Stats.Model({
-        id: this.survey.get('id')
-      });
+      this.stats = options.stats;
       this.stats.on('change', this.render);
+
       this.$el.html(this.loadingTemplate({}));
     },
 

@@ -55,6 +55,7 @@ define(function (require) {
       _.bindAll(this,
         'render',
         'setupMap',
+        'setupTable',
         'setupWideGraph',
         'showDataSelector',
         'addLayer',
@@ -74,6 +75,7 @@ define(function (require) {
       var context = {};
       this.$el.html(this.template({}));
       this.setupSlider();
+      this.setupTable();
       this.setupDataSelector();
       this.setupMap();
     },
@@ -97,7 +99,7 @@ define(function (require) {
       var $el = this.selectorView.render();
       this.$el.find('.b').prepend($el);
 
-      // Now add those surveys
+      // Dynamically add surveys to the dataSelector.
       this.surveys = new Surveys.Collection();
       this.surveys.fetch({ reset: true });
       this.surveys.on('reset', function() {
@@ -181,8 +183,8 @@ define(function (require) {
       var self = this;
       // Dispatch the correct layers
       this.activeLayers[layerName] = new this.layers[layerName]({
-        map: this.mapView.map, // TODO -- deprecate use of map in layers.
-        mapView: this.mapView,
+        map: this.mapView.map,
+        tableView: this.tableView,
         layerId: layerId,
         clickHandler: function (data) {
           self.setupWideGraph(data);
@@ -201,11 +203,6 @@ define(function (require) {
         this.setupMap();
       } else {
         this.mapView.$el.show();
-      }
-      if (!this.wideGraph) {
-        this.setupGraph();
-      } else {
-        this.wideGraph.$el.show();
       }
       this.$('#map-tools a').removeClass('selected');
       this.$('#map-btn').addClass('selected');
@@ -229,9 +226,9 @@ define(function (require) {
     },
 
     setupTable: function() {
-      this.tableView = new TableView({
-        el: $('#project-table')
-      });
+      this.tableView = new TableView({});
+      var $table = this.tableView.render();
+      this.$el.find('.b').append($table);
     },
 
     /* Map ------------------------------------------------ */

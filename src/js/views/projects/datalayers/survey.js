@@ -15,17 +15,20 @@ define(function (require) {
   // Models
   var Surveys = require('models/surveys');
   var Forms = require('models/forms');
+  var Stats = require('models/stats');
 
   // Views
   var SettingsView = require('views/projects/datalayers/survey/settings-survey');
 
   // Templates
   var template = require('text!templates/projects/layerControl.html');
+  var tableTemplate = require('text!templates/projects/surveys/surveyTable.html');
 
 
   // The View
   var LayerControl = Backbone.View.extend({
     template: _.template(template),
+    tableTemplate: _.template(tableTemplate),
 
     events: {
       'click .close': 'close',
@@ -54,6 +57,7 @@ define(function (require) {
 
       console.log("Creating survey layer with options", options);
       this.map = options.map;
+      this.table = options.tableView;
       this.surveyId = options.layerId;
 
       this.survey = new Surveys.Model({ id: this.surveyId });
@@ -64,6 +68,16 @@ define(function (require) {
     processData: function(data) {
       this.render();
       this.getTileJSON();
+
+      // TODO:
+      // - First, add map.
+      //
+      // Parallel:
+      // - Get form
+      // - Get stats
+      // Then:
+      // - Create table
+      // - Create settings
     },
 
     update: function() {
@@ -111,9 +125,16 @@ define(function (require) {
     },
 
     setupSettings: function() {
+      this.stats = new Stats.Model({
+        id: this.survey.get('id')
+      });
+      this.stats.on('reset', this.setupTable);
+      this.stats.fetch({reset: true});
+
       this.settings = new SettingsView({
         survey: this.survey,
-        forms: this.forms
+        forms: this.forms,
+        stats: this.stats
       });
 
       this.settings.on('filterSet', this.changeFilter);
@@ -121,6 +142,15 @@ define(function (require) {
 
       var $el = this.settings.render();
       this.$el.find('.settings').append($el);
+    },
+
+    setupTable: function() {
+      var $table = this.tableTemplate({
+        survey: this.survey.toJSON(),
+        stats: this.stats.toJSON()
+      });
+      console.log("Setting table", this.table, this.stats.toJSON());
+      this.table.$el.append($table);
     },
 
     closeSettings: function() {
@@ -148,7 +178,7 @@ define(function (require) {
         name: this.survey.get('name') || 'LocalData Survey',
         kind: 'responses',
         meta: {
-          count: this.survey.get('responseCount') //this.getCount()
+          count: this.survey.get('responseCount') || 0 //this.getCount()
         }
       };
 
@@ -163,7 +193,9 @@ define(function (require) {
     },
 
     close: function() {
-      // this.map.removeLayer(this.layer);
+      if(this.tileLayer) {
+        this.map.removeLayer(this.tileLayer);
+      }
       this.remove();
     }
   });
