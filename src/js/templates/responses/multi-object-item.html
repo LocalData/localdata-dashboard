@@ -1,0 +1,61 @@
+<!-- streetview -->
+<% if(r.geo_info != undefined) { %>
+  <img src="http://maps.googleapis.com/maps/api/streetview?size=500x250&location=<%= r.geo_info.centroid[1] %>,<%= r.geo_info.centroid[0] %>&key=<%= googleKey %>" height="250" width="500">
+<% } %>
+
+<span class="collector">
+  <i class="fa fa-user"></i>
+  <% if(r.geo_info != undefined) { %>
+    <% if(r.source.collector) { %>
+      <%- r.source.collector %>
+    <% } else { %>
+      No name given
+    <% } %>
+  <% } else { %>
+    <%- r.responses.collector %>
+  <% } %>
+</span>
+
+<span class="time">
+  <i class="fa fa-clock-o"></i>
+  <%- r.createdHumanized %>
+</span>
+
+<% if(r.files != undefined) { %>
+  <% _.each(r.files, function(file){ %>
+    <img src="<%= file %>" alt="" style="width: 90%">
+  <% });%>
+<% } %>
+
+
+<div class="answers">
+
+<% _.each(r.responses, function(resp, key) { %>
+  <div class="answer">
+    <span class="key">
+      <% if(labels[key]) { %>
+        <%- labels[key] %>
+      <% } else { %>
+        <%- key %>
+      <% } %>
+    </span>
+    <span class="value"><strong><%- resp %></strong></span>
+  </div>
+<% }); %>
+</div>
+
+<button class="mini danger confirm"><i class="icon-trash"></i> Delete</button>
+
+
+<div class="review-tools">
+  <button class="mini ok approve"><i class="fa fa-check"></i> Approve</button>
+  <button class="mini danger flex flag"><i class="fa fa-flag"></i> Flag</button>
+</div>
+
+
+<div class="confirm-delete">
+  <button class="mini cancel">Cancel</button>
+  <button class="mini danger flex delete"><i class="icon-trash"></i> Confirm delete</button>
+</div>
+
+<div class="error">Sorry, there was a problem deleting this record</div>

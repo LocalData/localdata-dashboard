@@ -15,7 +15,7 @@ define([
   'models/responses',
 
   // Templates
-  'text!templates/responses/item.html'
+  'text!templates/responses/multi-object-item.html'
 ],
 
 function($, _, Backbone, events, settings, api, Responses, template) {
@@ -43,7 +43,8 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       var $el = $(this.el);
       $el.html(this.template({
         r: this.model.toJSON(),
-        labels: this.labels
+        labels: this.labels,
+        googleKey: settings.GoogleKey
       }));
       return this;
     },

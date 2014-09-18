@@ -15,10 +15,10 @@ define([
   'models/responses',
 
   // Views
-  'views/responses/item',
+  'views/responses/multi-object-item',
 
   // Templates
-  'text!templates/responses/list.html'
+  'text!templates/responses/multi-object-list.html'
 ],
 
 function($, _, Backbone, events, settings, api, Responses, ResponseView, template) {
@@ -62,11 +62,7 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
       }
 
       var $el = $(this.el);
-      $el.html(this.template({
-        name: name,
-        responses: this.collection.toJSON(),
-        googleKey: settings.GoogleKey
-      }));
+      $el.html(this.template({ }));
 
       this.collection.each(function(response) {
         var item = new ResponseView({

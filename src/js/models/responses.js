@@ -53,7 +53,7 @@ function($, _, Backbone, moment, settings, api) {
       if (this.objectId) {
         return url + '?objectId=' + this.objectId;
       }
-      return url;
+      return url + '?count=20&startIndex=0';
     },
 
     parse: function(response) {
