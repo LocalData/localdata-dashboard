@@ -41,18 +41,32 @@ function($, _, Backbone, moment, settings, api) {
 
     initialize: function(options) {
       if (options !== undefined) {
-        console.log("Getting responses", options);
         this.surveyId = options.surveyId;
         this.objectId = options.objectId;
+        this.limit = options.limit;
+        this.filters = options.filters;
         this.fetch();
       }
     },
 
     url: function() {
-      var url = settings.api.baseurl + '/surveys/' + this.surveyId + '/responses';
+      var url = settings.api.baseurl + '/surveys/' + this.surveyId + '/responses?';
       if (this.objectId) {
-        return url + '?objectId=' + this.objectId;
+        return url + 'objectId=' + this.objectId;
       }
+
+      if (this.limit) {
+        url = url + 'count=' + this.limit + '&startIndex=0';
+      } else {
+        url = url + 'count=20&startIndex=0';
+      }
+
+      if (this.filters) {
+        _.each(this.filters, function(value, key){
+          url = url + '&responses[' + key + ']=' + value;
+        });
+      }
+
       return url;
     },
 
@@ -145,8 +159,6 @@ function($, _, Backbone, moment, settings, api) {
 
     // Filter the items in the collection
     setFilter: function (question, answer) {
-      console.log("Filtering the responses", question, answer);
-
       // Make a shallow clone of the unfiltered models array.
       //
       // TODO: if someone calls reset or update, we need to toss out the
@@ -174,7 +186,6 @@ function($, _, Backbone, moment, settings, api) {
     },
 
     clearFilter: function (options) {
-      console.log("Clearing filter");
       this.filters = null;
       if (this.unfilteredModels !== null) {
         this.reset(this.unfilteredModels, options);

@@ -136,6 +136,9 @@ define(function(require, exports, module) {
         case "filters":
           this.currentContentView.showFilters();
           break;
+        case "review":
+          this.currentContentView.showReview();
+          break;
       }
     },
 
@@ -162,6 +165,11 @@ define(function(require, exports, module) {
     goto_filters: function() {
       this._router.navigate("surveys/" + settings.slug + "/dive");
       this.goto_survey("filters");
+    },
+
+    goto_review: function() {
+      this._router.navigate("surveys/" + settings.slug + "/review");
+      this.goto_survey("review");
     },
 
     goto_design: function() {
