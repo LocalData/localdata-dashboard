@@ -42,6 +42,7 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
       // this.listenTo(this.collection, 'add', this.render);
       this.listenTo(this.collection, 'reset', this.render);
       this.labels = options.labels;
+      this.showReviewTools = options.showReviewTools;
     },
 
     remove: function() {
@@ -71,7 +72,8 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
       this.collection.each(function(response) {
         var item = new ResponseView({
           model: response,
-          labels: this.labels
+          labels: this.labels,
+          showReviewTools: this.showReviewTools
         });
         $el.find('.responses-list').append(item.render().el);
       }.bind(this));

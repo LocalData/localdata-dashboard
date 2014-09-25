@@ -29,7 +29,10 @@ function($, _, Backbone, events, settings, api, Responses, template) {
     events: {
       'click .confirm': 'confirm',
       'click .delete': 'destroy',
-      'click .cancel': 'cancel'
+      'click .cancel': 'cancel',
+
+      'click .flag': 'flag',
+      'click .accept': 'accept'
     },
 
     initialize: function(options) {
@@ -37,14 +40,22 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       this.listenTo(this.model, "destroy", this.remove);
 
       this.labels = options.labels;
+      this.showReviewTools = options.showReviewTools;
     },
 
     render: function() {
       var $el = $(this.el);
-      $el.html(this.template({
+
+      var options = {
         r: this.model.toJSON(),
         labels: this.labels
-      }));
+      };
+
+      if(this.showReviewTools) {
+        options.showReviewTools = true;
+      }
+
+      $el.html(this.template(options));
       return this;
     },
 
@@ -75,6 +86,20 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       this.model.destroy({
         success: success,
         error: error
+      });
+    },
+
+    flag: function(event) {
+      event.preventDefault();
+      this.model.patch({
+        review: 'flagged'
+      });
+    },
+
+    accept: function(event) {
+      event.preventDefault();
+      this.model.patch({
+        review: 'accepted'
       });
     }
 

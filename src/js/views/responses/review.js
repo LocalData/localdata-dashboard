@@ -17,7 +17,7 @@ define(function(require, exports, module) {
   var Responses = require('models/responses');
 
   // Views
-  var ResponseListView = require('views/responses/multi-object-list');
+  var ResponseListView = require('views/responses/list');
 
   // Templates
   var template = require('text!templates/responses/review.html');
@@ -39,26 +39,27 @@ define(function(require, exports, module) {
 
       this.survey = options.survey;
       this.forms = options.forms;
-      this.render();
-    },
-
-    render: function() {
-      // Actually render the page
-      this.$el.html(this.template({}));
 
       // Set the response collection
       this.collection = new Responses.Collection({
-        surveyId: this.survey.get('id')
+        surveyId: this.survey.get('id'),
+        limit: 1
       });
+      this.collection.on('reset', this.render);
+      this.getNew();
+    },
 
-      // Create the list view
-      var reviewListView = new ResponseListView({
-        el: '#review-list',
+    render: function() {
+      this.$el.html(this.template({}));
+
+      var responseView = new ResponseListView({
         collection: this.collection,
-        labels: this.forms.getQuestions()
+        showReviewTools: true
       });
+    },
 
-      this.collection.fetch({ reset: true });
+    getNew: function() {
+      this.collection.fetch({reset: true});
     }
 
   });

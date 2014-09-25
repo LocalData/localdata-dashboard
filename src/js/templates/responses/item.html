@@ -39,6 +39,14 @@
 <% }); %>
 </div>
 
+
+<% if (showReviewTools) { %>
+  <div class="review-tools">
+    <button class="mini ok approve"><i class="fa fa-check"></i> Approve</button>
+    <button class="mini danger flex flag"><i class="fa fa-flag"></i> Flag</button>
+  </div>
+<% } %>
+
 <button class="mini danger confirm"><i class="icon-trash"></i> Delete</button>
 
 <div class="confirm-delete">
