@@ -24,6 +24,7 @@ function($, _, Backbone, settings, api, exportTemplate) {
 
     events: {
       'click .shapefile': 'getShapefile',
+      'click .kml': 'getKML',
       'click .csv': 'getCSV'
     },
 
@@ -104,6 +105,12 @@ function($, _, Backbone, settings, api, exportTemplate) {
     getCSV: function getCSV() {
       var url = settings.api.baseurl + '/surveys/' + this.surveyId + '/responses.csv';
       this.pingExport('csv', url);
+    },
+
+    // Ask the API to generate a KML export.
+    getKML: function getKML() {
+      var url = settings.api.baseurl + '/surveys/' + this.surveyId + '/responses.kml';
+      this.pingExport('kml', url);
     },
 
     // Ask the API to generate a shapefile export.
