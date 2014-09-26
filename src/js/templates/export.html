@@ -19,7 +19,11 @@
       <a class="button ok csv flex"><span class="fa fa-table"></span> Download CSV<a>
       <% } %>
 
-      <a href="<%= baseurl %>/surveys/<%= surveyId %>/responses.kml" class="button ok flex"><span class="button-in"><span class="fa fa-map-marker"></span> Download KML (points) </span></a>
+      <% if (loading.kml) { %>
+      <a class="button ok kml flex"><span class="fa fa-gear fa-spin"></span> Downloading KML...</a>
+      <% } else { %>
+      <a class="button ok kml flex"><span class="fa fa-map-marker"></span> Download KML (points)<a>
+      <% } %>
 
       <div class="error">Error exporting data. Please try again later or contact LocalData for help.</div>
 
