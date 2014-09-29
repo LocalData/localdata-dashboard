@@ -52,10 +52,14 @@ define(function(require, exports, module) {
     render: function() {
       this.$el.html(this.template({}));
 
+      console.log("Rendering review view");
       var responseView = new ResponseListView({
+        el: '.response-container',
         collection: this.collection,
+        labels: this.forms.getQuestions(),
         showReviewTools: true
       });
+      responseView.render();
     },
 
     getNew: function() {

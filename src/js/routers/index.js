@@ -24,7 +24,7 @@ function($, _, Backbone, settings, api) {
       "surveys/:slug/dive": "dive",
       "surveys/:slug/export": "survey_export",
       "surveys/:slug/design": "design",
-      "surveys/:slug/live": "review",
+      "surveys/:slug/review": "review",
       "surveys/:slug": "survey",
 
       "surveys/:slug/form/edit": "form_edit",
@@ -39,6 +39,7 @@ function($, _, Backbone, settings, api) {
       this.controller = options.controller;
 
       this.route(/^login\/(.*)$/, "login", this.login);
+
     },
 
     home: function() {

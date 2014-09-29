@@ -39,6 +39,7 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
     },
 
     initialize: function(options) {
+      console.log("Init list view", options);
       // this.listenTo(this.collection, 'add', this.render);
       this.listenTo(this.collection, 'reset', this.render);
       this.labels = options.labels;
@@ -53,6 +54,7 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
     },
 
     render: function() {
+      console.log("Render list view");
       var first = this.collection.at(0);
       var name;
 

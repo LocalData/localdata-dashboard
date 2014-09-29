@@ -55,6 +55,7 @@ function($, _, Backbone, events, settings, api, Responses, template) {
         options.showReviewTools = true;
       }
 
+      console.log("Using options", options);
       $el.html(this.template(options));
       return this;
     },

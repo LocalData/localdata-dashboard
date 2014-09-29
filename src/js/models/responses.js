@@ -44,6 +44,7 @@ function($, _, Backbone, moment, settings, api) {
         console.log("Getting responses", options);
         this.surveyId = options.surveyId;
         this.objectId = options.objectId;
+        this.limit = options.limit;
         this.fetch();
       }
     },
@@ -52,6 +53,10 @@ function($, _, Backbone, moment, settings, api) {
       var url = settings.api.baseurl + '/surveys/' + this.surveyId + '/responses';
       if (this.objectId) {
         return url + '?objectId=' + this.objectId;
+      }
+      if (this.limit) {
+        console.log("USING LIMIT");
+        return url + '?count=' + this.limit + '&startIndex=0';
       }
       return url + '?count=20&startIndex=0';
     },

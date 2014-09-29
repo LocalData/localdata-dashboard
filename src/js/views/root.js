@@ -168,7 +168,7 @@ define(function(require, exports, module) {
     },
 
     goto_review: function() {
-      this._router.navigate("surveys/" + settings.slug + "/live");
+      this._router.navigate("surveys/" + settings.slug + "/review");
       this.goto_survey("review");
     },
 
