@@ -19,6 +19,12 @@
       <a class="button ok csv flex"><span class="fa fa-table"></span> Download CSV<a>
       <% } %>
 
+      <% if (loading.csvLatest) { %>
+      <a class="button ok csvLatest flex"><span class="fa fa-gear fa-spin"></span> Downloading CSV...</a>
+      <% } else { %>
+      <a class="button ok csvLatest flex"><span class="fa fa-table"></span> Download latest results as CSV<a>
+      <% } %>
+
       <% if (loading.kml) { %>
       <a class="button ok kml flex"><span class="fa fa-gear fa-spin"></span> Downloading KML...</a>
       <% } else { %>

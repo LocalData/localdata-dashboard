@@ -25,7 +25,8 @@ function($, _, Backbone, settings, api, exportTemplate) {
     events: {
       'click .shapefile': 'getShapefile',
       'click .kml': 'getKML',
-      'click .csv': 'getCSV'
+      'click .csv': 'getCSV',
+      'click .csvLatest': 'getCSVLatest'
     },
 
     initialize: function(options) {
@@ -105,6 +106,12 @@ function($, _, Backbone, settings, api, exportTemplate) {
     getCSV: function getCSV() {
       var url = settings.api.baseurl + '/surveys/' + this.surveyId + '/responses.csv';
       this.pingExport('csv', url);
+    },
+
+    // Ask the API to generate a CSV export.
+    getCSVLatest: function getCSVLatest() {
+      var url = settings.api.baseurl + '/surveys/' + this.surveyId + '/responses.csv?latest=true';
+      this.pingExport('csvLatest', url);
     },
 
     // Ask the API to generate a KML export.
