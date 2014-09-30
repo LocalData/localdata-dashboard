@@ -43,9 +43,15 @@ define(function(require, exports, module) {
       // Set the response collection
       this.collection = new Responses.Collection({
         surveyId: this.survey.get('id'),
-        limit: 1
+        limit: 1,
+        filters: {
+          reviewed: 'undefined'
+        }
       });
       this.collection.on('reset', this.render);
+      this.collection.on('reviewed', function(){
+        console.log("REVIEWED");
+      });
       this.getNew();
     },
 

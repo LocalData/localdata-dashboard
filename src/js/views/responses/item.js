@@ -28,11 +28,11 @@ function($, _, Backbone, events, settings, api, Responses, template) {
 
     events: {
       'click .confirm': 'confirm',
-      'click .delete': 'destroy',
+      'click .action-delete': 'destroy',
       'click .cancel': 'cancel',
 
-      'click .flag': 'flag',
-      'click .accept': 'accept'
+      'click .action-flag': 'flag',
+      'click .action-accept': 'accept'
     },
 
     initialize: function(options) {
@@ -91,19 +91,30 @@ function($, _, Backbone, events, settings, api, Responses, template) {
     },
 
     flag: function(event) {
+      console.log("Flagging a response", this.model.toJSON());
       event.preventDefault();
-      this.model.patch({
-        review: 'flagged'
+      this.model.save({
+        responses: {
+          reviewed: 'flagged'
+        }
+      }, {
+        patch: true
       });
+      this.trigger('reviewed');
     },
 
     accept: function(event) {
+      console.log("Accept");
       event.preventDefault();
-      this.model.patch({
-        review: 'accepted'
+      this.model.save({
+        responses: {
+          reviewed: 'accepted'
+        }
+      }, {
+        patch: true
       });
+      this.trigger('reviewed');
     }
-
   });
 
   return ResponseView;

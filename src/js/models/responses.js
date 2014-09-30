@@ -45,20 +45,30 @@ function($, _, Backbone, moment, settings, api) {
         this.surveyId = options.surveyId;
         this.objectId = options.objectId;
         this.limit = options.limit;
+        this.filters = options.filters;
         this.fetch();
       }
     },
 
     url: function() {
-      var url = settings.api.baseurl + '/surveys/' + this.surveyId + '/responses';
+      var url = settings.api.baseurl + '/surveys/' + this.surveyId + '/responses?';
       if (this.objectId) {
-        return url + '?objectId=' + this.objectId;
+        return url + 'objectId=' + this.objectId;
       }
+
       if (this.limit) {
-        console.log("USING LIMIT");
-        return url + '?count=' + this.limit + '&startIndex=0';
+        url = url + 'count=' + this.limit + '&startIndex=0';
+      } else {
+        url = url + 'count=20&startIndex=0';
       }
-      return url + '?count=20&startIndex=0';
+
+      if (this.filters) {
+        _.each(this.filters, function(value, key){
+          url = url + '&responses[' + key + ']=' + value;
+        });
+      }
+
+      return url;
     },
 
     parse: function(response) {
