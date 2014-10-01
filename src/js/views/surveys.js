@@ -300,7 +300,7 @@ function(
       });
 
       // Export, Settings views
-      this.exportView = new ExportView({surveyId: this.surveyId});
+      this.exportView = new ExportView({survey: this.survey });
       this.settingsView = new SettingsView({
         survey: this.survey,
         forms: this.forms
