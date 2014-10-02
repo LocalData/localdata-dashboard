@@ -73,12 +73,6 @@ function($, _, Backbone, settings, api, exportTemplate) {
         options.timezone = this.survey.get('timezone');
       }
 
-      // Paramterize the options and add to the URL
-      var params = $.param(options);
-      if (params) {
-        url += '?' + params;
-      }
-
       var self = this;
 
       this.loading[type] = true;
@@ -100,6 +94,7 @@ function($, _, Backbone, settings, api, exportTemplate) {
 
         $.ajax({
           url: url,
+          data: options,
           cache: false
         }).done(function (data, textStatus, jqXHR) {
           if (jqXHR.status === 202 && self.loading[type]) {
