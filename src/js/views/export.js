@@ -33,13 +33,14 @@ function($, _, Backbone, settings, api, exportTemplate) {
       _.bindAll(this, 'render', 'pingExport');
 
       // Show a given survey
-      this.surveyId = options.surveyId;
+      this.survey = options.survey;
+      this.survey.on('change', this.render);
     },
 
     render: function() {
       // Set the context & render the page
       var context = {
-        surveyId: this.surveyId,
+        surveyId: this.survey.get('id'),
         baseurl: settings.api.baseurl,
         loading: this.loading
       };
@@ -63,6 +64,15 @@ function($, _, Backbone, settings, api, exportTemplate) {
     pingExport: function pingExport(type, url) {
       var expiration = Date.now() + exportTimeout;
 
+      // We may need to pass in some optional parameters
+      var options = {};
+      if(type === 'csvLatest') {
+        options.latest = true;
+      }
+      if(this.survey.has('timezone')) {
+        options.timezone = this.survey.get('timezone');
+      }
+
       var self = this;
 
       this.loading[type] = true;
@@ -84,6 +94,7 @@ function($, _, Backbone, settings, api, exportTemplate) {
 
         $.ajax({
           url: url,
+          data: options,
           cache: false
         }).done(function (data, textStatus, jqXHR) {
           if (jqXHR.status === 202 && self.loading[type]) {
@@ -104,25 +115,25 @@ function($, _, Backbone, settings, api, exportTemplate) {
 
     // Ask the API to generate a CSV export.
     getCSV: function getCSV() {
-      var url = settings.api.baseurl + '/surveys/' + this.surveyId + '/responses.csv';
+      var url = settings.api.baseurl + '/surveys/' + this.survey.get('id') + '/responses.csv';
       this.pingExport('csv', url);
     },
 
     // Ask the API to generate a CSV export.
     getCSVLatest: function getCSVLatest() {
-      var url = settings.api.baseurl + '/surveys/' + this.surveyId + '/responses.csv?latest=true';
+      var url = settings.api.baseurl + '/surveys/' + this.survey.get('id') + '/responses.csv';
       this.pingExport('csvLatest', url);
     },
 
     // Ask the API to generate a KML export.
     getKML: function getKML() {
-      var url = settings.api.baseurl + '/surveys/' + this.surveyId + '/responses.kml';
+      var url = settings.api.baseurl + '/surveys/' + this.survey.get('id') + '/responses.kml';
       this.pingExport('kml', url);
     },
 
     // Ask the API to generate a shapefile export.
     getShapefile: function getShapefile() {
-      var url = settings.api.baseurl + '/surveys/' + this.surveyId + '/responses.zip';
+      var url = settings.api.baseurl + '/surveys/' + this.survey.get('id') + '/responses.zip';
       this.pingExport('shapefile', url);
     }
   });
