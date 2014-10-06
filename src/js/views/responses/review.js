@@ -51,10 +51,7 @@ define(function(require, exports, module) {
       });
       this.collection.on('reset', this.render);
       this.collection.on('remove', this.getNew);
-      this.collection.on('change:responses', function() {
-        this.collection.reset(); // clear the collection
-        this.getNew();
-      }.bind(this));
+      this.collection.on('change:responses', this.getNew);
 
       this.getNew(0);
     },
@@ -76,11 +73,14 @@ define(function(require, exports, module) {
         wait = 250;
       }
 
+      // Remove any existing entries
+      this.collection.reset();
+
       // We need to wait until the model is synced.
       // Unfortunately, it doesn't look like there's a clear way to do this
       // except by waiting a little bit.
       setTimeout(function(){
-          this.collection.fetch({ reset: true });
+        this.collection.fetch({ reset: true });
       }.bind(this), wait);
     }
   });
