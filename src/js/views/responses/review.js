@@ -53,7 +53,7 @@ define(function(require, exports, module) {
       this.collection.on('remove', this.getNew);
       this.collection.on('change:responses', this.getNew);
 
-      this.getNew(0);
+      this.getNew();
     },
 
     render: function() {
@@ -68,20 +68,11 @@ define(function(require, exports, module) {
       responseView.render();
     },
 
-    getNew: function(wait) {
-      if (!wait) {
-        wait = 250;
-      }
-
+    getNew: function() {
       // Remove any existing entries
       this.collection.reset();
 
-      // We need to wait until the model is synced.
-      // Unfortunately, it doesn't look like there's a clear way to do this
-      // except by waiting a little bit.
-      setTimeout(function(){
-        this.collection.fetch({ reset: true });
-      }.bind(this), wait);
+      this.collection.fetch({ reset: true });
     }
   });
 

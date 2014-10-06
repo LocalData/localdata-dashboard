@@ -97,7 +97,8 @@ function($, _, Backbone, events, settings, api, Responses, template) {
           reviewed: 'flagged'
         }
       }, {
-        patch: true
+        patch: true,
+        wait: true
       });
     },
 
@@ -108,7 +109,8 @@ function($, _, Backbone, events, settings, api, Responses, template) {
           reviewed: 'accepted'
         }
       }, {
-        patch: true
+        patch: true,
+        wait: true
       });
     }
   });
