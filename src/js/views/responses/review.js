@@ -49,9 +49,18 @@ define(function(require, exports, module) {
         }
       });
       this.collection.on('reset', this.render);
-      this.collection.on('reviewed', function(){
-        console.log("REVIEWED");
-      });
+
+      this.collection.on('change:responses', function() {
+        this.collection.reset(); // clear the collection
+
+        // We need to wait until the model is synced.
+        // Unfortunately, it doesn't look like there's a clear way to do this
+        // except by waiting a little bit.
+        setTimeout(function(){
+          this.collection.fetch({ reset: true });
+        }.bind(this), 250);
+      }.bind(this));
+
       this.getNew();
     },
 

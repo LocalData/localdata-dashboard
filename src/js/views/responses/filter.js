@@ -1,28 +1,28 @@
 /*jslint nomen: true */
 /*globals define: true */
 
-define([
-  'jquery',
-  'lib/lodash',
-  'backbone',
-  'lib/tinypubsub',
-  'lib/kissmetrics',
+define(function(require, exports, module) {
+  'use strict';
 
-  // LocalData
-  'settings',
-  'api',
+  // Libs
+  var $ = require('jquery');
+  var _ = require('lib/lodash');
+  var Backbone = require('backbone');
+
+  // App
+  var settings = require('settings');
+  var api = require('api');
 
   // Models
-  'models/responses',
-  'models/stats',
+  var Responses = require('models/responses');
+  var Stats = require('models/stats');
+
+  // Views
+  var ResponseListView = require('views/responses/list');
 
   // Templates
-  'text!templates/filters/filter.html',
-  'text!templates/filters/loading.html'
-],
-
-function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template, loadingTemplate) {
-  'use strict';
+  var template = require('text!templates/filters/filter.html');
+  var loadingTemplate = require('text!templates/filters/loading.html');
 
   var ANSWER = 'response';
   var NOANSWER = 'no response';
@@ -65,6 +65,25 @@ function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template
       // Match the question names and answer values from the form with stats and colors.
       var questions = this.forms.getFlattenedForm();
       var stats = this.stats;
+
+      console.log("Has reviews?", stats.has('reviewed'));
+      console.log("Question format", this.forms.getFlattenedForm());
+
+      if (stats.has('reviewed')) {
+        questions.reviewed = {
+          text: 'Review status',
+          answers: [{
+            text: 'flagged',
+            value: 'flagged'
+          }, {
+            text: 'accepted',
+            value: 'accepted'
+          }, {
+            text: 'no response',
+            value: 'no response'
+          }]
+        };
+      }
 
       _.each(_.keys(questions), function (question) {
         var answerObjects = {};
@@ -173,7 +192,6 @@ function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template
     },
 
     selectQuestion: function(event) {
-      _kmq.push(['record', "Question filter selected"]);
       console.log("Another filter selected", event);
 
       // Clear out any filters
@@ -200,7 +218,6 @@ function($, _, Backbone, events, _kmq, settings, api, Responses, Stats, template
      * Show only responses with a specific answer
      */
     selectAnswer: function(event) {
-      _kmq.push(['record', "Answer filter selected"]);
       var $answer = $(event.target);
       this.filters.answer = $answer.attr('data-answer');
 

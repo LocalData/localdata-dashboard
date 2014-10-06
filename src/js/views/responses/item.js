@@ -39,8 +39,8 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       this.listenTo(this.model, "change", this.render);
       this.listenTo(this.model, "destroy", this.remove);
 
+      this.renderOptions = options || {};
       this.labels = options.labels;
-      this.showReviewTools = options.showReviewTools;
     },
 
     render: function() {
@@ -48,7 +48,8 @@ function($, _, Backbone, events, settings, api, Responses, template) {
 
       var options = {
         r: this.model.toJSON(),
-        labels: this.labels
+        labels: this.labels,
+        renderOptions: this.renderOptions
       };
 
       if(this.showReviewTools) {
@@ -100,7 +101,6 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       }, {
         patch: true
       });
-      this.trigger('reviewed');
     },
 
     accept: function(event) {
@@ -113,7 +113,6 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       }, {
         patch: true
       });
-      this.trigger('reviewed');
     }
   });
 

@@ -143,4 +143,22 @@
 
 #review-view-container .responses-list {
   position: relative;
+  width: 100%;
+  top: 0;
+  margin-left: 0;
+  overflow: auto;
+
+  .collector,
+  .time {
+    color: $body-color;
+  }
+
+  .close {
+    display: none;
+  }
+
+  .response-image,
+  .streetview {
+    float: right;
+  }
 }

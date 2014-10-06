@@ -68,6 +68,8 @@ function($, _, Backbone, moment, settings, api) {
         });
       }
 
+      console.log("Getting responses with url", url);
+
       return url;
     },
 
