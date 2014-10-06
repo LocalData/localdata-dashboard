@@ -161,4 +161,11 @@
   .streetview {
     float: right;
   }
+
+  .response-image {
+    max-width: 500px ! important;
+    display: inline-block;
+    margin-top: 1em;
+    clear: both;
+  }
 }
