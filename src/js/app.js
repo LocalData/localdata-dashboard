@@ -44,11 +44,11 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView, Users) {
 
   // Kick off the LocalData app
   LD.initialize = function() {
-    console.log("Initalizing app");
 
     // Set up the user and make it available across the app
     settings.user = new Users.Model();
     settings.user.fetch();
+
 
     // Start routing
     LD.router = new RootView();

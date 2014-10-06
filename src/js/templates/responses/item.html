@@ -1,3 +1,10 @@
+<% if (renderOptions.showReviewTools) { %>
+  <div class="review-tools">
+    <button class="mini ok action-accept flex"><i class="fa fa-check"></i> Accept</button>
+    <button class="mini danger flex action-flag"><i class="fa fa-flag"></i> Flag</button>
+  </div>
+<% } %>
+
 <span class="collector">
   <i class="fa fa-user"></i>
   <% if(r.geo_info != undefined) { %>
@@ -18,7 +25,7 @@
 
 <% if(r.files != undefined) { %>
   <% _.each(r.files, function(file){ %>
-    <img src="<%= file %>" alt="" style="width: 90%">
+    <img src="<%= file %>" alt="" style="width: 90%" class="response-image">
   <% });%>
 <% } %>
 
@@ -39,11 +46,11 @@
 <% }); %>
 </div>
 
-<button class="mini danger confirm"><i class="icon-trash"></i> Delete</button>
+<button class="mini danger action-show-confirm"><i class="icon-trash"></i> Delete</button>
 
 <div class="confirm-delete">
   <button class="mini cancel">Cancel</button>
-  <button class="mini danger flex delete"><i class="icon-trash"></i> Confirm delete</button>
+  <button class="mini danger flex action-delete"><i class="icon-trash"></i> Confirm delete</button>
 </div>
 
 <div class="error">Sorry, there was a problem deleting this record</div>

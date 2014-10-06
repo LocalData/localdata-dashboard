@@ -1,74 +1,41 @@
 /*jslint nomen: true */
-/*globals define: true */
+/*globals define, location: true */
 
-define([
-  'jquery',
-  'lib/lodash',
-  'backbone',
-  'lib/leaflet/leaflet',
-  'lib/tinypubsub',
-  'lib/async',
-  'lib/kissmetrics',
-
-  // LocalData
-  'settings',
-  'api',
-
-  // Models
-  'models/surveys',
-  'models/responses',
-  'models/forms',
-
-  // Views
-  'views/export',
-  'views/settings',
-  'views/responses/responses',
-  'views/forms',
-  'views/maps/map',
-
-  // Templates
-  'text!templates/surveys/new.html',
-  'text!templates/surveys/item.html',
-  'text!templates/surveys/list-item.html',
-
-  // Misc
-  'misc/exampleform'
-],
-
-function(
-  $,
-  _,
-  Backbone,
-  L,
-  events,
-  async,
-  _kmq,
-
-  // LocalData
-  settings,
-  api,
-
-  // Models
-  SurveyModels,
-  ResponseModels,
-  FormModels,
-
-  // Views
-  ExportView,
-  SettingsView,
-  ResponseViews,
-  FormViews,
-  MapView,
-
-  // Templates
-  newSurveyTemplate,
-  surveyTemplate,
-  surveyListItemTemplate,
-
-  // Misc
-  exampleForm
-){
+define(function(require, exports, module) {
   'use strict';
+
+  // Libs
+  var $ = require('jquery');
+  var _ = require('lib/lodash');
+  var Backbone = require('backbone');
+  var L = require('lib/leaflet/leaflet');
+  var async = require('lib/async');
+
+  // LocalData
+  var settings = require('settings');
+  var api = require('api');
+
+  // Models
+  var SurveyModels = require('models/surveys');
+  var ResponseModels = require('models/responses');
+  var FormModels = require('models/forms');
+
+  // Views
+  var ExportView = require('views/export');
+  var SettingsView = require('views/settings');
+  var ResponseViews = require('views/responses/responses');
+  var ReviewView = require('views/responses/review');
+  var FormViews = require('views/forms');
+  var MapView = require('views/maps/map');
+
+  // Templates
+  var newSurveyTemplate = require('text!templates/surveys/new.html');
+  var surveyTemplate = require('text!templates/surveys/item.html');
+  var surveyListItemTemplate = require('text!templates/surveys/list-item.html');
+
+  // Misc
+  var exampleform = require('misc/exampleform');
+
 
   var SurveyViews = {};
 
@@ -299,6 +266,12 @@ function(
         forms: this.forms
       });
 
+      // Review view
+      this.reviewView = new ReviewView({
+        survey: this.survey,
+        forms: this.forms
+      });
+
       // Export, Settings views
       this.exportView = new ExportView({survey: this.survey });
       this.settingsView = new SettingsView({
@@ -348,6 +321,10 @@ function(
 
     showForm: function() {
       this.show('#form-view-container', '#tab-survey-form');
+    },
+
+    showReview: function() {
+      this.show('#review-view-container', '#tab-survey-live');
     },
 
     showSettings: function() {
