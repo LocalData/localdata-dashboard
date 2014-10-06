@@ -41,7 +41,6 @@ function($, _, Backbone, moment, settings, api) {
 
     initialize: function(options) {
       if (options !== undefined) {
-        console.log("Getting responses", options);
         this.surveyId = options.surveyId;
         this.objectId = options.objectId;
         this.limit = options.limit;
@@ -67,8 +66,6 @@ function($, _, Backbone, moment, settings, api) {
           url = url + '&responses[' + key + ']=' + value;
         });
       }
-
-      console.log("Getting responses with url", url);
 
       return url;
     },
@@ -162,8 +159,6 @@ function($, _, Backbone, moment, settings, api) {
 
     // Filter the items in the collection
     setFilter: function (question, answer) {
-      console.log("Filtering the responses", question, answer);
-
       // Make a shallow clone of the unfiltered models array.
       //
       // TODO: if someone calls reset or update, we need to toss out the
@@ -191,7 +186,6 @@ function($, _, Backbone, moment, settings, api) {
     },
 
     clearFilter: function (options) {
-      console.log("Clearing filter");
       this.filters = null;
       if (this.unfilteredModels !== null) {
         this.reset(this.unfilteredModels, options);

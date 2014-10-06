@@ -34,7 +34,8 @@ define(function(require, exports, module) {
 
     initialize: function(options) {
       _.bindAll(this,
-        'render'
+        'render',
+        'getNew'
       );
 
       this.survey = options.survey;
@@ -49,25 +50,18 @@ define(function(require, exports, module) {
         }
       });
       this.collection.on('reset', this.render);
-
+      this.collection.on('remove', this.getNew);
       this.collection.on('change:responses', function() {
         this.collection.reset(); // clear the collection
-
-        // We need to wait until the model is synced.
-        // Unfortunately, it doesn't look like there's a clear way to do this
-        // except by waiting a little bit.
-        setTimeout(function(){
-          this.collection.fetch({ reset: true });
-        }.bind(this), 250);
+        this.getNew();
       }.bind(this));
 
-      this.getNew();
+      this.getNew(0);
     },
 
     render: function() {
       this.$el.html(this.template({}));
 
-      console.log("Rendering review view");
       var responseView = new ResponseListView({
         el: '.response-container',
         collection: this.collection,
@@ -77,14 +71,20 @@ define(function(require, exports, module) {
       responseView.render();
     },
 
-    getNew: function() {
-      this.collection.fetch({reset: true});
-    }
+    getNew: function(wait) {
+      if (!wait) {
+        wait = 250;
+      }
 
+      // We need to wait until the model is synced.
+      // Unfortunately, it doesn't look like there's a clear way to do this
+      // except by waiting a little bit.
+      setTimeout(function(){
+          this.collection.fetch({ reset: true });
+      }.bind(this), wait);
+    }
   });
 
-
   return ReviewView;
-
 });
 

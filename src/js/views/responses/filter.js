@@ -66,9 +66,6 @@ define(function(require, exports, module) {
       var questions = this.forms.getFlattenedForm();
       var stats = this.stats;
 
-      console.log("Has reviews?", stats.has('reviewed'));
-      console.log("Question format", this.forms.getFlattenedForm());
-
       if (stats.has('reviewed')) {
         questions.reviewed = {
           text: 'Review status',
@@ -192,8 +189,6 @@ define(function(require, exports, module) {
     },
 
     selectQuestion: function(event) {
-      console.log("Another filter selected", event);
-
       // Clear out any filters
       if(this.filters.answer) {
         this.reset();

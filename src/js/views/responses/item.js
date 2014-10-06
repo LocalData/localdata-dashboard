@@ -27,7 +27,7 @@ function($, _, Backbone, events, settings, api, Responses, template) {
     template: _.template(template),
 
     events: {
-      'click .confirm': 'confirm',
+      'click .action-show-confirm': 'confirm',
       'click .action-delete': 'destroy',
       'click .cancel': 'cancel',
 
@@ -56,21 +56,20 @@ function($, _, Backbone, events, settings, api, Responses, template) {
         options.showReviewTools = true;
       }
 
-      console.log("Using options", options);
       $el.html(this.template(options));
       return this;
     },
 
     confirm: function(event) {
       event.preventDefault();
-      this.$('.confirm').hide();
+      this.$('.action-show-confirm').hide();
       this.$('.confirm-delete').show();
     },
 
     cancel: function(event) {
       event.preventDefault();
       this.$('.confirm-delete').hide();
-      this.$('.confirm').show();
+      this.$('.action-show-confirm').show();
     },
 
     destroy: function(event) {
@@ -92,7 +91,6 @@ function($, _, Backbone, events, settings, api, Responses, template) {
     },
 
     flag: function(event) {
-      console.log("Flagging a response", this.model.toJSON());
       event.preventDefault();
       this.model.save({
         responses: {
@@ -104,7 +102,6 @@ function($, _, Backbone, events, settings, api, Responses, template) {
     },
 
     accept: function(event) {
-      console.log("Accept");
       event.preventDefault();
       this.model.save({
         responses: {
