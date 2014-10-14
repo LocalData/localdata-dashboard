@@ -146,27 +146,11 @@
 }
 
 
-/* Reports ----------------------------------------------------------------- */
-#report-list {
-  background:#fff;
-  padding: 20px;
-  overflow: auto;
-}
 
-.report {
-  width: 40%;
-  padding: 0 10% 5% 0;
-  float: left;
-
-  h3 {
-    font-size: 22px;
-    line-height: 1.2;
-    font-family: $bold;
-  }
-}
 
 
 /* Forms ------------------------------------------------------------------- */
 @import "components/forms";
 @import "components/preview";
 @import "components/editor";
+@import "components/reports";

@@ -1,0 +1,21 @@
+<div class="questions">
+
+  <% _.each(_.keys(questions), function (name) {%>
+    <% if(! _.has(questions, name)) { return; } %>
+
+    <div class="question">
+      <label class="" data-question="<%- name %>">
+        <div class="circle"></div> <%- questions[name].text %>
+      </label>
+
+      <div class="answers">
+        <% _.each(questions[name].answers, function (answer) {%>
+          <div class="answer" data-answer="<%- answer.value %>" data-question="<%- name %>">
+            <%- answer.text %>: <span class="count"><%- answer.count %></span>
+          </div>
+        <% }); %>
+      </div>
+
+    </div>
+  <% }); %>
+</div>

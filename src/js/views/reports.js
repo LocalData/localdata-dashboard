@@ -18,22 +18,26 @@ define(function(require, exports, module) {
 
   var template = require('text!templates/responses/reports.html');
   var reportTemplate = require('text!templates/responses/report.html');
-  var statsTemplate = require('text!templates/responses/reports.html');
+  var statsTemplate = require('text!templates/responses/stats.html');
 
   var MAX_LENGTH = 14;
+
+  var ANSWER = 'response';
+  var NOANSWER = 'no response';
 
   var ExportView = Backbone.View.extend({
     el: '#reports-view-container',
 
     template: _.template(template),
     reportTemplate: _.template(reportTemplate),
+    statsTemplate: _.template(statsTemplate),
 
     events: {
       'click .shapefile': 'getShapefile'
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'report', 'graph');
+      _.bindAll(this, 'render', 'renderStats', 'report', 'graph');
 
       this.surveyId = options.surveyId;
       this.stats = options.stats;
@@ -49,13 +53,111 @@ define(function(require, exports, module) {
       console.log("FLATTENED FORM", this.titles);
     },
 
+    renderStats: function() {
+      // Match the question names and answer values from the form with stats and colors.
+      var questions = this.forms.getFlattenedForm();
+      var stats = this.stats;
+
+      if (stats.has('reviewed')) {
+        questions.reviewed = {
+          text: 'Review status',
+          answers: [{
+            text: 'flagged',
+            value: 'flagged'
+          }, {
+            text: 'accepted',
+            value: 'accepted'
+          }, {
+            text: 'no response',
+            value: 'no response'
+          }]
+        };
+      }
+
+      _.each(_.keys(questions), function (question) {
+        var answerObjects = {};
+        var questionStats = stats.get(question);
+        var type = questions[question].type;
+        if (type === 'text') {
+          var total = _.reduce(questionStats, function (sum, count) {
+            return sum + count;
+          }, 0);
+
+          var noResponseCount;
+          if (questionStats) {
+            noResponseCount = questionStats[NOANSWER];
+          }
+          if (noResponseCount === undefined) {
+            noResponseCount = 0;
+          }
+
+          questions[question].answers = [{
+            text: ANSWER,
+            value: ANSWER,
+            count: total - noResponseCount,
+            color: settings.colorRange[1]
+          }, {
+            text: NOANSWER,
+            value: NOANSWER,
+            count: noResponseCount,
+            color: settings.colorRange[0]
+          }];
+        } else if (type === 'file') {
+          // TODO: We need to see photo upload numbers in the stats (or
+          // somewhere) to report them in the UI.
+
+          questions[question].answers = [{
+            text: ANSWER,
+            value: ANSWER,
+            count: '',
+            color: settings.colorRange[1]
+          }, {
+            text: NOANSWER,
+            value: NOANSWER,
+            count: '',
+            color: settings.colorRange[0]
+          }];
+        } else {
+          var answers = questions[question].answers;
+          _.each(answers, function (answer, index) {
+            if (!questionStats) {
+              answer.count = 0;
+            } else {
+              // Get the count from the stats object.
+              answer.count = questionStats[answer.value];
+              if (answer.count === undefined) {
+                answer.count = 0;
+              }
+            }
+
+            // Get the color.
+            // The last "answer" is the no-response placeholder, which gets the
+            // zero-index color.
+            answer.color = settings.colorRange[(index + 1) % answers.length];
+          });
+        }
+      });
+
+      var context = {
+        questions: questions,
+        mapping: this.forms.map()
+      };
+      this.$el.html(this.template(context));
+
+      this.$el.find('#stats-list').html(this.statsTemplate(context));
+    },
+
     render: function() {
       console.log("Rendering reports");
       this.$el.html(this.template({}));
+
       console.log("Got stats", this.stats.toJSON());
+
+      // Render the stats
+      this.renderStats();
+
+      // Render the graphs
       _.each(this.titles, this.graph); //was this.stats.toJSON()
-
-
     },
 
     // Make a shorter label for long questions
