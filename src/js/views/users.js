@@ -53,15 +53,30 @@ function($, _, Backbone, events, _kmq, router, settings, api,
       if(_.has(options, 'user')) {
         this.user = options.user;
         this.user.on('change', this.render);
+        this.user.on('error', this.render);
       }
+      this.render();
     },
 
-    render: function() {
+    render: function(error) {
       var context = {
         user: this.user.toJSON()
       };
       this.$el.html(_.template($('#userbar-view').html(), context));
-      this.$el.fadeIn(400).css("display","inline-block");
+      this.$el.fadeIn(400).css("display", "inline-block");
+
+      console.log("User render got", error, this.user);
+
+      if(!this.user.isLoggedIn()) {
+        this.$el.find('.login').fadeIn();
+        this.$el.find('.logout').fadeOut();
+        $('.mysurveys').hide();
+
+      }else {
+        this.$el.find('.login').fadeOut();
+        this.$el.find('.logout').fadeIn();
+        $('.mysurveys').fadeIn();
+      }
       return this;
     }
   });
@@ -140,7 +155,7 @@ function($, _, Backbone, events, _kmq, router, settings, api,
       this.redirectTo = options.redirectTo || "/";
       this.redirectTo = this.redirectTo.replace("?redirectTo=", "");
 
-      this.user = options.user;
+      this.user = settings.user;
 
       this.render();
     },

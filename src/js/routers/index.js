@@ -25,6 +25,7 @@ function($, _, Backbone, settings, api) {
       "surveys/:slug/export": "survey_export",
       "surveys/:slug/reports": "reports",
       "surveys/:slug/design": "design",
+      "surveys/:slug/review": "review",
       "surveys/:slug": "survey",
 
       "surveys/:slug/form/edit": "form_edit",
@@ -39,6 +40,7 @@ function($, _, Backbone, settings, api) {
       this.controller = options.controller;
 
       this.route(/^login\/(.*)$/, "login", this.login);
+
     },
 
     home: function() {
@@ -91,6 +93,10 @@ function($, _, Backbone, settings, api) {
 
     design: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_design);
+    },
+
+    review: function(slug) {
+      api.setSurveyIdFromSlug(slug, this.controller.goto_review);
     },
 
     default_route: function(actions) {

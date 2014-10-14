@@ -7,11 +7,29 @@
     <p>Working in Excel or Access? Download the CSV file to see all your results.</p>
 
     <div class="button-container">
-      <a class="button ok shapefile flex"><span class="fa fa-globe"></span> <% if (loading) {%>Exporting...<%} else {%>Download Shapefile<%}%></a>
+      <% if (loading.shapefile) { %>
+      <a class="button ok shapefile flex"><span class="fa fa-gear fa-spin"></span> Downloading Shapefile...</a>
+      <% } else { %>
+      <a class="button ok shapefile flex"><span class="fa fa-globe"></span> Download Shapefile<a>
+      <% } %>
 
-      <a href="<%= baseurl %>/surveys/<%= surveyId %>/responses.csv" class="button ok flex"><span class="fa fa-table"></span> Download CSV</a>
+      <% if (loading.csv) { %>
+      <a class="button ok csv flex"><span class="fa fa-gear fa-spin"></span> Downloading CSV...</a>
+      <% } else { %>
+      <a class="button ok csv flex"><span class="fa fa-table"></span> Download CSV<a>
+      <% } %>
 
-      <a href="<%= baseurl %>/surveys/<%= surveyId %>/responses.kml" class="button ok flex"><span class="button-in"><span class="fa fa-map-marker"></span> Download KML (points) </span></a>
+      <% if (loading.csvLatest) { %>
+      <a class="button ok csvLatest flex"><span class="fa fa-gear fa-spin"></span> Downloading CSV...</a>
+      <% } else { %>
+      <a class="button ok csvLatest flex"><span class="fa fa-table"></span> Download latest results as CSV<a>
+      <% } %>
+
+      <% if (loading.kml) { %>
+      <a class="button ok kml flex"><span class="fa fa-gear fa-spin"></span> Downloading KML...</a>
+      <% } else { %>
+      <a class="button ok kml flex"><span class="fa fa-map-marker"></span> Download KML (points)<a>
+      <% } %>
 
       <div class="error">Error exporting data. Please try again later or contact LocalData for help.</div>
 

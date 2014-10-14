@@ -1,4 +1,9 @@
 <div class="responses-list">
 	<h3><%= name %></h3>
 	<button class="close mini">Close</button>
+
+    <!-- streetview -->
+    <% if(responses[0].geo_info != undefined) { %>
+      <img src="http://maps.googleapis.com/maps/api/streetview?size=500x250&location=<%= responses[0].geo_info.centroid[1] %>,<%= responses[0].geo_info.centroid[0] %>&key=<%= googleKey %>" height="250" width="500" class="streetview">
+    <% } %>
 </div>

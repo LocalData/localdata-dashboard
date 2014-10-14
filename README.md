@@ -11,20 +11,23 @@ into a directory hosted by a web server (such as Apache). Set the
 
 Things get kicked off from `src/js/main.js`.
 
-## Installation & development
+## Installation & develoviewpment
 
-Install SASS:
+We use Grunt to compile SASS styles and prepare the app for deployment. Install Grunt and company:
 
-`gem install sass`
+`npm install`
 
 Watch the directory for style changes:
 
-`sass --watch src/css/sass/styles.scss:src/css/app.css`
+`grunt watch`
 
+OR just `grunt` for short.
 
-## Building  & deploying
+The output is in `staging/` and has a `css/app.css` instead of the various .scss files.
 
-We use Grunt to prepare the app for deployment. Run `grunt` or `grunt build` to build the minified, deployable package. You can configure locations in a `dev-settings.json` file, after which `grunt deploy` or `grunt deploy:mylocation` will sync the built package to an S3 location. Deployment requires [s3cmd](http://s3tools.org/s3cmd).
+## Building & deploying
+
+Run `grunt build` to build the minified, deployable package. You can configure locations in a `dev-settings.json` file, after which `grunt deploy` or `grunt deploy:mylocation` will sync the built package to an S3 location. Deployment requires [s3cmd](http://s3tools.org/s3cmd).
 
 Sample `dev-settings.json`:
 
