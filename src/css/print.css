@@ -9,7 +9,8 @@ button.refresh,
 .filters .question,
 .filters button.button,
 .filters h3,
-.refresh {
+.refresh,
+.printhide {
   display: none;
 }
 
