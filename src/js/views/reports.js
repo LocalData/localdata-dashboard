@@ -1,26 +1,24 @@
 /*jslint nomen: true */
 /*globals define: true */
 
-define([
-  'jquery',
-  'lib/lodash',
-  'backbone',
-  'Chart',
+define(function(require, exports, module) {
+  'use strict';
+
+  var $ = require('jquery');
+  var _ = require('lib/lodash');
+  var Backbone = require('backbone');
+  var Chart = require('Chart');
 
   // LocalData
-  'settings',
-  'api',
+  var settings = require('settings');
+  var api = require('api');
 
   // Models
-  'models/stats',
+  var Stats = require('models/stats');
 
-  // Templates
-  'text!templates/responses/reports.html',
-  'text!templates/responses/report.html'
-],
-
-function($, _, Backbone, Chart, settings, api, Stats, template, reportTemplate) {
-  'use strict';
+  var template = require('text!templates/responses/reports.html');
+  var reportTemplate = require('text!templates/responses/report.html');
+  var statsTemplate = require('text!templates/responses/reports.html');
 
   var MAX_LENGTH = 14;
 
@@ -56,6 +54,8 @@ function($, _, Backbone, Chart, settings, api, Stats, template, reportTemplate) 
       this.$el.html(this.template({}));
       console.log("Got stats", this.stats.toJSON());
       _.each(this.titles, this.graph); //was this.stats.toJSON()
+
+
     },
 
     // Make a shorter label for long questions
@@ -185,7 +185,6 @@ function($, _, Backbone, Chart, settings, api, Stats, template, reportTemplate) 
 
     // Graph the reports!
     graph: function(question, slug) {
-      // console.log("Time to graph!", question, slug);
       var chartType;
       var stats = this.stats.toJSON();
 
