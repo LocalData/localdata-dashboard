@@ -21,6 +21,8 @@ define([
 function($, _, Backbone, L, moment, _kmq, settings, api, template) {
   'use strict';
 
+  var MIN_GRID_ZOOM = 16; // furthest out we'll have interactive grids.
+
   function flip(a) {
     return [a[1], a[0]];
   }
@@ -56,6 +58,7 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
       console.log("Init map view");
       _.bindAll(this,
         'render',
+        'controlUTFZoom',
         'update',
         'fitBounds',
         'selectObject',
@@ -84,6 +87,23 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
 
 
     /**
+     * Hide or show the UTF Grid based on zoom level.
+     */
+    controlUTFZoom: function() {
+      var zoom = this.map.getZoom();
+      var hasGridLayer = this.map.hasLayer(this.gridLayer);
+
+      if (zoom < MIN_GRID_ZOOM && hasGridLayer) {
+        this.map.removeLayer(this.gridLayer);
+      }
+
+      if (zoom >= MIN_GRID_ZOOM && !hasGridLayer) {
+        this.map.addLayer(this.gridLayer);
+      }
+    },
+
+
+    /**
      * Given tilejson data, add the tiles and the UTFgrid
      * @param  {Object} tilejson
      */
@@ -108,7 +128,9 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
       });
 
       // Make sure the grid layer is on top.
-      this.map.addLayer(this.gridLayer);
+      if (this.map.getZoom() >= MIN_GRID_ZOOM) {
+        this.map.addLayer(this.gridLayer);
+      }
 
       this.gridLayer.on('click', this.selectObject);
       if (this.clickHandler) {
@@ -182,6 +204,9 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
           "Satellite": this.satelliteLayer,
           "Print": this.printLayer
         };
+
+        // Make sure we don't show the UTF grid too far out.
+        this.map.on('zoomend', this.controlUTFZoom);
 
         // Add the layer control
         // Make sure the layer stays in the background
