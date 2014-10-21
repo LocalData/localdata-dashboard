@@ -44,11 +44,11 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView, Users) {
 
   // Kick off the LocalData app
   LD.initialize = function() {
-    console.log("Initalizing app");
 
     // Set up the user and make it available across the app
     settings.user = new Users.Model();
     settings.user.fetch();
+
 
     // Start routing
     LD.router = new RootView();
@@ -58,15 +58,16 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView, Users) {
     events.subscribe('loading', LD.setLoading);
     events.subscribe('navigate', LD.navigateTo);
 
-    // Handle redirecting to the login page
-    // Currently not used.
+    // Handle redirecting to the login page if not logged in when visiting
+    // the homepage.
     var redirectToLogin = function() {
       // Don't keep redirecting to login
       var isLogin = Backbone.history.fragment.indexOf("login") !== -1;
       var isRegister = Backbone.history.fragment.indexOf("register") !== -1;
       var isReset = Backbone.history.fragment.indexOf("reset") !== -1;
+      var isSurvey = Backbone.history.fragment.indexOf("survey") !== -1;
 
-      if (isLogin || isRegister || isReset) {
+      if (isLogin || isRegister || isReset || isSurvey) {
         return;
       }
 
@@ -79,7 +80,7 @@ function($, _, Backbone, events, settings, api, RootView, LoadingView, Users) {
       console.log("Ajax error: " + xhr.status);
       if (xhr.status === 401) {
         // togglePublicMode();
-        // redirectToLogin();
+        redirectToLogin();
       }
     });
   };

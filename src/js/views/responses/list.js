@@ -39,9 +39,10 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
     },
 
     initialize: function(options) {
+      console.log("Init list view", options);
       this.listenTo(this.collection, 'add', this.render);
-      this.listenTo(this.collection, 'reset', this.render);
       this.labels = options.labels;
+      this.showReviewTools = options.showReviewTools;
     },
 
     remove: function() {
@@ -54,6 +55,10 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
     render: function() {
       var first = this.collection.at(0);
       var name;
+
+      if(!first) {
+        return;
+      }
 
       if(first.get('geo_info') !== undefined) {
         name = first.get('geo_info').humanReadableName;
@@ -71,7 +76,8 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
       this.collection.each(function(response) {
         var item = new ResponseView({
           model: response,
-          labels: this.labels
+          labels: this.labels,
+          showReviewTools: this.showReviewTools
         });
         $el.find('.responses-list').append(item.render().el);
       }.bind(this));

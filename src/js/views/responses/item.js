@@ -27,38 +27,49 @@ function($, _, Backbone, events, settings, api, Responses, template) {
     template: _.template(template),
 
     events: {
-      'click .confirm': 'confirm',
-      'click .delete': 'destroy',
-      'click .cancel': 'cancel'
+      'click .action-show-confirm': 'confirm',
+      'click .action-delete': 'destroy',
+      'click .cancel': 'cancel',
+
+      'click .action-flag': 'flag',
+      'click .action-accept': 'accept'
     },
 
     initialize: function(options) {
       this.listenTo(this.model, "change", this.render);
       this.listenTo(this.model, "destroy", this.remove);
 
+      this.renderOptions = options || {};
       this.labels = options.labels;
     },
 
     render: function() {
       var $el = $(this.el);
-      console.log(this.model);
-      $el.html(this.template({
+
+      var options = {
         r: this.model.toJSON(),
-        labels: this.labels
-      }));
+        labels: this.labels,
+        renderOptions: this.renderOptions
+      };
+
+      if(this.showReviewTools) {
+        options.showReviewTools = true;
+      }
+
+      $el.html(this.template(options));
       return this;
     },
 
     confirm: function(event) {
       event.preventDefault();
-      this.$('.confirm').hide();
+      this.$('.action-show-confirm').hide();
       this.$('.confirm-delete').show();
     },
 
     cancel: function(event) {
       event.preventDefault();
       this.$('.confirm-delete').hide();
-      this.$('.confirm').show();
+      this.$('.action-show-confirm').show();
     },
 
     destroy: function(event) {
@@ -77,8 +88,31 @@ function($, _, Backbone, events, settings, api, Responses, template) {
         success: success,
         error: error
       });
-    }
+    },
 
+    flag: function(event) {
+      event.preventDefault();
+      this.model.save({
+        responses: {
+          reviewed: 'flagged'
+        }
+      }, {
+        patch: true,
+        wait: true
+      });
+    },
+
+    accept: function(event) {
+      event.preventDefault();
+      this.model.save({
+        responses: {
+          reviewed: 'accepted'
+        }
+      }, {
+        patch: true,
+        wait: true
+      });
+    }
   });
 
   return ResponseView;

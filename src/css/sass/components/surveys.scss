@@ -103,7 +103,8 @@
   margin-left: 10%;
   z-index: 10000;
 
-  button {
+  button .action-delete,
+  .action-show-confirm button {
     position: absolute;
     right: 0;
     bottom: 10px;
@@ -132,9 +133,39 @@
 
   .confirm-delete {
     display: none;
-    .delete {
+    .action-delete {
       right: 100px;
     }
   }
 }
 
+/* Response review ------------------------- */
+
+#review-view-container .responses-list {
+  position: relative;
+  width: 100%;
+  top: 0;
+  margin-left: 0;
+  overflow: auto;
+
+  .collector,
+  .time {
+    color: $body-color;
+  }
+
+  .close {
+    display: none;
+  }
+
+  .response-image,
+  .streetview {
+    float: right;
+  }
+
+  .response-image {
+    max-width: 500px ! important;
+    display: inline-block;
+    margin-top: 1em;
+    clear: both;
+  }
+}
