@@ -32,7 +32,7 @@ define(function (require) {
 
     events: {
       'click .close': 'close',
-      'click': 'showSettings',
+      'click .show-settings': 'showSettings',
       'click .close-settings': 'closeSettings'
     },
 
@@ -51,6 +51,7 @@ define(function (require) {
         // Settings
         'setupSettings',
         'closeSettings',
+        'showSettings',
         'changeFilter',
         'clearFilter'
       );
@@ -125,6 +126,7 @@ define(function (require) {
     },
 
     setupSettings: function() {
+      console.log("Getting settings", this.forms);
       this.stats = new Stats.Model({
         id: this.survey.get('id')
       });
@@ -151,6 +153,10 @@ define(function (require) {
       });
       console.log("Setting table", this.table, this.stats.toJSON());
       this.table.$el.append($table);
+    },
+
+    showSettings: function() {
+      this.$el.find('.settings').show();
     },
 
     closeSettings: function() {

@@ -46,6 +46,8 @@ define(function (require) {
       this.survey = options.survey;
       this.forms = options.forms;
       // this.mapView = options.map;
+      //
+      console.log("CREATING SETTINGS PANEL", this.forms);
 
       this.stats = options.stats;
       this.stats.on('change', this.render);

@@ -177,20 +177,36 @@ define(function (require) {
 
     },
 
-    addLayer: function(layerName, layerId) {
-      console.log("Add layer", layerName, layerId);
+    /**
+     * Create a layer
+     * @param {String} layerType
+     * @param {String} layerId   Specific instance of this type of layer to create
+     *                           For example, for surveys, this is this surveyId.
+     */
+    addLayer: function(layerType, layerId) {
+      console.log("Add layer", layerType, layerId);
 
       var self = this;
       // Dispatch the correct layers
-      this.activeLayers[layerName] = new this.layers[layerName]({
+      this.activeLayers[layerType] = new this.layers[layerType]({
+
+        // Pass in the map and table views, so the layer can add itself
         map: this.mapView.map,
         tableView: this.tableView,
+
+        // Set the specific layer to create
         layerId: layerId,
+
+        // Optional click handler
+        // TODO: not sure why we have this.
         clickHandler: function (data) {
           self.setupWideGraph(data);
         }
       });
-      this.$el.find('.layers').append(this.activeLayers[layerName].render());
+
+      // Append to the list of active layers
+      // TODO: use a model
+      this.$el.find('.layers').append(this.activeLayers[layerType].render());
     },
 
     /* Data views ----------------------------------------- */
