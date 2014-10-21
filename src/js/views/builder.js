@@ -36,6 +36,7 @@ function($, _, Backbone, _kmq, settings, api, template, FormViews) {
       question: _.template($('#question-edit-template').html()),
       photoQuestion: _.template($('#photo-question-edit-template').html()),
       textQuestion: _.template($('#text-question-edit-template').html()),
+      numberQuestion: _.template($('#number-question-edit-template').html()),
       answer: _.template($('#answer-edit-template').html())
     },
 
@@ -180,6 +181,11 @@ function($, _, Backbone, _kmq, settings, api, template, FormViews) {
         question.type = 'text';
         delete question.answers;
       }
+
+      if (dataRole === 'number-question') {
+        question.type = 'number';
+        delete question.answers;
+      }
     },
 
     deleteQuestion: function($question, parent, questionIndex) {
@@ -244,7 +250,6 @@ function($, _, Backbone, _kmq, settings, api, template, FormViews) {
         var type = $(event.currentTarget).attr('data-type');
 
         console.log("Adding sub-question", type);
-        _kmq.push(['record', 'Sub-question added']);
 
         var newQuestion = this.makeBlankQuestion();
         this.setQuestionType(newQuestion, type);
@@ -336,6 +341,9 @@ function($, _, Backbone, _kmq, settings, api, template, FormViews) {
       }
       if(question.type === 'text') {
         $question = $(this.templates.textQuestion({question: question}));
+      }
+      if(question.type === 'number') {
+        $question = $(this.templates.numberQuestion({question: question}));
       }
 
       // Listen for changes to the question ...................................
