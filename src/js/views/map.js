@@ -233,7 +233,12 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
         if (this.survey.has('zones')) {
           this.plotZones();
         }
-        this.listenTo(this.survey, 'change', this.plotZones);
+
+        this.listenTo(this.survey, 'change', function () {
+          if (this.survey.hasChanged('zones')) {
+            this.plotZones();
+          }
+        });
 
         this.selectDataMap();
       }
