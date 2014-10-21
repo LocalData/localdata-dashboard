@@ -13,7 +13,6 @@ define(function(require, exports, module) {
   var settings = require('settings');
   var IndexRouter = require('routers/index');
 
-  'views/upload',
 
   // Models
   var Users = require('models/users');
@@ -26,12 +25,8 @@ define(function(require, exports, module) {
   var DesignViews = require('views/design');
   var SettingsViews = require('views/settings');
   var ReviewView = require('views/responses/review');
+  var UploadView = require('views/upload');
 
-<<<<<<< HEAD
-function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, UserViews, SurveyViews, DesignViews, SettingsViews, UploadView, Users) {
-  'use strict';
-=======
->>>>>>> master
 
   var AllViews = {};
   AllViews.HomeView = HomeView;
