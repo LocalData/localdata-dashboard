@@ -21,8 +21,8 @@ define(function(require, exports, module) {
   var ResponseListView = require('views/responses/list');
 
   // Templates
-  var template = require('text!templates/filters/filter.html');
-  var loadingTemplate = require('text!templates/filters/loading.html');
+  var template = require('text!templates/filters/filters.html');
+  var questionFiltersTemplate = require('text!templates/filters/question-filters.html');
 
   var ANSWER = 'response';
   var NOANSWER = 'no response';
@@ -37,12 +37,14 @@ define(function(require, exports, module) {
     filters: {},
 
     template: _.template(template),
-    loadingTemplate: _.template(loadingTemplate),
+    questionFiltersTemplate: _.template(questionFiltersTemplate),
 
     events: {
       "click .question label": "selectQuestion",
       "click .answer": "selectAnswer",
-      "click .clear": "reset"
+      "click .clear": "reset",
+
+      "change #datefilter": "selectDate"
     },
 
     initialize: function(options) {
@@ -56,11 +58,54 @@ define(function(require, exports, module) {
         id: this.survey.get('id')
       });
       this.stats.on('change', this.render);
-      this.$el.html(this.loadingTemplate({}));
+      this.$el.html(this.template());
+    },
+
+    selectDate: function(event) {
+      var HOUR_IN_MS = 1000*60*60;
+      var val = $(event.target).val();
+      var after = new Date();
+
+      if (val === 'all') {
+        this.map.setDate({});
+        this.stats.initialize({
+          id: this.survey.get('id')
+        });
+
+        return;
+      }
+
+      if (val === 'hour') {
+        after = new Date(after.getTime() - HOUR_IN_MS);
+      }
+
+      if (val === 'today') {
+        // The beginning of the day, not 24 hours ago.
+        after = new Date(after.setHours(0,0,0,0));
+      }
+
+      if (val === 'week') {
+        after = new Date(after.getTime() - (HOUR_IN_MS * 24 * 7));
+      }
+
+      // Set the date on the map, so the correct tiles are fetched.
+      this.map.setDate({
+        after: after.getTime()
+      });
+
+      // Reset the stats with the new parameters.
+      this.stats.initialize({
+        id: this.survey.get('id'),
+        params: {
+          after: after.getTime()
+        }
+      });
     },
 
     render: function() {
       console.log('Rendering the filters');
+
+      this.$el.find('.question-filters').html('');
 
       // Match the question names and answer values from the form with stats and colors.
       var questions = this.forms.getFlattenedForm();
@@ -150,7 +195,20 @@ define(function(require, exports, module) {
         questions: questions,
         mapping: this.forms.map()
       };
-      this.$el.html(this.template(context));
+
+      this.$el.find('.question-filters').html(this.questionFiltersTemplate(context));
+
+      // Re-mark any selected questions
+      if(this.filters.question) {
+        var $question = $('label[data-question=' + this.filters.question + ']');
+        this.markQuestionSelected($question);
+      }
+      if(this.filters.answer) {
+        var $answer = $('div[data-question=' + this.filters.question + '][data-answer='
+            + this.filters.answer + ']');
+        this.markAnswerSelected($answer);
+      }
+
     },
 
     /**
@@ -188,6 +246,30 @@ define(function(require, exports, module) {
       $question.parent().find('.answers').show();
     },
 
+    markAnswerSelected: function($answer) {
+      // Make sure we have the right question selected
+      this.filters.question = $answer.attr('data-question');
+      var $question = $('label[data-question=' + this.filters.question + ']');
+      this.markQuestionSelected($question);
+
+      if(!this.filters.answer) {
+        $answer = $answer.parent();
+        this.filters.answer = $answer.attr('data-answer');
+      }
+
+      // Mark the answer as selected
+      $('.answers').removeClass('selected');
+      $('.answers .circle').addClass('inactive');
+
+      $answer.find('.circle').addClass('selected');
+      $answer.find('.circle').removeClass('inactive');
+
+      // Color the responses on the map
+      this.map.setFilter(this.filters.question, this.filters.answer);
+
+      console.log("Selected answer", $answer, this.filters.answer);
+    },
+
     selectQuestion: function(event) {
       // Clear out any filters
       if(this.filters.answer) {
@@ -216,27 +298,7 @@ define(function(require, exports, module) {
       var $answer = $(event.target);
       this.filters.answer = $answer.attr('data-answer');
 
-      // Make sure we have the right question selected
-      this.filters.question = $answer.attr('data-question');
-      var $question = $('label[data-question=' + this.filters.question + ']');
-      this.markQuestionSelected($question);
-
-      if(!this.filters.answer) {
-        $answer = $answer.parent();
-        this.filters.answer = $answer.attr('data-answer');
-      }
-
-      // Mark the answer as selected
-      $('.answers').removeClass('selected');
-      $('.answers .circle').addClass('inactive');
-
-      $answer.find('.circle').addClass('selected');
-      $answer.find('.circle').removeClass('inactive');
-
-      // Color the responses on the map
-      this.map.setFilter(this.filters.question, this.filters.answer);
-
-      console.log("Selected answer", $answer, this.filters.answer);
+      this.markAnswerSelected($answer);
     }
   });
 

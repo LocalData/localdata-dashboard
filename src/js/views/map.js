@@ -55,7 +55,6 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
 
     initialize: function(options) {
       L.Icon.Default.imagePath = '/js/lib/leaflet/images';
-      console.log("Init map view");
       _.bindAll(this,
         'render',
         'controlUTFZoom',
@@ -263,12 +262,11 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
       }
       url = url + '/tile.json';
 
-      console.log("Getting tilejson", url);
       // Get TileJSON
       $.ajax({
         url: url,
-        type: 'GET',
         dataType: 'json',
+        data: this.daterange,
         cache: false
       }).done(this.addTileLayer)
       .fail(function(jqXHR, textStatus, errorThrown) {
@@ -292,12 +290,16 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
       this.selectDataMap();
     },
 
+    setDate: function(options) {
+      this.daterange = options;
+      this.map.invalidateSize();
+      this.selectDataMap();
+    },
 
     clearFilter: function () {
       this.filter = null;
       this.selectDataMap();
     },
-
 
     /**
      * Plot survey zones on the map
