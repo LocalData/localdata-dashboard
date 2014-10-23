@@ -119,6 +119,7 @@ module.exports = function(grunt) {
             expand: true,
             cwd: '<%= dirs.staging %>',
             src: [
+              'index.html',
               'js/require.js',
               'js/lib/aight.js',
               'img/**',
