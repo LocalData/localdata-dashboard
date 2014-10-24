@@ -25,6 +25,13 @@ function($, _, Backbone, moment, settings, api) {
       return settings.api.baseurl + '/surveys/' + this.get('survey') + '/responses/' + this.get('id');
     },
 
+    parse: function(data) {
+      if (data && data.response) {
+        return data.response; // when we fetch the response directly
+      }
+      return data; // when we fetch the response through a colleciton
+    },
+
     toJSON: function() {
       // This is the backbone implementation, which does clone attributes.
       // We've added the date humanization.

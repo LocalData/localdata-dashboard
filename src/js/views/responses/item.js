@@ -36,7 +36,7 @@ function($, _, Backbone, events, settings, api, Responses, template) {
     },
 
     initialize: function(options) {
-      this.listenTo(this.model, "change", this.render);
+      this.listenTo(this.model, "sync", this.render);
       this.listenTo(this.model, "destroy", this.remove);
 
       this.renderOptions = options || {};
@@ -44,6 +44,7 @@ function($, _, Backbone, events, settings, api, Responses, template) {
     },
 
     render: function() {
+      console.log("Re-rendering model", this.model);
       var $el = $(this.el);
 
       var options = {
@@ -52,9 +53,8 @@ function($, _, Backbone, events, settings, api, Responses, template) {
         renderOptions: this.renderOptions
       };
 
-      if(this.showReviewTools) {
-        options.showReviewTools = true;
-      }
+      // For now, we always want to show the review tools.
+      options.renderOptions.showReviewTools = true;
 
       $el.html(this.template(options));
       return this;
@@ -98,7 +98,12 @@ function($, _, Backbone, events, settings, api, Responses, template) {
         }
       }, {
         patch: true,
-        wait: true
+        wait: true, // wait until sync to update attributes
+        success: function (event) {
+          // We need to fetch the model because patch resets the local
+          // attributes.
+          this.model.fetch({ reset: true });
+        }.bind(this)
       });
     },
 
@@ -110,7 +115,10 @@ function($, _, Backbone, events, settings, api, Responses, template) {
         }
       }, {
         patch: true,
-        wait: true
+        wait: true,
+        success: function (event) {
+          this.model.fetch({ reset: true });
+        }.bind(this)
       });
     }
   });
