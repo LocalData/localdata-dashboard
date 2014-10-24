@@ -222,32 +222,6 @@ define(function (require) {
   //   });
   // };
 
-
-  // Get the form for the current survey
-  api.getForm = function(callback) {
-    console.log("API: getting form data");
-    var url = api.getSurveyURL() + "/forms";
-
-    $.getJSON(url, function(data){
-
-      // Get only the mobile forms
-      var mobileForms = _.filter(data.forms, function(form) {
-        if (_.has(form, 'type')) {
-          if (form.type === 'mobile'){
-            return true;
-          }
-        }
-        return false;
-      });
-
-      // Endpoint should give the most recent form first.
-      // And that's what we'll use
-      settings.formData = mobileForms[0];
-
-      callback();
-    });
-  };
-
   // Add a form to a survey
   //
   // @param {Object} form

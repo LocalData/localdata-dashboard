@@ -147,8 +147,7 @@ function($, _, Backbone, settings) {
 
     parse: function(response) {
       if (response.forms.length === 0) {
-        var newForm = new Forms.Model({ 'questions': [] });
-        return [ newForm ];
+        return [];
       }
 
       return response.forms;
