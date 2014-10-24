@@ -249,28 +249,38 @@ define(function(require, exports, module) {
         survey: this.survey.toJSON()
       }));
 
-      // Map the responses
-      this.mapAndListView = new ResponseViews.MapAndListView({
-        // responses: this.responses,
-        forms: this.forms,
-        survey: this.survey
-      });
-
-      if(this.filters) {
-        this.mapAndListView.showFilters();
-      }
-
       // Form view
       this.formView = new FormViews.FormView({
         survey: this.survey,
         forms: this.forms
       });
 
-      // Review view
-      this.reviewView = new ReviewView({
-        survey: this.survey,
-        forms: this.forms
-      });
+      var surveyFullyCreated = (this.forms &&
+                                this.forms.models &&
+                                this.forms.models.length > 0);
+
+      if (surveyFullyCreated) {
+        // Map the responses
+        this.mapAndListView = new ResponseViews.MapAndListView({
+          // responses: this.responses,
+          forms: this.forms,
+          survey: this.survey
+        });
+
+        if(this.filters) {
+          this.mapAndListView.showFilters();
+        }
+        // Review view
+        this.reviewView = new ReviewView({
+          survey: this.survey,
+          forms: this.forms
+        });
+      } else {
+        // Once the form has been created, we should rerender, so we can display all of the other components.
+        this.listenToOnce(this.forms, 'add', function () {
+          this.render();
+        });
+      }
 
       // Export, Settings views
       this.exportView = new ExportView({survey: this.survey });
@@ -293,6 +303,10 @@ define(function(require, exports, module) {
         $('#tab-survey-export').hide();
         $('#tab-survey-settings').hide();
         $('#tab-survey-app').hide();
+      }
+
+      if (!surveyFullyCreated) {
+        location.href = '/#surveys/' + settings.slug + '/form';
       }
     },
 

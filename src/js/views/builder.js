@@ -2,24 +2,18 @@
 /*globals define: true */
 /*globals console: true */
 
-define([
-  'jquery',
-  'lib/lodash',
-  'backbone',
-  'lib/kissmetrics',
-
-  // LocalData
-  'settings',
-  'api',
-
-  // Templates
-  'text!templates/surveys/form-editor.html',
-
-  'views/forms'
-],
-
-function($, _, Backbone, _kmq, settings, api, template, FormViews) {
+define(function (require) {
   'use strict';
+
+  var $ = require('jquery');
+  var _ = require('lib/lodash');
+  var Backbone = require('backbone');
+  var _kmq = require('lib/kissmetrics');
+
+  var api = require('api');
+  var template = require('text!templates/surveys/form-editor.html');
+  var Form = require('models/forms');
+
 
   var Builder = {};
 
@@ -78,7 +72,7 @@ function($, _, Backbone, _kmq, settings, api, template, FormViews) {
       console.log('Saving form');
       _kmq.push(['record', 'Survey questions saved']);
 
-      api.createForm(settings.formData, function(){
+      api.createForm(this.forms.getMostRecentForm(), function(){
         console.log('Form successfully saved');
         $(".saved").fadeIn().css("display","inline-block").delay(2000).fadeOut();
       });
@@ -110,16 +104,24 @@ function($, _, Backbone, _kmq, settings, api, template, FormViews) {
       this.formQuestions = $('#editor');
       this.formQuestions.html('');
 
+      var form = this.forms.getMostRecentForm();
+      var formData;
+
       // Default to a blank question if the form is empty
-      if (settings.formData === undefined) {
-        settings.formData = {};
-        settings.formData.questions = [];
-        settings.formData.questions.push(this.makeBlankQuestion());
+      if (form === undefined) {
+        formData = {};
+        formData.questions = [];
+        formData.questions.push(this.makeBlankQuestion());
+        this.forms.add(new Form.Model({ questions: formData.questions }));
+      } else {
+        formData = {
+          questions: form.get('questions')
+        };
       }
 
       // Render form
-      _.each(settings.formData.questions, function (question, questionIndex) {
-        this.renderQuestion(question, undefined, undefined, undefined, undefined, questionIndex, settings.formData.questions);
+      _.each(formData.questions, function (question, questionIndex) {
+        this.renderQuestion(question, undefined, undefined, undefined, undefined, questionIndex, formData.questions);
       }, this);
     },
 

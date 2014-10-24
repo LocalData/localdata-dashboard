@@ -50,7 +50,8 @@ function($, _, Backbone, settings, api, template, DesignViews, BuilderViews, Pre
 
         var designView = new DesignViews.DesignView({
           el: '#survey-design-container',
-          model: this.survey
+          model: this.survey,
+          forms: this.forms
         });
         designView.render();
 
@@ -90,15 +91,14 @@ function($, _, Backbone, settings, api, template, DesignViews, BuilderViews, Pre
 
       this.$el.html(this.template(context));
 
-      // old: Make sure we have up-to-date form data before showing the design view
-      api.getForm(function() {
-        if (settings.formData === undefined) {
-          this.showDesigner();
-        }else {
-          this.showBuilder();
-        }
-      }.bind(this));
-
+      // Decide if we should show the Builder (view+edit) or the Designer
+      // (choose from a template)
+      if (this.forms.models.length > 0) {
+        // We have a form, so let the user view and edit it.
+        this.showBuilder();
+      } else {
+        this.showDesigner();
+      }
     }
   });
 
