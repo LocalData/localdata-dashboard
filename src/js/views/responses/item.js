@@ -44,6 +44,7 @@ function($, _, Backbone, events, settings, api, Responses, template) {
     },
 
     render: function() {
+      console.log("Re-rendering model", this.model);
       var $el = $(this.el);
 
       var options = {
@@ -52,9 +53,8 @@ function($, _, Backbone, events, settings, api, Responses, template) {
         renderOptions: this.renderOptions
       };
 
-      if(this.showReviewTools) {
-        options.showReviewTools = true;
-      }
+      console.log("REndered", options);
+      options.renderOptions.showReviewTools = true;
 
       $el.html(this.template(options));
       return this;
@@ -97,9 +97,13 @@ function($, _, Backbone, events, settings, api, Responses, template) {
           reviewed: 'flagged'
         }
       }, {
-        patch: true,
-        wait: true
+        patch: true
+        // wait: true
       });
+      this.model.fetch({ reset: true });
+
+      // TODO: try just changing the model without saving.
+      //
     },
 
     accept: function(event) {
@@ -109,9 +113,10 @@ function($, _, Backbone, events, settings, api, Responses, template) {
           reviewed: 'accepted'
         }
       }, {
-        patch: true,
-        wait: true
+        patch: true
+        // wait: true
       });
+      this.model.fetch({ reset: true });
     }
   });
 
