@@ -8,4 +8,4 @@ staging
 .sass-cache/
 .sass-cache/*
 .DS_Store
-css
+app.css
