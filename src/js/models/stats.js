@@ -17,18 +17,20 @@ function($, _, Backbone, settings) {
     urlRoot: settings.api.baseurl + "/surveys/",
 
     url: function() {
-      return this.urlRoot + this.id + '/stats/';
+      return this.urlRoot + this.id + '/stats?' +  $.param(this.params);
     },
 
     initialize: function(options) {
       _.bindAll(this, 'parse', 'url');
+
+      this.attributes = {}; // otherwise fetch doesn't seem to remove old vals
+      this.params = options.params || {};
       this.fetch();
     },
 
     parse: function(response) {
       return response.stats;
     }
-
   });
 
   return Stats;
