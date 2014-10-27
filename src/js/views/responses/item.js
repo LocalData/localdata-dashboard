@@ -36,7 +36,7 @@ function($, _, Backbone, events, settings, api, Responses, template) {
     },
 
     initialize: function(options) {
-      this.listenTo(this.model, "change", this.render);
+      this.listenTo(this.model, "sync", this.render);
       this.listenTo(this.model, "destroy", this.remove);
 
       this.renderOptions = options || {};
@@ -97,13 +97,14 @@ function($, _, Backbone, events, settings, api, Responses, template) {
           reviewed: 'flagged'
         }
       }, {
-        patch: true
-        // wait: true
+        patch: true,
+        wait: true, // wait until sync to update attributes
+        success: function (event) {
+          // We need to fetch the model because patch resets the local
+          // attributes.
+          this.model.fetch({ reset: true });
+        }.bind(this)
       });
-      this.model.fetch({ reset: true });
-
-      // TODO: try just changing the model without saving.
-      //
     },
 
     accept: function(event) {
@@ -113,10 +114,12 @@ function($, _, Backbone, events, settings, api, Responses, template) {
           reviewed: 'accepted'
         }
       }, {
-        patch: true
-        // wait: true
+        patch: true,
+        wait: true,
+        success: function (event) {
+          this.model.fetch({ reset: true });
+        }.bind(this)
       });
-      this.model.fetch({ reset: true });
     }
   });
 
