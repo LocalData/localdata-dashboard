@@ -26,7 +26,6 @@ function($, _, Backbone, moment, settings, api) {
     },
 
     parse: function(data) {
-      console.log("Parsing response", data);
       if (data && data.response) {
         return data.response; // when we fetch the response directly
       }

@@ -53,7 +53,7 @@ function($, _, Backbone, events, settings, api, Responses, template) {
         renderOptions: this.renderOptions
       };
 
-      console.log("REndered", options);
+      // For now, we always want to show the review tools.
       options.renderOptions.showReviewTools = true;
 
       $el.html(this.template(options));
