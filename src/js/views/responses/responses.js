@@ -1,40 +1,32 @@
 /*jslint nomen: true */
 /*globals define: true */
 
-define([
-  'jquery',
-  'lib/lodash',
-  'backbone',
-  'moment',
-  'lib/tinypubsub',
-  'lib/kissmetrics',
+define(function(require, exports, module) {
+  'use strict';
+
+  // Libs
+  var $ = require('jquery');
+  var _ = require('lib/lodash');
+  var Backbone = require('backbone');
+  var moment = require('moment');
 
   // LocalData
-  'settings',
-  'api',
+  var settings = require('settings');
+  var api = require('api');
 
   // Models
-  'models/responses',
+  var Responses = require('models/responses');
 
   // Views
-  'views/map',
-  'views/responses/filter',
-  'views/responses/list',
-  'views/surveys/count',
+  var ResponseCountView = require('views/surveys/count');
+  var ResponseListView = require('views/responses/list');
+  var FilterView = require('views/responses/filter');
+  var MapView = require('views/maps/map');
+  var CollectorStatsView = require('views/surveys/stats-collector');
 
   // Templates
-  'text!templates/responses/map-list.html'
-],
+  var mapListTemplate = require('text!templates/responses/map-list.html');
 
-function($, _, Backbone, moment, events, _kmq, settings, api,
-  Responses,
-  MapView,
-  FilterView,
-  ResponseListView,
-  ResponseCountView,
-  mapListTemplate) {
-
-  'use strict';
 
   var ResponseViews = {};
 
@@ -98,6 +90,12 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
         survey: this.survey.toJSON()
       };
       this.$el.html(this.template(context));
+      console.log("XXXXXXX", $('#map-view-container'));
+
+      // Show collector stats
+      this.collectorStatsView = new CollectorStatsView({
+        survey: this.survey
+      });
 
       // Set up the map view, now that the root exists.
       if (this.mapView === null) {
@@ -328,7 +326,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
     goToPage: function(e) {
       e.preventDefault();
 
-      _kmq.push(['record', "Specfic result page selected"]);
+      // _kmq.push(['record', "Specfic result page selected"]);
       var page = parseInt($(e.target).attr('data-page'), 10);
       this.page = page;
       this.render();
@@ -337,7 +335,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
     pageNext: function (e) {
       e.preventDefault();
 
-      _kmq.push(['record', "Next page of results selected"]);
+      // _kmq.push(['record', "Next page of results selected"]);
       if (this.page === this.pageCount - 1) {
         return;
       }
@@ -349,7 +347,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
     pagePrev: function (e) {
       e.preventDefault();
 
-      _kmq.push(['record', "Previous page of results selected"]);
+      // _kmq.push(['record', "Previous page of results selected"]);
       if (this.page === 0) {
         return;
       }

@@ -249,6 +249,7 @@ define(function(require, exports, module) {
         survey: this.survey.toJSON()
       }));
 
+
       // Form view
       this.formView = new FormViews.FormView({
         survey: this.survey,
