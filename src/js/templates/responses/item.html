@@ -1,10 +1,3 @@
-<% if (renderOptions.showReviewTools) { %>
-  <div class="review-tools">
-    <button class="mini ok action-accept flex"><i class="fa fa-check"></i> Accept</button>
-    <button class="mini danger flex action-flag"><i class="fa fa-flag"></i> Flag</button>
-  </div>
-<% } %>
-
 <span class="collector">
   <i class="fa fa-user"></i>
   <% if(r.geo_info != undefined) { %>
@@ -46,11 +39,28 @@
 <% }); %>
 </div>
 
-<button class="mini danger action-show-confirm"><i class="icon-trash"></i> Delete</button>
+<div class="response-tools">
+  <% if (surveyOptions.showReviewTools) { %>
+    <div class="review-tools">
+      <% if(r.responses.reviewed === 'flagged') { %>
+        <button class="mini ok action-accept flex"><i class="fa fa-check"></i> Accept</button>
+        (currently <strong><%= r.responses.reviewed %></strong>)
+      <% } else if (r.responses.reviewed === 'accepted') { %>
+        <button class="mini danger flex action-flag"><i class="fa fa-flag"></i> Flag</button>
+        (currently <strong><%= r.responses.reviewed %></strong>)
+      <% } else { %>
+        <button class="mini ok action-accept flex"><i class="fa fa-check"></i> Accept</button>
+        <button class="mini danger flex action-flag"><i class="fa fa-flag"></i> Flag</button>
+      <% } %>
+    </div>
+  <% } %>
 
-<div class="confirm-delete">
-  <button class="mini cancel">Cancel</button>
-  <button class="mini danger flex action-delete"><i class="icon-trash"></i> Confirm delete</button>
+  <button class="mini danger action-show-confirm"><i class="icon-trash"></i> Delete</button>
+
+  <div class="confirm-delete">
+    <button class="mini cancel">Cancel</button>
+    <button class="mini danger flex action-delete"><i class="icon-trash"></i> Confirm delete</button>
+  </div>
+
+  <div class="error">Sorry, there was a problem deleting this record</div>
 </div>
-
-<div class="error">Sorry, there was a problem deleting this record</div>
