@@ -39,7 +39,7 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       this.listenTo(this.model, "sync", this.render);
       this.listenTo(this.model, "destroy", this.remove);
 
-      this.renderOptions = options || {};
+      this.surveyOptions = options.surveyOptions || {};
       this.labels = options.labels;
     },
 
@@ -50,11 +50,8 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       var options = {
         r: this.model.toJSON(),
         labels: this.labels,
-        renderOptions: this.renderOptions
+        surveyOptions: this.surveyOptions
       };
-
-      // For now, we always want to show the review tools.
-      options.renderOptions.showReviewTools = true;
 
       $el.html(this.template(options));
       return this;

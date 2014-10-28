@@ -139,10 +139,12 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
         objectId: event.data.object_id
       });
 
+      var surveyOptions = this.survey.get('options') || {};
       var selectedItemListView = new ResponseListView({
         el: '#responses-list-container',
         collection: rc,
-        labels: this.forms.getQuestions()
+        labels: this.forms.getQuestions(),
+        surveyOptions: surveyOptions
       });
 
       selectedItemListView.on('remove', function() {

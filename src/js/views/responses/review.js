@@ -59,11 +59,13 @@ define(function(require, exports, module) {
     render: function() {
       this.$el.html(this.template({}));
 
+      var surveyOptions = this.survey.get('surveyOptions') || {};
+      surveyOptions.showReviewTools = true;
       var responseView = new ResponseListView({
         el: '.response-container',
         collection: this.collection,
         labels: this.forms.getQuestions(),
-        showReviewTools: true
+        surveyOptions: surveyOptions
       });
       responseView.render();
     },

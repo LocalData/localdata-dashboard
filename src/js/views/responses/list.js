@@ -42,7 +42,7 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
       console.log("Init list view", options);
       this.listenTo(this.collection, 'add', this.render);
       this.labels = options.labels;
-      this.showReviewTools = options.showReviewTools;
+      this.surveyOptions = options.surveyOptions;
     },
 
     remove: function() {
@@ -77,7 +77,7 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
         var item = new ResponseView({
           model: response,
           labels: this.labels,
-          showReviewTools: this.showReviewTools
+          surveyOptions: this.surveyOptions
         });
         $el.find('.responses-list').append(item.render().el);
       }.bind(this));
