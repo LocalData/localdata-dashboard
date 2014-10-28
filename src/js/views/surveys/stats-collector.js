@@ -16,11 +16,8 @@ define(function(require, exports, module) {
   // Models
   var Stats = require('models/stats');
 
-  // Models
-  var UserListItemView = require('views/surveys/user-list-item');
-
   // Templates
-  var template = require('text!templates/surveys/users.html');
+  var template = require('text!templates/surveys/stats-collector.html');
 
 
   var CollectorStatsView = Backbone.View.extend({
@@ -43,13 +40,15 @@ define(function(require, exports, module) {
       this.stats = new Stats.Model({
         id: this.survey.get('id')
       });
-      this.stats.on('reset', this.render);
+      this.stats.on('sync', this.render);
+      this.stats.fetch({reset: true});
+      console.log("INIT STATS VIEW");
     },
 
-    render: function() {
-      console.log("Rendering user stats", this.stats.toJSON());
+    render: function(event) {
+      console.log("Rendering user stats", this.stats.getCollectors());
       var context = {
-        stats: this.stats.toJSON()
+        collectors: this.stats.getCollectors()
       };
       this.$el.html(this.template(context));
     }

@@ -21,7 +21,7 @@ define(function(require, exports, module) {
   var ResponseCountView = require('views/surveys/count');
   var ResponseListView = require('views/responses/list');
   var FilterView = require('views/responses/filter');
-  var MapView = require('views/maps/map');
+  var MapView = require('views/map');
   var CollectorStatsView = require('views/surveys/stats-collector');
 
   // Templates

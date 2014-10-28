@@ -1,3 +1,9 @@
 <div class="collector-stats">
-HI THERE COLLECTOR STATS HERE
+<h3>Contributors</h3>
+<% _.each(collectors, function(collector) { %>
+    <div class="collector-stat">
+    <div class="collector-name"><strong><%= collector.name %></strong> </div>
+    <div class="stat"><%= collector.prettyCount %></div>
+    </div>
+<% }); %>
 </div>

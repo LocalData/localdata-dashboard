@@ -169,3 +169,18 @@
     clear: both;
   }
 }
+
+
+/* Collector stats ------------------------- */
+
+.collector-stats {
+  overflow: auto;
+  padding-top: 2em;
+
+  .collector-stat {
+    width: 25%;
+    float: left;
+    min-height: 80px;
+    text-transform: capitalize;
+  }
+}
