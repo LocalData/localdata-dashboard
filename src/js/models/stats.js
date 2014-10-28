@@ -32,14 +32,23 @@ function($, _, Backbone, settings) {
       return response.stats;
     },
 
+    // Adds commas to numbers to make them look good. 2000000 => 2,000,000
     numberWithCommas: function(x) {
         return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
 
+    // Get a lightly deduplicated list of collectors
     dedupeCollectors: function() {
       var deduped = {};
       _.each(this.get('Collectors'), function(count, name) {
-        var cleanName = name.trim().toLowerCase();
+
+        var cleanName = name.trim(); // remove inadvertent spaces whitepace
+
+        // lowercase for consistency
+        // the client can run text-transform: capitalize
+        // NOT a long-term best practice (eg some people do not have capitalized
+        // names)
+        cleanName = cleanName.toLowerCase();
 
         if(_.has(deduped, cleanName)) {
           deduped[cleanName] += count;
@@ -59,6 +68,8 @@ function($, _, Backbone, settings) {
 
       var collectors = this.dedupeCollectors();
       var collectorList = [];
+
+      // Construct a nicer format, with name, count, and comma-tized count
       _.each(collectors, function(count, name) {
         collectorList.push({
           name: name,
@@ -67,6 +78,7 @@ function($, _, Backbone, settings) {
         });
       }.bind(this));
 
+      // Sort by largest first
       var sorted = _.sortBy(collectorList, function(x) { return -x.count; });
       return sorted;
     }
