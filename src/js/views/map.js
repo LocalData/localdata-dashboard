@@ -21,7 +21,7 @@ define([
 function($, _, Backbone, L, moment, _kmq, settings, api, template) {
   'use strict';
 
-  var MIN_GRID_ZOOM = 16; // furthest out we'll have interactive grids.
+  var MIN_GRID_ZOOM = 14; // furthest out we'll have interactive grids.
 
   function flip(a) {
     return [a[1], a[0]];
