@@ -139,7 +139,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
         objectId: event.data.object_id
       });
 
-      var surveyOptions = this.survey.get('options') || {};
+      var surveyOptions = this.survey.get('surveyOptions') || {};
       var selectedItemListView = new ResponseListView({
         el: '#responses-list-container',
         collection: rc,
