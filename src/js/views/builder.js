@@ -72,7 +72,7 @@ define(function (require) {
       console.log('Saving form');
       _kmq.push(['record', 'Survey questions saved']);
 
-      api.createForm(this.forms.getMostRecentForm(), function(){
+      api.createForm(this.forms.getMostRecentForm().toJSON(), function(){
         console.log('Form successfully saved');
         $(".saved").fadeIn().css("display","inline-block").delay(2000).fadeOut();
       });
