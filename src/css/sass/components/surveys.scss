@@ -75,6 +75,7 @@
 }
 
 .map-loading {
+  pointer-events:none;
   text-align: center;
   background: url(../img/preloader.gif) no-repeat center center;
   height: 128px;
