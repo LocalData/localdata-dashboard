@@ -15,7 +15,7 @@ define(function (require) {
   var Responses = require('models/responses');
 
   // Templates
-  var template = require('text!templates/filters/filter.html');
+  var template = require('text!templates/projects/surveys/settings-survey.html');
   var loadingTemplate = require('text!templates/filters/loading.html');
 
   var ANSWER = 'response';
@@ -37,7 +37,8 @@ define(function (require) {
       "click .select": "showOptions",
       "click .question-title": "selectQuestion",
       "click .answer": "selectAnswer",
-      "click .clear": "reset"
+      "click .clear": "reset",
+      "click .close-settings": "close"
     },
 
     initialize: function(options) {
@@ -46,8 +47,6 @@ define(function (require) {
       this.survey = options.survey;
       this.forms = options.forms;
       // this.mapView = options.map;
-      //
-      console.log("CREATING SETTINGS PANEL", this.forms);
 
       this.stats = options.stats;
       this.stats.on('change', this.render);
@@ -55,13 +54,13 @@ define(function (require) {
       this.$el.html(this.loadingTemplate({}));
     },
 
-    render: function() {
-      console.log('Rendering the filters');
+    close: function() {
+      console.log("Closing settings");
+      this.$el.hide();
+    },
 
+    prepQuestions: function(questions, stats) {
       // Match the question names and answer values from the form with stats and colors.
-      var questions = this.forms.getFlattenedForm();
-      var stats = this.stats;
-
       _.each(_.keys(questions), function (question) {
         var questionStats = stats.get(question);
         var type = questions[question].type;
@@ -125,6 +124,16 @@ define(function (require) {
         }
       });
 
+      return questions;
+    },
+
+    render: function() {
+      console.log('Rendering the filters');
+
+      var questions = this.forms.getFlattenedForm();
+      var stats = this.stats;
+      questions = this.prepQuestions(questions, stats);
+
       var context = {
         questions: questions,
         mapping: this.forms.map()
@@ -135,7 +144,7 @@ define(function (require) {
 
     showOptions: function(event) {
       event.preventDefault();
-      $('.filters .options .question').show();
+      $('.filters .options').show();
     },
 
     /**
@@ -172,6 +181,9 @@ define(function (require) {
       $question.find('.toggle').slideUp();
 
       this.trigger('filterSet', this.filters);
+
+      // XXX TODO
+      // Mark this question as selected
     },
 
     /**

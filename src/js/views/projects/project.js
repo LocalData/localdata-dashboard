@@ -256,7 +256,6 @@ define(function (require) {
 
       this.mapView = new MapView({
         el: $('#project-map'),
-        survey: this.survey,
         clickHandler: this.mapClickHandler
       });
 

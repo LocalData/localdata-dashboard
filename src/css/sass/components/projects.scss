@@ -166,6 +166,8 @@
       line-height: 1.4;
     }
 
+    /* Settings ---------------------------------------------------------- */
+
     .settings {
       position: absolute;
       left: 100%;
@@ -178,16 +180,43 @@
       color: $body-color;
 
       /* We're using the h2 as a toolbar in .settings */
-      h2 {
-        font-size: 1em;
-        font-family: $bold;
-        padding: 12px;
-        letter-spacing: 0;
+      .toolbar {
+        position: relative;
 
-        .fa-close {
-          float: right;
-          cursor: pointer;
+        h2 {
+          font-size: 1.5em;
+          /* font-family: $bold; */
+          padding: 12px;
+          letter-spacing: 0;
+
+          .fa-close {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            cursor: pointer;
+          }
         }
+      }
+
+      .options {
+        display: none;
+        margin: 0 15px;
+        background: #fff;
+
+        .question {
+          border-bottom-width: 2px;
+          border-bottom-style: solid;
+        }
+      }
+
+      .select {
+        margin: 0 15px;
+        border: 5px solid $blue;
+        padding: 10px;
+        background: #fff;
+        font-family: $bold;
+        line-height: 20px;
+        cursor: pointer;
       }
 
       .filters {

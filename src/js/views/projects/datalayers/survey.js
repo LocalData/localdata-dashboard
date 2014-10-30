@@ -22,7 +22,7 @@ define(function (require) {
 
   // Templates
   var template = require('text!templates/projects/layerControl.html');
-  var tableTemplate = require('text!templates/projects/surveys/surveyTable.html');
+  var tableTemplate = require('text!templates/projects/surveys/table-survey.html');
 
 
   // The View
@@ -32,8 +32,7 @@ define(function (require) {
 
     events: {
       'click .close': 'close',
-      'click .show-settings': 'showSettings',
-      'click .close-settings': 'closeSettings'
+      'click .show-settings': 'showSettings'
     },
 
     className: 'layer',
@@ -50,7 +49,6 @@ define(function (require) {
 
         // Settings
         'setupSettings',
-        'closeSettings',
         'showSettings',
         'changeFilter',
         'clearFilter'
@@ -69,16 +67,6 @@ define(function (require) {
     processData: function(data) {
       this.render();
       this.getTileJSON();
-
-      // TODO:
-      // - First, add map.
-      //
-      // Parallel:
-      // - Get form
-      // - Get stats
-      // Then:
-      // - Create table
-      // - Create settings
     },
 
     update: function() {
@@ -126,6 +114,8 @@ define(function (require) {
     },
 
     setupSettings: function() {
+      // XXX TODO
+      // Settings are getting rendered multiple times
       console.log("Getting settings", this.forms);
       this.stats = new Stats.Model({
         id: this.survey.get('id')
@@ -143,7 +133,7 @@ define(function (require) {
       this.settings.on('filterReset', this.clearFilter);
 
       var $el = this.settings.render();
-      this.$el.find('.settings').append($el);
+      this.$el.find('.settings').html($el);
     },
 
     setupTable: function() {
@@ -156,11 +146,8 @@ define(function (require) {
     },
 
     showSettings: function() {
+      console.log("Showing settings");
       this.$el.find('.settings').show();
-    },
-
-    closeSettings: function() {
-      this.$el.find('.settings').hide();
     },
 
     changeFilter: function(filter) {

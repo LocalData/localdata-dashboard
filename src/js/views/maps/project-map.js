@@ -173,7 +173,7 @@ define(function (require) {
         // Initialize the map
         this.map = new L.map('map', {
           zoom: 15,
-          center: [37.770888, -122.39409]
+          center: [42.356671, -83.064537]
         });
 
         // Set up the base maps
