@@ -32,7 +32,7 @@ define(function (require) {
   }
 
   var MapView = Backbone.View.extend({
-    BASEMAP_URL: 'http://a.tiles.mapbox.com/v3/matth.map-n9bps30s/{z}/{x}/{y}.png',
+    BASEMAP_URL: 'http://a.tiles.mapbox.com/v3/matth.g93nnjc2/{z}/{x}/{y}.png',
 
     filtered: false,
     filter: null,
@@ -172,13 +172,13 @@ define(function (require) {
 
         // Initialize the map
         this.map = new L.map('map', {
-          zoom: 15,
+          zoom: 13,
           center: [42.356671, -83.064537]
         });
 
         // Set up the base maps
-        this.baseLayer = L.tileLayer(settings.baseLayer);
-        //this.baseLayer = this.satelliteLayer = L.tileLayer(settings.satelliteLayer);
+        // this.baseLayer = L.tileLayer(settings.baseLayer);
+        this.baseLayer = this.satelliteLayer = L.tileLayer(settings.satelliteLayer);
         this.satelliteLayer = L.tileLayer(settings.satelliteLayer);
         this.printLayer = L.tileLayer(settings.printLayer);
         this.map.addLayer(this.baseLayer);
@@ -203,7 +203,7 @@ define(function (require) {
         // size.
         setTimeout(function () {
           // this.map.addLayer(this.zoneLayer);
-          this.map.setView([37.770888,-122.39409]);
+          this.map.setView([42.356671, -83.064537]);
 
           // Center the map
           // this.fitBounds();

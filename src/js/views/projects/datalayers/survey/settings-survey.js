@@ -27,7 +27,7 @@ define(function (require) {
    * See responses/responses/ListView for a heavyweight implementation.
    */
   var FilterView = Backbone.View.extend({
-    className: 'filters',
+    className: 'settings',
     filters: {},
 
     template: _.template(template),

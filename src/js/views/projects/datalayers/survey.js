@@ -133,7 +133,7 @@ define(function (require) {
       this.settings.on('filterReset', this.clearFilter);
 
       var $el = this.settings.render();
-      this.$el.find('.settings').html($el);
+      this.$el.find('.settings-container').html($el);
     },
 
     setupTable: function() {
@@ -146,7 +146,7 @@ define(function (require) {
     },
 
     showSettings: function() {
-      console.log("Showing settings");
+      console.log("Showing settings", this.$el.find('.settings'));
       this.$el.find('.settings').show();
     },
 

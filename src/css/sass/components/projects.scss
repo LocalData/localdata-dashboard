@@ -1,11 +1,16 @@
+header {
+  border-bottom: 1px solid $disabled;
+}
+
 #project {
   height: 100%;
 
   .c {
     position: absolute;
-    top: 50px;
+    top: 51px;
     bottom: 0;
-    background: $darkblue;
+    border-right: 1px solid $disabled;
+    background: #fff;
   }
 
   .b {
@@ -139,7 +144,6 @@
   /* Layer selectors -------------------------------------------------------- */
   .layers {
     padding: 12px;
-    color: #fff;
 
     #slider-range {
       margin-top: 0;
@@ -147,8 +151,9 @@
   }
 
   .layer {
-    border-bottom: 1px dotted #fff;
-    padding: 8px 0px 20px;
+    padding: 13px;
+    border: 4px solid $thinpink;
+    marigin-bottom: 1em;
 
     strong {
       padding-bottom: 0.5em;
@@ -162,7 +167,7 @@
     .close {
       cursor: pointer;
       float: right;
-      color: #daedff;
+      color: $body-accent;
       line-height: 1.4;
     }
 
@@ -173,39 +178,49 @@
       left: 100%;
       top: 0;
       height: 100%;
-      width: 150%;
+      width: 400%;
       z-index: 9999;
-      background: #fcf5f0;
+      background: #fff;
       overflow: scroll;
       color: $body-color;
+      border-left: 1px solid $disabled;
+      border-right: 1px solid $disabled;
 
       /* We're using the h2 as a toolbar in .settings */
       .toolbar {
         position: relative;
+        padding-top: 10px;
 
         h2 {
           font-size: 1.5em;
           /* font-family: $bold; */
           padding: 12px;
           letter-spacing: 0;
+        }
 
-          .fa-close {
-            position: absolute;
-            right: 15px;
-            top: 15px;
-            cursor: pointer;
-          }
+        .close-settings {
+          position: absolute;
+          right: 15px;
+          top: 10px;
+          cursor: pointer;
         }
       }
 
       .options {
-        display: none;
         margin: 0 15px;
         background: #fff;
 
         .question {
-          border-bottom-width: 2px;
-          border-bottom-style: solid;
+          border-bottom: 2px solid $gray;
+          display: inline-block;
+          padding: 1%;
+          padding-top: 20px;
+          margin-bottom: 30px;
+          width: 22%;
+
+          .answers {
+            display: none;
+          }
         }
       }
 
