@@ -195,3 +195,21 @@
     clear: both;
   }
 }
+
+
+/* Collector stats ------------------------- */
+
+.collector-stats {
+  overflow: auto;
+  padding-top: 2em;
+  padding-bottom: 2em;
+  margin-bottom: 2em;
+  border-bottom: 5px solid $thinpink;
+
+  .collector-stat {
+    width: 25%;
+    float: left;
+    min-height: 80px;
+    text-transform: capitalize;
+  }
+}
