@@ -166,7 +166,11 @@ define(function(require, exports, module) {
     showFilters: function() {
       $('.factoid').addClass('small-factoid');
       this.$el.addClass('bigb');
-      this.mapView.map.invalidateSize();
+
+      // We need to wait for CSS transitions to finish to resize the map
+      setTimeout(function () {
+        this.mapView.map.invalidateSize();
+      }.bind(this), 350);
 
       // Render the filter
       $("#filter-view-container").show();
@@ -175,7 +179,12 @@ define(function(require, exports, module) {
     hideFilters: function() {
       $('.factoid').removeClass('small-factoid');
       this.$el.removeClass('bigb');
-      this.mapView.map.invalidateSize();
+
+      // We need to wait for CSS transitions to finish to resize the map
+      setTimeout(function () {
+        this.mapView.map.invalidateSize();
+      }.bind(this), 350);
+
       this.update();
 
       $("#filter-view-container").hide();
