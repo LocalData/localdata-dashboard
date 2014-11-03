@@ -39,6 +39,7 @@
 <% }); %>
 </div>
 
+<% if (surveyOptions.loggedIn) { %>}
 <div class="response-tools">
   <% if (surveyOptions.showReviewTools) { %>
     <div class="review-tools">
@@ -64,3 +65,4 @@
 
   <div class="error">Sorry, there was a problem deleting this record</div>
 </div>
+<% } %>

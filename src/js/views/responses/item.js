@@ -47,6 +47,8 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       console.log("Re-rendering model", this.model);
       var $el = $(this.el);
 
+      this.surveyOptions.loggedIn = settings.user.isLoggedIn();
+
       var options = {
         r: this.model.toJSON(),
         labels: this.labels,
