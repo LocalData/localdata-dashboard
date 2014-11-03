@@ -3,6 +3,7 @@ publish
 dev-settings.json
 build
 temp
+staging
 .sass-cache
 .sass-cache/
 .sass-cache/*

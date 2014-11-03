@@ -1,40 +1,32 @@
 /*jslint nomen: true */
 /*globals define: true */
 
-define([
-  'jquery',
-  'lib/lodash',
-  'backbone',
-  'moment',
-  'lib/tinypubsub',
-  'lib/kissmetrics',
+define(function(require, exports, module) {
+  'use strict';
+
+  // Libs
+  var $ = require('jquery');
+  var _ = require('lib/lodash');
+  var Backbone = require('backbone');
+  var moment = require('moment');
 
   // LocalData
-  'settings',
-  'api',
+  var settings = require('settings');
+  var api = require('api');
 
   // Models
-  'models/responses',
+  var Responses = require('models/responses');
 
   // Views
-  'views/map',
-  'views/responses/filter',
-  'views/responses/list',
-  'views/surveys/count',
+  var ResponseCountView = require('views/surveys/count');
+  var ResponseListView = require('views/responses/list');
+  var FilterView = require('views/responses/filter');
+  var MapView = require('views/map');
+  var CollectorStatsView = require('views/surveys/stats-collector');
 
   // Templates
-  'text!templates/responses/map-list.html'
-],
+  var mapListTemplate = require('text!templates/responses/map-list.html');
 
-function($, _, Backbone, moment, events, _kmq, settings, api,
-  Responses,
-  MapView,
-  FilterView,
-  ResponseListView,
-  ResponseCountView,
-  mapListTemplate) {
-
-  'use strict';
 
   var ResponseViews = {};
 
@@ -99,6 +91,11 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
       };
       this.$el.html(this.template(context));
 
+      // Show collector stats
+      this.collectorStatsView = new CollectorStatsView({
+        survey: this.survey
+      });
+
       // Set up the map view, now that the root exists.
       if (this.mapView === null) {
         this.mapView = new MapView({
@@ -127,7 +124,11 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
 
       // Listen for new responses
       this.survey.on('change', this.mapView.update);
-      this.survey.on('change', this.mapView.fitBounds);
+
+      // Listen for a change in map view size
+      this.$('.b').on('transitionend', function(event) {
+        this.mapView.map.invalidateSize();
+      }.bind(this));
     },
 
     mapClickHandler: function(event) {
@@ -140,10 +141,12 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
         objectId: event.data.object_id
       });
 
+      var surveyOptions = this.survey.get('surveyOptions') || {};
       var selectedItemListView = new ResponseListView({
         el: '#responses-list-container',
         collection: rc,
-        labels: this.forms.getQuestions()
+        labels: this.forms.getQuestions(),
+        surveyOptions: surveyOptions
       });
 
       selectedItemListView.on('remove', function() {
@@ -168,7 +171,6 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
     showFilters: function() {
       $('.factoid').addClass('small-factoid');
       this.$el.addClass('bigb');
-      this.mapView.map.invalidateSize();
 
       // Render the filter
       $("#filter-view-container").show();
@@ -177,7 +179,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
     hideFilters: function() {
       $('.factoid').removeClass('small-factoid');
       this.$el.removeClass('bigb');
-      this.mapView.map.invalidateSize();
+
       this.update();
 
       $("#filter-view-container").hide();
@@ -329,7 +331,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
     goToPage: function(e) {
       e.preventDefault();
 
-      _kmq.push(['record', "Specfic result page selected"]);
+      // _kmq.push(['record', "Specfic result page selected"]);
       var page = parseInt($(e.target).attr('data-page'), 10);
       this.page = page;
       this.render();
@@ -338,7 +340,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
     pageNext: function (e) {
       e.preventDefault();
 
-      _kmq.push(['record', "Next page of results selected"]);
+      // _kmq.push(['record', "Next page of results selected"]);
       if (this.page === this.pageCount - 1) {
         return;
       }
@@ -350,7 +352,7 @@ function($, _, Backbone, moment, events, _kmq, settings, api,
     pagePrev: function (e) {
       e.preventDefault();
 
-      _kmq.push(['record', "Previous page of results selected"]);
+      // _kmq.push(['record', "Previous page of results selected"]);
       if (this.page === 0) {
         return;
       }

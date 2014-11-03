@@ -21,6 +21,8 @@ define([
 function($, _, Backbone, L, moment, _kmq, settings, api, template) {
   'use strict';
 
+  var MIN_GRID_ZOOM = 14; // furthest out we'll have interactive grids.
+
   function flip(a) {
     return [a[1], a[0]];
   }
@@ -53,9 +55,9 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
 
     initialize: function(options) {
       L.Icon.Default.imagePath = '/js/lib/leaflet/images';
-      console.log("Init map view");
       _.bindAll(this,
         'render',
+        'controlUTFZoom',
         'update',
         'fitBounds',
         'selectObject',
@@ -84,6 +86,23 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
 
 
     /**
+     * Hide or show the UTF Grid based on zoom level.
+     */
+    controlUTFZoom: function() {
+      var zoom = this.map.getZoom();
+      var hasGridLayer = this.map.hasLayer(this.gridLayer);
+
+      if (zoom < MIN_GRID_ZOOM && hasGridLayer) {
+        this.map.removeLayer(this.gridLayer);
+      }
+
+      if (zoom >= MIN_GRID_ZOOM && !hasGridLayer) {
+        this.map.addLayer(this.gridLayer);
+      }
+    },
+
+
+    /**
      * Given tilejson data, add the tiles and the UTFgrid
      * @param  {Object} tilejson
      */
@@ -108,7 +127,9 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
       });
 
       // Make sure the grid layer is on top.
-      this.map.addLayer(this.gridLayer);
+      if (this.map.getZoom() >= MIN_GRID_ZOOM) {
+        this.map.addLayer(this.gridLayer);
+      }
 
       this.gridLayer.on('click', this.selectObject);
       if (this.clickHandler) {
@@ -183,6 +204,9 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
           "Print": this.printLayer
         };
 
+        // Make sure we don't show the UTF grid too far out.
+        this.map.on('zoomend', this.controlUTFZoom);
+
         // Add the layer control
         // Make sure the layer stays in the background
         L.control.layers(baseMaps).addTo(this.map);
@@ -208,7 +232,12 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
         if (this.survey.has('zones')) {
           this.plotZones();
         }
-        this.listenTo(this.survey, 'change', this.plotZones);
+
+        this.listenTo(this.survey, 'change', function () {
+          if (this.survey.hasChanged('zones')) {
+            this.plotZones();
+          }
+        });
 
         this.selectDataMap();
       }
@@ -233,12 +262,11 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
       }
       url = url + '/tile.json';
 
-      console.log("Getting tilejson", url);
       // Get TileJSON
       $.ajax({
         url: url,
-        type: 'GET',
         dataType: 'json',
+        data: this.daterange,
         cache: false
       }).done(this.addTileLayer)
       .fail(function(jqXHR, textStatus, errorThrown) {
@@ -262,12 +290,16 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
       this.selectDataMap();
     },
 
+    setDate: function(options) {
+      this.daterange = options;
+      this.map.invalidateSize();
+      this.selectDataMap();
+    },
 
     clearFilter: function () {
       this.filter = null;
       this.selectDataMap();
     },
-
 
     /**
      * Plot survey zones on the map

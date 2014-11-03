@@ -62,6 +62,8 @@ function($, _, Backbone, events, settings, api, SurveyModels, FormModels, Previe
         reset: true
       });
 
+      this.forms = options.forms;
+
       this.el = options.el;
       this.$el = $(options.el);
 
@@ -107,20 +109,33 @@ function($, _, Backbone, events, settings, api, SurveyModels, FormModels, Previe
       var formToSave = formCollection.toJSON()[0];
       delete formToSave.created;
       delete formToSave.id;
+
+      console.log('Form Designer: using the form from survey ' + formCollection.get('surveyId'));
+
+      this.forms.add(new FormModels.Model(formToSave));
+
       api.createForm(formToSave, $.proxy(function() {
         this.trigger('formAdded');
       },this));
     },
 
     useSurvey: function(event) {
-      console.log("Using the survey");
+      console.log('Form Designer: using the sample form');
+
+      this.forms.add(new FormModels.Model(exampleForm));
+
+      // TODO: Use Model.save
       api.createForm(exampleForm, $.proxy(function() {
         this.trigger('formAdded');
       },this));
     },
 
     useBlankSurvey: function(event) {
-      console.log("Using the survey");
+      console.log('Form Designer: using the blank form');
+
+      this.forms.add(new FormModels.Model(blankForm));
+
+      // TODO: Use Model.save
       api.createForm(blankForm, $.proxy(function() {
         this.trigger('formAdded');
       },this));

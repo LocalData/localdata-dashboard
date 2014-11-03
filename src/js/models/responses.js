@@ -25,11 +25,18 @@ function($, _, Backbone, moment, settings, api) {
       return settings.api.baseurl + '/surveys/' + this.get('survey') + '/responses/' + this.get('id');
     },
 
+    parse: function(data) {
+      if (data && data.response) {
+        return data.response; // when we fetch the response directly
+      }
+      return data; // when we fetch the response through a colleciton
+    },
+
     toJSON: function() {
       // This is the backbone implementation, which does clone attributes.
       // We've added the date humanization.
       var json = _.clone(this.attributes);
-      json.createdHumanized = moment(json.created, "YYYY-MM-DDThh:mm:ss.SSSZ").format("MMM Do h:mma");
+      json.createdHumanized = moment(json.created, "YYYY-MM-DDThh:mm:ss.SSSZ").format("MMM Do YYYY - h:mma");
       return json;
     }
   });
@@ -41,18 +48,32 @@ function($, _, Backbone, moment, settings, api) {
 
     initialize: function(options) {
       if (options !== undefined) {
-        console.log("Getting responses", options);
         this.surveyId = options.surveyId;
         this.objectId = options.objectId;
+        this.limit = options.limit;
+        this.filters = options.filters;
         this.fetch();
       }
     },
 
     url: function() {
-      var url = settings.api.baseurl + '/surveys/' + this.surveyId + '/responses';
+      var url = settings.api.baseurl + '/surveys/' + this.surveyId + '/responses?';
       if (this.objectId) {
-        return url + '?objectId=' + this.objectId;
+        return url + 'objectId=' + this.objectId;
       }
+
+      if (this.limit) {
+        url = url + 'count=' + this.limit + '&startIndex=0';
+      } else {
+        url = url + 'count=20&startIndex=0';
+      }
+
+      if (this.filters) {
+        _.each(this.filters, function(value, key){
+          url = url + '&responses[' + key + ']=' + value;
+        });
+      }
+
       return url;
     },
 
@@ -145,8 +166,6 @@ function($, _, Backbone, moment, settings, api) {
 
     // Filter the items in the collection
     setFilter: function (question, answer) {
-      console.log("Filtering the responses", question, answer);
-
       // Make a shallow clone of the unfiltered models array.
       //
       // TODO: if someone calls reset or update, we need to toss out the
@@ -174,7 +193,6 @@ function($, _, Backbone, moment, settings, api) {
     },
 
     clearFilter: function (options) {
-      console.log("Clearing filter");
       this.filters = null;
       if (this.unfilteredModels !== null) {
         this.reset(this.unfilteredModels, options);

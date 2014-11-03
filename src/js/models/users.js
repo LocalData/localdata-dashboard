@@ -21,7 +21,7 @@ function($, _, Backbone, settings) {
     },
 
     isLoggedIn: function() {
-      return (this.attributes.username !== undefined);
+      return (this.attributes.name !== undefined);
     }
   });
 

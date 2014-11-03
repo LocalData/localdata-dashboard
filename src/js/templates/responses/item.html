@@ -18,30 +18,49 @@
 
 <% if(r.files != undefined) { %>
   <% _.each(r.files, function(file){ %>
-    <img src="<%= file %>" alt="">
+    <img src="<%= file %>" alt="" style="width: 90%" class="response-image">
   <% });%>
 <% } %>
 
+
 <div class="answers">
+
 <% _.each(r.responses, function(resp, key) { %>
   <div class="answer">
-    <span class="key"><strong>
+    <span class="key">
       <% if(labels[key]) { %>
         <%- labels[key] %>
       <% } else { %>
         <%- key %>
-      <% } %></strong>
+      <% } %>
     </span>
-    <span class="value"><%- resp %>&nbsp;</span>
+    <span class="value"><strong><%- resp %></strong></span>
   </div>
 <% }); %>
 </div>
 
-<button class="mini danger confirm"><i class="icon-trash"></i> Delete</button>
+<div class="response-tools">
+  <% if (surveyOptions.showReviewTools) { %>
+    <div class="review-tools">
+      <% if(r.responses.reviewed === 'flagged') { %>
+        <button class="mini ok action-accept flex"><i class="fa fa-check"></i> Accept</button>
+        (currently <strong><%= r.responses.reviewed %></strong>)
+      <% } else if (r.responses.reviewed === 'accepted') { %>
+        <button class="mini danger flex action-flag"><i class="fa fa-flag"></i> Flag</button>
+        (currently <strong><%= r.responses.reviewed %></strong>)
+      <% } else { %>
+        <button class="mini ok action-accept flex"><i class="fa fa-check"></i> Accept</button>
+        <button class="mini danger flex action-flag"><i class="fa fa-flag"></i> Flag</button>
+      <% } %>
+    </div>
+  <% } %>
 
-<div class="confirm-delete">
-  <button class="mini cancel">Cancel</button>
-  <button class="mini danger flex delete"><i class="icon-trash"></i> Confirm delete</button>
+  <button class="mini danger action-show-confirm"><i class="icon-trash"></i> Delete</button>
+
+  <div class="confirm-delete">
+    <button class="mini cancel">Cancel</button>
+    <button class="mini danger flex action-delete"><i class="icon-trash"></i> Confirm delete</button>
+  </div>
+
+  <div class="error">Sorry, there was a problem deleting this record</div>
 </div>
-
-<div class="error">Sorry, there was a problem deleting this record</div>

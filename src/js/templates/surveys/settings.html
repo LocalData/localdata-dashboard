@@ -1,38 +1,36 @@
 <div class="out contrast survey-settings">
-  <div class="in">
-    <div class="a">
-      <h3>Survey settings</h3>
+  <div class="a">
+    <h3>Survey settings</h3>
 
-      <form action="" id="new-survey-form">
-        <input type="text" placeholder="Survey name" class="large survey-name" name="name" value="<%= survey.name %>">
-        <input type="text" placeholder="Survey city and state" class="large survey-location" name="location" value="<%= survey.location %>">
+    <form action="" id="new-survey-form">
+      <input type="text" placeholder="Survey name" class="large survey-name" name="name" value="<%= survey.name %>">
+      <input type="text" placeholder="Survey city and state" class="large survey-location" name="location" value="<%= survey.location %>">
 
-        <h3>What data are you collecting?</h3>
+      <h3>What data are you collecting?</h3>
 
-        <label class="radio">
-          <input type="radio" value="point" name="type" <% if(survey.type === 'point') { %>checked <% } %>>
-          Points on a map (for example, potholes, trees, data that doesn&apos;t correspond to an address)
-        </label>
+      <label class="radio">
+        <input type="radio" value="point" name="type" <% if(survey.type === 'point') { %>checked <% } %>>
+        Points on a map (for example, potholes, trees, data that doesn&apos;t correspond to an address)
+      </label>
 
-        <label class="radio">
-          <input type="radio" value="parcel" name="type" <% if(survey.type !== 'point' && survey.type !== 'pointandparcel') { %>checked <% } %>>
-          Data using a parcel map (for example, property, homes, businesses with an address)
-        </label>
+      <label class="radio">
+        <input type="radio" value="parcel" name="type" <% if(survey.type !== 'point' && survey.type !== 'pointandparcel') { %>checked <% } %>>
+        Data using a parcel map (for example, property, homes, businesses with an address)
+      </label>
 
-        <label class="radio">
-          <input type="radio" value="pointandparcel" name="type" <% if(survey.type === 'pointandparcel') { %>checked <% } %>>
-          We need to collect information about points and parcels
-        </label>
+      <label class="radio">
+        <input type="radio" value="pointandparcel" name="type" <% if(survey.type === 'pointandparcel') { %>checked <% } %>>
+        We need to collect information about points and parcels
+      </label>
 
-        <div id="map-draw-view-container"></div>
+      <div id="map-draw-view-container"></div>
 
-        <button class="save flex">Save changes</button>
-        <div class="saved">Changes saved</div>
-        <div class="error">We couldn't save your changes.</div>
-      </form>
-    </div>
-    <div class="b">
-      <div id="sharing-view-container"></div>
-    </div>
+      <button class="save flex">Save changes</button>
+      <div class="saved">Changes saved</div>
+      <div class="error">We couldn't save your changes.</div>
+    </form>
+  </div>
+  <div class="b">
+    <div id="sharing-view-container"></div>
   </div>
 </div>

@@ -27,38 +27,46 @@ function($, _, Backbone, events, settings, api, Responses, template) {
     template: _.template(template),
 
     events: {
-      'click .confirm': 'confirm',
-      'click .delete': 'destroy',
-      'click .cancel': 'cancel'
+      'click .action-show-confirm': 'confirm',
+      'click .action-delete': 'destroy',
+      'click .cancel': 'cancel',
+
+      'click .action-flag': 'flag',
+      'click .action-accept': 'accept'
     },
 
     initialize: function(options) {
-      this.listenTo(this.model, "change", this.render);
+      this.listenTo(this.model, "sync", this.render);
       this.listenTo(this.model, "destroy", this.remove);
 
+      this.surveyOptions = options.surveyOptions || {};
       this.labels = options.labels;
     },
 
     render: function() {
+      console.log("Re-rendering model", this.model);
       var $el = $(this.el);
-      console.log(this.model);
-      $el.html(this.template({
+
+      var options = {
         r: this.model.toJSON(),
-        labels: this.labels
-      }));
+        labels: this.labels,
+        surveyOptions: this.surveyOptions
+      };
+
+      $el.html(this.template(options));
       return this;
     },
 
     confirm: function(event) {
       event.preventDefault();
-      this.$('.confirm').hide();
+      this.$('.action-show-confirm').hide();
       this.$('.confirm-delete').show();
     },
 
     cancel: function(event) {
       event.preventDefault();
       this.$('.confirm-delete').hide();
-      this.$('.confirm').show();
+      this.$('.action-show-confirm').show();
     },
 
     destroy: function(event) {
@@ -77,8 +85,39 @@ function($, _, Backbone, events, settings, api, Responses, template) {
         success: success,
         error: error
       });
-    }
+    },
 
+    flag: function(event) {
+      event.preventDefault();
+      this.model.save({
+        responses: {
+          reviewed: 'flagged'
+        }
+      }, {
+        patch: true,
+        wait: true, // wait until sync to update attributes
+        success: function (event) {
+          // We need to fetch the model because patch resets the local
+          // attributes.
+          this.model.fetch({ reset: true });
+        }.bind(this)
+      });
+    },
+
+    accept: function(event) {
+      event.preventDefault();
+      this.model.save({
+        responses: {
+          reviewed: 'accepted'
+        }
+      }, {
+        patch: true,
+        wait: true,
+        success: function (event) {
+          this.model.fetch({ reset: true });
+        }.bind(this)
+      });
+    }
   });
 
   return ResponseView;

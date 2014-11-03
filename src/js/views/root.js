@@ -1,32 +1,30 @@
 /*jslint nomen: true */
 /*globals define: true */
 
-define([
-  'jquery',
-  'lib/lodash',
-  'backbone',
-  'lib/kissmetrics',
+define(function(require, exports, module) {
+  'use strict';
 
-  // LocalData
-  'settings',
+  // Libs
+  var $ = require('jquery');
+  var _ = require('lib/lodash');
+  var Backbone = require('backbone');
 
-  // Router
-  'routers/index',
-
-  // Views
-  'views/home',
-  'views/dashboard',
-  'views/users',
-  'views/surveys',
-  'views/design',
-  'views/settings',
+  // App
+  var settings = require('settings');
+  var IndexRouter = require('routers/index');
 
   // Models
-  'models/users'
-],
+  var Users = require('models/users');
 
-function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, UserViews, SurveyViews, DesignViews, SettingsViews, Users) {
-  'use strict';
+  // Views
+  var HomeView = require('views/home');
+  var DashboardView = require('views/dashboard');
+  var UserViews = require('views/users');
+  var SurveyViews = require('views/surveys');
+  var DesignViews = require('views/design');
+  var SettingsViews = require('views/settings');
+  var ReviewView = require('views/responses/review');
+
 
   var AllViews = {};
   AllViews.HomeView = HomeView;
@@ -35,6 +33,7 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
   AllViews.SurveyView = SurveyViews.SurveyView;
   AllViews.NewSurveyView= SurveyViews.NewSurveyView;
   AllViews.DesignView = DesignViews.DesignView;
+  AllViews.ReviewView = ReviewView;
 
   AllViews.LoginView = UserViews.LoginView;
   AllViews.ChangePasswordView = UserViews.ChangePasswordView;
@@ -55,10 +54,8 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
       _.bindAll(this);
 
       // Keep track of the user.
-      this.user = new Users.Model();
-      this.user.fetch();
       this.userView = new AllViews.UserBarView({
-        user: this.user
+        user: settings.user // created on init in app.js
       });
 
       // Set up global router
@@ -75,8 +72,6 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
 
     // Register each view as it is created and never create more than one.
     getOrCreateView: function(viewClass, viewName, options) {
-      _kmq.push(['record', viewName]);
-
       // If the view already exists, use it.
       // If it doesn't exist, create it.
       if (_.has(this.views, viewName)) {
@@ -120,8 +115,6 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
     // Survey dashboard routes .................................................
     goto_survey: function(tab) {
 
-      _kmq.push(['record', "SurveyView"]);
-
       // Get or create a view for the survey
       var surveyViewName = "Survey" + settings.surveyId;
       this.currentContentView = this.getOrCreateView("SurveyView", surveyViewName, {id: settings.surveyId});
@@ -146,6 +139,9 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
         case "filters":
           this.currentContentView.showFilters();
           break;
+        case "review":
+          this.currentContentView.showReview();
+          break;
       }
     },
 
@@ -155,7 +151,6 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
     },
 
     goto_settings: function() {
-      _kmq.push(['record', "SettingsView"]);
       this._router.navigate("surveys/" + settings.slug + "/settings");
       this.goto_survey("settings");
     },
@@ -166,7 +161,6 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
     },
 
     goto_export: function() {
-      _kmq.push(['record', "ExportView"]);
       this._router.navigate("surveys/" + settings.slug + "/export");
       this.goto_survey("export");
     },
@@ -178,9 +172,13 @@ function($, _, Backbone, _kmq, settings, IndexRouter, HomeView, DashboardView, U
     },
 
     goto_filters: function() {
-      _kmq.push(['record', "FilterVIew"]);
       this._router.navigate("surveys/" + settings.slug + "/dive");
       this.goto_survey("filters");
+    },
+
+    goto_review: function() {
+      this._router.navigate("surveys/" + settings.slug + "/review");
+      this.goto_survey("review");
     },
 
     goto_design: function() {

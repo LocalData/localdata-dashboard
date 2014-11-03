@@ -83,6 +83,10 @@ button.danger {
   color: white;
 }
 
+button.danger:hover {
+  background: #f36c3c;
+}
+
 button.disabled {
   background-color: $disabled;
   border-color: $disabled;

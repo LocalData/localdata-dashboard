@@ -39,9 +39,10 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
     },
 
     initialize: function(options) {
+      console.log("Init list view", options);
       this.listenTo(this.collection, 'add', this.render);
-      this.listenTo(this.collection, 'reset', this.render);
       this.labels = options.labels;
+      this.surveyOptions = options.surveyOptions;
     },
 
     remove: function() {
@@ -55,6 +56,10 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
       var first = this.collection.at(0);
       var name;
 
+      if(!first) {
+        return;
+      }
+
       if(first.get('geo_info') !== undefined) {
         name = first.get('geo_info').humanReadableName;
       }else {
@@ -62,12 +67,17 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
       }
 
       var $el = $(this.el);
-      $el.html(this.template({ name: name }));
+      $el.html(this.template({
+        name: name,
+        responses: this.collection.toJSON(),
+        googleKey: settings.GoogleKey
+      }));
 
       this.collection.each(function(response) {
         var item = new ResponseView({
           model: response,
-          labels: this.labels
+          labels: this.labels,
+          surveyOptions: this.surveyOptions
         });
         $el.find('.responses-list').append(item.render().el);
       }.bind(this));
