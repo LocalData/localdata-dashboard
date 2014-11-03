@@ -124,6 +124,11 @@ define(function(require, exports, module) {
 
       // Listen for new responses
       this.survey.on('change', this.mapView.update);
+
+      // Listen for a change in map view size
+      this.$('.b').on('transitionend', function(event) {
+        this.mapView.map.invalidateSize();
+      }.bind(this));
     },
 
     mapClickHandler: function(event) {
@@ -166,7 +171,6 @@ define(function(require, exports, module) {
     showFilters: function() {
       $('.factoid').addClass('small-factoid');
       this.$el.addClass('bigb');
-      this.mapView.map.invalidateSize();
 
       // Render the filter
       $("#filter-view-container").show();
@@ -175,7 +179,7 @@ define(function(require, exports, module) {
     hideFilters: function() {
       $('.factoid').removeClass('small-factoid');
       this.$el.removeClass('bigb');
-      this.mapView.map.invalidateSize();
+
       this.update();
 
       $("#filter-view-container").hide();
