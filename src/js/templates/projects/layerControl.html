@@ -1,7 +1,7 @@
-<strong><%= name %>
+<h4><%= name %>
 <i class="fa fa-spinner fa-spin loading"></i>
 <i class="fa fa-cog show-settings"></i>
-</strong>
+</h4>
 
 <div class="graph"></div>
 
@@ -12,4 +12,13 @@
 
 <div class="settings-container"></div>
 
-
+<% if (settingsSelected) { %>
+    <div class="settings-selected">
+        <h5>Selected</h5>
+        <strong><%= settingsSelected.name %></strong>
+        <% if (settingsSelected.value) { %>
+            <div class=""><%= settingsSelected.answer %></div>
+        <% } %>
+        <div class="show-settings"><i class="fa fa-cog"></i>Change</div>
+    </div>
+<% } %>
