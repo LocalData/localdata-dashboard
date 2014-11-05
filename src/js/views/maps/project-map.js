@@ -173,7 +173,8 @@ define(function (require) {
         // Initialize the map
         this.map = new L.map('map', {
           zoom: 13,
-          center: [42.356671, -83.064537]
+          center: [41.59337,-87.346427]
+          //center: [42.356671, -83.064537]
         });
 
         // Set up the base maps
@@ -203,7 +204,8 @@ define(function (require) {
         // size.
         setTimeout(function () {
           // this.map.addLayer(this.zoneLayer);
-          this.map.setView([42.356671, -83.064537]);
+          // this.map.setView([42.356671, -83.064537]);
+          this.map.setView([41.59337,-87.346427]);
 
           // Center the map
           // this.fitBounds();

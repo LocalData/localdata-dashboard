@@ -14,14 +14,15 @@ define(function (require) {
 
   // Templates
   var template = require('text!templates/projects/layerControl.html');
-
+  var tableTemplate = require('text!templates/projects/surveys/table-survey.html');
 
   var LayerControl = Backbone.View.extend({
     template: _.template(template),
+    tableTemplate: _.template(tableTemplate),
 
     events: {
       'click .close': 'close',
-      'click .open-settings': 'settings'
+      'click .show-settings': 'showSettings'
     },
 
     className: 'layer',
@@ -32,7 +33,8 @@ define(function (require) {
         'render',
         'update',
         'close',
-        'settings'
+        'setupSettings',
+        'showSettings'
       );
       console.log("Creating data layer layer with options", options);
       this.map = options.map;
@@ -75,7 +77,7 @@ define(function (require) {
 
     },
 
-    settings: function(event) {
+    showSettings: function(event) {
       event.preventDefault();
       this.$el.find('.settings').show();
     },

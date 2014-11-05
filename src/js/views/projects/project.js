@@ -30,6 +30,7 @@ define(function (require) {
   var pedFatalitiesDataSource = require('views/projects/datalayers/ped-fatalities');
   var bikeFatalitiesDataSource = require('views/projects/datalayers/bike-fatalities');
   var bikeCountsDataSource = require('views/projects/datalayers/bike-counts');
+  var cartoDataSource = require('views/projects/datalayers/carto');
   var pedCountsDataSource = require('views/projects/datalayers/ped-counts');
   var traffic = require('views/projects/datalayers/traffic');
   var surveyDataSource = require('views/projects/datalayers/survey');
@@ -168,6 +169,7 @@ define(function (require) {
       'ped-fatalities': pedFatalitiesDataSource,
       'bike-fatalities': bikeFatalitiesDataSource,
       'bike-counts': bikeCountsDataSource,
+      'carto': cartoDataSource,
       'ped-counts': pedCountsDataSource,
       'traffic': traffic,
       'survey': surveyDataSource
