@@ -2,7 +2,11 @@
 <h3>Contributors</h3>
 <% _.each(collectors, function(collector) { %>
     <div class="collector-stat">
-    <div class="collector-name"><strong><%= collector.name %></strong> </div>
+    <div class="collector-name"><strong>
+        <% if (collector.name ==='No name given') { %> <em> <% }%>
+        <%= collector.name %>
+        <% if (collector.name ==='No name given') { %> </em> <% }%>
+    </strong></div>
     <div class="stat"><%= collector.prettyCount %></div>
     </div>
 <% }); %>

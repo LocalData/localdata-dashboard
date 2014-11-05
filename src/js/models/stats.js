@@ -57,6 +57,12 @@ function($, _, Backbone, settings) {
         }
       });
 
+      // Give a more human readable name to
+      if (_.has(deduped, '')) {
+        deduped['No name given'] = deduped[''];
+        delete deduped[''];
+      }
+
       return deduped;
     },
 

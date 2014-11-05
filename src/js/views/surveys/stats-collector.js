@@ -13,8 +13,6 @@ define(function(require, exports, module) {
   var settings = require('settings');
   var api = require('api');
 
-  // Models
-  var Stats = require('models/stats');
 
   // Templates
   var template = require('text!templates/surveys/stats-collector.html');
@@ -31,12 +29,9 @@ define(function(require, exports, module) {
       );
 
       this.survey = options.survey;
+      this.stats = options.stats;
 
-      this.stats = new Stats.Model({
-        id: this.survey.get('id')
-      });
       this.stats.on('sync', this.render);
-      this.stats.fetch({reset: true});
     },
 
     render: function(event) {
