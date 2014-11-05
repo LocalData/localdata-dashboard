@@ -53,10 +53,8 @@ define(function(require, exports, module) {
       this.survey = options.survey;
       this.forms = options.forms;
       this.map = options.map;
+      this.stats = options.stats;
 
-      this.stats = new Stats.Model({
-        id: this.survey.get('id')
-      });
       this.stats.on('change', this.render);
       this.$el.html(this.template());
     },
