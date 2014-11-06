@@ -32,6 +32,8 @@ function($, _, Backbone, settings, api) {
 
       "surveys/:slug/settings": "settings",
 
+      'embed/surveys/:slug': 'embed',
+
       "*actions": "default_route"
     },
 
@@ -92,6 +94,10 @@ function($, _, Backbone, settings, api) {
 
     review: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_review);
+    },
+
+    embed: function (slug) {
+      api.setSurveyIdFromSlug(slug, this.controller.gotoSurveyEmbed);
     },
 
     default_route: function(actions) {
