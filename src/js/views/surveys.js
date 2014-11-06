@@ -121,7 +121,7 @@ define(function(require, exports, module) {
   SurveyViews.NewSurveyView = Backbone.View.extend({
     template: _.template(newSurveyTemplate),
 
-    el: $("#container"),
+    el: '#container',
 
     events: {
       'submit #new-survey-form': 'submit'
@@ -190,7 +190,7 @@ define(function(require, exports, module) {
 
 
   SurveyViews.SurveyView = Backbone.View.extend({
-    el: $("#container"),
+    el: '#container',
 
     activeTab: undefined,
     filters: false,
@@ -238,14 +238,12 @@ define(function(require, exports, module) {
     },
 
     render: function (model) {
-      var $el = $(this.el);
-
       // Remove old sub-views
       if (this.mapAndListView !== undefined) {
         this.mapAndListView.remove();
       }
 
-      $el.html(this.template({
+      this.$el.html(this.template({
         survey: this.survey.toJSON()
       }));
 
