@@ -44,14 +44,11 @@ define(function (require) {
         'render',
         'update',
         'close',
-        'processData',
         'doneLoading',
 
         // Settings
         'setupSettings',
-        'showSettings',
-        'changeFilter',
-        'clearFilter'
+        'showSettings'
       );
 
       console.log("Creating cartodb layer with options", options);
@@ -72,32 +69,19 @@ define(function (require) {
       // XXX TODO
       // Settings are getting rendered multiple times
       console.log("Getting settings", this.forms);
-      this.stats = new Stats.Model({
-        id: this.survey.get('id')
-      });
-      this.stats.on('reset', this.setupTable);
-      this.stats.fetch({reset: true});
 
-      this.settings = new SettingsView({
-        survey: this.survey,
-        forms: this.forms,
-        stats: this.stats
-      });
+      // this.settings = new SettingsView({
+      // });
 
-      this.settings.on('filterSet', this.changeFilter);
-      this.settings.on('filterReset', this.clearFilter);
-
-      var $el = this.settings.render();
-      this.$el.find('.settings-container').html($el);
+      // var $el = this.settings.render();
+      this.$el.find('.settings-container').html('Settings!');
     },
 
     setupTable: function() {
-      var $table = this.tableTemplate({
-        survey: this.survey.toJSON(),
-        stats: this.stats.toJSON()
-      });
-      console.log("Setting table", this.table, this.stats.toJSON());
-      this.table.$el.append($table);
+      // var $table = this.tableTemplate({
+      // });
+      // console.log("Setting table", this.table, this.stats.toJSON());
+      // this.table.$el.append($table);
     },
 
     showSettings: function() {
@@ -107,19 +91,26 @@ define(function (require) {
 
     render: function() {
       var context = {
-        name: this.survey.get('name') || 'LocalData Survey',
-        kind: 'responses',
+        name: 'Carto Dataset', // XXX TODO Add datasetname
+        kind: 'values',
         meta: {
-          count: this.survey.get('responseCount') || 0 //this.getCount()
+          count: 200 // XXX TODO
+          // count: this.survey.get('responseCount') || 0 //this.getCount()
         }
       };
 
       this.$el.html(this.template(context));
-      if(this.survey.get('name')) {
-        this.doneLoading();
-      }
 
-      this.getForms();
+      cartodb.createLayer(this.map, 'https://localdata.cartodb.com/api/v2/viz/0e8bbb64-6514-11e4-bdbc-0e4fddd5de28/viz.json')
+        .addTo(this.map)
+        .on('done', function(layer) {
+          this.doneLoading();
+          console.log("Stuff");
+        }.bind(this))
+        .on('error', function(err) {
+          console.log("some error occurred: " + err);
+        });
+
 
       return this.$el;
     },
