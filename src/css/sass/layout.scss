@@ -15,7 +15,22 @@ body {
 
 .out {
   background: #fff;
-  overflow: auto;
+}
+
+/* Clear floats on .out
+   Needed because the simpler overflow: auto doesn't work as we want
+   with children that are positioned absolutely.
+   */
+.out:before,
+.out:after {
+  content:"";
+  display:table;
+}
+.out:after {
+  clear:both;
+}
+.out {
+  zoom:1; /* For IE 6/7 (trigger hasLayout) */
 }
 
 .in {

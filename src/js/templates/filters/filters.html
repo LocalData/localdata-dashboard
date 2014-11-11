@@ -1,14 +1,26 @@
-<h3>Filter responses</h3>
+<button href="" class="button flex action-show-filters">
+  Filter data <i class="fa fa-chevron-right"></i>
+</button>
 
-<div class="date-filters filter">
-  <h4>Filter by date</h4>
-  <select id="datefilter">
-    <option value="all">All responses</option>
-    <option value="hour">Past hour</option>
-    <option value="today">Today</option>
-    <option value="week">Past 7 days</option>
-    <!-- <option value="other">Custom range</option> -->
-  </select>
+<div class="filters">
+  <div class="filters-in">
+        <button href="" class="button mini flex close">Close filter</button>
+        <button href="" class="button mini flex clear">Clear filters</button>
+    <div class="date-filters filter">
+      <h3>
+        Filter by date
+        <select id="datefilter">
+          <option value="all">All responses</option>
+          <option value="hour">Past hour</option>
+          <option value="today">Today</option>
+          <option value="week">Past 7 days</option>
+          <!-- <option value="other">Custom range</option> -->
+        </select>
+
+      </h3>
+    </div>
+
+    <div class="question-filters filter"></div>
+  </div>
 </div>
 
-<div class="question-filters filter"></div>
