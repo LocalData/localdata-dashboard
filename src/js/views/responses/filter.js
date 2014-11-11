@@ -33,16 +33,18 @@ define(function(require, exports, module) {
    * See responses/responses/ListView for a heavyweight implementation.
    */
   var FilterView = Backbone.View.extend({
-    className: 'filters',
+    className: 'filters-out',
     filters: {},
 
     template: _.template(template),
     questionFiltersTemplate: _.template(questionFiltersTemplate),
 
     events: {
-      "click .question label": "selectQuestion",
+      "click .question": "selectQuestion",
       "click .answer": "selectAnswer",
       "click .clear": "reset",
+      "click .close": "close",
+      "click .action-show-filters": "showHideFilters",
 
       "change #datefilter": "selectDate"
     },
@@ -59,6 +61,19 @@ define(function(require, exports, module) {
       });
       this.stats.on('change', this.render);
       this.$el.html(this.template());
+
+      $('.action-show-filters').click(function(event) {
+      });
+    },
+
+    showHideFilters: function() {
+      console.log('toggle filters');
+      $('.filters').toggle();
+    },
+
+    close: function() {
+      console.log("Closing filters");
+      this.$el.find('.filters').hide();
     },
 
     selectDate: function(event) {
@@ -200,7 +215,7 @@ define(function(require, exports, module) {
 
       // Re-mark any selected questions
       if(this.filters.question) {
-        var $question = $('label[data-question=' + this.filters.question + ']');
+        var $question = $('div[data-question=' + this.filters.question + ']');
         this.markQuestionSelected($question);
       }
       if(this.filters.answer) {
@@ -241,15 +256,17 @@ define(function(require, exports, module) {
 
     markQuestionSelected: function($question) {
       // Mark this filter as selected and show answers
+      // First, clear out any selected questions
       $('.filters .question').removeClass('selected');
-      $question.parent().addClass('selected');
-      $question.parent().find('.answers').show();
+
+      // Then, add the selected class to this question
+      $question.addClass('selected');
     },
 
     markAnswerSelected: function($answer) {
       // Make sure we have the right question selected
       this.filters.question = $answer.attr('data-question');
-      var $question = $('label[data-question=' + this.filters.question + ']');
+      var $question = $('div[data-question=' + this.filters.question + ']').parent();
       this.markQuestionSelected($question);
 
       if(!this.filters.answer) {

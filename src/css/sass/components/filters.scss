@@ -3,6 +3,21 @@
 }
 
 .filters {
+  background: #fff;
+  position: absolute;
+  width: 70%; /* leaves a little bit of a gap so you can see the map behind */
+  left: 29%;
+  top: 0;
+  z-index: 1250; /* leaflet zoom controls are at 999 */
+  margin-bottom: 20px;
+
+  .filters-in {
+    padding: 20px;
+    border: 5px solid $pink;
+    border-top-width: 0px;
+    overflow: auto;
+  }
+
   .filter {
     margin-bottom: 1em;
   }
@@ -13,6 +28,22 @@
   }
 
   .question {
+    display: inline-block;
+    vertical-align: top;
+
+    width: 20%;
+    padding: 1%;
+    margin-right: 2%;
+    min-height: 50px;
+    border-top: 4px solid $thinpink;
+
+    .answers {
+      display: none;
+      -webkit-transition: all 0.3s ease;
+      -moz-transition: all 0.3s ease;
+      -o-transition: all 0.3s ease;
+      -ms-transition: all 0.3s ease;
+    }
   }
 
   h3 {
@@ -24,8 +55,7 @@
     font-family: $bold;
     line-height: 1.2;
     display: block;
-    position: relative;
-    padding-left: 32px;
+    padding-left: 5px;
   }
 
   .question {
@@ -45,6 +75,7 @@
 
   .answer {
     position: relative;
+    line-height: 20px;
     padding-left: 32px;
     clear: both;
     margin-top: 10px
@@ -52,15 +83,22 @@
 
   .circle {
     position: absolute;
-    left: 0;
+    left: 5px;
     border-radius: 50%;
     width: 20px;
     height: 20px;
-    border: 3px solid #fff;
+    bborder: 3px solid #fff;
     background: transparent;
   }
 
   .selected {
+    border-top-color: $red;
+    background: $highlight;
+
+    .answers {
+      display: block;
+    }
+
     .circle {
       background: #6e6663;
       display: block;
