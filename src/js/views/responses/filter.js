@@ -23,6 +23,7 @@ define(function(require, exports, module) {
   // Templates
   var template = require('text!templates/filters/filters.html');
   var questionFiltersTemplate = require('text!templates/filters/question-filters.html');
+  var selectedFiltersTemplate = require('text!templates/filters/selected-filters.html');
 
   var ANSWER = 'response';
   var NOANSWER = 'no response';
@@ -38,6 +39,7 @@ define(function(require, exports, module) {
 
     template: _.template(template),
     questionFiltersTemplate: _.template(questionFiltersTemplate),
+    selectedFiltersTemplate: _.template(selectedFiltersTemplate),
 
     events: {
       "click .question": "selectQuestion",
@@ -50,7 +52,7 @@ define(function(require, exports, module) {
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'reset');
+      _.bindAll(this, 'render', 'reset', 'updateSidebar');
 
       this.survey = options.survey;
       this.forms = options.forms;
@@ -115,6 +117,10 @@ define(function(require, exports, module) {
           after: after.getTime()
         }
       });
+
+      // Update the sidebar
+      this.filters.after = after;
+      this.updateSidebar();
     },
 
     render: function() {
@@ -252,53 +258,86 @@ define(function(require, exports, module) {
 
       $('.question').removeClass('selected');
       $('.answers .circle').removeClass('inactive');
+
+      // Clear out the sidebar
+      this.updateSidebar();
+    },
+
+    updateSidebar: function() {
+      // Display the selected filter on the sidbar.
+      console.log("Flattened form", this.forms.getFlattenedForm());
+      var questions = this.forms.getFlattenedForm();
+      var question = questions[this.filters.question].text;
+      var answer = _.findWhere(questions[this.filters.question].answers, { value: this.filters.answer }).text
+        || '';
+
+      var selectedFilters = this.selectedFiltersTemplate({
+        filters: {
+          question: question,
+          answer: answer
+        }
+      });
+      $('.selected-filters').html(selectedFilters);
     },
 
     markQuestionSelected: function($question) {
       // Mark this filter as selected and show answers
       // First, clear out any selected questions
+      console.log("Marking question selected", $question);
       $('.filters .question').removeClass('selected');
 
       // Then, add the selected class to this question
       $question.addClass('selected');
+
+      this.updateSidebar();
     },
 
     markAnswerSelected: function($answer) {
       // Make sure we have the right question selected
       this.filters.question = $answer.attr('data-question');
-      var $question = $('div[data-question=' + this.filters.question + ']').parent();
+      var $question = $('div.question[data-question=' + this.filters.question + ']');
       this.markQuestionSelected($question);
 
       if(!this.filters.answer) {
-        $answer = $answer.parent();
+        // $answer = $answer.parent();
         this.filters.answer = $answer.attr('data-answer');
       }
 
-      // Mark the answer as selected
-      $('.answers').removeClass('selected');
+      // Remove the "selected" class from any of the circles.
+      $('.answers .circle').removeClass('selected');
       $('.answers .circle').addClass('inactive');
 
+      // Mark the circle as selected
       $answer.find('.circle').addClass('selected');
       $answer.find('.circle').removeClass('inactive');
 
       // Color the responses on the map
       this.map.setFilter(this.filters.question, this.filters.answer);
 
+      this.updateSidebar();
+
       console.log("Selected answer", $answer, this.filters.answer);
     },
 
     selectQuestion: function(event) {
-      // Clear out any filters
-      if(this.filters.answer) {
-        this.reset();
-      }
-
       var $question = $(event.target);
       var question = $question.attr('data-question');
       if(!question) {
         $question = $question.parent();
         question = $question.attr('data-question');
       }
+
+      // Don't double select the question.
+      if (this.filters.question === question) {
+        return;
+      }
+
+      // Clear out any existing filters
+      if(this.filters.answer) {
+        this.reset();
+      }
+
+      // Record the filter
       this.filters.question = question;
       var answers = this.stats.get(question);
 
