@@ -15,8 +15,21 @@ body {
 
 .out {
   background: #fff;
-  overflow: auto;
 }
+
+/* Clearfix without overflow */
+.out:before,
+.out:after {
+  content:"";
+  display:table;
+}
+.out:after {
+  clear:both;
+}
+.out {
+  zoom:1; /* For IE 6/7 (trigger hasLayout) */
+}
+
 
 .in {
   margin: 0px auto;
