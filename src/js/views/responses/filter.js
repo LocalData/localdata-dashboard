@@ -265,11 +265,20 @@ define(function(require, exports, module) {
 
     updateSidebar: function() {
       // Display the selected filter on the sidbar.
-      console.log("Flattened form", this.forms.getFlattenedForm());
       var questions = this.forms.getFlattenedForm();
+
+      if(!this.filters.question) {
+        $('.selected-filters').html('');
+        return;
+      }
+
+      // Get the human-readable names for answers.
       var question = questions[this.filters.question].text;
-      var answer = _.findWhere(questions[this.filters.question].answers, { value: this.filters.answer }).text
-        || '';
+      var answer = _.findWhere(questions[this.filters.question].answers, { value: this.filters.answer });
+
+      if (answer) {
+        answer = answer.text;
+      }
 
       var selectedFilters = this.selectedFiltersTemplate({
         filters: {
