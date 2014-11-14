@@ -34,7 +34,6 @@ define(function(require, exports, module) {
    * See responses/responses/ListView for a heavyweight implementation.
    */
   var FilterView = Backbone.View.extend({
-    className: 'filters-out',
     filters: {},
 
     template: _.template(template),
@@ -46,7 +45,6 @@ define(function(require, exports, module) {
       "click .answer": "selectAnswer",
       "click .clear": "reset",
       "click .close": "close",
-      "click .action-show-filters": "showHideFilters",
 
       "change #datefilter": "selectDate"
     },
@@ -66,11 +64,6 @@ define(function(require, exports, module) {
 
       $('.action-show-filters').click(function(event) {
       });
-    },
-
-    showHideFilters: function() {
-      console.log('toggle filters');
-      $('.filters').toggle();
     },
 
     close: function() {
@@ -263,13 +256,23 @@ define(function(require, exports, module) {
       this.updateSidebar();
     },
 
+    // TODO: indicate filter selection/clearing through an event; move the
+    // rendering piece to the appropriate view.
     updateSidebar: function() {
       // Display the selected filter on the sidbar.
       console.log("Flattened form", this.forms.getFlattenedForm());
       var questions = this.forms.getFlattenedForm();
-      var question = questions[this.filters.question].text;
-      var answer = _.findWhere(questions[this.filters.question].answers, { value: this.filters.answer }).text
-        || '';
+
+      if (!this.filters.question) {
+        $('.selected-filters').html('');
+        return;
+      }
+
+      var question =  questions[this.filters.question].text;
+      var answer = '';
+      if (this.filters.answer) {
+        answer = _.findWhere(questions[this.filters.question].answers, { value: this.filters.answer }).text || '';
+      }
 
       var selectedFilters = this.selectedFiltersTemplate({
         filters: {

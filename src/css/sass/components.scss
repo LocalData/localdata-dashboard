@@ -64,7 +64,7 @@
 .factoid .number {
   font-size: 150px;
   line-height: 1em;
-  display: block;
+  display: inline-block;
 }
 
 .factoid.orange {
@@ -101,10 +101,15 @@
   height: 500px;
 }
 
-#map-tools {
-  background: $body-accent;
-  padding: 5px 5px 0 5px;
+.control-pane {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  padding: 20px;
+  background: white;
+}
 
+#map-tools {
   input[type=text] {
     display: inline;
     margin-bottom: 0;

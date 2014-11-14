@@ -55,8 +55,6 @@ define(function (require) {
         survey: this.survey,
         showFilter: true
       });
-
-      this.mapAndListView.showFilters();
     },
   });
 

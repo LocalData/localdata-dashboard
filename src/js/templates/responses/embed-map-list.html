@@ -1,12 +1,24 @@
 <div class="out contrast map-list-view">
-  <div class="a">
-    <div id="filter-view-container"></div>
+  <div class="b">
     <div id="responses-list-container"></div>
   </div>
-  <div class="b">
-    <div id="response-count-container"></div>
+
+  <div id="map-view-container">
+    <div id="map"></div>
+    <div class="map-loading"></div>
   </div>
 
-
-  <div id="map-view-container"></div>
+  <div class="control-pane">
+    <div id="response-count-container"></div>
+    <form id="map-tools" class="printhide">
+        <input type="text" id="address-search" placeholder="Address">
+        <button class="mini flex save address-search-button">Search</button>
+        <span class="error"></span>
+    </form>
+    <button href="" class="button mini flex action-show-filters">
+      Filter data <i class="fa fa-chevron-right"></i>
+    </button>
+    <div class="selected-filters"></div>
+  </div>
+  <div id="filter-view-container"></div>
 </div>
