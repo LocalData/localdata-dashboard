@@ -384,12 +384,13 @@ define(function(require, exports, module) {
 
     el: '#response-view-container',
 
+    events: {
+      'click .action-show-filters': 'toggleFilters',
+    },
+
     initialize: function(options) {
       _.bindAll(this,
-        // XXX
-        // Filtering
-        'showFilters',
-
+        'toggleFilters',
         'mapClickHandler'
       );
 
@@ -440,20 +441,15 @@ define(function(require, exports, module) {
 
       // Set up the response count view.
       this.countView = new ResponseCountView({
+        el: '#response-count-container',
         model: this.survey
       }).render();
-      $('#response-count-container').html(this.countView.$el);
 
       // Listen for new responses
       this.mapView.listenTo(this.survey, 'change', this.mapView.update);
 
-      if (this.showFilter) {
-        $('.factoid').addClass('small-factoid');
-        this.$el.addClass('bigb');
-
-        // Render the filter
-        $('#filter-view-container').show();
-      }
+      $('.factoid').addClass('small-factoid');
+      this.$el.addClass('bigb');
     },
 
     mapClickHandler: function (event) {
@@ -483,12 +479,9 @@ define(function(require, exports, module) {
       }.bind(this));
     },
 
-    showFilters: function () {
-      $('.factoid').addClass('small-factoid');
-      this.$el.addClass('bigb');
-
+    toggleFilters: function () {
       // Render the filter
-      $("#filter-view-container").show();
+      $('.filters').toggle();
     },
 
     remove: function () {

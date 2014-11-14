@@ -184,14 +184,14 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
 
     render: function() {
       if (this.map === null) {
-        // Render the map template
-        this.$el.html(this.template({}));
-
         // Initialize the map
         this.map = new L.map('map', {
           zoom: 15,
-          center: [37.77585785035733, -122.41362811351655]
+          center: [37.77585785035733, -122.41362811351655],
+          zoomControl: false
         });
+
+        this.map.addControl(L.control.zoom({ position: 'topright' }));
 
         // Set up the base maps
         this.baseLayer = L.tileLayer(settings.baseLayer);
