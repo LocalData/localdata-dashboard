@@ -129,6 +129,21 @@ header .b {
   }
 }
 
+.embed .a {
+  width: 48%;
+  margin-right: 2%;
+  margin-left: 0%;
+}
+.embed .bigb .a {
+  width: 28%;
+  margin-right: 2%
+}
+.embed .b {
+  width: 70%;
+  margin-right: 0%;
+  margin-left: 0%;
+}
+
 #container {
   min-height: 500px;
 }

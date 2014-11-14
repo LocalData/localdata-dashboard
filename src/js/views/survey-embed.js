@@ -50,9 +50,10 @@ define(function (require) {
         survey: this.survey.toJSON()
       }));
 
-      this.mapAndListView = new ResponseViews.MapAndListView({
+      this.mapAndListView = new ResponseViews.EmbeddedResponseMapView({
         forms: this.forms,
-        survey: this.survey
+        survey: this.survey,
+        showFilter: true
       });
 
       this.mapAndListView.showFilters();

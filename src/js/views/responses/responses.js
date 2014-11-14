@@ -10,10 +10,6 @@ define(function(require, exports, module) {
   var Backbone = require('backbone');
   var moment = require('moment');
 
-  // LocalData
-  var settings = require('settings');
-  var api = require('api');
-
   // Models
   var Responses = require('models/responses');
 
@@ -26,6 +22,7 @@ define(function(require, exports, module) {
 
   // Templates
   var mapListTemplate = require('text!templates/responses/map-list.html');
+  var embeddedResponseMapTemplate = require('text!templates/responses/embed-map-list.html');
 
 
   var ResponseViews = {};
@@ -371,6 +368,151 @@ define(function(require, exports, module) {
     }
 
   });
+
+  /*
+   * Map-oriented view for embedded pages.
+   */
+  ResponseViews.EmbeddedResponseMapView = Backbone.View.extend({
+    filters: {},
+    firstRun: true,
+    mapView: null,
+    listView: null,
+    responses: null,
+    survey: null,
+
+    template: _.template(embeddedResponseMapTemplate),
+
+    el: '#response-view-container',
+
+    initialize: function(options) {
+      _.bindAll(this,
+        // XXX
+        // Filtering
+        'showFilters',
+
+        'mapClickHandler'
+      );
+
+      this.responses = options.responses;
+
+      this.forms = options.forms;
+      this.forms.on('reset', this.updateFilterChoices, this);
+
+      this.survey = options.survey;
+
+      this.showFilter = options.showFilter;
+
+      this.render();
+    },
+
+    render: function () {
+      // Actually render the page
+      var context = {
+        survey: this.survey.toJSON()
+      };
+      this.$el.html(this.template(context));
+
+      // XXX
+      //// Show collector stats
+      //this.collectorStatsView = new CollectorStatsView({
+      //  survey: this.survey
+      //});
+
+      // Set up the map view, now that the root exists.
+      if (this.mapView === null) {
+        this.mapView = new MapView({
+          el: $('#map-view-container'),
+          survey: this.survey,
+          clickHandler: this.mapClickHandler
+        });
+      }
+
+      // Render the map
+      this.mapView.render();
+
+      this.filterView = new FilterView({
+        collection: this.responses,
+        survey: this.survey,
+        forms: this.forms,
+        map: this.mapView
+      });
+      $('#filter-view-container').html(this.filterView.$el);
+
+      // Set up the response count view.
+      this.countView = new ResponseCountView({
+        model: this.survey
+      }).render();
+      $('#response-count-container').html(this.countView.$el);
+
+      // Listen for new responses
+      this.mapView.listenTo(this.survey, 'change', this.mapView.update);
+
+      if (this.showFilter) {
+        $('.factoid').addClass('small-factoid');
+        this.$el.addClass('bigb');
+
+        // Render the filter
+        $('#filter-view-container').show();
+      }
+    },
+
+    mapClickHandler: function (event) {
+      if (!event.data || !event.data.object_id) {
+        return;
+      }
+
+      var rc = new Responses.Collection({
+        surveyId: this.survey.get('id'),
+        objectId: event.data.object_id
+      });
+
+      var surveyOptions = this.survey.get('surveyOptions') || {};
+      var selectedItemListView = new ResponseListView({
+        el: '#responses-list-container',
+        collection: rc,
+        labels: this.forms.getQuestions(),
+        surveyOptions: surveyOptions
+      });
+
+      selectedItemListView.on('remove', function () {
+        this.mapView.deselectObject();
+      }.bind(this));
+
+      rc.on('destroy', function () {
+        this.mapView.update();
+      }.bind(this));
+    },
+
+    showFilters: function () {
+      $('.factoid').addClass('small-factoid');
+      this.$el.addClass('bigb');
+
+      // Render the filter
+      $("#filter-view-container").show();
+    },
+
+    remove: function () {
+      this.$el.remove();
+      this.stopListening();
+      // XXX
+      this.responses.off('reset', this.render, this);
+      this.responses.off('add', this.update, this);
+      this.responses.off('addSet', this.update, this);
+
+      if (this.mapView) {
+        this.mapView.remove();
+        this.mapView = null;
+      }
+
+      if (this.listView) {
+        this.listView.remove();
+        this.listView = null;
+      }
+
+      return this;
+    }
+  });
+
 
   return ResponseViews;
 
