@@ -35,6 +35,18 @@
       <% } %>
     </span>
     <span class="value"><strong><%- resp %></strong></span>
+
+    <select class="edit">
+      <% if (form[key]) { %>
+        <% _.each(form[key].answers, function(answer) { %>
+          <option
+            value="<%- answer.value %>"
+            <% if (answer.value === resp) { %> selected="selected" <% } %>>
+            <%- answer.text %>
+          </option>
+        <% }); %>
+      <% } %>
+    </select>
   </div>
 <% }); %>
 </div>
@@ -55,6 +67,10 @@
       <% } %>
     </div>
   <% } %>
+
+  <button class="mini action-show-edit"><i class="icon-pencil"></i> Edit</button>
+  <button class="mini action-hide-edit">Cancel</button>
+  <button class="mini action-save-edit">Save</button>
 
   <button class="mini danger action-show-confirm"><i class="icon-trash"></i> Delete</button>
 

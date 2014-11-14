@@ -29,6 +29,8 @@ function($, _, Backbone, events, settings, api, Responses, template) {
     events: {
       'click .action-show-confirm': 'confirm',
       'click .action-delete': 'destroy',
+      'click .action-show-edit': 'edit',
+      'click .action-save-edit': 'save',
       'click .cancel': 'cancel',
 
       'click .action-flag': 'flag',
@@ -41,10 +43,13 @@ function($, _, Backbone, events, settings, api, Responses, template) {
 
       this.surveyOptions = options.surveyOptions || {};
       this.labels = options.labels;
+      this.forms = options.forms;
     },
 
     render: function() {
-      console.log("Re-rendering model", this.model);
+      console.log("Rendering the model", this.model);
+
+      console.log("Using form", this.forms.getFlattenedForm());
       var $el = $(this.el);
 
       this.surveyOptions.loggedIn = settings.user.isLoggedIn();
@@ -52,6 +57,7 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       var options = {
         r: this.model.toJSON(),
         labels: this.labels,
+        form: this.forms.getFlattenedForm(),
         surveyOptions: this.surveyOptions
       };
 
@@ -69,6 +75,14 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       event.preventDefault();
       this.$('.confirm-delete').hide();
       this.$('.action-show-confirm').show();
+    },
+
+    edit: function(event) {
+      event.preventDefault();
+      this.$('.value').hide();
+      this.$('.edit').show();
+      this.$('.action-save-edit').show();
+      this.$('.action-cancel-edit').show();
     },
 
     destroy: function(event) {

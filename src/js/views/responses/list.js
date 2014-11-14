@@ -39,9 +39,10 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
     },
 
     initialize: function(options) {
-      console.log("Init list view", options);
+      console.log("Init list view xxx", options);
       this.listenTo(this.collection, 'add', this.render);
       this.labels = options.labels;
+      this.forms = options.forms;
       this.surveyOptions = options.surveyOptions;
     },
 
@@ -77,6 +78,7 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
         var item = new ResponseView({
           model: response,
           labels: this.labels,
+          forms: this.forms,
           surveyOptions: this.surveyOptions
         });
         $el.find('.responses-list').append(item.render().el);

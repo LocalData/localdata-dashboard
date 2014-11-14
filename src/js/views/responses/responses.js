@@ -146,6 +146,7 @@ define(function(require, exports, module) {
         el: '#responses-list-container',
         collection: rc,
         labels: this.forms.getQuestions(),
+        forms: this.forms,
         surveyOptions: surveyOptions
       });
 

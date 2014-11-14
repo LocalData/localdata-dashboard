@@ -114,6 +114,15 @@
     top: 20px;
   }
 
+  button.action-save-edit,
+  button.action-cancel-edit {
+    display: none;
+  }
+
+  .edit {
+    display: none;
+  }
+
   .time, .collector {
     color: $body-accent;
   }
