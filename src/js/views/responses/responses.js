@@ -369,6 +369,7 @@ define(function(require, exports, module) {
 
   });
 
+
   /*
    * Map-oriented view for embedded pages.
    */
