@@ -1,0 +1,30 @@
+// settings-survey
+<div class="toolbar">
+  <h2>Layer controls</h2>
+  <span class="close-settings"><i class="fa fa-close"></i> Close</span>
+</div>
+
+<div class="questions">
+  <!-- <strong class="clear">Show all repsonses</strong>-->
+
+  <div class="select">Select a question</div>
+
+  <div class="options">
+  <% _.each(_.keys(questions), function (name) {%>
+    <% if(! _.has(questions, name)) { return; } %>
+    <div class="question" data-question="<%- name %>">
+      <span class="question-title"><%- questions[name].text %></span>
+      <span class="toggle"><i class="fa fa-angle-down"></i></span>
+
+      <div class="answers">
+        <% _.each(questions[name].answers, function (answer) {%>
+          <span class="answer" data-answer="<%- answer.value %>" data-question="<%- name %>" style="background-color: <%- answer.color %>; border-color: <%- answer.color %>; ">
+            <%- answer.text %> (<%- answer.count %>)
+          </span>
+        <% }); %>
+      </div>
+    </div>
+
+  <% }); %>
+  </div>
+</div>

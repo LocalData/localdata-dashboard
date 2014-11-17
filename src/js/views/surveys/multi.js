@@ -78,6 +78,33 @@ define(function(require, exports, module) {
         // Listen for changes
       });
 
+
+
+      /*
+      XXX CREATE AND EDIT A SURVEY
+      var self = this;
+      // Dispatch the correct layers
+      this.activeLayers[layerType] = new this.layers[layerType]({
+
+        // Pass in the map and table views, so the layer can add itself
+        map: this.mapView.map,
+        tableView: this.tableView,
+
+        // Set the specific layer to create
+        layerId: layerId,
+
+        // Optional click handler
+        // TODO: not sure why we have this.
+        clickHandler: function (data) {
+          self.setupWideGraph(data);
+        }
+      });
+
+      */
+
+      // Append to the list of active layers
+      // TODO: use a model
+      this.$el.find('.layers').append(this.activeLayers[layerType].render());
       // Set up the response count view.
       // this.countView = new ResponseCountView({
       //   el: '#response-count-container',
