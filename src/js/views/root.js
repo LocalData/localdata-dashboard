@@ -24,7 +24,10 @@ define(function(require, exports, module) {
   var DesignViews = require('views/design');
   var SettingsViews = require('views/settings');
   var ReviewView = require('views/responses/review');
+
+  // Embed views
   var SurveyEmbedView = require('views/survey-embed');
+  var MultiSurveyEmbedView = require('views/surveys/multi');
 
   // Templates
   var dashboardTemplateText = require('text!templates/dashboard.html');
@@ -212,6 +215,14 @@ define(function(require, exports, module) {
       this.currentContentView = new SurveyEmbedView({
         id: settings.surveyId
       });
+    },
+
+    gotoMultiSurvey: function () {
+      this.renderEmbed();
+      console.log('Naviating to embedded multi-survey view'); // XXX
+      // We won't navigate between surveys in a single-survey embed view, so we
+      // don't need to use the factory.
+      this.currentContentView = new MultiSurveyEmbedView({});
     }
 
   });

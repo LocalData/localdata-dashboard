@@ -225,3 +225,22 @@
     text-transform: capitalize;
   }
 }
+
+
+/* Multi-survey ------------------------- */
+.multi {
+  .layer {
+    margin-bottom: 2em;
+
+    h4 {
+      font-size: 36px;
+      line-height: 1.1;
+      letter-spacing: -2px;
+
+      .count {
+        display: block;
+        font-size: 60px;
+      }
+    }
+  }
+}

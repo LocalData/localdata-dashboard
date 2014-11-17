@@ -1,0 +1,23 @@
+<div class="graph"></div>
+
+<h4 style="<% if(meta.filter) { %> color: <%= meta.filter.color %> <% } %>">
+    <span class="count"><%= meta.count %></span>
+    <% if(meta.filter) { %>
+        <%= meta.filter.legend %>
+    <% } else { %>
+        <%= kind %>
+    <% } %>
+</h4>
+
+
+<!--
+<%= kind %>
+-->
+
+<!--
+<span class="close"><i class="fa fa-close"></i> Remove layer</span>
+ -->
+
+<!--
+<div class="settings-container"></div>
+-->

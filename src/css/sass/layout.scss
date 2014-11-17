@@ -108,7 +108,8 @@ header .b {
 /* Same as .b above, but with no margins */
 .b.nomargin {
   margin-left: 0;
-  width: 41%;
+  margin-right: 0;
+  width: 50%;
 
   /* column sizing */
   float:left;
@@ -143,6 +144,7 @@ header .b {
   }
 }
 
+/*
 .embed .a {
   width: 48%;
   margin-right: 2%;
@@ -157,6 +159,7 @@ header .b {
   margin-right: 0%;
   margin-left: 0%;
 }
+*/
 
 #container {
   min-height: 500px;
