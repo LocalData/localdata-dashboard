@@ -36,7 +36,7 @@
     </span>
     <span class="value"><strong><%- resp %></strong></span>
 
-    <select class="edit">
+    <select class="edit" data-question="<%- key %>">
       <% if (form[key]) { %>
         <% _.each(form[key].answers, function(answer) { %>
           <option
@@ -69,7 +69,7 @@
   <% } %>
 
   <button class="mini action-show-edit"><i class="icon-pencil"></i> Edit</button>
-  <button class="mini action-hide-edit">Cancel</button>
+  <button class="mini action-cancel-edit">Cancel</button>
   <button class="mini action-save-edit">Save</button>
 
   <button class="mini danger action-show-confirm"><i class="icon-trash"></i> Delete</button>

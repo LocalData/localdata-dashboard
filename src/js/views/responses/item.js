@@ -26,13 +26,21 @@ function($, _, Backbone, events, settings, api, Responses, template) {
 
     template: _.template(template),
 
+    responseEdits: {}, // changes to make to the responses object.
+
     events: {
+      // Deleting
       'click .action-show-confirm': 'confirm',
       'click .action-delete': 'destroy',
-      'click .action-show-edit': 'edit',
-      'click .action-save-edit': 'save',
       'click .cancel': 'cancel',
 
+      // Editing
+      'click .action-show-edit': 'edit',
+      'click .action-save-edit': 'save',
+      'click .action-cancel-edit': 'cancelEdit',
+      'change .edit': 'questionEdited',
+
+      // Flagging
       'click .action-flag': 'flag',
       'click .action-accept': 'accept'
     },
@@ -65,6 +73,7 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       return this;
     },
 
+    // Deleting
     confirm: function(event) {
       event.preventDefault();
       this.$('.action-show-confirm').hide();
@@ -75,14 +84,6 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       event.preventDefault();
       this.$('.confirm-delete').hide();
       this.$('.action-show-confirm').show();
-    },
-
-    edit: function(event) {
-      event.preventDefault();
-      this.$('.value').hide();
-      this.$('.edit').show();
-      this.$('.action-save-edit').show();
-      this.$('.action-cancel-edit').show();
     },
 
     destroy: function(event) {
@@ -103,6 +104,54 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       });
     },
 
+
+    // Editing
+    edit: function(event) {
+      event.preventDefault();
+      this.$('.value').hide();
+      this.$('.edit').show();
+      this.$('.action-save-edit').show();
+      this.$('.action-cancel-edit').show();
+    },
+
+    questionEdited: function(event) {
+      console.log("Model", this.model);
+      var question = $(event.target).attr('data-question');
+      var answer = $(event.target).val();
+
+      this.responseEdits[question] = answer;
+    },
+
+    cancelEdit: function(event) {
+      event.preventDefault();
+
+      this.$('.value').show();
+      this.$('.edit').hide();
+      this.$('.action-save-edit').hide();
+      this.$('.action-cancel-edit').hide();
+
+      // Fetch the attributes to make sure we have the latest version.
+      this.model.fetch();
+    },
+
+    save: function(event) {
+      event.preventDefault();
+
+      this.model.save({
+        responses: this.responseEdits
+      }, {
+        patch: true,
+        wait: true, // wait until sync to update attributes
+        success: function (event) {
+          // We need to fetch the model because patch resets the local
+          // attributes.
+          this.model.fetch({ reset: true });
+        }.bind(this)
+      });
+    },
+
+
+    // Flagging
     flag: function(event) {
       event.preventDefault();
       this.model.save({
