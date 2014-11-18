@@ -20,6 +20,8 @@ define(function(require, exports, module) {
   var MapView = require('views/maps/multi-map');
   var CollectorStatsView = require('views/surveys/stats-collector');
 
+  var SurveyView = require('views/surveys/survey');
+
   // Templates
   var embeddedSurveyTemplate = require('text!templates/responses/embed-multi.html');
 
@@ -34,7 +36,8 @@ define(function(require, exports, module) {
     listView: null,
     responses: null,
 
-    surveyIds: [],
+    surveyIds: ['06a311f0-4b1a-11e3-aca4-1bb74719513f', '44f94b00-4005-11e4-b627-69499f28b4e5'],
+    activeLayers: {},
 
     template: _.template(embeddedSurveyTemplate),
 
@@ -59,7 +62,6 @@ define(function(require, exports, module) {
       };
       this.$el.html(this.template(context));
 
-
       // Set up the map view, now that the root exists.
       if (this.mapView === null) {
         console.log("Creating map view map-view-container", $('#map-view-container'));
@@ -72,44 +74,20 @@ define(function(require, exports, module) {
       // Render the map
       this.mapView.render();
 
-      _.each(this.surveyId, function(surveyId) {
+      _.each(this.surveyIds, function(surveyId) {
         // Create a model
+        var surveyLayer = new SurveyView({
+          map: this.mapView.map,
+          layerId: surveyId
+        });
 
-        // Listen for changes
-      });
 
+        // Add the survey to the list
+        this.$el.find('.layers').append(surveyLayer.render());
 
-
-      /*
-      XXX CREATE AND EDIT A SURVEY
-      var self = this;
-      // Dispatch the correct layers
-      this.activeLayers[layerType] = new this.layers[layerType]({
-
-        // Pass in the map and table views, so the layer can add itself
-        map: this.mapView.map,
-        tableView: this.tableView,
-
-        // Set the specific layer to create
-        layerId: layerId,
-
-        // Optional click handler
-        // TODO: not sure why we have this.
-        clickHandler: function (data) {
-          self.setupWideGraph(data);
-        }
-      });
-
-      */
-
-      // Append to the list of active layers
-      // TODO: use a model
-      this.$el.find('.layers').append(this.activeLayers[layerType].render());
-      // Set up the response count view.
-      // this.countView = new ResponseCountView({
-      //   el: '#response-count-container',
-      //   model: this.survey
-      // }).render();
+        // Save it to activeLayers for future reference.
+        this.activeLayers[surveyId] = surveyLayer;
+      }.bind(this));
     },
 
     mapClickHandler: function (event) {

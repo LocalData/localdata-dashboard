@@ -1,6 +1,3 @@
-// data-sources/survey
-
-
 /*jslint nomen: true */
 /*globals define, cartodb, Rickshaw: true */
 
@@ -21,17 +18,15 @@ define(function (require) {
   var Stats = require('models/stats');
 
   // Views
-  var SettingsView = require('views/projects/datalayers/survey/settings-survey');
+  var LayerFilterView = require('views/surveys/layer-filter');
 
   // Templates
-  var template = require('text!templates/projects/layerControl.html');
-  var tableTemplate = require('text!templates/projects/surveys/table-survey.html');
+  var template = require('text!templates/layers/layerControl.html');
 
 
   // The View
   var LayerControl = Backbone.View.extend({
     template: _.template(template),
-    tableTemplate: _.template(tableTemplate),
 
     events: {
       'click .close': 'close',
@@ -59,7 +54,6 @@ define(function (require) {
 
       console.log("Creating survey layer with options", options);
       this.map = options.map;
-      this.table = options.tableView;
       this.surveyId = options.layerId;
 
       this.survey = new Surveys.Model({ id: this.surveyId });
@@ -123,10 +117,9 @@ define(function (require) {
       this.stats = new Stats.Model({
         id: this.survey.get('id')
       });
-      this.stats.on('reset', this.setupTable);
       this.stats.fetch({reset: true});
 
-      this.settings = new SettingsView({
+      this.settings = new LayerFilterView({
         survey: this.survey,
         forms: this.forms,
         stats: this.stats
@@ -137,15 +130,6 @@ define(function (require) {
 
       var $el = this.settings.render();
       this.$el.find('.settings-container').html($el);
-    },
-
-    setupTable: function() {
-      var $table = this.tableTemplate({
-        survey: this.survey.toJSON(),
-        stats: this.stats.toJSON()
-      });
-      console.log("Setting table", this.table, this.stats.toJSON());
-      this.table.$el.append($table);
     },
 
     showSettings: function() {
