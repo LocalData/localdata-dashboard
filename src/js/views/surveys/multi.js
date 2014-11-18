@@ -27,20 +27,38 @@ define(function(require, exports, module) {
 
 
   /*
-   * Map-oriented view for embedded pages.
+   * Multi-survey, embedded view.
+   *
+   * CONFIGURATION:
+   *   - The list of surveys controls what gets displayed
+   *     If there is no filter property, all responses will be shown.
    */
   var MultiSurveyView = Backbone.View.extend({
-    filters: {},
-    firstRun: true,
-    mapView: null,
-    listView: null,
-    responses: null,
-
-    surveyIds: ['06a311f0-4b1a-11e3-aca4-1bb74719513f', '44f94b00-4005-11e4-b627-69499f28b4e5'],
     activeLayers: {},
+    mapView: null,
+
+    title: 'Walkscope Survey',
+    description: '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>',
+
+    surveys: [{
+      surveyId: '44f94b00-4005-11e4-b627-69499f28b4e5',
+      filter: {
+        question: 'Is-the-property-maintained',
+        answer: 'Yes',
+        legend: 'Maintained properties',
+        color: '#f15a24'
+      }
+    }, {
+      surveyId: '44f94b00-4005-11e4-b627-69499f28b4e5',
+      filter: {
+        question: 'Is-there-dumping-on-the-property',
+        answer: 'No',
+        legend: 'No dumping',
+        color: '#a743c3'
+      }
+    }],
 
     template: _.template(embeddedSurveyTemplate),
-
     el: '#container',
 
     events: {
@@ -58,7 +76,8 @@ define(function(require, exports, module) {
     render: function () {
       // Actually render the page
       var context = {
-        //survey: this.survey.toJSON()
+        title: this.title,
+        description: this.description
       };
       this.$el.html(this.template(context));
 
@@ -67,6 +86,10 @@ define(function(require, exports, module) {
         console.log("Creating map view map-view-container", $('#map-view-container'));
         this.mapView = new MapView({
           $el: $('#map-view-container'),
+          config: {
+            center: [40.715678,-74.213848],
+            zoom: 15
+          },
           clickHandler: this.mapClickHandler
         });
       }
@@ -74,19 +97,21 @@ define(function(require, exports, module) {
       // Render the map
       this.mapView.render();
 
-      _.each(this.surveyIds, function(surveyId) {
+      _.each(this.surveys, function(survey) {
         // Create a model
         var surveyLayer = new SurveyView({
+          $el: this.$el.find('.layers'),
           map: this.mapView.map,
-          layerId: surveyId
+          layerId: survey.surveyId,
+          filter: survey.filter
         });
 
 
         // Add the survey to the list
-        this.$el.find('.layers').append(surveyLayer.render());
+        this.$el.find('.layers').append(surveyLayer.$el);
 
         // Save it to activeLayers for future reference.
-        this.activeLayers[surveyId] = surveyLayer;
+        this.activeLayers[survey.surveyId] = surveyLayer;
       }.bind(this));
     },
 
@@ -115,28 +140,6 @@ define(function(require, exports, module) {
       rc.on('destroy', function () {
         this.mapView.update();
       }.bind(this));
-    },
-
-    remove: function () {
-      this.$el.remove();
-      this.stopListening();
-
-      // XXX
-      this.responses.off('reset', this.render, this);
-      this.responses.off('add', this.update, this);
-      this.responses.off('addSet', this.update, this);
-
-      if (this.mapView) {
-        this.mapView.remove();
-        this.mapView = null;
-      }
-
-      if (this.listView) {
-        this.listView.remove();
-        this.listView = null;
-      }
-
-      return this;
     }
   });
 

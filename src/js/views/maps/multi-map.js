@@ -25,6 +25,7 @@ define(function(require, exports, module) {
     initialize: function(options) {
       console.log("Init map view", options);
       _.bindAll(this, 'render');
+      this.config = options.config
 
       this.$el = options.$el;
     },
@@ -32,8 +33,8 @@ define(function(require, exports, module) {
     render: function() {
       // Initialize the map
       this.map = new L.map(this.$el[0], {
-        zoom: 15,
-        center: [42.331427,-83.045754]
+        zoom: this.config.zoom,
+        center: this.config.center
       });
       this.baseLayer = L.tileLayer(settings.baseLayer);
       this.map.addLayer(this.baseLayer);
