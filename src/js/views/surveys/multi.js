@@ -34,7 +34,7 @@ define(function(require, exports, module) {
    *     If there is no filter property, all responses will be shown.
    */
   var MultiSurveyView = Backbone.View.extend({
-    activeLayers: {},
+    activeLayers: [],
     mapView: null,
 
     title: 'Walkscope Survey',
@@ -67,10 +67,29 @@ define(function(require, exports, module) {
 
     initialize: function(options) {
       _.bindAll(this,
-        'mapClickHandler'
+        'mapClickHandler',
+        'totalUp'
       );
 
       this.render();
+    },
+
+    totalUp: function() {
+      var totaled = [];
+      var total = 0;
+      _.each(this.activeLayers, function(surveyView) {
+        var id = surveyView.survey.get('id');
+
+        // Don't double-count surveys
+        if (_.contains(totaled, id)) {
+          return;
+        }
+
+        total = total + surveyView.survey.get('responseCount') || 0;
+        totaled.push(id);
+      });
+
+      this.$el.find('.response-count .count').html(total);
     },
 
     render: function () {
@@ -106,12 +125,14 @@ define(function(require, exports, module) {
           filter: survey.filter
         });
 
+        surveyLayer.survey.on('change', this.totalUp);
+
 
         // Add the survey to the list
         this.$el.find('.layers').append(surveyLayer.$el);
 
         // Save it to activeLayers for future reference.
-        this.activeLayers[survey.surveyId] = surveyLayer;
+        this.activeLayers.push(surveyLayer);
       }.bind(this));
     },
 

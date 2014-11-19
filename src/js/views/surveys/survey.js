@@ -24,6 +24,10 @@ define(function (require) {
   // Templates
   var template = require('text!templates/surveys/survey-control.html');
 
+
+  var MIN_GRID_ZOOM = 14; // furthest out we'll have interactive grids.
+
+
   function downgrade(f) {
     return function g(data) {
       console.log("Downgrade", data);
@@ -71,6 +75,7 @@ define(function (require) {
       this.survey = new Surveys.Model({ id: this.surveyId });
       //this.survey.on('change', this.processData);
       this.survey.fetch();
+      this.getTileJSON();
 
       this.forms = new Forms.Collection({ surveyId: this.surveyId });
       this.stats = new Stats.Model({ id: this.surveyId });
@@ -100,7 +105,6 @@ define(function (require) {
 
     processData: function() {
       this.render();
-      this.getTileJSON();
     },
 
     /**
@@ -133,12 +137,35 @@ define(function (require) {
       });
     },
 
+    addGridLayer: function(tilejson) {
+      this.gridLayer = new L.UtfGrid(tilejson.grids[0], {
+        resolution: 4
+      });
+
+      // Make sure the grid layer is on top.
+      if (this.map.getZoom() >= MIN_GRID_ZOOM) {
+        this.map.addLayer(this.gridLayer);
+      }
+
+      this.gridLayer.on('click', this.selectObject);
+      if (this.clickHandler) {
+        this.gridLayer.on('click', this.clickHandler);
+      }
+    },
+
+    selectObject: function() {
+      console.log("selected");
+    },
+
+
     addTileLayer: function(tilejson) {
       if(this.tileLayer) {
         this.map.removeLayer(this.tileLayer);
       }
       this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
       this.map.addLayer(this.tileLayer);
+
+      this.addGridLayer(tilejson);
     },
 
     doneLoading: function() {
