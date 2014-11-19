@@ -71,6 +71,7 @@ define(function (require) {
       this.survey = new Surveys.Model({ id: this.surveyId });
       //this.survey.on('change', this.processData);
       this.survey.fetch();
+      this.getTileJSON();
 
       this.forms = new Forms.Collection({ surveyId: this.surveyId });
       this.stats = new Stats.Model({ id: this.surveyId });
@@ -100,7 +101,6 @@ define(function (require) {
 
     processData: function() {
       this.render();
-      this.getTileJSON();
     },
 
     /**

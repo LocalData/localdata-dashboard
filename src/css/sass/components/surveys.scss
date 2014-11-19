@@ -213,18 +213,29 @@
 
 /* Multi-survey ------------------------- */
 .multi {
+  h3 {
+    line-height: 1.1;
+    letter-spacing: -2px;
+    color: #58aeff;
+
+    .count {
+      display: block;
+      font-size: 60px;
+    }
+  }
+
+  h4 {
+    font-size: 36px;
+    line-height: 1.1;
+    letter-spacing: -2px;
+
+    .count {
+      display: block;
+      font-size: 60px;
+    }
+  }
+
   .layer {
     margin-bottom: 2em;
-
-    h4 {
-      font-size: 36px;
-      line-height: 1.1;
-      letter-spacing: -2px;
-
-      .count {
-        display: block;
-        font-size: 60px;
-      }
-    }
   }
 }
