@@ -27,10 +27,12 @@ define(function (require) {
 
   var MIN_GRID_ZOOM = 14; // furthest out we'll have interactive grids.
 
+  function flip(a) {
+    return [a[1], a[0]];
+  }
 
   function downgrade(f) {
     return function g(data) {
-      console.log("Downgrade", data);
       return f(null, data);
     };
   }
@@ -56,7 +58,8 @@ define(function (require) {
         'doneLoading',
         'getForms',
         'getTileJSON',
-        'addTileLayer'
+        'addTileLayer',
+        'fitBounds'
 
         // Settings
         // XXX NOT USED IN MULTI EMBED
@@ -66,23 +69,19 @@ define(function (require) {
         // 'clearFilter'
       );
 
-      console.log("Creating survey layer with options", options);
       this.map = options.map;
       this.surveyId = options.layerId;
 
       this.filter = options.filter;
 
       this.survey = new Surveys.Model({ id: this.surveyId });
-      //this.survey.on('change', this.processData);
+      this.survey.on('change', this.fitBounds);
       this.survey.fetch();
       this.getTileJSON();
 
       this.forms = new Forms.Collection({ surveyId: this.surveyId });
       this.stats = new Stats.Model({ id: this.surveyId });
       this.stats.fetch({reset: true});
-      this.stats.on('change', function() {
-        console.log("STATS RESET", this.stats);
-      }.bind(this));
 
       // Don't render the page until we have the necessary models.
       var self = this;
@@ -97,7 +96,7 @@ define(function (require) {
           self.forms.once('reset', downgrade(next));
         }
       ], function (error) {
-        console.log("GOT EVERYTHING", error);
+        console.log("Got everything", error);
         self.processData();
       });
 
@@ -135,6 +134,21 @@ define(function (require) {
       .fail(function(jqXHR, textStatus, errorThrown) {
         console.log("Error fetching tilejson", jqXHR, textStatus, errorThrown);
       });
+    },
+
+    fitBounds: function() {
+      var bounds = this.survey.get('responseBounds');
+      if (bounds) {
+        bounds = [flip(bounds[0]), flip(bounds[1])];
+        if (bounds[0][0] === bounds[1][0] || bounds[0][1] === bounds[1][1]) {
+          this.map.setView(bounds[0], 15);
+        } else {
+          this.map.fitBounds(bounds, {
+            reset: true,
+            maxZoom: 18
+          });
+        }
+      }
     },
 
     addGridLayer: function(tilejson) {

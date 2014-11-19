@@ -222,7 +222,9 @@ define(function(require, exports, module) {
       console.log('Naviating to embedded multi-survey view'); // XXX
       // We won't navigate between surveys in a single-survey embed view, so we
       // don't need to use the factory.
-      this.currentContentView = new MultiSurveyEmbedView({});
+      this.currentContentView = new MultiSurveyEmbedView({
+        surveyId: settings.surveyId
+      });
     }
 
   });

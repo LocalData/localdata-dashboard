@@ -33,7 +33,7 @@ function($, _, Backbone, settings, api) {
       "surveys/:slug/settings": "settings",
 
       'embed/surveys/:slug': 'embed',
-      'multi': 'multi',
+      'multi/surveys/:slug': 'multi',
 
       "*actions": "default_route"
     },
@@ -102,7 +102,7 @@ function($, _, Backbone, settings, api) {
     },
 
     multi: function (slug) {
-      this.controller.gotoMultiSurvey();
+      api.setSurveyIdFromSlug(slug, this.controller.gotoMultiSurvey);
     },
 
     default_route: function(actions) {

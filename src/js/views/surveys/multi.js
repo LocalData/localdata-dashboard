@@ -37,10 +37,12 @@ define(function(require, exports, module) {
     activeLayers: [],
     mapView: null,
 
-    title: 'Walkscope Survey',
     description: '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>',
 
-    surveys: [{
+    surveys: [],
+
+
+    gtech: [{
       surveyId: '44f94b00-4005-11e4-b627-69499f28b4e5',
       filter: {
         question: 'Is-the-property-maintained',
@@ -58,6 +60,24 @@ define(function(require, exports, module) {
       }
     }],
 
+    walkscope: [{
+      surveyId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
+      filter: {
+        question: 'What-would-you-like-to-record',
+        answer: 'Sidewalk-Quality',
+        legend: 'Sidewalk inspections',
+        color: '#a743c3'
+      }
+    }, {
+      surveyId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
+      filter: {
+        question: 'What-would-you-like-to-record',
+        answer: 'Intersection-Quality',
+        legend: 'Intersection inspections',
+        color: '#f15a24'
+      }
+    }],
+
     template: _.template(embeddedSurveyTemplate),
     el: '#container',
 
@@ -70,6 +90,16 @@ define(function(require, exports, module) {
         'mapClickHandler',
         'totalUp'
       );
+
+      // XXX TODO
+      // Pull from survey options?
+      // Load the right layers for each survey.
+      this.surveyId = options.surveyId;
+      if (this.surveyId === 'ec7984d0-2719-11e4-b45c-5d65d83b39b6') {
+        this.surveys = this.walkscope;
+      } else {
+        this.surveys = this.gtech;
+      }
 
       this.render();
     },
@@ -95,14 +125,12 @@ define(function(require, exports, module) {
     render: function () {
       // Actually render the page
       var context = {
-        title: this.title,
         description: this.description
       };
       this.$el.html(this.template(context));
 
       // Set up the map view, now that the root exists.
       if (this.mapView === null) {
-        console.log("Creating map view map-view-container", $('#map-view-container'));
         this.mapView = new MapView({
           $el: $('#map-view-container'),
           config: {
