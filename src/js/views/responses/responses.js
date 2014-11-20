@@ -465,11 +465,15 @@ define(function(require, exports, module) {
       });
 
       var surveyOptions = this.survey.get('surveyOptions') || {};
+      // FIXME: respect the actual configured options
+      surveyOptions.comments = true;
       var selectedItemListView = new ResponseListView({
         el: '#responses-list-container',
         collection: rc,
         labels: this.forms.getQuestions(),
-        surveyOptions: surveyOptions
+        surveyOptions: surveyOptions,
+        surveyId: this.survey.get('id'),
+        objectId: event.data.object_id
       });
 
       selectedItemListView.on('remove', function () {
