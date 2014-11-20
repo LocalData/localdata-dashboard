@@ -1,28 +1,20 @@
 /*jslint nomen: true */
 /*globals define: true */
 
-define([
-  'jquery',
-  'lib/lodash',
-  'backbone',
-  'lib/tinypubsub',
+define(function (require) {
+  'use strict';
+  var _ = require('lib/lodash');
+  var Backbone = require('backbone');
 
   // LocalData
-  'settings',
-  'api',
-
-  // Models
-  'models/responses',
+  var settings = require('settings');
 
   // Views
-  'views/responses/item',
+  var ResponseView = require('views/responses/item');
 
   // Templates
-  'text!templates/responses/list.html'
-],
-
-function($, _, Backbone, events, settings, api, Responses, ResponseView, template) {
-  'use strict';
+  var template = require('text!templates/responses/list.html');
+  var commentTemplate = require('text!templates/responses/comments.html');
 
   /**
    * Intended for shorter lists of responses (arbitrarily <25)
@@ -33,6 +25,7 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
     className: 'responses',
 
     template: _.template(template),
+    commentTemplate: _.template(commentTemplate),
 
     events: {
       'click .close': 'remove'
@@ -43,6 +36,8 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
       this.listenTo(this.collection, 'add', this.render);
       this.labels = options.labels;
       this.surveyOptions = options.surveyOptions;
+      this.surveyId = options.surveyId;
+      this.objectId = options.objectId;
     },
 
     remove: function() {
@@ -66,21 +61,29 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
         name = first.get('parcel_id');
       }
 
-      var $el = $(this.el);
-      $el.html(this.template({
+      this.$el.html(this.template({
         name: name,
         responses: this.collection.toJSON(),
         googleKey: settings.GoogleKey
       }));
 
+      var $list = this.$('.responses-list');
       this.collection.each(function(response) {
         var item = new ResponseView({
           model: response,
           labels: this.labels,
           surveyOptions: this.surveyOptions
         });
-        $el.find('.responses-list').append(item.render().el);
+        $list.append(item.render().el);
       }.bind(this));
+
+      if (this.surveyOptions.comments) {
+        $list.append(this.commentTemplate({
+          id: 'ptxdev', // FIXME: read from the survey options
+          surveyId: this.surveyId,
+          objectId: this.objectId
+        }));
+      }
 
       return this;
     }
