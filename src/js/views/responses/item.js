@@ -55,9 +55,6 @@ function($, _, Backbone, events, settings, api, Responses, template) {
     },
 
     render: function() {
-      console.log("Rendering the model", this.model);
-
-      console.log("Using form", this.forms.getFlattenedForm());
       var $el = $(this.el);
 
       this.surveyOptions.loggedIn = settings.user.isLoggedIn();
@@ -117,7 +114,6 @@ function($, _, Backbone, events, settings, api, Responses, template) {
     },
 
     questionEdited: function(event) {
-      console.log("Model", this.model);
       var question = $(event.target).attr('data-question');
       var answer = $(event.target).val();
 

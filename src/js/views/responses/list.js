@@ -39,7 +39,6 @@ function($, _, Backbone, events, settings, api, Responses, ResponseView, templat
     },
 
     initialize: function(options) {
-      console.log("Init list view xxx", options);
       this.listenTo(this.collection, 'add', this.render);
       this.labels = options.labels;
       this.forms = options.forms;
