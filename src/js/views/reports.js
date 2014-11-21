@@ -37,23 +37,30 @@ function($, _, Backbone, Chart, settings, api, Stats, template, reportTemplate) 
     initialize: function(options) {
       _.bindAll(this, 'render', 'report', 'graph');
 
-      this.surveyId = options.surveyId;
+      this.survey = options.survey;
       this.stats = options.stats;
       this.forms = options.forms;
 
-      // TODO: this is a terrible way to get the stats.
-      this.stats = new Stats.Model({
-        id: this.surveyId
-      });
-      this.stats.on('change', this.render);
+      this.stats.on('reset', this.render);
 
       this.titles = this.forms.getFlattenedForm();
       console.log("FLATTENED FORM", this.titles);
     },
 
     render: function() {
+      var context = {};
+      console.log("responseCount", this.survey);
+
+      context.count = this.survey.get('responseCount') || 0;
+      context.stats = this.stats.toJSON();
+
+      // Get list of top questions
+      var form = this.forms.getMostRecentForm();
+      console.log("Form", form);
+
+      // Get list of rest of the questions
       console.log("Rendering reports");
-      this.$el.html(this.template({}));
+      this.$el.html(this.template(context));
       console.log("Got stats", this.stats.toJSON());
       _.each(this.titles, this.graph); //was this.stats.toJSON()
     },

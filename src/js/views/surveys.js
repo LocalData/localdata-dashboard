@@ -19,6 +19,7 @@ define(function(require, exports, module) {
   var SurveyModels = require('models/surveys');
   var ResponseModels = require('models/responses');
   var FormModels = require('models/forms');
+  var StatsModels = require('models/stats');
 
   // Views
   var ExportView = require('views/export');
@@ -219,6 +220,10 @@ define(function(require, exports, module) {
       // Get the forms
       this.forms = new FormModels.Collection({surveyId: this.surveyId});
 
+      // Get the stats
+      this.stats = new StatsModels.Model({surveyId: this.surveyId});
+      this.stats.fetch({reset: true});
+
       // Don't render the page until we have the survey and the forms, both of
       // which are necessary for the content within a SurveyView.
       var self = this;
@@ -291,7 +296,8 @@ define(function(require, exports, module) {
       });
 
       this.reportsView = new ReportsView({
-        surveyId: this.surveyId,
+        survey: this.survey,
+        stats: this.stats,
         forms: this.forms
       });
 

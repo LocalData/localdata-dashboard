@@ -1,5 +1,22 @@
 <div class="out contrast">
   <div class="in">
+
+    <div class="report">
+        <%= count %>
+        total responses
+    </div>
+
+    <div class="report">
+        <% _.each(stats.Collectors, function(collector, name) { %>
+            <%= name %>
+        <% }); %>
+    </div>
+
+    <div class="report">
+        Users over time
+    </div>
+
+
     <div id="report-list"></div>
   </div>
 </div>
