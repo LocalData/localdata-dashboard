@@ -24,7 +24,7 @@ function($, _, Backbone, Chart, settings, api, Stats, template, reportTemplate) 
 
   var MAX_LENGTH = 14;
 
-  var ExportView = Backbone.View.extend({
+  var ReportView = Backbone.View.extend({
     el: '#reports-view-container',
 
     template: _.template(template),
@@ -41,15 +41,14 @@ function($, _, Backbone, Chart, settings, api, Stats, template, reportTemplate) 
       this.stats = options.stats;
       this.forms = options.forms;
 
-      this.stats.on('reset', this.render);
+      this.stats.on('change', this.render);
 
       this.titles = this.forms.getFlattenedForm();
-      console.log("FLATTENED FORM", this.titles);
     },
 
     render: function() {
       var context = {};
-      console.log("responseCount", this.survey);
+      console.log("Reports: using stats", this.stats.toJSON());
 
       context.count = this.survey.get('responseCount') || 0;
       context.stats = this.stats.toJSON();
@@ -61,7 +60,7 @@ function($, _, Backbone, Chart, settings, api, Stats, template, reportTemplate) 
       // Get list of rest of the questions
       console.log("Rendering reports");
       this.$el.html(this.template(context));
-      console.log("Got stats", this.stats.toJSON());
+
       _.each(this.titles, this.graph); //was this.stats.toJSON()
     },
 
@@ -221,6 +220,6 @@ function($, _, Backbone, Chart, settings, api, Stats, template, reportTemplate) 
     }
   });
 
-  return ExportView;
+  return ReportView;
 
 });

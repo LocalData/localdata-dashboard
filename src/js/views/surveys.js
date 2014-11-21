@@ -221,7 +221,7 @@ define(function(require, exports, module) {
       this.forms = new FormModels.Collection({surveyId: this.surveyId});
 
       // Get the stats
-      this.stats = new StatsModels.Model({surveyId: this.surveyId});
+      this.stats = new StatsModels.Model({id: this.surveyId});
       this.stats.fetch({reset: true});
 
       // Don't render the page until we have the survey and the forms, both of
