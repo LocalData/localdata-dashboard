@@ -109,6 +109,8 @@ function($, _, Backbone, events, settings, api, Responses, template) {
     edit: function(event) {
       event.preventDefault();
       this.$('.value').hide();
+      this.$('.action-show-edit').hide();
+
       this.$('.edit').show();
       this.$('.action-save-edit').show();
       this.$('.action-cancel-edit').show();
@@ -125,7 +127,11 @@ function($, _, Backbone, events, settings, api, Responses, template) {
     cancelEdit: function(event) {
       event.preventDefault();
 
+      // Show the values and edit button
       this.$('.value').show();
+      this.$('.action-show-edit').show();
+
+      // Hide the form and save / cancel buttons
       this.$('.edit').hide();
       this.$('.action-save-edit').hide();
       this.$('.action-cancel-edit').hide();
