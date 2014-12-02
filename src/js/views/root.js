@@ -78,13 +78,24 @@ define(function(require, exports, module) {
     renderDashboard: _.once(function () {
       // TODO: factor out the embedded script-tag templates and turn the
       // following into .html instead of .prepend
+      this.cleanup();
       this.$el.prepend(dashboardTemplate());
     }),
 
     renderEmbed: function () {
       // TODO: factor out the embedded script-tag templates and turn the
       // following into .html instead of .prepend
+      this.cleanup();
       this.$el.prepend(embedTemplate());
+    },
+
+    // FIXME: This is a hack. We should refactor the HTML/templates so we can
+    // cleanly replace the contents of one element (body or a containing div)
+    // with the appropriate new content.
+    cleanup: function cleanup() {
+      this.$('header').remove();
+      this.$('footer').remove();
+      this.$('#container').remove();
     },
 
     // Start Backbone routing. Separated from initialize() so that the
