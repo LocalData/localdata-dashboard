@@ -33,7 +33,11 @@ function($, _, Backbone, settings, api) {
       "surveys/:slug/settings": "settings",
 
       'embed/surveys/:slug': 'embed',
+      // TODO: a multi-dataset view is a project that can reference multiple surveys,
+      // so 'multi/survey/:slug' is not totally intuitive, but we're keeping it
+      // around for now for backward compatibility.
       'multi/surveys/:slug': 'multi',
+      'projects/:slug': 'multi',
 
       "*actions": "default_route"
     },
@@ -102,7 +106,7 @@ function($, _, Backbone, settings, api) {
     },
 
     multi: function (slug) {
-      api.setSurveyIdFromSlug(slug, this.controller.gotoMultiSurvey);
+      this.controller.gotoMultiSurvey(slug);
     },
 
     default_route: function(actions) {
