@@ -9,6 +9,7 @@ define(function(require, exports, module) {
   var _ = require('lib/lodash');
   var Backbone = require('backbone');
   var moment = require('moment');
+  var util = require('util');
 
   // Models
   var Responses = require('models/responses');
@@ -87,8 +88,7 @@ define(function(require, exports, module) {
 
     initialize: function(options) {
       _.bindAll(this,
-        'mapClickHandler',
-        'totalUp'
+        'mapClickHandler'
       );
 
       // XXX TODO
@@ -119,7 +119,7 @@ define(function(require, exports, module) {
         totaled.push(id);
       });
 
-      this.$el.find('.response-count .count').html(total);
+      this.$el.find('.response-count .count').html(util.numberWithCommas(total));
     },
 
     render: function () {
@@ -153,7 +153,7 @@ define(function(require, exports, module) {
           filter: survey.filter
         });
 
-        surveyLayer.survey.on('change', this.totalUp);
+        this.listenTo(surveyLayer.survey, 'change', this.totalUp);
 
 
         // Add the survey to the list

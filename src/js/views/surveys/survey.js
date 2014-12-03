@@ -12,6 +12,7 @@ define(function (require) {
 
   // LocalData
   var settings = require('settings');
+  var util = require('util');
 
   // Models
   var Surveys = require('models/surveys');
@@ -35,10 +36,6 @@ define(function (require) {
     return function g(data) {
       return f(null, data);
     };
-  }
-
-  function numberWithCommas(x) {
-      return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
   // The View
@@ -237,8 +234,9 @@ define(function (require) {
       // Change the response count if we have a specific filter
       if (this.filter) {
         count = this.stats.get(this.filter.question)[this.filter.answer];
-        count = numberWithCommas(count);
       }
+
+      count = util.numberWithCommas(count);
 
       var context = {
         name: this.survey.get('name') || 'LocalData Survey',
