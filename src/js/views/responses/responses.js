@@ -140,7 +140,7 @@ define(function(require, exports, module) {
 
       var surveyOptions = this.survey.get('surveyOptions') || {};
       var selectedItemListView = new ResponseListView({
-        el: '#responses-list-container',
+        el: '#responses-list',
         collection: rc,
         labels: this.forms.getQuestions(),
         surveyOptions: surveyOptions
@@ -467,7 +467,7 @@ define(function(require, exports, module) {
       // FIXME: respect the actual configured options
       surveyOptions.comments = true;
       var selectedItemListView = new ResponseListView({
-        el: '#responses-list-container',
+        el: '#responses-list',
         collection: rc,
         labels: this.forms.getQuestions(),
         surveyOptions: surveyOptions,
@@ -515,4 +515,3 @@ define(function(require, exports, module) {
   return ResponseViews;
 
 });
-
