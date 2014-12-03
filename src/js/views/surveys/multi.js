@@ -52,7 +52,7 @@ define(function(require, exports, module) {
       }]
     },
     walkscope: {
-      description: '<p>foo bar</p>',
+      description: '<p>Explore the WALKscope inventory of pedestrian infrastructure through data collected on sidewalks and intersections.</p>',
       surveys: [{
         surveyId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
         filter: {
