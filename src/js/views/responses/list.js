@@ -76,7 +76,7 @@ define(function (require) {
       }.bind(this));
 
       if (this.surveyOptions.comments) {
-        $list.append(this.commentTemplate({
+        this.$el.append(this.commentTemplate({
           id: 'ptxdev', // FIXME: read from the survey options
           surveyId: this.surveyId,
           objectId: this.objectId
