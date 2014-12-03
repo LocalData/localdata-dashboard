@@ -22,8 +22,6 @@ define(function (require) {
    * See responses/responses/ListView for a heavyweight implementation.
    */
   var ResponseListView = Backbone.View.extend({
-    className: 'responses',
-
     template: _.template(template),
     commentTemplate: _.template(commentTemplate),
 
@@ -41,6 +39,7 @@ define(function (require) {
     },
 
     remove: function() {
+      this.$el.hide();
       this.$el.empty();
       this.trigger('remove');
       this.stopListening();
@@ -67,7 +66,6 @@ define(function (require) {
         googleKey: settings.GoogleKey
       }));
 
-      var $list = this.$('.responses-list');
       this.collection.each(function(response) {
         var item = new ResponseView({
           model: response,
@@ -75,17 +73,18 @@ define(function (require) {
           forms: this.forms,
           surveyOptions: this.surveyOptions
         });
-        $list.append(item.render().el);
+        this.$el.append(item.render().el);
       }.bind(this));
 
       if (this.surveyOptions.comments) {
-        $list.append(this.commentTemplate({
+        this.$el.append(this.commentTemplate({
           id: 'ptxdev', // FIXME: read from the survey options
           surveyId: this.surveyId,
           objectId: this.objectId
         }));
       }
 
+      this.$el.show();
       return this;
     }
   });
