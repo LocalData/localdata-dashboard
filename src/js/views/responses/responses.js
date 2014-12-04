@@ -16,6 +16,7 @@ define(function(require, exports, module) {
 
   // Models
   var Responses = require('models/responses');
+  var Stats = require('models/stats');
 
   // Views
   var ResponseCountView = require('views/surveys/count');
@@ -69,6 +70,12 @@ define(function(require, exports, module) {
 
       this.survey = options.survey;
 
+      // Start getting the stats here so they load sooner.
+      this.stats = new Stats.Model({
+        id: this.survey.get('id')
+      });
+      this.stats.fetch({reset: true});
+
       this.render();
     },
 
@@ -93,6 +100,7 @@ define(function(require, exports, module) {
 
       // Show collector stats
       this.collectorStatsView = new CollectorStatsView({
+        stats: this.stats,
         survey: this.survey
       });
 
@@ -110,6 +118,7 @@ define(function(require, exports, module) {
 
       this.filterView = new FilterView({
         collection: this.responses,
+        stats: this.stats,
         survey: this.survey,
         forms: this.forms,
         map: this.mapView
