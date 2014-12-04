@@ -223,6 +223,7 @@ define(function(require, exports, module) {
         this.markAnswerSelected($answer);
       }
 
+      return this;
     },
 
     /**

@@ -88,17 +88,25 @@
 /* Responses ---------------------------------------------------------------- */
 .map-list-view {
   position: relative;
+  height: 500px;
+}
+.map-list-view.gutter {
+  margin-left: 9%;
+  margin-right: 9%;
 }
 
 .responses-list {
   position: absolute;
-  width: 50%;
+  width: 30%;
+  height: 500px;
   background: #fff;
+  opacity: 0.9;
   padding: 20px 20px 0px 20px;
   top: 0;
   right: 0;
   z-index: 10000;
   display: none;
+  overflow: scroll;
 
   button .action-delete,
   .action-show-confirm button {
@@ -112,6 +120,11 @@
     position: absolute;
     right: 20px;
     top: 20px;
+  }
+
+  .streetview {
+    width: 100%;
+    height: auto;
   }
 
   .time, .collector {
@@ -240,6 +253,9 @@
   }
 
   #map {
+    height: 100vh;
+  }
+  #map-view-container {
     height: 100vh;
   }
 }

@@ -1,3 +1,9 @@
-<div class="factoid">
+<% if (small) { %>
+  <div class="factoid small-factoid">
     <span class="number"><%= count %></span> responses collected
-</div>
+  </div>
+<% } else { %>
+  <div class="factoid">
+    <span class="number"><%= count %></span><br>responses collected
+  </div>
+<% } %>
