@@ -81,6 +81,8 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
 
       this.delayFitBounds = _.debounce(this.fitBounds, 250);
 
+      // Listen for new responses
+      this.listenTo(this.survey, 'change', this.update);
       this.render();
     },
 

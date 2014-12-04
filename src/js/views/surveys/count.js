@@ -20,14 +20,18 @@ function($, _, Backbone, events, Responses, template) {
   var ResponseCountView = Backbone.View.extend({
     template: _.template(template),
 
-    initialize: function() {
+    initialize: function (options) {
       this.listenTo(this.model, "change", this.render);
       this.listenTo(this.model, "destroy", this.remove);
+      this.small = options.small;
     },
 
     render: function() {
       var $el = $(this.el);
-      $el.html(this.template({count: this.model.getCount() }));
+      $el.html(this.template({
+        count: this.model.getCount(),
+        small: this.small
+      }));
       return this;
     }
 

@@ -34,6 +34,7 @@ define(function(require, exports, module) {
     listView: null,
     responses: null,
     survey: null,
+    mode: 'overview',
 
     template: _.template(mapListTemplate),
 
@@ -59,12 +60,17 @@ define(function(require, exports, module) {
         'mapClickHandler'
       );
 
+      // XXX I don't think we need this
       this.responses = options.responses;
 
       this.forms = options.forms;
       this.forms.on('reset', this.updateFilterChoices, this);
 
       this.survey = options.survey;
+
+      if (options.mode) {
+        this.mode = options.mode;
+      }
 
       this.render();
     },
@@ -106,26 +112,24 @@ define(function(require, exports, module) {
       this.mapView.render();
 
       this.filterView = new FilterView({
-        collection: this.responses,
+        el: $('#filter-view-container'),
         survey: this.survey,
         forms: this.forms,
         map: this.mapView
-      });
-      $("#filter-view-container").html(this.filterView.$el);
-
-      // Set up the response count view.
-      this.countView = new ResponseCountView({
-        model: this.survey
       }).render();
-      $("#response-count-container").html(this.countView.$el);
-
-      // Listen for new responses
-      this.survey.on('change', this.mapView.update);
 
       // Listen for a change in map view size
-      this.$('.b').on('transitionend', function(event) {
+      this.$el.on('transitionend', function(event) {
         this.mapView.map.invalidateSize();
       }.bind(this));
+
+      if (this.mode === 'deep-dive') {
+        // Deep dive
+        this.showFilters();
+      } else {
+        // Overview
+        this.hideFilters();
+      }
     },
 
     mapClickHandler: function(event) {
@@ -158,29 +162,57 @@ define(function(require, exports, module) {
 
     update: function() {
       if (this.firstRun) {
+        // FIXME: Do we ever end up here?
         this.render();
       }
-
-      // Update the count
-      // TODO: Use a template
-      this.$('#count').html(_.template('<%= _.size(responses) %> Response<% if(_.size(responses) != 1) { %>s<% } %>', {responses: this.responses}));
     },
 
+    // XXX Rename for clarity
     showFilters: function() {
-      $('.factoid').addClass('small-factoid');
-      this.$el.addClass('bigb');
+      // Show the deep dive controls.
+      $('.control-pane').show();
+      //$('#filter-view-container').show();
 
-      // Render the filter
-      $("#filter-view-container").show();
+      // Hide the overview controls.
+      $('#overview-container').hide();
+      $('#map-view-container').removeClass('b');
+      //this.$('.map-list-view').addClass('gutter');
+
+      // Set up the response count view.
+      this.countView = new ResponseCountView({
+        el: '#deep-dive-count-container',
+        model: this.survey,
+        small: true
+      }).render();
+      // XXX full-width map
+      // XXX left-hand controls pane
+      // XXX possibly load/show right-hand info pane
+      this.mapView.map.invalidateSize();
     },
 
+    // XXX Rename for clarity
     hideFilters: function() {
-      $('.factoid').removeClass('small-factoid');
-      this.$el.removeClass('bigb');
-
       this.update();
 
-      $("#filter-view-container").hide();
+      // Hide the deep dive controls.
+      $('.control-pane').hide();
+      $('#filter-view-container').hide();
+      //this.$('.map-list-view').removeClass('gutter');
+
+      // Show the overview controls.
+      $('#overview-container').show();
+      $('#map-view-container').addClass('b');
+
+      // Set up the response count view.
+      this.overviewCountView = new ResponseCountView({
+        el: '#overview-count-container',
+        model: this.survey
+      }).render();
+
+      // XXX
+      // right-column map
+      // XXX
+      this.mapView.map.invalidateSize();
     },
 
     remove: function () {
@@ -204,12 +236,13 @@ define(function(require, exports, module) {
     getNew: function(event) {
       console.log("Getting new responses");
       event.preventDefault();
-      this.survey.fetch();
+      var $checking = $('.checking');
+      $checking.fadeIn(250);
       this.mapView.update();
 
-      // This is a hack because it's hard to watch .fetch
-      // if there are no changes.
-      $('.checking').fadeIn(500).fadeOut(750);
+      this.survey.fetch().always(function () {
+        $checking.fadeOut(500);
+      });
     },
 
     /**
@@ -223,153 +256,6 @@ define(function(require, exports, module) {
     }
 
   });
-
-
-  /**
-   * Heavy-duty list view
-   * Includes pagination
-   * Not currently in use in the app.
-   * See views/responses/list.js for a shorter verson.
-   */
-  ResponseViews.ListView = Backbone.View.extend({
-    responses: null,
-    parentView: null,
-    visibleItemCount: 1,
-    page: -1,
-    pageCount: null,
-    nextButton: null,
-    prevButton: null,
-    responsesPagination: null,
-
-    events: {
-      'click #next': 'pageNext',
-      'click #prev': 'pagePrev',
-      'click .pageNum': 'goToPage'
-    },
-
-    initialize: function(options) {
-      _.bindAll(this, 'updateResponses', 'render', 'goToPage', 'humanizeDates', 'setupPagination', 'pagePrev', 'pageNext');
-      this.template = _.template($('#response-list').html());
-      this.paginationTemplate = _.template($('#t-responses-pagination').html());
-
-      this.responses = options.responses;
-      this.listenTo(this.responses, 'reset', this.updateResponses);
-      this.listenTo(this.responses, 'addSet', this.updateResponses);
-
-      this.parentView = options.parentView;
-
-      if (options.visibleItemCount) {
-        this.visibleItemCount = options.visibleItemCount;
-      }
-
-      this.nextButton = this.$('#next');
-      this.prevButton = this.$('#prev');
-    },
-
-    render: function() {
-      if (this.pageCount === null) {
-        this.setupPagination();
-      }
-
-      var start = this.page * this.visibleItemCount;
-      var end = start + this.visibleItemCount;
-      var thisPage = _.map(this.responses.models.slice(start, end),
-        function (item) {
-          return item.toJSON();
-        });
-
-      // Humanize the dates so people who aren't robots can read them
-      this.humanizeDates(thisPage);
-
-      // Actually render the page
-      var context = {
-        responses: thisPage,
-        startIndex: start
-      };
-
-      // Render the responses table
-      this.$el.html(this.template(context));
-      // Render the pagination elements
-      this.responsesPagination = this.$('#responses-pagination');
-      this.responsesPagination.html(this.paginationTemplate({
-        page: this.page,
-        pageCount: this.pageCount
-      }));
-    },
-
-    updateResponses: function () {
-      var rerender = false;
-      if (this.page === this.pageCount - 1 || this.pageCount === 0) {
-        rerender = true;
-      }
-
-      // We got more responses, so let's recalculate the pagination parameters.
-      this.setupPagination();
-
-      // We only need to rerender if we're on the last page. Otherwise, those
-      // new items don't affect the view yet.
-      if (rerender) {
-        this.render();
-      } else {
-        var context = {
-          page: this.page,
-          pageCount: this.pageCount
-        };
-        this.responsesPagination.html(this.paginationTemplate(context));
-      }
-    },
-
-    setupPagination: function() {
-      if (this.page === -1) {
-        this.page = 0;
-      }
-      this.pageCount = Math.ceil(this.responses.length / this.visibleItemCount);
-    },
-
-    goToPage: function(e) {
-      e.preventDefault();
-
-      // _kmq.push(['record', "Specfic result page selected"]);
-      var page = parseInt($(e.target).attr('data-page'), 10);
-      this.page = page;
-      this.render();
-    },
-
-    pageNext: function (e) {
-      e.preventDefault();
-
-      // _kmq.push(['record', "Next page of results selected"]);
-      if (this.page === this.pageCount - 1) {
-        return;
-      }
-
-      this.page += 1;
-      this.render();
-    },
-
-    pagePrev: function (e) {
-      e.preventDefault();
-
-      // _kmq.push(['record', "Previous page of results selected"]);
-      if (this.page === 0) {
-        return;
-      }
-
-      this.page -= 1;
-      this.render();
-    },
-
-    humanizeDates: function(responses, field) {
-      _.each(responses, function(response){
-        // 2012-06-26T20:00:52.283Z
-        if(_.has(response, "created")) {
-          response.createdHumanized = moment(response.created, "YYYY-MM-DDThh:mm:ss.SSSZ").format("MMM Do h:mma");
-        }
-      });
-    }
-
-  });
-
 
   /*
    * Map-oriented view for embedded pages.
@@ -434,21 +320,18 @@ define(function(require, exports, module) {
       this.mapView.render();
 
       this.filterView = new FilterView({
+        el: $('#filter-view-container'),
         collection: this.responses,
         survey: this.survey,
         forms: this.forms,
         map: this.mapView
-      });
-      $('#filter-view-container').html(this.filterView.$el);
+      }).render();
 
       // Set up the response count view.
       this.countView = new ResponseCountView({
         el: '#response-count-container',
         model: this.survey
       }).render();
-
-      // Listen for new responses
-      this.mapView.listenTo(this.survey, 'change', this.mapView.update);
 
       $('.factoid').addClass('small-factoid');
       this.$el.addClass('bigb');

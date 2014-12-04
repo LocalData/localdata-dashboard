@@ -259,15 +259,17 @@ define(function(require, exports, module) {
 
       if (surveyFullyCreated) {
         // Map the responses
+        var mode = 'overview';
+        if (this.filters) {
+          mode = 'deep-dive';
+        }
         this.mapAndListView = new ResponseViews.MapAndListView({
           // responses: this.responses,
           forms: this.forms,
-          survey: this.survey
+          survey: this.survey,
+          mode: mode
         });
 
-        if(this.filters) {
-          this.mapAndListView.showFilters();
-        }
         // Review view
         this.reviewView = new ReviewView({
           survey: this.survey,
