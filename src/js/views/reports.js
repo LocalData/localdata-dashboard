@@ -6,6 +6,7 @@ define([
   'lib/lodash',
   'backbone',
   'Chart',
+  'moment',
 
   // LocalData
   'settings',
@@ -19,7 +20,7 @@ define([
   'text!templates/responses/report.html'
 ],
 
-function($, _, Backbone, Chart, settings, api, Stats, template, reportTemplate) {
+function($, _, Backbone, Chart, moment, settings, api, Stats, template, reportTemplate) {
   'use strict';
 
   var MAX_LENGTH = 14;
@@ -43,6 +44,8 @@ function($, _, Backbone, Chart, settings, api, Stats, template, reportTemplate) 
 
       this.stats.on('change', this.render);
 
+
+
       this.titles = this.forms.getFlattenedForm();
     },
 
@@ -60,6 +63,8 @@ function($, _, Backbone, Chart, settings, api, Stats, template, reportTemplate) 
       // Get list of rest of the questions
       console.log("Rendering reports");
       this.$el.html(this.template(context));
+
+      this.makeLineChart();
 
       _.each(this.titles, this.graph); //was this.stats.toJSON()
     },
@@ -162,6 +167,54 @@ function($, _, Backbone, Chart, settings, api, Stats, template, reportTemplate) 
         tooltipFontFamily: 'NeuzeitOfficeW01-Regula',
         tooltipTitleFontFamily: 'NeuzeitOfficeW01-Regula'
       });
+    },
+
+    makeLineChart: function() {
+      // Render the chart of users over time.
+      var userActivityChart = $('#chart-user-activity').get(0);
+      if (!userActivityChart) {
+        return;
+      }
+      console.log("Using activity chart", userActivityChart);
+      var ctx = userActivityChart.getContext('2d');
+
+
+      console.log("GEtting user activity");
+
+      $.get('https://localhost:3443/api/surveys/06a311f0-4b1a-11e3-aca4-1bb74719513f/stats/activity?after=1385320961495&resolution=296000000&until=1416857080118')
+        .done(function(stats) {
+          console.log("GOT user activity data", stats);
+
+          var labels = [];
+          var data = [];
+          _.each(stats.stats.activity, function(a) {
+            data.push(a.count);
+            var created = moment(a.ts).format("Do YYYY"); //- h:mma
+            labels.push(created);
+            console.log("CHECKING", a, created);
+          });
+
+          var chartOptions = {
+            labels: labels,
+            datasets: [
+                {
+                    label: "My First dataset",
+                    fillColor: "rgba(220,220,220,0.2)",
+                    strokeColor: "rgba(220,220,220,1)",
+                    pointColor: "rgba(220,220,220,1)",
+                    pointStrokeColor: "#fff",
+                    pointHighlightFill: "#fff",
+                    pointHighlightStroke: "rgba(220,220,220,1)",
+                    data: data
+                }
+            ]
+          };
+
+          console.log("using options", labels, data);
+
+          var myLineChart = new Chart(ctx).Line(chartOptions, {}) ;
+
+        });
     },
 
     makePieChart: function(question, title, ctx) {

@@ -7,13 +7,10 @@
     </div>
 
     <div class="report">
+        <canvas id="chart-user-activity"></canvas>
         <% _.each(stats.Collectors, function(collector, name) { %>
-            <%= name %>
+            <%= name %> <%= collector %>
         <% }); %>
-    </div>
-
-    <div class="report">
-        Users over time
     </div>
 
 
