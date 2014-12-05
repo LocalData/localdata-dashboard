@@ -270,6 +270,10 @@ define(function(require, exports, module) {
           mode: mode
         });
 
+        if (this.selectedObject) {
+          this.mapAndListView.selectItem(this.selectedObject);
+        }
+
         // Review view
         this.reviewView = new ReviewView({
           survey: this.survey,
@@ -345,11 +349,14 @@ define(function(require, exports, module) {
         this.show('#settings-view-container', '#tab-survey-settings');
     },
 
-    showFilters: function() {
+    showFilters: function (options) {
       this.show('#response-view-container', '#tab-survey-filters');
       this.filters = true;
       if (this.mapAndListView) {
         this.mapAndListView.showFilters();
+        this.mapAndListView.selectItem(options.objectId);
+      } else {
+        this.selectedObject = options.objectId;
       }
     }
   });

@@ -22,6 +22,7 @@ function($, _, Backbone, settings, api) {
 
       "surveys/new": "new_survey",
       "surveys/:slug/dive": "dive",
+      "surveys/:slug/dive/:oid": "objectDetails",
       "surveys/:slug/export": "survey_export",
       "surveys/:slug/design": "design",
       "surveys/:slug/review": "review",
@@ -79,6 +80,12 @@ function($, _, Backbone, settings, api) {
 
     dive: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_filters);
+    },
+
+    objectDetails: function (slug, oid) {
+      api.setSurveyIdFromSlug(slug, function (y) {
+        this.controller.goto_filters(oid);
+      }.bind(this));
     },
 
     settings: function(slug) {
