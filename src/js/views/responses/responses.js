@@ -8,6 +8,7 @@ define(function(require, exports, module) {
   var $ = require('jquery');
   var _ = require('lib/lodash');
   var Backbone = require('backbone');
+  var events = require('lib/tinypubsub');
   var moment = require('moment');
   
   var api = require('api');
@@ -157,6 +158,10 @@ define(function(require, exports, module) {
     },
 
     mapClickHandler: function(event) {
+      if (this.mode === 'overview') {
+        events.publish('navigate', ['surveys/' + this.survey.get('slug') + '/dive']);
+      }
+      
       if (!event.data || !event.data.object_id) {
         return;
       }
@@ -167,7 +172,7 @@ define(function(require, exports, module) {
       });
 
       var surveyOptions = this.survey.get('surveyOptions') || {};
-      var selectedItemListView = new ResponseListView({
+      this.selectedItemListView = new ResponseListView({
         el: '#responses-list',
         collection: rc,
         labels: this.forms.getQuestions(),
@@ -175,7 +180,7 @@ define(function(require, exports, module) {
         surveyOptions: surveyOptions
       });
 
-      selectedItemListView.on('remove', function() {
+      this.selectedItemListView.on('remove', function() {
         this.mapView.deselectObject();
       }.bind(this));
 
@@ -191,8 +196,8 @@ define(function(require, exports, module) {
       }
     },
 
-    // XXX Rename for clarity
     showFilters: function() {
+      this.mode = 'deep-dive';
       // Show the deep dive controls.
       $('.control-pane').show();
       //$('#filter-view-container').show();
@@ -208,18 +213,21 @@ define(function(require, exports, module) {
         model: this.survey,
         small: true
       }).render();
-      // XXX possibly load/show right-hand info pane
+
       this.mapView.map.invalidateSize();
     },
 
-    // XXX Rename for clarity
     hideFilters: function() {
+      this.mode = 'overview';
       this.update();
 
       // Hide the deep dive controls.
       $('.control-pane').hide();
       $('#filter-view-container').hide();
-      //this.$('.map-list-view').removeClass('gutter');
+      if (this.selectedItemListView) {
+        this.selectedItemListView.remove();
+        this.selectedItemListView = null;
+      }
 
       // Show the overview controls and restrict the map to the right-hand column.sldfjlsdkjfldkf sfdlkj slfdj 
       $('#overview-container').show();
@@ -231,9 +239,6 @@ define(function(require, exports, module) {
         model: this.survey
       }).render();
 
-      // XXX
-      // right-column map
-      // XXX
       this.mapView.map.invalidateSize();
     },
 
