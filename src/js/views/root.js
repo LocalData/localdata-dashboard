@@ -151,7 +151,7 @@ define(function(require, exports, module) {
 
 
     // Survey dashboard routes .................................................
-    goto_survey: function(tab) {
+    goto_survey: function (tab, options) {
       this.renderDashboard();
 
       // Get or create a view for the survey
@@ -173,7 +173,7 @@ define(function(require, exports, module) {
           this.currentContentView.showSettings();
           break;
         case "filters":
-          this.currentContentView.showFilters();
+          this.currentContentView.showFilters(options);
           break;
         case "review":
           this.currentContentView.showReview();
@@ -202,9 +202,15 @@ define(function(require, exports, module) {
       this.goto_survey("export");
     },
 
-    goto_filters: function() {
-      this._router.navigate("surveys/" + settings.slug + "/dive");
-      this.goto_survey("filters");
+    goto_filters: function (objectId) {
+      if (!objectId) {
+        this._router.navigate('surveys/' + settings.slug + '/dive');
+      } else {
+        this._router.navigate('surveys/' + settings.slug + '/dive/' + objectId);
+      }
+      this.goto_survey('filters', {
+        objectId: objectId
+      });
     },
 
     goto_review: function() {
