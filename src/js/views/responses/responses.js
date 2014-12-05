@@ -9,6 +9,8 @@ define(function(require, exports, module) {
   var _ = require('lib/lodash');
   var Backbone = require('backbone');
   var moment = require('moment');
+  
+  var api = require('api');
 
   // Models
   var Responses = require('models/responses');
@@ -41,7 +43,8 @@ define(function(require, exports, module) {
     el: '#response-view-container',
 
     events: {
-      'click .refresh': 'getNew'
+      'click .refresh': 'getNew',
+      'click .address-search-button': 'search'
     },
 
     initialize: function(options) {
@@ -57,6 +60,7 @@ define(function(require, exports, module) {
         'getNew',
         'lastUpdated',
 
+        'search',
         'mapClickHandler'
       );
 
@@ -132,6 +136,26 @@ define(function(require, exports, module) {
       }
     },
 
+    /**
+     * Search for an address
+     */
+    search: function(event) {
+      event.preventDefault();
+      var address = this.$('#address-search').val();
+      var location = this.survey.get('location');
+      var $error = this.$('#map-tools .error');
+      var mapView = this.mapView;
+      api.codeAddress(address, location, function (error, results) {
+        if (error) {
+          $error.html(error.message);
+        } else {
+          $error.html('');
+        }
+        
+        mapView.goToLatLng(results.coords);
+      });
+    },
+
     mapClickHandler: function(event) {
       if (!event.data || !event.data.object_id) {
         return;
@@ -172,7 +196,7 @@ define(function(require, exports, module) {
       $('.control-pane').show();
       //$('#filter-view-container').show();
 
-      // Hide the overview controls.
+      // Hide the overview controls and expand the map.
       $('#overview-container').hide();
       $('#map-view-container').removeClass('b');
       //this.$('.map-list-view').addClass('gutter');
@@ -183,8 +207,6 @@ define(function(require, exports, module) {
         model: this.survey,
         small: true
       }).render();
-      // XXX full-width map
-      // XXX left-hand controls pane
       // XXX possibly load/show right-hand info pane
       this.mapView.map.invalidateSize();
     },
@@ -198,7 +220,7 @@ define(function(require, exports, module) {
       $('#filter-view-container').hide();
       //this.$('.map-list-view').removeClass('gutter');
 
-      // Show the overview controls.
+      // Show the overview controls and restrict the map to the right-hand column.sldfjlsdkjfldkf sfdlkj slfdj 
       $('#overview-container').show();
       $('#map-view-container').addClass('b');
 
@@ -273,12 +295,14 @@ define(function(require, exports, module) {
 
     events: {
       'click .action-show-filters': 'toggleFilters',
+      'click .address-search-button': 'search'
     },
 
     initialize: function(options) {
       _.bindAll(this,
         'toggleFilters',
-        'mapClickHandler'
+        'mapClickHandler',
+        'search'
       );
 
       this.responses = options.responses;
@@ -334,6 +358,23 @@ define(function(require, exports, module) {
 
       $('.factoid').addClass('small-factoid');
       this.$el.addClass('bigb');
+    },
+    
+    search: function(event) {
+      event.preventDefault();
+      var address = this.$('#address-search').val();
+      var location = this.survey.get('location');
+      var $error = this.$('#map-tools .error');
+      var mapView = this.mapView;
+      api.codeAddress(address, location, function (error, results) {
+        if (error) {
+          $error.html(error.message);
+        } else {
+          $error.html('');
+        }
+        
+        mapView.goToLatLng(results.coords);
+      });
     },
 
     mapClickHandler: function (event) {
