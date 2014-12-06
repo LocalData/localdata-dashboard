@@ -219,6 +219,8 @@ define(function (require) {
 
         // Remove it from the json
         parent.splice(questionIndex, 1);
+
+        this.renderForm();
       };
     },
 
