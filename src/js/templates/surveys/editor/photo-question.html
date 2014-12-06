@@ -1,0 +1,40 @@
+<div class="question" data-name="<%= question.name %>">
+  <div class="input-append input-prepend">
+    <span class="add-on"><i class="fa fa-camera"> </i></span>
+    <input type="text" placeholder="Photo upload question" value="<%= question.text %>" data-role="question" class="question-input input-xlarge">
+    <a class="btn remove"><i class="fa fa-trash-o"></i></a>
+  </div>
+  <div class="add-question-container">
+    <a class="btn add-question"><i class="fa fa-plus-square-o"></i> Add question</a>
+
+    <div class="question-choices">
+      <div class="choice add-sub-question" data-type="radio-question">
+        <span class="title">
+          <i class="fa fa-dot-circle-o"></i>
+          <i class="fa fa-circle-o"></i> Select one
+        </span>
+        Use when only one answer applies.
+        <span class="example"> Example: Rank the condition of this property.</span>
+      </div>
+      <div class="choice add-sub-question" data-type="checkbox-question">
+        <span class="title">
+          <i class="fa fa-check-square-o"></i>
+          <i class="fa fa-check-square-o"></i> Select multiple
+        </span>
+        Use when several answers may apply.
+        <span class="example">Example: Select problems that apply to this building.</span>
+      </div>
+      <div class="choice add-sub-question" data-type="text-question">
+        <span class="title"><i class="fa fa-edit"></i> Text field</span>
+        Add notes or other details.
+      </div>
+      <div class="choice add-sub-question" data-type="file-question">
+        <span class="title"><i class="fa fa-camera"></i> Photo upload</span>
+        Prompts surveyors to add a photo
+      </div>
+      <div class="choice close-add-sub-question">
+        <span class="title"><i class="fa fa-times"></i> Cancel</span>
+      </div>
+    </div>
+  </div>
+</div>

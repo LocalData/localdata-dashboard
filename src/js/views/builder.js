@@ -12,6 +12,11 @@ define(function (require) {
 
   var api = require('api');
   var template = require('text!templates/surveys/form-editor.html');
+  var addTopQuestionTemplate = require('text!templates/surveys/editor/add-top-question.html');
+  var photoQuestionTemplate = require('text!templates/surveys/editor/photo-question.html');
+  var textQuestionTemplate = require('text!templates/surveys/editor/text-question.html');
+  var multipleChoiceTemplate = require('text!templates/surveys/editor/multiple-choice.html');
+  var answerTemplate = require('text!templates/surveys/editor/answer.html');
   var Form = require('models/forms');
 
 
@@ -27,10 +32,11 @@ define(function (require) {
     questionsByParentId: {},
     repeatCounter: {},
     templates: {
-      question: _.template($('#question-edit-template').html()),
-      photoQuestion: _.template($('#photo-question-edit-template').html()),
-      textQuestion: _.template($('#text-question-edit-template').html()),
-      answer: _.template($('#answer-edit-template').html())
+      addTopQuestion: _.template(addTopQuestionTemplate),
+      question: _.template(multipleChoiceTemplate),
+      photoQuestion: _.template(photoQuestionTemplate),
+      textQuestion: _.template(textQuestionTemplate),
+      answer: _.template(answerTemplate)
     },
 
     events: {
