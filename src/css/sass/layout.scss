@@ -17,10 +17,7 @@ body {
   background: #fff;
 }
 
-/* Clear floats on .out
-   Needed because the simpler overflow: auto doesn't work as we want
-   with children that are positioned absolutely.
-   */
+/* Clearfix without overflow */
 .out:before,
 .out:after {
   content:"";
@@ -32,6 +29,7 @@ body {
 .out {
   zoom:1; /* For IE 6/7 (trigger hasLayout) */
 }
+
 
 .in {
   margin: 0px auto;

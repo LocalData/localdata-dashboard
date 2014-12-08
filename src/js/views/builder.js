@@ -12,6 +12,11 @@ define(function (require) {
 
   var api = require('api');
   var template = require('text!templates/surveys/form-editor.html');
+  var addTopQuestionTemplate = require('text!templates/surveys/editor/add-top-question.html');
+  var photoQuestionTemplate = require('text!templates/surveys/editor/photo-question.html');
+  var textQuestionTemplate = require('text!templates/surveys/editor/text-question.html');
+  var multipleChoiceTemplate = require('text!templates/surveys/editor/multiple-choice.html');
+  var answerTemplate = require('text!templates/surveys/editor/answer.html');
   var Form = require('models/forms');
 
 
@@ -27,10 +32,11 @@ define(function (require) {
     questionsByParentId: {},
     repeatCounter: {},
     templates: {
-      question: _.template($('#question-edit-template').html()),
-      photoQuestion: _.template($('#photo-question-edit-template').html()),
-      textQuestion: _.template($('#text-question-edit-template').html()),
-      answer: _.template($('#answer-edit-template').html())
+      addTopQuestion: _.template(addTopQuestionTemplate),
+      question: _.template(multipleChoiceTemplate),
+      photoQuestion: _.template(photoQuestionTemplate),
+      textQuestion: _.template(textQuestionTemplate),
+      answer: _.template(answerTemplate)
     },
 
     events: {
@@ -119,6 +125,25 @@ define(function (require) {
         };
       }
 
+
+      // Handle showing/hiding the add-question interfaces through
+      // delegated events.
+      this.$el.on('click', '.add-question', function (event) {
+        event.preventDefault();
+        $(this).parent().find('> .question-choices').slideDown();
+      });
+
+      this.$el.on('click', '.close-add-sub-question', function(event) {
+        event.preventDefault();
+        $(this).parents('.question-choices').slideUp();
+      });
+
+      // Render the initial add-question interface.
+      var createQuestionProxy = $.proxy(this.createQuestionFactory(formData.questions, -1), this);
+      $(this.templates.addTopQuestion())
+      .appendTo(this.formQuestions)
+      .find('.add-sub-question').click(createQuestionProxy);
+
       // Render form
       _.each(formData.questions, function (question, questionIndex) {
         this.renderQuestion(question, undefined, undefined, undefined, undefined, questionIndex, formData.questions);
@@ -194,6 +219,8 @@ define(function (require) {
 
         // Remove it from the json
         parent.splice(questionIndex, 1);
+
+        this.renderForm();
       };
     },
 
@@ -352,19 +379,6 @@ define(function (require) {
       var deleteQuestionProxy = $.proxy(this.deleteQuestion($question, parent, questionIndex), this);
       $question.find('> div .remove').click(deleteQuestionProxy);
 
-
-      // Add a question
-      // Show add sub-question
-      $question.find('.add-question').click(function(event) {
-        event.preventDefault();
-        $(this).parent().find('> .question-choices').slideDown();
-      });
-
-      // Hide add sub-question
-      $question.find('.close-add-sub-question').click(function(event) {
-        event.preventDefault();
-        $(this).parents('.question-choices').slideUp();
-      });
 
       // Listen for a request to add a question
       var createQuestionProxy = $.proxy(this.createQuestionFactory(parent, questionIndex), this);

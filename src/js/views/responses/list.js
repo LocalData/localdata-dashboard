@@ -30,9 +30,9 @@ define(function (require) {
     },
 
     initialize: function(options) {
-      console.log("Init list view", options);
       this.listenTo(this.collection, 'add', this.render);
       this.labels = options.labels;
+      this.forms = options.forms;
       this.surveyOptions = options.surveyOptions;
       this.surveyId = options.surveyId;
       this.objectId = options.objectId;
@@ -70,6 +70,7 @@ define(function (require) {
         var item = new ResponseView({
           model: response,
           labels: this.labels,
+          forms: this.forms,
           surveyOptions: this.surveyOptions
         });
         this.$el.append(item.render().el);

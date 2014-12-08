@@ -127,6 +127,15 @@
     height: auto;
   }
 
+  button.action-save-edit,
+  button.action-cancel-edit {
+    display: none;
+  }
+
+  .edit {
+    display: none;
+  }
+
   .time, .collector {
     color: $body-accent;
   }
@@ -156,6 +165,13 @@
       .review-tools {
         display: inline-block;
         float: left;
+        padding-right: 5px;
+        border-right: 3px solid $thinpink;
+        margin-right: 15px;
+
+        button {
+          margin-bottom: 0;
+        }
       }
 
       .action-show-confirm {
