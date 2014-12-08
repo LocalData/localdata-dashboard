@@ -6,6 +6,8 @@ define([
   'lib/lodash',
   'backbone',
   'Chart',
+  'd3',
+  'lib/c3',
   'moment',
 
   // LocalData
@@ -17,19 +19,44 @@ define([
 
   // Templates
   'text!templates/responses/reports.html',
-  'text!templates/responses/report.html'
+  'text!templates/responses/report.html',
+  'text!templates/responses/report-top-question.html'
 ],
 
-function($, _, Backbone, Chart, moment, settings, api, Stats, template, reportTemplate) {
+function($, _, Backbone, Chart, d3, c3, moment, settings, api, Stats, template, reportTemplate, topQuestionTemplate) {
   'use strict';
 
+  // c3 = window.c3;
+
   var MAX_LENGTH = 14;
+  Chart.defaults.global.responsive = true;
+
+  var numberWithCommas = function(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
+  var statDetails = function(stats) {
+    var s = {};
+    var sum = _.reduce(stats, function(memo, stat){ return memo + stat; }, 0);
+
+    _.each(stats, function(stat, key) {
+      s[key] = {
+        count: stat,
+        prettyCount: numberWithCommas(stat),
+        percent: stat / sum * 100,
+        prettyPercent: stat / sum * 100
+      };
+    });
+
+    return s;
+  };
 
   var ReportView = Backbone.View.extend({
     el: '#reports-view-container',
 
     template: _.template(template),
     reportTemplate: _.template(reportTemplate),
+    topQuestionTemplate: _.template(topQuestionTemplate),
 
     events: {
       'click .shapefile': 'getShapefile'
@@ -38,12 +65,13 @@ function($, _, Backbone, Chart, moment, settings, api, Stats, template, reportTe
     initialize: function(options) {
       _.bindAll(this, 'render', 'report', 'graph');
 
+      console.log("GOT C3?", c3, d3);
+
       this.survey = options.survey;
       this.stats = options.stats;
       this.forms = options.forms;
 
       this.stats.on('change', this.render);
-
 
 
       this.titles = this.forms.getFlattenedForm();
@@ -53,20 +81,41 @@ function($, _, Backbone, Chart, moment, settings, api, Stats, template, reportTe
       var context = {};
       console.log("Reports: using stats", this.stats.toJSON());
 
+      // Don't render if we don't have the stats yet
+      if(_.isEmpty(this.stats.toJSON())) {
+        return;
+      }
+
+      // First, set up some basic stats and render those while
+      // we wait for the rest of the stats to load
       context.count = this.survey.get('responseCount') || 0;
+      context.count = numberWithCommas(context.count);
       context.stats = this.stats.toJSON();
 
-      // Get list of top questions
       var form = this.forms.getMostRecentForm();
-      console.log("Form", form);
-
-      // Get list of rest of the questions
-      console.log("Rendering reports");
       this.$el.html(this.template(context));
 
-      this.makeLineChart();
+      // Start making the user activity chart
+      this.makeUserActivityChart();
+
+      // Highlight the top question
+      this.makeTopQuestionChart();
 
       _.each(this.titles, this.graph); //was this.stats.toJSON()
+    },
+
+    makeTopQuestionChart: function() {
+      // Add a stat for the first question
+      var formOrder = this.forms.getMostRecentForm().toJSON().questions;
+      var firstQuestion = formOrder[0];
+      var firstQuestionStats = this.stats.toJSON()[firstQuestion.name];
+      var enhancedStats = statDetails(firstQuestionStats);
+
+      console.log("Working with titles", firstQuestion, firstQuestionStats);
+      $('#report-top-question').html(this.topQuestionTemplate({
+        question: firstQuestion,
+        stats: enhancedStats
+      }));
     },
 
     // Make a shorter label for long questions
@@ -169,50 +218,86 @@ function($, _, Backbone, Chart, moment, settings, api, Stats, template, reportTe
       });
     },
 
-    makeLineChart: function() {
+    makeUserActivityChart: function() {
       // Render the chart of users over time.
       var userActivityChart = $('#chart-user-activity').get(0);
       if (!userActivityChart) {
         return;
       }
-      console.log("Using activity chart", userActivityChart);
-      var ctx = userActivityChart.getContext('2d');
+      // var ctx = userActivityChart.getContext('2d');
 
 
-      console.log("GEtting user activity");
+
 
       $.get('https://localhost:3443/api/surveys/06a311f0-4b1a-11e3-aca4-1bb74719513f/stats/activity?after=1385320961495&resolution=296000000&until=1416857080118')
         .done(function(stats) {
-          console.log("GOT user activity data", stats);
+          console.log("Got user activity data", stats);
 
-          var labels = [];
-          var data = [];
+          var labels = ['x'];
+          var data = ['counts'];
           _.each(stats.stats.activity, function(a) {
             data.push(a.count);
-            var created = moment(a.ts).format("Do YYYY"); //- h:mma
+            var created = moment(a.ts).format("Do YYYY");
             labels.push(created);
-            console.log("CHECKING", a, created);
+            // Hack to hide labels
+            // TODO: maybe show every third?
+            // & use moment.js
+            // labels.push('');
           });
 
-          var chartOptions = {
-            labels: labels,
-            datasets: [
-                {
-                    label: "My First dataset",
-                    fillColor: "rgba(220,220,220,0.2)",
-                    strokeColor: "rgba(220,220,220,1)",
-                    pointColor: "rgba(220,220,220,1)",
-                    pointStrokeColor: "#fff",
-                    pointHighlightFill: "#fff",
-                    pointHighlightStroke: "rgba(220,220,220,1)",
-                    data: data
+          var chart = c3.generate({
+              bindto: '#chart-user-activity',
+              data: {
+                x: 'x',
+                columns: [
+                  labels,
+                  data
+                ],
+                colors: {
+                    counts: '#58aeff'
                 }
-            ]
-          };
+              },
+              size: {
+                height: 200
+              },
+              interaction: {
+                enabled: false
+              },
+              axis: {
+                x: {
+                  type: 'category',
+                  tick: {
+                    // this also works for non timeseries data
+                    values: labels // ['2013-01-05', '2013-01-10']
+                  }
+                }
+              }
+        });
 
-          console.log("using options", labels, data);
-
-          var myLineChart = new Chart(ctx).Line(chartOptions, {}) ;
+          // var chartOptions = {
+          //   labels: labels,
+          //   datasets: [
+          //     {
+          //       label: "Responses over time",
+          //       fillColor: "#58aeff",
+          //       strokeColor: "#58aeff",
+          //       pointColor: "#58aeff",
+          //       pointStrokeColor: "#fff",
+          //       pointHighlightFill: "#fff",
+          //       pointHighlightStroke: "rgba(220,220,220,1)",
+          //       data: data
+          //     }
+          //   ]
+          // };
+//
+          // console.log("using options", labels, data);
+//
+          // var myLineChart = new Chart(ctx).Line(chartOptions, {
+          //   scaleShowGridLines: false,
+          //   scaleShowLabels: false,
+          //   responsive: true,
+          //   maintainAspectRatio: false
+          // }) ;
 
         });
     },
@@ -242,26 +327,30 @@ function($, _, Backbone, Chart, moment, settings, api, Stats, template, reportTe
       });
     },
 
-    // Graph the reports!
+    /**
+     * Graph the questions
+     * @param  {Object} question
+     * @param  {String} slug     Question slug, eg is-property-vacant
+     */
     graph: function(question, slug) {
-      // console.log("Time to graph!", question, slug);
       var chartType;
       var stats = this.stats.toJSON();
 
-      // Skip unhelpful qustions,
-      // like those with lots of answers
+      // Skip unhelpful qustions, like those with lots of answers
       if (question.type === 'file') { return; }
       if (question.type === 'text') { return; }
 
-      // Prep the HTML for the question
+      // Prep the HTML for the question and add it to the DOM
       this.report(question, slug);
 
+      // Find the element we just created and create a Canvas context for it
       var $elt = $('#' + slug).get(0);
       if (!$elt) {
         return;
       }
       var ctx = $elt.getContext('2d');
 
+      // Decide what type of chart to use.
       // We'll use pie charts for yes / no questions
       if (question.type === 'checkbox') {
         this.makeCheckboxChart(question, slug, ctx);  // this.makeBarChart(question, slug, ctx);

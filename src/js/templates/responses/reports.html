@@ -1,18 +1,21 @@
-<div class="out contrast">
+<div class="out contrast reports">
   <div class="in">
 
     <div class="report">
-        <%= count %>
-        total responses
+        <span class="factoid">
+            <span class="number"><%= count %></span>
+            total responses
+        </span>
     </div>
 
     <div class="report">
-        <canvas id="chart-user-activity"></canvas>
-        <% _.each(stats.Collectors, function(collector, name) { %>
+        <div id="chart-user-activity"></div>
+        <!--<% _.each(stats.Collectors, function(collector, name) { %>
             <%= name %> <%= collector %>
-        <% }); %>
+        <% }); %>-->
     </div>
 
+    <div id="report-top-question"></div>
 
     <div id="report-list"></div>
   </div>

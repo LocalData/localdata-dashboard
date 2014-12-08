@@ -1,0 +1,11 @@
+<div class="">
+<h3><%= question.text %></h3>
+
+<% _.each(question.answers, function(answer) { %>
+    <div class="answer">
+        <%= answer.text %>:
+        <%= stats[answer.value].prettyCount %>
+        <div class="bar" style="width: <%= stats[answer.value].prettyPercent %>%"></div>
+    </div>
+<% }); %>
+</div>

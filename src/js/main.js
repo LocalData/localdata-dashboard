@@ -9,6 +9,7 @@ require.config({
     jquery: 'lib/jquery-1.7.1',
     backbone: 'lib/backbone',
     Chart: 'lib/Chart',
+    d3: 'lib/d3.min',
     moment: 'lib/moment.min',
     'lib/kissmetrics': '//doug1izaerwt3.cloudfront.net/' + '1f57015c5e8f46bdc07701e1aa74c6cbdf565383' + '.1',
     'lib/kmq': 'lib/kissmetrics'
@@ -50,6 +51,11 @@ require.config({
     'lib/kissmetrics': {
       deps: ['lib/kmq'],
       exports: '_kmq'
+    },
+
+    'lib/c3': {
+      deps: ['d3'],
+      exports: 'c3'
     }
   }
 });
