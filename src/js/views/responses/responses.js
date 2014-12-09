@@ -429,6 +429,7 @@ define(function(require, exports, module) {
         el: '#responses-list',
         collection: rc,
         labels: this.forms.getQuestions(),
+        forms: this.forms,
         surveyOptions: surveyOptions,
         surveyId: this.survey.get('id'),
         objectId: event.data.object_id
