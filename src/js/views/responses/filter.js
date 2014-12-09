@@ -11,14 +11,9 @@ define(function(require, exports, module) {
 
   // App
   var settings = require('settings');
-  var api = require('api');
 
   // Models
-  var Responses = require('models/responses');
   var Stats = require('models/stats');
-
-  // Views
-  var ResponseListView = require('views/responses/list');
 
   // Templates
   var template = require('text!templates/filters/filters.html');
@@ -122,7 +117,8 @@ define(function(require, exports, module) {
       this.$el.find('.question-filters').html('');
 
       // Match the question names and answer values from the form with stats and colors.
-      var questions = this.forms.getFlattenedForm();
+      this.questions = this.forms.getFlattenedForm();
+      var questions = this.questions;
       var stats = this.stats;
 
       if (stats.has('reviewed')) {
@@ -142,7 +138,6 @@ define(function(require, exports, module) {
       }
 
       _.each(_.keys(questions), function (question) {
-        var answerObjects = {};
         var questionStats = stats.get(question);
         var type = questions[question].type;
         if (type === 'text') {
@@ -214,12 +209,16 @@ define(function(require, exports, module) {
 
       // Re-mark any selected questions
       if(this.filters.question) {
+        // TODO: scope this search to less than the whole document
         var $question = $('div[data-question=' + this.filters.question + ']');
         this.markQuestionSelected($question);
       }
       if(this.filters.answer) {
-        var $answer = $('div[data-question=' + this.filters.question + '][data-answer='
-            + this.filters.answer + ']');
+        // TODO: scope this search to less than the whole document
+        var $answer = $('div[data-question=' +
+                        this.filters.question +
+                        '][data-answer=' +
+                        this.filters.answer + ']');
         this.markAnswerSelected($answer);
       }
 
@@ -261,18 +260,15 @@ define(function(require, exports, module) {
     // rendering piece to the appropriate view.
     updateSidebar: function() {
       // Display the selected filter on the sidbar.
-      console.log("Flattened form", this.forms.getFlattenedForm());
-      var questions = this.forms.getFlattenedForm();
-
       if (!this.filters.question) {
         $('.selected-filters').html('');
         return;
       }
 
-      var question =  questions[this.filters.question].text;
+      var question =  this.questions[this.filters.question].text;
       var answer = '';
       if (this.filters.answer) {
-        answer = _.findWhere(questions[this.filters.question].answers, { value: this.filters.answer }).text || '';
+        answer = _.findWhere(this.questions[this.filters.question].answers, { value: this.filters.answer }).text || '';
       }
 
       var selectedFilters = this.selectedFiltersTemplate({
@@ -343,7 +339,6 @@ define(function(require, exports, module) {
 
       // Record the filter
       this.filters.question = question;
-      var answers = this.stats.get(question);
 
       this.markQuestionSelected($question);
 
