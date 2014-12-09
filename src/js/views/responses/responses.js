@@ -44,6 +44,7 @@ define(function(require, exports, module) {
     el: '#response-view-container',
 
     events: {
+      'click .action-show-filters': 'toggleFilters',
       'click .refresh': 'getNew',
       'click .address-search-button': 'search'
     },
@@ -263,6 +264,12 @@ define(function(require, exports, module) {
 
       this.mapView.map.invalidateSize();
     },
+
+    toggleFilters: function () {
+      // Render the filter
+      this.$('.filters').toggle();
+    },
+
 
     remove: function () {
       this.$el.remove();
