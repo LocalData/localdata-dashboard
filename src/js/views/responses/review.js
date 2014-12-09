@@ -64,6 +64,7 @@ define(function(require, exports, module) {
       var responseView = new ResponseListView({
         el: '.response-container',
         collection: this.collection,
+        forms: this.forms,
         labels: this.forms.getQuestions(),
         surveyOptions: surveyOptions
       });
