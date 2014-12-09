@@ -25,6 +25,17 @@ define(function(require, exports, module) {
   var SettingsViews = require('views/settings');
   var ReviewView = require('views/responses/review');
 
+  // Embed views
+  var SurveyEmbedView = require('views/survey-embed');
+  var MultiSurveyEmbedView = require('views/surveys/multi');
+
+  // Templates
+  var dashboardTemplateText = require('text!templates/dashboard.html');
+  var embedTemplateText = require('text!templates/embed.html');
+
+  var dashboardTemplate = _.template(dashboardTemplateText);
+  var embedTemplate = _.template(embedTemplateText);
+
 
   var AllViews = {};
   AllViews.HomeView = HomeView;
@@ -64,6 +75,29 @@ define(function(require, exports, module) {
       return this;
     },
 
+    renderDashboard: _.once(function () {
+      // TODO: factor out the embedded script-tag templates and turn the
+      // following into .html instead of .prepend
+      this.cleanup();
+      this.$el.prepend(dashboardTemplate());
+    }),
+
+    renderEmbed: function () {
+      // TODO: factor out the embedded script-tag templates and turn the
+      // following into .html instead of .prepend
+      this.cleanup();
+      this.$el.prepend(embedTemplate());
+    },
+
+    // FIXME: This is a hack. We should refactor the HTML/templates so we can
+    // cleanly replace the contents of one element (body or a containing div)
+    // with the appropriate new content.
+    cleanup: function cleanup() {
+      this.$('header').remove();
+      this.$('footer').remove();
+      this.$('#container').remove();
+    },
+
     // Start Backbone routing. Separated from initialize() so that the
     // global controller is available for any preset routes (direct links).
     startRouting: function() {
@@ -89,12 +123,14 @@ define(function(require, exports, module) {
     // Handle routes (they're in routers/index.js) .............................
     // Home
     goto_home: function() {
+      this.renderDashboard();
       // this.currentContentView = this.getOrCreateView("HomeView", "HomeView");
       this.currentContentView = this.getOrCreateView("DashboardView", "DashboardView");
 
     },
 
     goto_login: function(redirectTo) {
+      this.renderDashboard();
       this.currentContentView = this.getOrCreateView("LoginView", "LoginView", {
         'redirectTo': redirectTo,
         'user': this.user
@@ -102,18 +138,21 @@ define(function(require, exports, module) {
     },
 
     goto_change_password: function (resetInfo) {
+      this.renderDashboard();
       this.currentContentView = this.getOrCreateView('ChangePasswordView', 'ChangePasswordView', {
         resetInfo: resetInfo
       });
     },
 
     goto_reset_password: function () {
+      this.renderDashboard();
       this.currentContentView = this.getOrCreateView('ResetPasswordView', 'ResetPasswordView');
     },
 
 
     // Survey dashboard routes .................................................
-    goto_survey: function(tab) {
+    goto_survey: function (tab, options) {
+      this.renderDashboard();
 
       // Get or create a view for the survey
       var surveyViewName = "Survey" + settings.surveyId;
@@ -134,7 +173,7 @@ define(function(require, exports, module) {
           this.currentContentView.showSettings();
           break;
         case "filters":
-          this.currentContentView.showFilters();
+          this.currentContentView.showFilters(options);
           break;
         case "review":
           this.currentContentView.showReview();
@@ -143,6 +182,7 @@ define(function(require, exports, module) {
     },
 
     goto_new: function() {
+      this.renderDashboard();
       console.log("Going to new");
       this.currentContentView = this.getOrCreateView("NewSurveyView", "NewSurveyView");
     },
@@ -162,9 +202,15 @@ define(function(require, exports, module) {
       this.goto_survey("export");
     },
 
-    goto_filters: function() {
-      this._router.navigate("surveys/" + settings.slug + "/dive");
-      this.goto_survey("filters");
+    goto_filters: function (objectId) {
+      if (!objectId) {
+        this._router.navigate('surveys/' + settings.slug + '/dive');
+      } else {
+        this._router.navigate('surveys/' + settings.slug + '/dive/' + objectId);
+      }
+      this.goto_survey('filters', {
+        objectId: objectId
+      });
     },
 
     goto_review: function() {
@@ -173,8 +219,29 @@ define(function(require, exports, module) {
     },
 
     goto_design: function() {
+      this.renderDashboard();
       console.log("Going to design");
       this.currentContentView = this.getOrCreateView("DesignView", "DesignView", {id: settings.surveyId});
+    },
+
+    gotoSurveyEmbed: function () {
+      this.renderEmbed();
+      console.log('Naviating to embedded survey view'); // XXX
+      // We won't navigate between surveys in a single-survey embed view, so we
+      // don't need to use the factory.
+      this.currentContentView = new SurveyEmbedView({
+        id: settings.surveyId
+      });
+    },
+
+    gotoMultiSurvey: function (slug) {
+      this.renderEmbed();
+      console.log('Naviating to embedded multi-survey view'); // XXX
+      // We won't navigate between surveys in a single-survey embed view, so we
+      // don't need to use the factory.
+      this.currentContentView = new MultiSurveyEmbedView({
+        slug: slug
+      });
     }
 
   });

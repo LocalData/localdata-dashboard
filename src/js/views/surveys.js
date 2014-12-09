@@ -121,7 +121,7 @@ define(function(require, exports, module) {
   SurveyViews.NewSurveyView = Backbone.View.extend({
     template: _.template(newSurveyTemplate),
 
-    el: $("#container"),
+    el: '#container',
 
     events: {
       'submit #new-survey-form': 'submit'
@@ -190,7 +190,7 @@ define(function(require, exports, module) {
 
 
   SurveyViews.SurveyView = Backbone.View.extend({
-    el: $("#container"),
+    el: '#container',
 
     activeTab: undefined,
     filters: false,
@@ -238,14 +238,12 @@ define(function(require, exports, module) {
     },
 
     render: function (model) {
-      var $el = $(this.el);
-
       // Remove old sub-views
       if (this.mapAndListView !== undefined) {
         this.mapAndListView.remove();
       }
 
-      $el.html(this.template({
+      this.$el.html(this.template({
         survey: this.survey.toJSON()
       }));
 
@@ -261,15 +259,21 @@ define(function(require, exports, module) {
 
       if (surveyFullyCreated) {
         // Map the responses
+        var mode = 'overview';
+        if (this.filters) {
+          mode = 'deep-dive';
+        }
         this.mapAndListView = new ResponseViews.MapAndListView({
           // responses: this.responses,
           forms: this.forms,
-          survey: this.survey
+          survey: this.survey,
+          mode: mode
         });
 
-        if(this.filters) {
-          this.mapAndListView.showFilters();
+        if (this.selectedObject) {
+          this.mapAndListView.selectItem(this.selectedObject);
         }
+
         // Review view
         this.reviewView = new ReviewView({
           survey: this.survey,
@@ -345,11 +349,16 @@ define(function(require, exports, module) {
         this.show('#settings-view-container', '#tab-survey-settings');
     },
 
-    showFilters: function() {
+    showFilters: function (options) {
       this.show('#response-view-container', '#tab-survey-filters');
       this.filters = true;
       if (this.mapAndListView) {
         this.mapAndListView.showFilters();
+        if (options.objectId) {
+          this.mapAndListView.selectItem(options.objectId);
+        }
+      } else {
+        this.selectedObject = options.objectId;
       }
     }
   });

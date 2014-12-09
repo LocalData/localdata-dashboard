@@ -17,6 +17,22 @@ body {
   background: #fff;
 }
 
+/* Clear floats on .out
+   Needed because the simpler overflow: auto doesn't work as we want
+   with children that are positioned absolutely.
+   */
+.out:before,
+.out:after {
+  content:"";
+  display:table;
+}
+.out:after {
+  clear:both;
+}
+.out {
+  zoom:1; /* For IE 6/7 (trigger hasLayout) */
+}
+
 /* Clearfix without overflow */
 .out:before,
 .out:after {
@@ -92,7 +108,8 @@ header .b {
 /* Same as .b above, but with no margins */
 .b.nomargin {
   margin-left: 0;
-  width: 41%;
+  margin-right: 0;
+  width: 50%;
 
   /* column sizing */
   float:left;
@@ -126,6 +143,23 @@ header .b {
     float:none;
   }
 }
+
+/*
+.embed .a {
+  width: 48%;
+  margin-right: 2%;
+  margin-left: 0%;
+}
+.embed .bigb .a {
+  width: 28%;
+  margin-right: 2%
+}
+.embed .b {
+  width: 70%;
+  margin-right: 0%;
+  margin-left: 0%;
+}
+*/
 
 #container {
   min-height: 500px;

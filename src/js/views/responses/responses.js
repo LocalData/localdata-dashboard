@@ -8,10 +8,9 @@ define(function(require, exports, module) {
   var $ = require('jquery');
   var _ = require('lib/lodash');
   var Backbone = require('backbone');
+  var events = require('lib/tinypubsub');
   var moment = require('moment');
-
-  // LocalData
-  var settings = require('settings');
+  
   var api = require('api');
 
   // Models
@@ -26,6 +25,7 @@ define(function(require, exports, module) {
 
   // Templates
   var mapListTemplate = require('text!templates/responses/map-list.html');
+  var embeddedResponseMapTemplate = require('text!templates/responses/embed-map-list.html');
 
 
   var ResponseViews = {};
@@ -37,13 +37,16 @@ define(function(require, exports, module) {
     listView: null,
     responses: null,
     survey: null,
+    mode: 'overview',
 
     template: _.template(mapListTemplate),
 
     el: '#response-view-container',
 
     events: {
-      'click .refresh': 'getNew'
+      'click .action-show-filters': 'toggleFilters',
+      'click .refresh': 'getNew',
+      'click .address-search-button': 'search'
     },
 
     initialize: function(options) {
@@ -59,15 +62,21 @@ define(function(require, exports, module) {
         'getNew',
         'lastUpdated',
 
+        'search',
         'mapClickHandler'
       );
 
+      // XXX I don't think we need this
       this.responses = options.responses;
 
       this.forms = options.forms;
       this.forms.on('reset', this.updateFilterChoices, this);
 
       this.survey = options.survey;
+
+      if (options.mode) {
+        this.mode = options.mode;
+      }
 
       this.render();
     },
@@ -109,49 +118,70 @@ define(function(require, exports, module) {
       this.mapView.render();
 
       this.filterView = new FilterView({
-        collection: this.responses,
+        el: $('#filter-view-container'),
         survey: this.survey,
         forms: this.forms,
         map: this.mapView
-      });
-      $("#filter-view-container").html(this.filterView.$el);
-
-      // Set up the response count view.
-      this.countView = new ResponseCountView({
-        model: this.survey
       }).render();
-      $("#response-count-container").html(this.countView.$el);
-
-      // Listen for new responses
-      this.survey.on('change', this.mapView.update);
 
       // Listen for a change in map view size
-      this.$('.b').on('transitionend', function(event) {
+      this.$el.on('transitionend', function(event) {
         this.mapView.map.invalidateSize();
       }.bind(this));
+
+      if (this.mode === 'deep-dive') {
+        // Deep dive
+        this.showFilters();
+      } else {
+        // Overview
+        this.hideFilters();
+      }
     },
 
-    mapClickHandler: function(event) {
-      if (!event.data || !event.data.object_id) {
-        return;
-      }
+    /**
+     * Search for an address
+     */
+    search: function(event) {
+      event.preventDefault();
+      var address = this.$('#address-search').val();
+      var location = this.survey.get('location');
+      var $error = this.$('#map-tools .error');
+      var mapView = this.mapView;
+      api.codeAddress(address, location, function (error, results) {
+        if (error) {
+          $error.html(error.message);
+        } else {
+          $error.html('');
+        }
+        
+        mapView.goToLatLng(results.coords);
+      });
+    },
 
+    selectItem: function (objectId) {
+      // FIXME: If this gets called because of a direct navigation to a
+      // surveys/:slug/dive/:oid URL, then there was never a click on the
+      // map, and so the object in question hasn't been highlighted on the map.
       var rc = new Responses.Collection({
         surveyId: this.survey.get('id'),
-        objectId: event.data.object_id
+        objectId: objectId
       });
 
       var surveyOptions = this.survey.get('surveyOptions') || {};
-      var selectedItemListView = new ResponseListView({
-        el: '#responses-list-container',
+      this.selectedItemListView = new ResponseListView({
+        el: '#responses-list',
         collection: rc,
         labels: this.forms.getQuestions(),
         forms: this.forms,
         surveyOptions: surveyOptions
       });
 
-      selectedItemListView.on('remove', function() {
+      this.selectedItemListView.on('remove', function() {
         this.mapView.deselectObject();
+        events.publish('navigate', [
+          'surveys/' + this.survey.get('slug') + '/dive',
+          { trigger: false }
+        ]);
       }.bind(this));
 
       rc.on('destroy', function() {
@@ -159,32 +189,87 @@ define(function(require, exports, module) {
       }.bind(this));
     },
 
+    mapClickHandler: function (event) {
+      var objectId;
+
+      if (event.data) {
+        objectId = event.data.object_id;
+      }
+      
+      if (this.mode === 'overview') {
+        if (objectId) {  
+          events.publish('navigate', ['surveys/' + this.survey.get('slug') + '/dive/' + objectId]);
+        } else {
+          events.publish('navigate', ['surveys/' + this.survey.get('slug') + '/dive']);
+        }
+      } else if (objectId) {
+        // Update the URL
+        events.publish('navigate', [
+          'surveys/' + this.survey.get('slug') + '/dive/' + objectId,
+          { trigger: false }
+        ]);
+        this.selectItem(objectId);
+      }
+    },
+
     update: function() {
       if (this.firstRun) {
+        // FIXME: Do we ever end up here?
         this.render();
       }
-
-      // Update the count
-      // TODO: Use a template
-      this.$('#count').html(_.template('<%= _.size(responses) %> Response<% if(_.size(responses) != 1) { %>s<% } %>', {responses: this.responses}));
     },
 
     showFilters: function() {
-      $('.factoid').addClass('small-factoid');
-      this.$el.addClass('bigb');
+      this.mode = 'deep-dive';
+      // Show the deep dive controls.
+      $('.control-pane').show();
+      //$('#filter-view-container').show();
 
-      // Render the filter
-      $("#filter-view-container").show();
+      // Hide the overview controls and expand the map.
+      $('#overview-container').hide();
+      $('#map-view-container').removeClass('b');
+      //this.$('.map-list-view').addClass('gutter');
+
+      // Set up the response count view.
+      this.countView = new ResponseCountView({
+        el: '#deep-dive-count-container',
+        model: this.survey,
+        small: true
+      }).render();
+
+      this.mapView.map.invalidateSize();
     },
 
     hideFilters: function() {
-      $('.factoid').removeClass('small-factoid');
-      this.$el.removeClass('bigb');
-
+      this.mode = 'overview';
       this.update();
 
-      $("#filter-view-container").hide();
+      // Hide the deep dive controls.
+      $('.control-pane').hide();
+      $('#filter-view-container').hide();
+      if (this.selectedItemListView) {
+        this.selectedItemListView.remove();
+        this.selectedItemListView = null;
+      }
+
+      // Show the overview controls and restrict the map to the right-hand column.sldfjlsdkjfldkf sfdlkj slfdj 
+      $('#overview-container').show();
+      $('#map-view-container').addClass('b');
+
+      // Set up the response count view.
+      this.overviewCountView = new ResponseCountView({
+        el: '#overview-count-container',
+        model: this.survey
+      }).render();
+
+      this.mapView.map.invalidateSize();
     },
+
+    toggleFilters: function () {
+      // Render the filter
+      this.$('.filters').toggle();
+    },
+
 
     remove: function () {
       this.$el.remove();
@@ -207,12 +292,13 @@ define(function(require, exports, module) {
     getNew: function(event) {
       console.log("Getting new responses");
       event.preventDefault();
-      this.survey.fetch();
+      var $checking = $('.checking');
+      $checking.fadeIn(250);
       this.mapView.update();
 
-      // This is a hack because it's hard to watch .fetch
-      // if there are no changes.
-      $('.checking').fadeIn(500).fadeOut(750);
+      this.survey.fetch().always(function () {
+        $checking.fadeOut(500);
+      });
     },
 
     /**
@@ -227,153 +313,165 @@ define(function(require, exports, module) {
 
   });
 
-
-  /**
-   * Heavy-duty list view
-   * Includes pagination
-   * Not currently in use in the app.
-   * See views/responses/list.js for a shorter verson.
+  /*
+   * Map-oriented view for embedded pages.
    */
-  ResponseViews.ListView = Backbone.View.extend({
+  ResponseViews.EmbeddedResponseMapView = Backbone.View.extend({
+    filters: {},
+    firstRun: true,
+    mapView: null,
+    listView: null,
     responses: null,
-    parentView: null,
-    visibleItemCount: 1,
-    page: -1,
-    pageCount: null,
-    nextButton: null,
-    prevButton: null,
-    responsesPagination: null,
+    survey: null,
+
+    template: _.template(embeddedResponseMapTemplate),
+
+    el: '#response-view-container',
 
     events: {
-      'click #next': 'pageNext',
-      'click #prev': 'pagePrev',
-      'click .pageNum': 'goToPage'
+      'click .action-show-filters': 'toggleFilters',
+      'click .address-search-button': 'search'
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'updateResponses', 'render', 'goToPage', 'humanizeDates', 'setupPagination', 'pagePrev', 'pageNext');
-      this.template = _.template($('#response-list').html());
-      this.paginationTemplate = _.template($('#t-responses-pagination').html());
+      _.bindAll(this,
+        'toggleFilters',
+        'mapClickHandler',
+        'search'
+      );
 
       this.responses = options.responses;
-      this.listenTo(this.responses, 'reset', this.updateResponses);
-      this.listenTo(this.responses, 'addSet', this.updateResponses);
 
-      this.parentView = options.parentView;
+      this.forms = options.forms;
+      this.forms.on('reset', this.updateFilterChoices, this);
 
-      if (options.visibleItemCount) {
-        this.visibleItemCount = options.visibleItemCount;
-      }
+      this.survey = options.survey;
 
-      this.nextButton = this.$('#next');
-      this.prevButton = this.$('#prev');
+      this.showFilter = options.showFilter;
+
+      this.render();
     },
 
-    render: function() {
-      if (this.pageCount === null) {
-        this.setupPagination();
-      }
-
-      var start = this.page * this.visibleItemCount;
-      var end = start + this.visibleItemCount;
-      var thisPage = _.map(this.responses.models.slice(start, end),
-        function (item) {
-          return item.toJSON();
-        });
-
-      // Humanize the dates so people who aren't robots can read them
-      this.humanizeDates(thisPage);
-
+    render: function () {
       // Actually render the page
       var context = {
-        responses: thisPage,
-        startIndex: start
+        survey: this.survey.toJSON()
       };
-
-      // Render the responses table
       this.$el.html(this.template(context));
-      // Render the pagination elements
-      this.responsesPagination = this.$('#responses-pagination');
-      this.responsesPagination.html(this.paginationTemplate({
-        page: this.page,
-        pageCount: this.pageCount
-      }));
-    },
 
-    updateResponses: function () {
-      var rerender = false;
-      if (this.page === this.pageCount - 1 || this.pageCount === 0) {
-        rerender = true;
+      // XXX
+      //// Show collector stats
+      //this.collectorStatsView = new CollectorStatsView({
+      //  survey: this.survey
+      //});
+
+      // Set up the map view, now that the root exists.
+      if (this.mapView === null) {
+        this.mapView = new MapView({
+          el: $('#map-view-container'),
+          survey: this.survey,
+          clickHandler: this.mapClickHandler
+        });
       }
 
-      // We got more responses, so let's recalculate the pagination parameters.
-      this.setupPagination();
+      // Render the map
+      this.mapView.render();
 
-      // We only need to rerender if we're on the last page. Otherwise, those
-      // new items don't affect the view yet.
-      if (rerender) {
-        this.render();
-      } else {
-        var context = {
-          page: this.page,
-          pageCount: this.pageCount
-        };
-        this.responsesPagination.html(this.paginationTemplate(context));
-      }
+      this.filterView = new FilterView({
+        el: $('#filter-view-container'),
+        collection: this.responses,
+        survey: this.survey,
+        forms: this.forms,
+        map: this.mapView
+      }).render();
+
+      // Set up the response count view.
+      this.countView = new ResponseCountView({
+        el: '#response-count-container',
+        model: this.survey
+      }).render();
+
+      $('.factoid').addClass('small-factoid');
+      this.$el.addClass('bigb');
     },
-
-    setupPagination: function() {
-      if (this.page === -1) {
-        this.page = 0;
-      }
-      this.pageCount = Math.ceil(this.responses.length / this.visibleItemCount);
-    },
-
-    goToPage: function(e) {
-      e.preventDefault();
-
-      // _kmq.push(['record', "Specfic result page selected"]);
-      var page = parseInt($(e.target).attr('data-page'), 10);
-      this.page = page;
-      this.render();
-    },
-
-    pageNext: function (e) {
-      e.preventDefault();
-
-      // _kmq.push(['record', "Next page of results selected"]);
-      if (this.page === this.pageCount - 1) {
-        return;
-      }
-
-      this.page += 1;
-      this.render();
-    },
-
-    pagePrev: function (e) {
-      e.preventDefault();
-
-      // _kmq.push(['record', "Previous page of results selected"]);
-      if (this.page === 0) {
-        return;
-      }
-
-      this.page -= 1;
-      this.render();
-    },
-
-    humanizeDates: function(responses, field) {
-      _.each(responses, function(response){
-        // 2012-06-26T20:00:52.283Z
-        if(_.has(response, "created")) {
-          response.createdHumanized = moment(response.created, "YYYY-MM-DDThh:mm:ss.SSSZ").format("MMM Do h:mma");
+    
+    search: function(event) {
+      event.preventDefault();
+      var address = this.$('#address-search').val();
+      var location = this.survey.get('location');
+      var $error = this.$('#map-tools .error');
+      var mapView = this.mapView;
+      api.codeAddress(address, location, function (error, results) {
+        if (error) {
+          $error.html(error.message);
+        } else {
+          $error.html('');
         }
+        
+        mapView.goToLatLng(results.coords);
       });
-    }
+    },
 
+    mapClickHandler: function (event) {
+      if (!event.data || !event.data.object_id) {
+        return;
+      }
+
+      var rc = new Responses.Collection({
+        surveyId: this.survey.get('id'),
+        objectId: event.data.object_id
+      });
+
+      var surveyOptions = this.survey.get('surveyOptions') || {};
+      // FIXME: respect the actual configured options
+      surveyOptions.comments = true;
+      var selectedItemListView = new ResponseListView({
+        el: '#responses-list',
+        collection: rc,
+        labels: this.forms.getQuestions(),
+        forms: this.forms,
+        surveyOptions: surveyOptions,
+        surveyId: this.survey.get('id'),
+        objectId: event.data.object_id
+      });
+
+      selectedItemListView.on('remove', function () {
+        this.mapView.deselectObject();
+      }.bind(this));
+
+      rc.on('destroy', function () {
+        this.mapView.update();
+      }.bind(this));
+    },
+
+    toggleFilters: function () {
+      // Render the filter
+      $('.filters').toggle();
+    },
+
+    remove: function () {
+      this.$el.remove();
+      this.stopListening();
+      // XXX
+      this.responses.off('reset', this.render, this);
+      this.responses.off('add', this.update, this);
+      this.responses.off('addSet', this.update, this);
+
+      if (this.mapView) {
+        this.mapView.remove();
+        this.mapView = null;
+      }
+
+      if (this.listView) {
+        this.listView.remove();
+        this.listView = null;
+      }
+
+      return this;
+    }
   });
+
 
   return ResponseViews;
 
 });
-

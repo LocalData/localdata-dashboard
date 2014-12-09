@@ -22,6 +22,7 @@ function($, _, Backbone, settings, api) {
 
       "surveys/new": "new_survey",
       "surveys/:slug/dive": "dive",
+      "surveys/:slug/dive/:oid": "objectDetails",
       "surveys/:slug/export": "survey_export",
       "surveys/:slug/design": "design",
       "surveys/:slug/review": "review",
@@ -31,6 +32,13 @@ function($, _, Backbone, settings, api) {
       "surveys/:slug/form": "form",
 
       "surveys/:slug/settings": "settings",
+
+      'embed/surveys/:slug': 'embed',
+      // TODO: a multi-dataset view is a project that can reference multiple surveys,
+      // so 'multi/survey/:slug' is not totally intuitive, but we're keeping it
+      // around for now for backward compatibility.
+      'multi/surveys/:slug': 'multi',
+      'projects/:slug': 'multi',
 
       "*actions": "default_route"
     },
@@ -74,6 +82,12 @@ function($, _, Backbone, settings, api) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_filters);
     },
 
+    objectDetails: function (slug, oid) {
+      api.setSurveyIdFromSlug(slug, function (y) {
+        this.controller.goto_filters(oid);
+      }.bind(this));
+    },
+
     settings: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_settings);
     },
@@ -92,6 +106,14 @@ function($, _, Backbone, settings, api) {
 
     review: function(slug) {
       api.setSurveyIdFromSlug(slug, this.controller.goto_review);
+    },
+
+    embed: function (slug) {
+      api.setSurveyIdFromSlug(slug, this.controller.gotoSurveyEmbed);
+    },
+
+    multi: function (slug) {
+      this.controller.gotoMultiSurvey(slug);
     },
 
     default_route: function(actions) {

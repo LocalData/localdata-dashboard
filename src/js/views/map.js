@@ -49,10 +49,6 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
     survey: null,
     template: _.template(template),
 
-    events: {
-      'click .address-search-button': 'search'
-    },
-
     initialize: function(options) {
       L.Icon.Default.imagePath = '/js/lib/leaflet/images';
       _.bindAll(this,
@@ -62,9 +58,7 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
         'fitBounds',
         'selectObject',
         'deselectObject',
-        'addTileLayer',
-        'search',
-        'searchResults'
+        'addTileLayer'
       );
 
       this.survey = options.survey;
@@ -81,6 +75,8 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
 
       this.delayFitBounds = _.debounce(this.fitBounds, 250);
 
+      // Listen for new responses
+      this.listenTo(this.survey, 'change', this.update);
       this.render();
     },
 
@@ -184,14 +180,14 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
 
     render: function() {
       if (this.map === null) {
-        // Render the map template
-        this.$el.html(this.template({}));
-
         // Initialize the map
         this.map = new L.map('map', {
           zoom: 15,
-          center: [37.77585785035733, -122.41362811351655]
+          center: [37.77585785035733, -122.41362811351655],
+          zoomControl: false
         });
+
+        this.map.addControl(L.control.zoom({ position: 'topright' }));
 
         // Set up the base maps
         this.baseLayer = L.tileLayer(settings.baseLayer);
@@ -363,31 +359,12 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
       }
     },
 
-
-    /**
-     * Search for an address
-     */
-    search: function(event) {
-      event.preventDefault();
-      var address = $('#address-search').val();
-      var location = this.survey.get('location');
-      api.codeAddress(address, location, this.searchResults);
-    },
-
-
-    searchResults: function(error, results) {
-      if(error) {
-        $('#map-tools .error').html(error.message);
-      }else {
-        $('#map-tools .error').html('');
-      }
-
+    goToLatLng: function (latlng) {
       // Remove any existing location marker
-      if(this.markers.location !== undefined) {
+      if (this.markers.location !== undefined) {
         this.map.removeLayer(this.markers.location);
       }
 
-      var latlng = results.coords;
       this.map.setView(latlng, 18);
       var marker = L.marker(latlng).addTo(this.map);
       this.markers.location = marker;

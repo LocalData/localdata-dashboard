@@ -1,14 +1,13 @@
-
 <div class="questions">
 
-  <h4>Filter by question</h4>
+  <h3>Filter by question</h3>
 
   <% _.each(_.keys(questions), function (name) {%>
     <% if(! _.has(questions, name)) { return; } %>
 
-    <div class="question">
-      <label class="" data-question="<%- name %>">
-        <div class="circle"></div> <%- questions[name].text %>
+    <div class="question" data-question="<%- name %>">
+      <label>
+        <%- questions[name].text %>
       </label>
 
       <div class="answers">
@@ -19,8 +18,6 @@
             <%- answer.text %> <%- answer.count %>
           </div>
         <% }); %>
-
-        <button href="" class="button mini flex clear">Clear filter</button>
       </div>
 
     </div>

@@ -11,18 +11,14 @@ define(function(require, exports, module) {
 
   // App
   var settings = require('settings');
-  var api = require('api');
 
   // Models
-  var Responses = require('models/responses');
   var Stats = require('models/stats');
-
-  // Views
-  var ResponseListView = require('views/responses/list');
 
   // Templates
   var template = require('text!templates/filters/filters.html');
   var questionFiltersTemplate = require('text!templates/filters/question-filters.html');
+  var selectedFiltersTemplate = require('text!templates/filters/selected-filters.html');
 
   var ANSWER = 'response';
   var NOANSWER = 'no response';
@@ -33,22 +29,23 @@ define(function(require, exports, module) {
    * See responses/responses/ListView for a heavyweight implementation.
    */
   var FilterView = Backbone.View.extend({
-    className: 'filters',
     filters: {},
 
     template: _.template(template),
     questionFiltersTemplate: _.template(questionFiltersTemplate),
+    selectedFiltersTemplate: _.template(selectedFiltersTemplate),
 
     events: {
-      "click .question label": "selectQuestion",
+      "click .question": "selectQuestion",
       "click .answer": "selectAnswer",
       "click .clear": "reset",
+      "click .close": "close",
 
       "change #datefilter": "selectDate"
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'reset');
+      _.bindAll(this, 'render', 'reset', 'updateSidebar');
 
       this.survey = options.survey;
       this.forms = options.forms;
@@ -59,6 +56,14 @@ define(function(require, exports, module) {
       });
       this.stats.on('change', this.render);
       this.$el.html(this.template());
+
+      $('.action-show-filters').click(function(event) {
+      });
+    },
+
+    close: function() {
+      console.log("Closing filters");
+      this.$el.find('.filters').hide();
     },
 
     selectDate: function(event) {
@@ -100,6 +105,10 @@ define(function(require, exports, module) {
           after: after.getTime()
         }
       });
+
+      // Update the sidebar
+      this.filters.after = after;
+      this.updateSidebar();
     },
 
     render: function() {
@@ -108,7 +117,8 @@ define(function(require, exports, module) {
       this.$el.find('.question-filters').html('');
 
       // Match the question names and answer values from the form with stats and colors.
-      var questions = this.forms.getFlattenedForm();
+      this.questions = this.forms.getFlattenedForm();
+      var questions = this.questions;
       var stats = this.stats;
 
       if (stats.has('reviewed')) {
@@ -128,7 +138,6 @@ define(function(require, exports, module) {
       }
 
       _.each(_.keys(questions), function (question) {
-        var answerObjects = {};
         var questionStats = stats.get(question);
         var type = questions[question].type;
         if (type === 'text') {
@@ -200,15 +209,20 @@ define(function(require, exports, module) {
 
       // Re-mark any selected questions
       if(this.filters.question) {
-        var $question = $('label[data-question=' + this.filters.question + ']');
+        // TODO: scope this search to less than the whole document
+        var $question = $('div[data-question=' + this.filters.question + ']');
         this.markQuestionSelected($question);
       }
       if(this.filters.answer) {
-        var $answer = $('div[data-question=' + this.filters.question + '][data-answer='
-            + this.filters.answer + ']');
+        // TODO: scope this search to less than the whole document
+        var $answer = $('div[data-question=' +
+                        this.filters.question +
+                        '][data-answer=' +
+                        this.filters.answer + ']');
         this.markAnswerSelected($answer);
       }
 
+      return this;
     },
 
     /**
@@ -237,53 +251,94 @@ define(function(require, exports, module) {
 
       $('.question').removeClass('selected');
       $('.answers .circle').removeClass('inactive');
+
+      // Clear out the sidebar
+      this.updateSidebar();
+    },
+
+    // TODO: indicate filter selection/clearing through an event; move the
+    // rendering piece to the appropriate view.
+    updateSidebar: function() {
+      // Display the selected filter on the sidbar.
+      if (!this.filters.question) {
+        $('.selected-filters').html('');
+        return;
+      }
+
+      var question =  this.questions[this.filters.question].text;
+      var answer = '';
+      if (this.filters.answer) {
+        answer = _.findWhere(this.questions[this.filters.question].answers, { value: this.filters.answer }).text || '';
+      }
+
+      var selectedFilters = this.selectedFiltersTemplate({
+        filters: {
+          question: question,
+          answer: answer
+        }
+      });
+      $('.selected-filters').html(selectedFilters);
     },
 
     markQuestionSelected: function($question) {
       // Mark this filter as selected and show answers
+      // First, clear out any selected questions
+      console.log("Marking question selected", $question);
       $('.filters .question').removeClass('selected');
-      $question.parent().addClass('selected');
-      $question.parent().find('.answers').show();
+
+      // Then, add the selected class to this question
+      $question.addClass('selected');
+
+      this.updateSidebar();
     },
 
     markAnswerSelected: function($answer) {
       // Make sure we have the right question selected
       this.filters.question = $answer.attr('data-question');
-      var $question = $('label[data-question=' + this.filters.question + ']');
+      var $question = $('div.question[data-question=' + this.filters.question + ']');
       this.markQuestionSelected($question);
 
       if(!this.filters.answer) {
-        $answer = $answer.parent();
+        // $answer = $answer.parent();
         this.filters.answer = $answer.attr('data-answer');
       }
 
-      // Mark the answer as selected
-      $('.answers').removeClass('selected');
+      // Remove the "selected" class from any of the circles.
+      $('.answers .circle').removeClass('selected');
       $('.answers .circle').addClass('inactive');
 
+      // Mark the circle as selected
       $answer.find('.circle').addClass('selected');
       $answer.find('.circle').removeClass('inactive');
 
       // Color the responses on the map
       this.map.setFilter(this.filters.question, this.filters.answer);
 
+      this.updateSidebar();
+
       console.log("Selected answer", $answer, this.filters.answer);
     },
 
     selectQuestion: function(event) {
-      // Clear out any filters
-      if(this.filters.answer) {
-        this.reset();
-      }
-
       var $question = $(event.target);
       var question = $question.attr('data-question');
       if(!question) {
         $question = $question.parent();
         question = $question.attr('data-question');
       }
+
+      // Don't double select the question.
+      if (this.filters.question === question) {
+        return;
+      }
+
+      // Clear out any existing filters
+      if(this.filters.answer) {
+        this.reset();
+      }
+
+      // Record the filter
       this.filters.question = question;
-      var answers = this.stats.get(question);
 
       this.markQuestionSelected($question);
 
