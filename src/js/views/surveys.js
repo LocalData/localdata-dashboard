@@ -354,7 +354,9 @@ define(function(require, exports, module) {
       this.filters = true;
       if (this.mapAndListView) {
         this.mapAndListView.showFilters();
-        this.mapAndListView.selectItem(options.objectId);
+        if (options.objectId) {
+          this.mapAndListView.selectItem(options.objectId);
+        }
       } else {
         this.selectedObject = options.objectId;
       }
