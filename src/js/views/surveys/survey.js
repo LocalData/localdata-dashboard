@@ -1,5 +1,5 @@
 /*jslint nomen: true */
-/*globals define, cartodb, Rickshaw: true */
+/*globals define */
 
 define(function (require) {
   'use strict';
@@ -11,22 +11,20 @@ define(function (require) {
   var L = require('lib/leaflet/leaflet.tilejson');
 
   // LocalData
-  var settings = require('settings');
   var util = require('util');
 
   // Models
   var Surveys = require('models/surveys');
   var Forms = require('models/forms');
   var Stats = require('models/stats');
+  var Responses = require('models/responses');
 
   // Views
-  var LayerFilterView = require('views/surveys/layer-filter');
+  //var LayerFilterView = require('views/surveys/layer-filter');
+  var ResponseListView = require('views/responses/list');
 
   // Templates
   var template = require('text!templates/surveys/survey-control.html');
-
-
-  var MIN_GRID_ZOOM = 14; // furthest out we'll have interactive grids.
 
   function flip(a) {
     return [a[1], a[0]];
@@ -51,23 +49,17 @@ define(function (require) {
     initialize: function(options) {
       _.bindAll(this,
         'render',
-        'processData',
         'doneLoading',
         'getForms',
         'getTileJSON',
-        'addTileLayer',
-        'fitBounds'
-
-        // Settings
-        // XXX NOT USED IN MULTI EMBED
-        // 'setupSettings',
-        // 'showSettings',
-        // 'changeFilter',
-        // 'clearFilter'
+        'addLayers',
+        'fitBounds',
+        'handleGridClick'
       );
 
-      this.map = options.map;
+      this.mapView = options.mapView;
       this.surveyId = options.layerId;
+      this.infoEl = options.infoEl;
 
       this.filter = options.filter;
 
@@ -94,13 +86,9 @@ define(function (require) {
         }
       ], function (error) {
         console.log("Got everything", error);
-        self.processData();
+        self.render();
       });
 
-    },
-
-    processData: function() {
-      this.render();
     },
 
     /**
@@ -127,7 +115,7 @@ define(function (require) {
         type: 'GET',
         dataType: 'json',
         cache: false
-      }).done(this.addTileLayer)
+      }).done(this.addLayers)
       .fail(function(jqXHR, textStatus, errorThrown) {
         console.log("Error fetching tilejson", jqXHR, textStatus, errorThrown);
       });
@@ -136,47 +124,54 @@ define(function (require) {
     fitBounds: function() {
       var bounds = this.survey.get('responseBounds');
       if (bounds) {
-        bounds = [flip(bounds[0]), flip(bounds[1])];
-        if (bounds[0][0] === bounds[1][0] || bounds[0][1] === bounds[1][1]) {
-          this.map.setView(bounds[0], 15);
-        } else {
-          this.map.fitBounds(bounds, {
-            reset: true,
-            maxZoom: 18
-          });
-        }
+        this.mapView.fitBounds([flip(bounds[0]), flip(bounds[1])]);
       }
     },
 
-    addGridLayer: function(tilejson) {
+    addLayers: function (tilejson) {
+      if (this.tileLayer) {
+        this.mapView.removeTileLayer(this.tileLayer);
+      }
+      this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
+      this.mapView.addTileLayer(this.tileLayer);
+
+      if (this.gridLayer) {
+        this.mapView.removeGridLayer(this.gridLayer);
+      }
       this.gridLayer = new L.UtfGrid(tilejson.grids[0], {
         resolution: 4
       });
-
-      // Make sure the grid layer is on top.
-      if (this.map.getZoom() >= MIN_GRID_ZOOM) {
-        this.map.addLayer(this.gridLayer);
-      }
-
-      this.gridLayer.on('click', this.selectObject);
-      if (this.clickHandler) {
-        this.gridLayer.on('click', this.clickHandler);
-      }
+      this.mapView.addGridLayer(this.gridLayer);
+      
+      this.gridLayer.on('click', this.handleGridClick);
     },
-
-    selectObject: function() {
-      console.log("selected");
-    },
-
-
-    addTileLayer: function(tilejson) {
-      if(this.tileLayer) {
-        this.map.removeLayer(this.tileLayer);
+    
+    handleGridClick: function (event) {
+      if (!event.data) {
+        return;
       }
-      this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
-      this.map.addLayer(this.tileLayer);
+      
+      var rc = new Responses.Collection({
+        surveyId: this.survey.get('id'),
+        objectId: event.data.object_id
+      });
 
-      this.addGridLayer(tilejson);
+      var surveyOptions = this.survey.get('surveyOptions') || {};
+      var selectedItemListView = new ResponseListView({
+        el: this.infoEl,
+        collection: rc,
+        labels: this.forms.getQuestions(),
+        forms: this.forms,
+        surveyOptions: surveyOptions
+      });
+
+      selectedItemListView.on('remove', function () {
+        this.mapView.deselectObject();
+      }.bind(this));
+
+      rc.on('destroy', function () {
+        this.mapView.update();
+      }.bind(this));
     },
 
     doneLoading: function() {

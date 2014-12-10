@@ -13,16 +13,12 @@ define(function(require, exports, module) {
   var settings = require('settings');
   var IndexRouter = require('routers/index');
 
-  // Models
-  var Users = require('models/users');
-
   // Views
   var HomeView = require('views/home');
   var DashboardView = require('views/dashboard');
   var UserViews = require('views/users');
   var SurveyViews = require('views/surveys');
   var DesignViews = require('views/design');
-  var SettingsViews = require('views/settings');
   var ReviewView = require('views/responses/review');
 
   // Embed views
@@ -226,7 +222,6 @@ define(function(require, exports, module) {
 
     gotoSurveyEmbed: function () {
       this.renderEmbed();
-      console.log('Naviating to embedded survey view'); // XXX
       // We won't navigate between surveys in a single-survey embed view, so we
       // don't need to use the factory.
       this.currentContentView = new SurveyEmbedView({
@@ -234,14 +229,15 @@ define(function(require, exports, module) {
       });
     },
 
-    gotoMultiSurvey: function (slug) {
+    gotoMultiSurvey: function (slug, options) {
       this.renderEmbed();
-      console.log('Naviating to embedded multi-survey view'); // XXX
+      options = options || {};
       // We won't navigate between surveys in a single-survey embed view, so we
       // don't need to use the factory.
-      this.currentContentView = new MultiSurveyEmbedView({
-        slug: slug
-      });
+      this.currentContentView = new MultiSurveyEmbedView(_.defaults(options, {
+        slug: slug,
+        mode: 'overview'
+      }));
     }
 
   });

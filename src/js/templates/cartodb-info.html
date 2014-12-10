@@ -1,0 +1,17 @@
+<h3><%= name %></h3>
+<button class="close mini">Close</button>
+
+<!-- streetview -->
+<% if (centroid) { %>
+  <img src="//maps.googleapis.com/maps/api/streetview?size=500x250&location=<%= centroid.coordinates[1] %>,<%= centroid.coordinates[0] %>&key=<%= googleKey %>" height="250" width="500" class="streetview">
+<% } %>
+  
+<% _.each(fields, function (field) { %>
+  <div class="answer">
+    <span class="key">
+      <%= field.name %>
+    </span>
+    <span class="value"><strong><%- field.value %></strong></span>
+  </div>
+<% }); %>
+</div>

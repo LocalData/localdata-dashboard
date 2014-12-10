@@ -39,6 +39,7 @@ function($, _, Backbone, settings, api) {
       // around for now for backward compatibility.
       'multi/surveys/:slug': 'multi',
       'projects/:slug': 'multi',
+      'projects/:slug/dive': 'multiDetails',
 
       "*actions": "default_route"
     },
@@ -115,6 +116,13 @@ function($, _, Backbone, settings, api) {
     multi: function (slug) {
       this.controller.gotoMultiSurvey(slug);
     },
+
+    multiDetails: function (slug) {
+      this.controller.gotoMultiSurvey(slug, {
+        mode: 'deep-dive'
+      });
+    },
+
 
     default_route: function(actions) {
       // console.log(actions);
