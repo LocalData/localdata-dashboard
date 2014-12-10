@@ -20,11 +20,13 @@ define(function (require) {
   var Responses = require('models/responses');
 
   // Views
-  //var LayerFilterView = require('views/surveys/layer-filter');
+  //var FilterView = require('views/responses/filter');
+  var LayerFilterView = require('views/surveys/layer-filter');
   var ResponseListView = require('views/responses/list');
 
   // Templates
   var template = require('text!templates/surveys/survey-control.html');
+  var selectedFiltersTemplate = require('text!templates/filters/selected-filters.html');
 
   function flip(a) {
     return [a[1], a[0]];
@@ -39,6 +41,7 @@ define(function (require) {
   // The View
   var LayerControl = Backbone.View.extend({
     template: _.template(template),
+    selectedFiltersTemplate: _.template(selectedFiltersTemplate),
 
     events: {
       'click .close': 'close',
@@ -60,6 +63,8 @@ define(function (require) {
       this.mapView = options.mapView;
       this.surveyId = options.layerId;
       this.infoEl = options.infoEl;
+      this.filterEl = options.filterEl;
+      this.legendEl = options.legendEl;
 
       this.filter = options.filter;
 
@@ -94,8 +99,10 @@ define(function (require) {
     /**
      * Set up and fetch the tilejson neede to add the survey to the map.
      */
-    getTileJSON: function() {
-      var filter = this.filter;
+    getTileJSON: function (filter) {
+      if (!filter) {
+        filter = this.filter;
+      }
 
       // Build the appropriate TileJSON URL.
       var url = '/tiles/' + this.survey.get('id');
@@ -178,35 +185,51 @@ define(function (require) {
       this.$el.find('.loading').hide();
     },
 
-    //setupSettings: function() {
-    //  // XXX TODO
-    //  // Settings are getting rendered multiple times
-    //  console.log("Getting settings", this.forms);
-    //  this.stats = new Stats.Model({
-    //    id: this.survey.get('id')
-    //  });
-    //  this.stats.fetch({reset: true});
-//
-    //  this.settings = new LayerFilterView({
-    //    survey: this.survey,
-    //    forms: this.forms,
-    //    stats: this.stats
-    //  });
-//
-    //  this.settings.on('filterSet', this.changeFilter);
-    //  this.settings.on('filterReset', this.clearFilter);
-//
-    //  var $el = this.settings.render();
-    //  this.$el.find('.settings-container').html($el);
-    //},
+    setupSettings: function() {
+      this.stats = new Stats.Model({
+        id: this.survey.get('id')
+      });
+      this.stats.fetch({reset: true});
+
+      this.settings = new LayerFilterView({
+        survey: this.survey,
+        forms: this.forms,
+        stats: this.stats
+      });
+
+      this.listenTo(this.settings, 'filterSet', this.changeFilter);
+      this.listenTo(this.settings, 'filterReset', this.clearFilter);
+
+      var $el = this.settings.render();
+      // FIXME: This is a hack to get only the first layer's filters to render
+      //this.$el.find('.settings-container').html($el);
+      if (this.filterEl) {
+        this.filterEl.html($el);
+      }
+    },
 
     showSettings: function() {
-      console.log("Showing settings", this.$el.find('.settings'));
       this.$el.find('.settings').show();
     },
 
     changeFilter: function(filter) {
       this.getTileJSON(filter);
+      // TODO: Update legend
+      if (this.legendEl) {
+        var questions = this.forms.getFlattenedForm();
+        var question =  questions[filter.question].text;
+        var answer = '';
+        if (this.filters.answer) {
+          answer = _.findWhere(questions[filter.question].answers, { value: filter.answer }).text || '';
+        }
+
+        this.legendEl.html(this.selectedFiltersTemplate({
+          filters: {
+            question: question,
+            answer: answer
+          }
+        }));
+      }
     },
 
     clearFilter: function() {
@@ -245,6 +268,18 @@ define(function (require) {
       this.$el.html(this.template(context));
       if(this.survey.get('name')) {
         this.doneLoading();
+      }
+
+      if (this.filterEl) {
+        this.setupSettings();
+        //this.filterView = new LayerFilterView({
+        //  el: this.filterEl,
+        //  survey: this.survey,
+        //  forms: this.forms,
+        //  // The SurveyView layer handles the filter change actions from the
+        //  // FilterView
+        //  map: this
+        //}).render();
       }
 
       return this.$el;

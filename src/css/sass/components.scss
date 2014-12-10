@@ -113,6 +113,17 @@
   max-width: 300px;
   height: 100%;
   opacity: 0.9;
+
+  button {
+    display: block;
+  }
+  button.address-search-button {
+    display: inline-block;
+  }
+  
+  form {
+    margin-bottom: 11px;
+  }
 }
 
 #map-tools {

@@ -24,6 +24,7 @@ define(function(require, exports, module) {
   module.exports = Backbone.View.extend({
     map: null,
     selectedLayer: null,
+    markers: {},
 
     initialize: function(options) {
       L.Icon.Default.imagePath = '/js/lib/leaflet/images';
@@ -66,6 +67,10 @@ define(function(require, exports, module) {
     addTileLayer: function (layer) {
       this.map.addLayer(layer);
     },
+
+    removeTileLayer: function (layer) {
+      this.map.removeLayer(layer);
+    },
     
     addGridLayer: function (layer) {
       // Make sure the grid layer is on top.
@@ -73,6 +78,10 @@ define(function(require, exports, module) {
         this.map.addLayer(layer);
         layer.on('click', this.selectObject);
       }
+    },
+
+    removeGridLayer: function (layer) {
+      this.map.removeLayer(layer);
     },
 
     loading: function() {

@@ -131,6 +131,13 @@ define(function(require, exports, module) {
     },
 
     totalUp: function() {
+      if (this.activeLayers.length === 1) {
+        this.$('.response-count').hide();
+        return;
+      } else {
+        this.$('.response-count').show();
+      }
+
       var totaled = [];
       var total = 0;
       _.each(this.activeLayers, function(surveyView) {
@@ -184,13 +191,18 @@ define(function(require, exports, module) {
         });
       }
 
-      _.each(this.project.surveys, function(survey) {
+      _.each(this.project.surveys, function (survey, i) {
+        var $filterEl;
+        if (i === 0) {
+          $filterEl = this.$('#filter-view-container');
+        }
         // Create a model
         var surveyLayer = new SurveyView({
           $el: this.$el.find('.layers'),
           mapView: this.mapView,
           layerId: survey.surveyId,
           infoEl: '#responses-list',
+          filterEl: $filterEl,
           filter: survey.filter
         });
 
@@ -215,6 +227,7 @@ define(function(require, exports, module) {
       this.mode = 'deep-dive';
       // Show the deep dive controls.
       $('.control-pane').show();
+      $('#filter-view-container').show();
 
       // Hide the overview controls and expand the map.
       $('#overview-container').hide();
@@ -252,6 +265,12 @@ define(function(require, exports, module) {
       }
 
       return;
+    },
+
+    toggleFilters: function () {
+      // Render the filter
+      this.$('.filters').toggle();
+      //this.$('.settings-container').toggle();
     },
 
     /**
