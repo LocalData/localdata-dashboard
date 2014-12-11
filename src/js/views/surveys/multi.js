@@ -73,6 +73,7 @@ define(function(require, exports, module) {
     walkscope: {
       description: '<p>WALKscope is a mobile tool developed by WalkDenver and PlaceMatters for collecting data related to sidewalks, intersections, and pedestrian counts in the Denver metro area. This information will help create an inventory of pedestrian infrastructure, identify gaps, and build the case for improvements.  Click on the map or one of the categories below to explore the data collected to date.</p>',
       surveys: [{
+        layerName: 'Sidewalk Quality Reports',
         layerId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
         filter: {
           question: 'What-would-you-like-to-record',
@@ -81,6 +82,7 @@ define(function(require, exports, module) {
           color: '#a743c3'
         }
       }, {
+        layerName: 'Intersection Quality Reports',
         layerId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
         filter: {
           question: 'What-would-you-like-to-record',
@@ -176,6 +178,10 @@ define(function(require, exports, module) {
       this.mapView.fitBounds(bounds);
     },
 
+    append: function ($el) {
+      this.$el.find('.layers').append($el);
+    },
+
     render: function () {
       // Actually render the page
       var context = {
@@ -220,8 +226,9 @@ define(function(require, exports, module) {
 
         // Add the survey to the list
         // Will automatically update as we get data
-        this.$el.find('.layers').append(surveyLayer.render());
+        // XXX REMOVE this.$el.find('.layers').append(surveyLayer.render());
 
+        this.listenTo(surveyLayer, 'rendered', this.append);
         this.listenTo(surveyLayer, 'newBounds', this.fitBounds);
         this.listenTo(surveyLayer, 'tileLayerReady', this.addTileLayer);
         this.listenTo(surveyLayer, 'gridLayerReady', this.addGridLayer);

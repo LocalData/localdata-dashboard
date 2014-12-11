@@ -173,6 +173,9 @@ function($, _, Backbone, settings) {
     // immediate question info.
     // { 'are-you-cool': {text: 'Are you cool?', answers: [{value: 'yes', text: 'Yes'}, {value: 'no', text: 'No'}]}}
     getFlattenedForm: function getFlattenedForm() {
+      if (!this.getMostRecentForm()) {
+        return undefined;
+      }
       return this.getMostRecentForm().getFlattenedForm();
     },
 

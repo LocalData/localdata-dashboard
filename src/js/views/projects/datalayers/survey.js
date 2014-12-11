@@ -6,6 +6,7 @@ define(function (require) {
 
   var $ = require('jquery');
   var _ = require('lib/lodash');
+  var async = require('lib/async');
   var Backbone = require('backbone');
   var L = require('lib/leaflet/leaflet.tilejson');
 
@@ -24,10 +25,16 @@ define(function (require) {
   var template = require('text!templates/projects/layerControl.html');
   var tableTemplate = require('text!templates/projects/surveys/table-survey.html');
 
-
   function flip(a) {
     return [a[1], a[0]];
   }
+
+  function downgrade(f) {
+    return function g(data) {
+      return f(null, data);
+    };
+  }
+
 
   // The View
   var LayerControl = Backbone.View.extend({
@@ -47,6 +54,7 @@ define(function (require) {
         'processData',
         'doneLoading',
         'getForms',
+        'setCount',
         'fitBounds',
         'getTileJSON',
         'addTileLayer',
@@ -59,10 +67,34 @@ define(function (require) {
       );
 
       console.log("Creating survey layer with options", options);
+      this.layerName = options.layerName;
       this.surveyId = options.layerId;
       this.filter = options.filter;
 
       this.survey = new Surveys.Model({ id: this.surveyId });
+      this.stats = new Stats.Model({ id: this.surveyId });
+      this.stats.fetch({reset: true});
+      this.forms = new Forms.Collection({ surveyId: this.surveyId });
+      this.forms.fetch({ reset: true });
+      //this.forms.on('reset', this.setupSettings);
+
+      var self = this;
+      async.parallel([
+        function (next) {
+          self.survey.once('change', downgrade(next));
+        },
+        function (next) {
+          self.stats.once('change', downgrade(next));
+        },
+        function (next) {
+          self.forms.once('reset', downgrade(next));
+        }
+      ], function (error) {
+        console.log("Got everything", error);
+        self.render();
+      });
+
+
       this.survey.on('change', this.processData);
       this.survey.on('change:responseBounds', this.fitBounds);
       this.survey.fetch();
@@ -135,10 +167,6 @@ define(function (require) {
       // XXX TODO
       // Settings are getting rendered multiple times
       console.log("Getting settings", this.forms);
-      this.stats = new Stats.Model({
-        id: this.survey.get('id')
-      });
-      this.stats.fetch({reset: true});
 
       this.settings = new SettingsView({
         survey: this.survey,
@@ -151,6 +179,7 @@ define(function (require) {
 
       var $el = this.settings.render();
       return $el;
+
       // this.$el.find('.settings-container').html($el);
     },
 
@@ -175,23 +204,35 @@ define(function (require) {
       this.forms.fetch({ reset: true });
     },
 
+    setCount: function() {
+      var count = this.stats.get(this.filter.question)[this.filter.answer] || '';
+
+      console.log("GOT COUNT", count);
+    },
+
     render: function() {
       var context = {
-        name: this.survey.get('name') || 'LocalData Survey',
+        name: this.layerName || this.survey.get('name') || 'LocalData Survey',
         kind: 'responses',
-        meta: {
-          count: this.survey.get('responseCount') || 0 //this.getCount()
-        }
+        meta: { }
       };
+
+      if(this.filter) {
+        context.meta.count = '';
+        this.stats.on('reset', this.setCount);
+      }else {
+        context.meta.count = this.survey.get('responseCount') || '';
+      }
 
       this.$el.html(this.template(context));
       if(this.survey.get('name')) {
         this.doneLoading();
       }
 
-      this.getForms();
+      this.trigger('rendered', this.$el);
 
-      return this.$el;
+      console.log('Created survey $el', this.$el);
+      // return this.$el;
     }
 
     // close: function() {
