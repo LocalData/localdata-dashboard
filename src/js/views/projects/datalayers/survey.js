@@ -178,9 +178,8 @@ define(function (require) {
       this.settings.on('filterReset', this.clearFilter);
 
       var $el = this.settings.render();
-      return $el;
-
-      // this.$el.find('.settings-container').html($el);
+      //this.trigger('renderedSettings', $el);
+      this.$el.find('.settings-container').html($el);
     },
 
     showSettings: function() {
@@ -232,6 +231,7 @@ define(function (require) {
       this.trigger('rendered', this.$el);
 
       console.log('Created survey $el', this.$el);
+      this.setupSettings();
       // return this.$el;
     }
 

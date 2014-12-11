@@ -149,15 +149,15 @@ define(function (require) {
         resolution: 4
       });
       this.mapView.addGridLayer(this.gridLayer);
-      
+
       this.gridLayer.on('click', this.handleGridClick);
     },
-    
+
     handleGridClick: function (event) {
       if (!event.data) {
         return;
       }
-      
+
       var rc = new Responses.Collection({
         surveyId: this.survey.get('id'),
         objectId: event.data.object_id

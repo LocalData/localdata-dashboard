@@ -182,8 +182,11 @@ define(function(require, exports, module) {
       this.$el.find('.layers').append($el);
     },
 
+    appendSettings: function($el) {
+      console.log("Got settings to append", $el);
+    },
+
     render: function () {
-      // Actually render the page
       var context = {
         description: this.project.description
       };
