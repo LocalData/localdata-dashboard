@@ -14,8 +14,8 @@ define(function(require, exports, module) {
 
   // Views
   var MapView = require('views/maps/multi-map');
-
   var SurveyView = require('views/surveys/survey');
+  var SurveyLayer = require('views/projects/datalayers/survey');
   var CartoDBLayer = require('views/maps/cartodb-layer');
 
   // Templates
@@ -73,7 +73,7 @@ define(function(require, exports, module) {
     walkscope: {
       description: '<p>WALKscope is a mobile tool developed by WalkDenver and PlaceMatters for collecting data related to sidewalks, intersections, and pedestrian counts in the Denver metro area. This information will help create an inventory of pedestrian infrastructure, identify gaps, and build the case for improvements.  Click on the map or one of the categories below to explore the data collected to date.</p>',
       surveys: [{
-        surveyId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
+        layerId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
         filter: {
           question: 'What-would-you-like-to-record',
           answer: 'Sidewalk-Quality',
@@ -81,7 +81,7 @@ define(function(require, exports, module) {
           color: '#a743c3'
         }
       }, {
-        surveyId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
+        layerId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
         filter: {
           question: 'What-would-you-like-to-record',
           answer: 'Intersection-Quality',
@@ -99,8 +99,10 @@ define(function(require, exports, module) {
    *     If there is no filter property, all responses will be shown.
    */
   var MultiSurveyView = Backbone.View.extend({
-    activeLayers: [],
+    activeLayers: {},
     mapView: null,
+
+
     // overview vs deep-dive
     mode: 'overview',
 
@@ -122,14 +124,18 @@ define(function(require, exports, module) {
       } else {
         this.project = projects.gtech;
       }
-      
+
       this.mode = options.mode;
-      
+
       _.bind(this.search, this);
 
       this.render();
     },
 
+    // Get a total count of responses so far
+    // XXX TODO
+    // This should ask the view for a count, not address the view's model
+    // directly.
     totalUp: function() {
       if (this.activeLayers.length === 1) {
         this.$('.response-count').hide();
@@ -153,6 +159,21 @@ define(function(require, exports, module) {
       });
 
       this.$el.find('.response-count .count').html(util.numberWithCommas(total));
+    },
+
+    addTileLayer: function(layer) {
+      console.log("Multi: got tile layer", this.mapView);
+      this.mapView.addTileLayer(layer);
+    },
+
+    addGridLayer: function(layer) {
+      console.log("Multi: got grid layer");
+      this.mapView.addGridLayer(layer);
+    },
+
+    fitBounds: function(bounds) {
+      console.log("Fit bounds", bounds);
+      this.mapView.fitBounds(bounds);
     },
 
     render: function () {
@@ -191,29 +212,50 @@ define(function(require, exports, module) {
         });
       }
 
-      _.each(this.project.surveys, function (survey, i) {
-        var $filterEl;
-        if (i === 0) {
-          $filterEl = this.$('#filter-view-container');
-        }
-        // Create a model
-        var surveyLayer = new SurveyView({
-          $el: this.$el.find('.layers'),
-          mapView: this.mapView,
-          layerId: survey.surveyId,
-          infoEl: '#responses-list',
-          filterEl: $filterEl,
-          filter: survey.filter
-        });
+      // Render survey layers
+      _.each(this.project.surveys, function (survey) {
+        var surveyLayer = new SurveyLayer(survey);
 
-        this.listenTo(surveyLayer.survey, 'change', this.totalUp);
-
+        this.activeLayers[survey.layerId] = surveyLayer;
 
         // Add the survey to the list
-        this.$el.find('.layers').append(surveyLayer.$el);
+        // Will automatically update as we get data
+        this.$el.find('.layers').append(surveyLayer.render());
+
+        this.listenTo(surveyLayer, 'newBounds', this.fitBounds);
+        this.listenTo(surveyLayer, 'tileLayerReady', this.addTileLayer);
+        this.listenTo(surveyLayer, 'gridLayerReady', this.addGridLayer);
+
+        // surveyLayer.on('settingsReady', function($el) {
+        //   console.log("Settings are ready");
+        //   // XXX TODO
+        //   // Filters
+        //   // Append the el at the right point.
+        // });
+
+        // XXX TODO do we still need to total up?
+        // Should be handled by survey's layerControl
+        // this.listenTo(surveyLayer.survey, 'change', this.totalUp);
 
         // Save it to activeLayers for future reference.
-        this.activeLayers.push(surveyLayer);
+        // this.activeLayers.push(surveyLayer);
+
+
+        // XXX Old material
+        // var $filterEl;
+        // if (i === 0) {
+        //   $filterEl = this.$('#filter-view-container');
+        // }
+        // // Create a model
+        // var surveyLayer = new SurveyView({
+        //   $el: this.$el.find('.layers'),
+        //   mapView: this.mapView,
+        //   layerId: survey.surveyId,
+        //   infoEl: '#responses-list',
+        //   filterEl: $filterEl,
+        //   filter: survey.filter
+        // });
+
       }.bind(this));
 
       if (this.mode === 'deep-dive') {
@@ -247,7 +289,7 @@ define(function(require, exports, module) {
         this.selectedItemListView = null;
       }
 
-      // Show the overview controls and restrict the map to the right-hand column.sldfjlsdkjfldkf sfdlkj slfdj 
+      // Show the overview controls and restrict the map to the right-hand column.sldfjlsdkjfldkf sfdlkj slfdj
       $('#overview-container').show();
       $('#map-view-container').addClass('b');
 
@@ -259,7 +301,7 @@ define(function(require, exports, module) {
       if (this.mode === 'overview') {
         this.showDeepDive();
       }
-      
+
       if (!event.data || !event.data.object_id) {
         return;
       }
@@ -288,7 +330,7 @@ define(function(require, exports, module) {
         } else {
           $error.html('');
         }
-        
+
         mapView.goToLatLng(results.coords);
       });
     }

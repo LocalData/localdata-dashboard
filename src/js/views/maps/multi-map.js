@@ -63,7 +63,6 @@ define(function(require, exports, module) {
       }
     },
 
-
     addTileLayer: function (layer) {
       this.map.addLayer(layer);
     },
@@ -71,7 +70,7 @@ define(function(require, exports, module) {
     removeTileLayer: function (layer) {
       this.map.removeLayer(layer);
     },
-    
+
     addGridLayer: function (layer) {
       // Make sure the grid layer is on top.
       if (this.map.getZoom() >= MIN_GRID_ZOOM) {
