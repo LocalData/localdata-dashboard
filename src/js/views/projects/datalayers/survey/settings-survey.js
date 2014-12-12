@@ -27,7 +27,6 @@ define(function (require) {
    * See responses/responses/ListView for a heavyweight implementation.
    */
   var FilterView = Backbone.View.extend({
-    className: 'settings',
     filters: {},
 
     template: _.template(template),
@@ -46,12 +45,7 @@ define(function (require) {
 
       this.survey = options.survey;
       this.forms = options.forms;
-      // this.mapView = options.map;
-
       this.stats = options.stats;
-      this.stats.on('change', this.render);
-
-      this.$el.html(this.loadingTemplate({}));
     },
 
     close: function() {

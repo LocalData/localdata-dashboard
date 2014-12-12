@@ -183,6 +183,10 @@ define(function(require, exports, module) {
     },
 
     appendSettings: function($el) {
+      // XXX TODO
+      // Set up a container for each datasource + id so we know exactly
+      // where to put the element?
+      this.$el.find('.settings-container').append($el);
       console.log("Got settings to append", $el);
     },
 
@@ -232,6 +236,7 @@ define(function(require, exports, module) {
         // XXX REMOVE this.$el.find('.layers').append(surveyLayer.render());
 
         this.listenTo(surveyLayer, 'rendered', this.append);
+        this.listenTo(surveyLayer, 'renderedSettings', this.appendSettings);
         this.listenTo(surveyLayer, 'newBounds', this.fitBounds);
         this.listenTo(surveyLayer, 'tileLayerReady', this.addTileLayer);
         this.listenTo(surveyLayer, 'gridLayerReady', this.addGridLayer);

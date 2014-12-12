@@ -1,6 +1,8 @@
-<%= meta.count %>
-
-<h4><%= name %></h4>
+<h4 <% if(meta.color) { %> style="border-bottom: 5px solid <%= meta.color %>" <% } %>
+    class="show-settings">
+    <%= meta.count %>
+    <%= name %>
+</h4>
 
 <!-- <i class="fa fa-spinner fa-spin loading"></i>
 <i class="fa fa-cog show-settings"></i>

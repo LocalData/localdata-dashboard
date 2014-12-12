@@ -51,7 +51,6 @@ define(function (require) {
       _.bindAll(this,
         'render',
         'update',
-        'processData',
         'doneLoading',
         'getForms',
         'setCount',
@@ -76,7 +75,6 @@ define(function (require) {
       this.stats.fetch({reset: true});
       this.forms = new Forms.Collection({ surveyId: this.surveyId });
       this.forms.fetch({ reset: true });
-      //this.forms.on('reset', this.setupSettings);
 
       var self = this;
       async.parallel([
@@ -90,19 +88,12 @@ define(function (require) {
           self.forms.once('reset', downgrade(next));
         }
       ], function (error) {
-        console.log("Got everything", error);
         self.render();
+        self.getTileJSON(self.filter);
       });
 
-
-      this.survey.on('change', this.processData);
       this.survey.on('change:responseBounds', this.fitBounds);
       this.survey.fetch();
-    },
-
-    processData: function(data) {
-      this.render();
-      this.getTileJSON(this.filter);
     },
 
     update: function() {
@@ -178,13 +169,13 @@ define(function (require) {
       this.settings.on('filterReset', this.clearFilter);
 
       var $el = this.settings.render();
-      //this.trigger('renderedSettings', $el);
-      this.$el.find('.settings-container').html($el);
+      this.$settings = $el;
+      this.trigger('renderedSettings', $el);
     },
 
     showSettings: function() {
-      console.log("Showing settings", this.$el.find('.settings'));
-      this.$el.find('.settings').show();
+      console.log("Showing settings", this.$settings);
+      this.$settings.show();
     },
 
     changeFilter: function(filter) {
@@ -199,7 +190,6 @@ define(function (require) {
       this.forms = new Forms.Collection({
         surveyId: this.survey.get('id')
       });
-      //this.forms.on('reset', this.setupSettings);
       this.forms.fetch({ reset: true });
     },
 
@@ -217,6 +207,7 @@ define(function (require) {
       };
 
       if(this.filter) {
+        context.meta.color = this.filter.color;
         context.meta.count = '';
         this.stats.on('reset', this.setCount);
       }else {
