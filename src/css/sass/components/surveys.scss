@@ -263,6 +263,10 @@
     }
   }
 
+  .show-settings {
+    cursor: pointer;
+  }
+
   .layer {
     margin-bottom: 2em;
   }
@@ -270,14 +274,18 @@
   #map {
     height: 100vh;
   }
+
   #map-view-container {
     height: 100vh;
   }
+
   #responses-list {
     height: 94vh;
     padding: 3vh;
   }
+
 }
+
 .multi.map-list-view {
   height: 100%;
 }

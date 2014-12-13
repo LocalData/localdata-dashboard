@@ -102,6 +102,8 @@ define(function(require, exports, module) {
    */
   var MultiSurveyView = Backbone.View.extend({
     activeLayers: {},
+    activeTileLayers: {},
+    activeGridLayers: {},
     mapView: null,
 
 
@@ -163,13 +165,21 @@ define(function(require, exports, module) {
       this.$el.find('.response-count .count').html(util.numberWithCommas(total));
     },
 
-    addTileLayer: function(layer) {
+    addTileLayer: function(layer, id) {
       console.log("Multi: got tile layer", this.mapView);
+      if(this.activeTileLayers[id]) {
+        this.mapView.removeTileLayer(this.activeTileLayers[id]);
+      }
+
       this.mapView.addTileLayer(layer);
+      this.activeTileLayers[id] = layer;
     },
 
-    addGridLayer: function(layer) {
+    addGridLayer: function(layer, id) {
       console.log("Multi: got grid layer");
+      if(this.activeGridLayers[id]) {
+        this.mapView.removeGridLayer(this.activeGridLayers[id]);
+      }
       this.mapView.addGridLayer(layer);
     },
 

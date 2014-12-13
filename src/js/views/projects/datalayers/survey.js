@@ -146,7 +146,7 @@ define(function (require) {
       //   this.map.removeLayer(this.tileLayer);
       // }
       this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
-      this.trigger('tileLayerReady', this.tileLayer);
+      this.trigger('tileLayerReady', this.tileLayer, this.surveyId);
       //this.map.addLayer(this.tileLayer);
     },
 
