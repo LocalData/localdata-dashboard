@@ -28,6 +28,7 @@ define(function (require) {
    */
   var FilterView = Backbone.View.extend({
     filters: {},
+    $legend: null,
 
     template: _.template(template),
     loadingTemplate: _.template(loadingTemplate),
@@ -52,6 +53,7 @@ define(function (require) {
       this.questions = this.forms.getFlattenedForm();
       console.log("QUESTIONS / FILTER", this.questions, options.filter);
       if(options.filter) {
+        this.originalFilter = options.filter;
         this.questions = this.forms.getSubquestionsFor(options.filter.question, options.filter.answer); //this.questions[options.filter.question];
       }
     },
@@ -156,8 +158,14 @@ define(function (require) {
         event.preventDefault();
       }
 
-      this.filters = {};
-      this.trigger('filterReset');
+      // Reset to the original filters, or none
+      if (this.originalFilter) {
+        this.filters = this.originalFilter;
+      } else {
+        this.filters = {};
+      }
+
+      this.trigger('filterReset', this.filters);
 
       $('.filters .clear').slideUp();
       $('.filters .options .answers').slideUp();
@@ -181,7 +189,9 @@ define(function (require) {
       $('.filters .clear').slideDown();
       $question.find('.toggle').slideUp();
 
-      this.trigger('filterSet', this.filters);
+      this.$legend = $question;
+
+      this.trigger('filterSet', this.filters, this.$legend);
 
       // XXX TODO
       // Mark this question as selected
@@ -203,7 +213,8 @@ define(function (require) {
         this.filters.answer = $answer.attr('data-answer');
       }
 
-      this.trigger('filterSet', this.filters);
+      this.$legend = $question;
+      this.trigger('filterSet', this.filters, this.$legend);
 
       $('.filters .answer').removeClass('active');
       $answer.addClass('active');
