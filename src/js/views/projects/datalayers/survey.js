@@ -142,11 +142,11 @@ define(function (require) {
 
     // XXX TODO This fires multiple times
     addTileLayer: function(tilejson) {
-      // if(this.tileLayer) {
-      //   this.map.removeLayer(this.tileLayer);
-      // }
+      if(this.tileLayer) {
+        this.trigger('removeLayer', this.tileLayer);
+      }
       this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
-      this.trigger('tileLayerReady', this.tileLayer, this.surveyId);
+      this.trigger('tileLayerReady', this.tileLayer);
       //this.map.addLayer(this.tileLayer);
     },
 
@@ -162,7 +162,8 @@ define(function (require) {
       this.settings = new SettingsView({
         survey: this.survey,
         forms: this.forms,
-        stats: this.stats
+        stats: this.stats,
+        filter: this.filter
       });
 
       this.settings.on('filterSet', this.changeFilter);

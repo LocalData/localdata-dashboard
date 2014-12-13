@@ -165,21 +165,17 @@ define(function(require, exports, module) {
       this.$el.find('.response-count .count').html(util.numberWithCommas(total));
     },
 
-    addTileLayer: function(layer, id) {
-      console.log("Multi: got tile layer", this.mapView);
-      if(this.activeTileLayers[id]) {
-        this.mapView.removeTileLayer(this.activeTileLayers[id]);
-      }
-
-      this.mapView.addTileLayer(layer);
-      this.activeTileLayers[id] = layer;
+    removeLayer: function(layer) {
+      this.mapView.removeTileLayer(layer);
     },
 
-    addGridLayer: function(layer, id) {
+    addTileLayer: function(layer) {
+      console.log("Multi: got tile layer", this.mapView);
+      this.mapView.addTileLayer(layer);
+    },
+
+    addGridLayer: function(layer) {
       console.log("Multi: got grid layer");
-      if(this.activeGridLayers[id]) {
-        this.mapView.removeGridLayer(this.activeGridLayers[id]);
-      }
       this.mapView.addGridLayer(layer);
     },
 
@@ -248,6 +244,7 @@ define(function(require, exports, module) {
         this.listenTo(surveyLayer, 'rendered', this.append);
         this.listenTo(surveyLayer, 'renderedSettings', this.appendSettings);
         this.listenTo(surveyLayer, 'newBounds', this.fitBounds);
+        this.listenTo(surveyLayer, 'removeLayer', this.removeLayer);
         this.listenTo(surveyLayer, 'tileLayerReady', this.addTileLayer);
         this.listenTo(surveyLayer, 'gridLayerReady', this.addGridLayer);
 

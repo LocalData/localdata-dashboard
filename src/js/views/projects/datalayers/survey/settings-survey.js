@@ -46,6 +46,14 @@ define(function (require) {
       this.survey = options.survey;
       this.forms = options.forms;
       this.stats = options.stats;
+
+      // If the settings are initialized with a filter,
+      // reduce the set of questions available
+      this.questions = this.forms.getFlattenedForm();
+      console.log("QUESTIONS / FILTER", this.questions, options.filter);
+      if(options.filter) {
+        this.questions = this.forms.getSubquestionsFor(options.filter.question, options.filter.answer); //this.questions[options.filter.question];
+      }
     },
 
     close: function() {
@@ -124,9 +132,8 @@ define(function (require) {
     render: function() {
       console.log('Rendering the filters');
 
-      var questions = this.forms.getFlattenedForm();
       var stats = this.stats;
-      questions = this.prepQuestions(questions, stats);
+      var questions = this.prepQuestions(this.questions, stats);
 
       var context = {
         questions: questions,
