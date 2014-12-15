@@ -166,8 +166,8 @@ define(function (require) {
         filter: this.filter
       });
 
-      this.settings.on('filterSet', this.changeFilter);
-      this.settings.on('legendSet', this.changeLegend);
+      this.listenTo(this.settings, 'filterSet', this.changeFilter);
+      this.listenTo(this.settings, 'legendSet', this.changeLegend);
 
       var $el = this.settings.render();
       this.$settings = $el;
