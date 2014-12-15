@@ -17,9 +17,11 @@ define(function (require) {
   // Templates
   var template = require('text!templates/projects/surveys/settings-survey.html');
   var loadingTemplate = require('text!templates/filters/loading.html');
+  var legendTemplate = require('text!templates/projects/surveys/legend.html');
 
   var ANSWER = 'response';
   var NOANSWER = 'no response';
+  var DURATION = 100;
 
   /**
    * Intended for shorter lists of responses (arbitrarily <25)
@@ -32,6 +34,7 @@ define(function (require) {
 
     template: _.template(template),
     loadingTemplate: _.template(loadingTemplate),
+    legendTemplate: _.template(legendTemplate),
 
     events: {
       "click .select": "showOptions",
@@ -56,6 +59,8 @@ define(function (require) {
         this.originalFilter = options.filter;
         this.questions = this.forms.getSubquestionsFor(options.filter.question, options.filter.answer); //this.questions[options.filter.question];
       }
+
+      this.on('filterSet', this.generateLegend);
     },
 
     close: function() {
@@ -145,6 +150,23 @@ define(function (require) {
       return this.$el;
     },
 
+    generateLegend: function() {
+      var question = this.questions[this.filters.question];
+      console.log("Generating legend", this.filters, this.questions, question);
+
+      if(!question) {
+        this.trigger('legendSet', $(''));
+        return;
+      }
+
+      var $legend = this.legendTemplate({
+        filters: this.filters,
+        question: question
+      });
+
+      this.trigger('legendSet', $legend);
+    },
+
     showOptions: function(event) {
       event.preventDefault();
       $('.filters .options').show();
@@ -171,8 +193,8 @@ define(function (require) {
       // is a bit of a hack. We should have a better way of clearing it.
       this.trigger('filterSet', this.filters, $(''));
 
-      $('.filters .clear').slideUp();
-      $('.filters .options .answers').slideUp();
+      $('.filters .clear').slideUp(DURATION);
+      $('.filters .options .answers').slideUp(DURATION);
       $('.filters .answer').removeClass('active');
     },
 
@@ -188,10 +210,10 @@ define(function (require) {
       this.filters.question = question;
 
       // Show the sub-answers
-      $('.filters .options .answers').slideUp();
-      $question.find('.answers').slideDown();
-      $('.filters .clear').slideDown();
-      $question.find('.toggle').slideUp();
+      $('.filters .options .answers').slideUp(DURATION);
+      $question.find('.answers').slideDown(DURATION);
+      $('.filters .clear').slideDown(DURATION);
+      $question.find('.toggle').slideUp(DURATION);
 
       this.$legend = $(''); //$question;
 

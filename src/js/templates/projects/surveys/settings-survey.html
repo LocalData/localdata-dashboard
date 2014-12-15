@@ -36,7 +36,7 @@
             <% _.each(questions[name].answers, function (answer) {%>
               <span class="answer" data-answer="<%- answer.value %>" data-question="<%- name %>">
                 <span class="circle" style="background-color: <%- answer.color %>; border-color: <%- answer.color %>;"></span>
-                <%- answer.text %>: <%- answer.count %>
+                <%- answer.text %> (<%- answer.count %>)
               </span>
             <% }); %>
           </div>

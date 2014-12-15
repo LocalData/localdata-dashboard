@@ -61,7 +61,8 @@ define(function (require) {
         // Settings
         'setupSettings',
         'showSettings',
-        'changeFilter'
+        'changeFilter',
+        'changeLegend'
       );
 
       console.log("Creating survey layer with options", options);
@@ -166,6 +167,7 @@ define(function (require) {
       });
 
       this.settings.on('filterSet', this.changeFilter);
+      this.settings.on('legendSet', this.changeLegend);
 
       var $el = this.settings.render();
       this.$settings = $el;
@@ -177,10 +179,15 @@ define(function (require) {
       this.$settings.show();
     },
 
-    changeFilter: function(filter, $legend) {
+    changeFilter: function(filter) {
       this.getTileJSON(filter);
 
       // Set up the legend
+      // this.$el.find('.legend').html($legend);
+    },
+
+    changeLegend: function($legend) {
+      console.log("GOT LEGEND", this.$el.find('.legend'));
       this.$el.find('.legend').html($legend);
     },
 
