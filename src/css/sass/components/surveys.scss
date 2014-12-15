@@ -284,6 +284,10 @@
       margin-bottom: -3px;
     }
 
+    .inactive .circle {
+      background-color: transparent !important;
+    }
+
     .question {
       line-height: 1em;
       margin-top: 0.5em;
@@ -312,6 +316,12 @@
   .filters {
     .date-filters {
       display: none;
+    }
+  }
+
+  .legend {
+    .question-title {
+      cursor: pointer;
     }
   }
 

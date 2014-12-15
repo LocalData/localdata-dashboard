@@ -60,11 +60,10 @@ define(function (require) {
         this.questions = this.forms.getSubquestionsFor(options.filter.question, options.filter.answer); //this.questions[options.filter.question];
       }
 
-      this.on('filterSet', this.generateLegend);
+      this.on('questionSet', this.generateLegend);
     },
 
     close: function() {
-      console.log("Closing settings");
       this.$el.hide();
     },
 
@@ -152,17 +151,20 @@ define(function (require) {
 
     generateLegend: function() {
       var question = this.questions[this.filters.question];
-      console.log("Generating legend", this.filters, this.questions, question);
 
       if(!question) {
         this.trigger('legendSet', $(''));
         return;
       }
 
-      var $legend = this.legendTemplate({
+      var legend = this.legendTemplate({
         filters: this.filters,
         question: question
       });
+      var $legend = $(legend);
+
+      $legend.find('.question-title').on('click', this.selectQuestion.bind(this));
+      $legend.find('.answer').on('click', this.selectAnswer.bind(this));
 
       this.trigger('legendSet', $legend);
     },
@@ -196,12 +198,15 @@ define(function (require) {
       $('.filters .clear').slideUp(DURATION);
       $('.filters .options .answers').slideUp(DURATION);
       $('.filters .answer').removeClass('active');
+
+      this.generateLegend();
+      this.close();
     },
 
     selectQuestion: function(event) {
       // Clear out any filters
       if(this.filters.answer) {
-        this.reset();
+        this.filters = {};
       }
 
       // Set up handy shortcuts
@@ -215,9 +220,11 @@ define(function (require) {
       $('.filters .clear').slideDown(DURATION);
       $question.find('.toggle').slideUp(DURATION);
 
-      this.$legend = $(''); //$question;
+      this.trigger('filterSet', this.filters);
 
-      this.trigger('filterSet', this.filters, this.$legend);
+      this.generateLegend();
+
+      this.close();
 
       // XXX TODO
       // Mark this question as selected
@@ -239,11 +246,14 @@ define(function (require) {
         this.filters.answer = $answer.attr('data-answer');
       }
 
-      this.$legend =  $(''); // $question;
-      this.trigger('filterSet', this.filters, this.$legend);
+      this.trigger('filterSet', this.filters);
 
-      $('.filters .answer').removeClass('active');
+      console.log("Activating", $answer);
+
+      $question.find('.answer').addClass('inactive');
+      $question.find('.answer').removeClass('active');
       $answer.addClass('active');
+      $answer.removeClass('inactive');
     },
 
     /**

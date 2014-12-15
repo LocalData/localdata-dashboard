@@ -180,6 +180,7 @@ define(function (require) {
     },
 
     changeFilter: function(filter) {
+      console.log("Got filter", filter);
       this.getTileJSON(filter);
 
       // Set up the legend
@@ -187,7 +188,6 @@ define(function (require) {
     },
 
     changeLegend: function($legend) {
-      console.log("GOT LEGEND", this.$el.find('.legend'));
       this.$el.find('.legend').html($legend);
     },
 
