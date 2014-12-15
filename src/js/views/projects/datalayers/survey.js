@@ -139,8 +139,6 @@ define(function (require) {
       this.trigger('newBounds', newBounds);
     },
 
-
-    // XXX TODO This fires multiple times
     addTileLayer: function(tilejson) {
       if(this.tileLayer) {
         this.trigger('removeLayer', this.tileLayer);
