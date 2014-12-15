@@ -192,6 +192,7 @@ define(function(require, exports, module) {
       // XXX TODO
       // Set up a container for each datasource + id so we know exactly
       // where to put the element?
+      $el.hide();
       this.$el.find('.settings-container').append($el);
       console.log("Got settings to append", $el);
     },
