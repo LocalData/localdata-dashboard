@@ -165,7 +165,11 @@ define(function (require) {
         this.filters = {};
       }
 
-      this.trigger('filterReset', this.filters);
+
+      // XXX TODO
+      // This method of clearing the legend  with an empty obj -- aka $('') --
+      // is a bit of a hack. We should have a better way of clearing it.
+      this.trigger('filterSet', this.filters, $(''));
 
       $('.filters .clear').slideUp();
       $('.filters .options .answers').slideUp();
@@ -189,7 +193,7 @@ define(function (require) {
       $('.filters .clear').slideDown();
       $question.find('.toggle').slideUp();
 
-      this.$legend = $question;
+      this.$legend = $(''); //$question;
 
       this.trigger('filterSet', this.filters, this.$legend);
 
@@ -213,7 +217,7 @@ define(function (require) {
         this.filters.answer = $answer.attr('data-answer');
       }
 
-      this.$legend = $question;
+      this.$legend =  $(''); // $question;
       this.trigger('filterSet', this.filters, this.$legend);
 
       $('.filters .answer').removeClass('active');

@@ -166,7 +166,6 @@ define(function (require) {
       });
 
       this.settings.on('filterSet', this.changeFilter);
-      this.settings.on('filterReset', this.changeFilter);
 
       var $el = this.settings.render();
       this.$settings = $el;

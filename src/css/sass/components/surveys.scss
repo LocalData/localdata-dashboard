@@ -269,6 +269,31 @@
 
   .layer {
     margin-bottom: 2em;
+
+    h4 {
+      letter-spacing: -1px;
+      font-size: 1.1em;
+      line-height: 1em;
+    }
+
+    .circle {
+      border-radius: 9px;
+      display: inline-block;
+      height: 18px;
+      width: 18px;
+      margin-bottom: -3px;
+    }
+
+    .question {
+      line-height: 1em;
+      margin-top: 0.5em;
+    }
+
+    .answer {
+      display: block;
+      cursor: pointer;
+      line-height: 27px;
+    }
   }
 
   #map {
@@ -282,6 +307,12 @@
   #responses-list {
     height: 94vh;
     padding: 3vh;
+  }
+
+  .filters {
+    .date-filters {
+      display: none;
+    }
   }
 
 }

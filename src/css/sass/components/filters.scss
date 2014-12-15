@@ -44,7 +44,6 @@
 
   h3 {
     font-size: 24px;
-    margin-bottom: 0;
   }
 
   label {
@@ -59,7 +58,6 @@
   }
 
   .answers {
-    .circle,
     button {
       display: none;
     }
@@ -70,21 +68,17 @@
   }
 
   .answer {
-    position: relative;
-    line-height: 20px;
-    padding-left: 32px;
-    clear: both;
-    margin-top: 10px
+    display: block;
+    cursor: pointer;
+    line-height: 27px;
   }
 
   .circle {
-    position: absolute;
-    left: 5px;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    bborder: 3px solid #fff;
-    background: transparent;
+    border-radius: 9px;
+    display: inline-block;
+    height: 18px;
+    width: 18px;
+    margin-bottom: -3px;
   }
 
   .selected {
