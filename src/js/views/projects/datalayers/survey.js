@@ -60,7 +60,10 @@ define(function (require) {
 
         // Settings
         'setupSettings',
-        'showSettings'
+        'showSettings',
+
+        // Interaction
+        'handleClick'
       );
 
       console.log("Creating survey layer with options", options);
@@ -206,12 +209,17 @@ define(function (require) {
     },
 
     handleClick: function (event) {
+      console.log("Handle click", event);
       var objectId;
 
       if (event.data) {
         objectId = event.data.object_id;
+      } else {
+        return;
       }
 
+      // XXX TODO
+      // Re-enable navigation support
       if (this.mode === 'overview') {
         if (objectId) {
           events.publish('navigate', ['surveys/' + this.survey.get('slug') + '/dive/' + objectId]);
@@ -226,6 +234,8 @@ define(function (require) {
         ]);
         this.selectItem(objectId);
       }
+
+
     },
 
     /**
