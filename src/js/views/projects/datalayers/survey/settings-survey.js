@@ -1,5 +1,5 @@
 /*jslint nomen: true */
-/*globals define, cartodb, Rickshaw: true */
+/*globals define */
 
 define(function (require) {
   'use strict';
@@ -11,16 +11,11 @@ define(function (require) {
   // LocalData
   var settings = require('settings');
 
-  // Models
-  var Responses = require('models/responses');
-
   // Templates
   var template = require('text!templates/projects/surveys/settings-survey.html');
   var loadingTemplate = require('text!templates/filters/loading.html');
   var legendTemplate = require('text!templates/projects/surveys/legend.html');
 
-  var ANSWER = 'response';
-  var NOANSWER = 'no response';
   var DURATION = 100;
 
   /**
@@ -50,123 +45,45 @@ define(function (require) {
       this.survey = options.survey;
       this.forms = options.forms;
       this.stats = options.stats;
-
-      // If the settings are initialized with a filter,
-      // reduce the set of questions available
-      this.questions = this.forms.getFlattenedForm();
-      console.log("QUESTIONS / FILTER", this.questions, options.filter);
-      if(options.filter) {
-        this.originalFilter = options.filter;
-        this.questions = this.forms.getSubquestionsFor(options.filter.question, options.filter.answer); //this.questions[options.filter.question];
-      }
-
-      this.on('questionSet', this.generateLegend);
+      this.exploration = options.exploration;
     },
 
     close: function() {
       this.$el.hide();
     },
 
-    prepQuestions: function(questions, stats) {
-      // Match the question names and answer values from the form with stats and colors.
-      _.each(_.keys(questions), function (question) {
-        var questionStats = stats.get(question);
-        var type = questions[question].type;
-        if (type === 'text') {
-          var total = _.reduce(questionStats, function (sum, count) {
-            return sum + count;
-          }, 0);
-
-          var noResponseCount;
-          if (questionStats) {
-            noResponseCount = questionStats[NOANSWER];
-          }
-          if (noResponseCount === undefined) {
-            noResponseCount = 0;
-          }
-
-          questions[question].answers = [{
-            text: ANSWER,
-            value: ANSWER,
-            count: total - noResponseCount,
-            color: settings.colorRange[1]
-          }, {
-            text: NOANSWER,
-            value: NOANSWER,
-            count: noResponseCount,
-            color: settings.colorRange[0]
-          }];
-        } else if (type === 'file') {
-          // TODO: We need to see photo upload numbers in the stats (or
-          // somewhere) to report them in the UI.
-
-          questions[question].answers = [{
-            text: ANSWER,
-            value: ANSWER,
-            count: '',
-            color: settings.colorRange[1]
-          }, {
-            text: NOANSWER,
-            value: NOANSWER,
-            count: '',
-            color: settings.colorRange[0]
-          }];
-        } else {
-          var answers = questions[question].answers;
-          _.each(answers, function (answer, index) {
-            if (!questionStats) {
-              answer.count = 0;
-            } else {
-              // Get the count from the stats object.
-              answer.count = questionStats[answer.value];
-              if (answer.count === undefined) {
-                answer.count = 0;
-              }
-            }
-
-            // Get the color.
-            // The last "answer" is the no-response placeholder, which gets the
-            // zero-index color.
-            answer.color = settings.colorRange[(index + 1) % answers.length];
-          });
-        }
-      });
-
-      return questions;
-    },
-
     render: function() {
-      console.log('Rendering the filters');
-
-      var stats = this.stats;
-      var questions = this.prepQuestions(this.questions, stats);
-
       var context = {
-        questions: questions,
-        mapping: this.forms.map()
+        categories: this.exploration
       };
       this.$el.html(this.template(context));
       return this.$el;
     },
 
-    generateLegend: function() {
-      var question = this.questions[this.filters.question];
-
-      if(!question) {
-        this.trigger('legendSet', $(''));
-        return;
+    generateLegend: function () {
+      var category;
+      if (this.filters.question) {
+        category = _.find(this.exploration, { name: this.filters.question });
       }
 
-      var legend = this.legendTemplate({
-        filters: this.filters,
-        question: question
-      });
-      var $legend = $(legend);
+      if (!category) {
+        this.$legend = null;
+      } else {
+        var legend = this.legendTemplate({
+          filters: this.filters,
+          category: category
+        });
+        this.$legend = $(legend);
 
-      $legend.find('.question-title').on('click', this.selectQuestion.bind(this));
-      $legend.find('.answer').on('click', this.selectAnswer.bind(this));
+        // TODO: Use delegated events?
+        this.$legend.find('.question-title').on('click', this.selectQuestion.bind(this));
+        this.$legend.find('.answer').on('click', this.selectAnswer.bind(this));
+      }
 
-      this.trigger('legendSet', $legend);
+      // TODO: Factor the legend into its own view, instead of passing DOM
+      // nodes between two views and spreading around the events and
+      // insertion/removal.
+      this.trigger('legendSet', this.$legend);
     },
 
     showOptions: function(event) {
@@ -190,10 +107,7 @@ define(function (require) {
       }
 
 
-      // XXX TODO
-      // This method of clearing the legend  with an empty obj -- aka $('') --
-      // is a bit of a hack. We should have a better way of clearing it.
-      this.trigger('filterSet', this.filters, $(''));
+      this.trigger('filterSet', this.filters);
 
       $('.filters .clear').slideUp(DURATION);
       $('.filters .options .answers').slideUp(DURATION);
@@ -215,6 +129,9 @@ define(function (require) {
       this.filters.question = question;
 
       // Show the sub-answers
+      // TODO: The following slides operate on two different matches. One
+      // seems to be hidden with a display:none, the other is a descendant of
+      // this.$el, so we can scope the search.
       $('.filters .options .answers').slideUp(DURATION);
       $question.find('.answers').slideDown(DURATION);
       $('.filters .clear').slideDown(DURATION);
@@ -239,12 +156,21 @@ define(function (require) {
 
       // Make sure we have the right question selected
       this.filters.question = $answer.attr('data-question');
-      var $question = $('div[data-question=' + this.filters.question + ']');
+      var $question = $('div[data-question="' + this.filters.question + '"]');
 
       if(!this.filters.answer) {
         $answer = $answer.parent();
         this.filters.answer = $answer.attr('data-answer');
       }
+      
+      // We're manipulating the answer styling in both the legend and the
+      // survey-layer settings box, so we need to find both answer elements.
+      // TODO: This is a hack. We should probably factor the legend out into
+      // its own view and let it manage its own styling. The legend and
+      // settings views can both listen to the appropriate events. The current
+      // technique is bound to interfere with other layers that have
+      // coincidentally-named questions/answers.
+      $answer = $('span[data-question="' + this.filters.question + '"][data-answer="' + this.filters.answer + '"]');
 
       this.trigger('filterSet', this.filters);
 

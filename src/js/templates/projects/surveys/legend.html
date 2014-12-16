@@ -1,13 +1,13 @@
 <div class="question" data-question="<%- filters.question %>">
   <span class="question-title">
-    <%- question.text %>
+    <%- category.name %>
   </span>
 
   <div class="answers">
-    <% _.each(question.answers, function (answer) {%>
-      <span class="answer" data-answer="<%- answer.value %>" data-question="<%- filters.question %>">
-        <span class="circle" style="background-color: <%- answer.color %>; border-color: <%- answer.color %>;"></span>
-        <%- answer.text %> (<%- answer.count %>)
+    <% _.each(category.values, function (value) {%>
+      <span class="answer" data-answer="<%- value.text %>" data-question="<%- category.name %>">
+        <span class="circle" style="background-color: <%- value.color %>; border-color: <%- value.color %>;"></span>
+        <%- value.text %>
       </span>
     <% }); %>
   </div>

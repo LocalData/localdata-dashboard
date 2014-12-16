@@ -20,6 +20,9 @@ define(function(require, exports, module) {
 
   // Templates
   var embeddedSurveyTemplate = require('text!templates/responses/embed-multi.html');
+  var exploreStyles = require('text!templates/projects/surveys/explore-styles.mss');
+  var simpleStyles = require('text!templates/projects/surveys/simple-styles.mss');
+
 
 
   // TODO: Fetch the project configuration data from the API via a Project
@@ -75,15 +78,58 @@ define(function(require, exports, module) {
       surveys: [{
         layerName: 'Sidewalk Quality Reports',
         layerId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
-        filter: {
-          question: 'What-would-you-like-to-record',
-          answer: 'Sidewalk-Quality',
-          legend: 'Sidewalk Quality Reports',
-          color: '#a743c3'
-        }
+        query: {
+          'entries.responses.What-would-you-like-to-record': 'Sidewalk-Quality'
+        },
+        select: {},
+        // XXX styles: _.template(simpleStyles)({color: '#a743c3'}),
+        styles: _.template(simpleStyles)({color: '#10a030'}),
+        exploration: [{
+          name: 'Sidewalk Type',
+          layer: {
+            query: '{}',
+            select: {
+              'entries.responses': 1
+            },
+            styles: _.template(exploreStyles)({
+              showNoResponse: false,
+              pairs: [{
+                key: 'responses.What-type-of-sidewalk',
+                value: 'No-sidewalk',
+                color: '#a743c3'
+              }, {
+                key: 'responses.What-type-of-sidewalk',
+                value: 'Less-than-3-feet-rollover-curb',
+                color: '#f15a24'
+              }]
+            })
+          },
+          values: [{
+            text: 'No sidewalk',
+            color: '#a743c3',
+            layer: {
+              query: {
+                'entries.responses.What-type-of-sidewalk': 'No-sidewalk'
+              },
+              select: {},
+              styles: _.template(simpleStyles)({color: '#a743c3'})
+            }
+          }, {
+            text: '< 3 ft with rollover curb',
+            color: '#f15a24',
+            layer: {
+            }
+          }]
+        }]
       }, {
         layerName: 'Intersection Quality Reports',
         layerId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
+        query: {
+          'entries.responses.What-would-you-like-to-record': 'Intersection-Quality'
+        },
+        select: {},
+        // XXX styles: _.template(simpleStyles)({color: '#f15a24'}),
+        styles: _.template(simpleStyles)({color: '#1030a0'}),
         filter: {
           question: 'What-would-you-like-to-record',
           answer: 'Intersection-Quality',
