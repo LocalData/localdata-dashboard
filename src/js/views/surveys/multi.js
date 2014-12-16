@@ -170,13 +170,13 @@ define(function(require, exports, module) {
     },
 
     addTileLayer: function(layer) {
-      console.log("Multi: got tile layer", this.mapView);
+
       this.mapView.addTileLayer(layer);
     },
 
     addGridLayer: function(layer) {
-      console.log("Multi: got grid layer");
-      this.mapView.addGridLayer(layer);
+      // XXX TODO We may need to make sure grid layers are on top
+      this.mapView.addTileLayer(layer);
     },
 
     fitBounds: function(bounds) {

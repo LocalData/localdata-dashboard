@@ -74,8 +74,9 @@ define(function(require, exports, module) {
     addGridLayer: function (layer) {
       // Make sure the grid layer is on top.
       if (this.map.getZoom() >= MIN_GRID_ZOOM) {
+
         this.map.addLayer(layer);
-        layer.on('click', this.selectObject);
+        // layer.on('click', this.selectObject);
       }
     },
 

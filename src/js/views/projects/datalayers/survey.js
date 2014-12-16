@@ -35,7 +35,6 @@ define(function (require) {
     };
   }
 
-
   // The View
   var LayerControl = Backbone.View.extend({
     template: _.template(template),
@@ -144,8 +143,56 @@ define(function (require) {
         this.trigger('removeLayer', this.tileLayer);
       }
       this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
+
+      // Create the grid layer
+      if (this.gridLayer) {
+        this.trigger('removeLayer', this.gridLayer);
+      }
+      this.gridLayer = new L.UtfGrid(tilejson.grids[0], {
+        resolution: 4
+      });
+
+      console.log("Using grid layer", this.gridLayer);
+
+      this.gridLayer.on('click', this.handleClick);
+
       this.trigger('tileLayerReady', this.tileLayer);
-      //this.map.addLayer(this.tileLayer);
+      this.trigger('gridLayerReady', this.gridLayer);
+    },
+
+    handleClick: function(event) {
+      console.log(event);
+    },
+
+    /**
+     * Highlight a selected object
+     * @param  {Object} event
+     */
+    selectObject: function(event) {
+      if (!event.data) {
+        return;
+      }
+
+      this.deselectObject();
+
+      // Add a layer with a visual selection
+      this.selectedLayer = new L.GeoJSON(event.data.geometry, {
+        pointToLayer: this.defaultPointToLayer,
+        style: settings.selectedStyle
+      });
+
+      // XXX TODO
+      // Send the layer up to the map
+      // this.map.addLayer(this.selectedLayer);
+      // this.selectedLayer.bringToFront();
+    },
+
+    deselectObject: function(event) {
+      // XXX TODO
+      // if (this.selectedLayer !== null) {
+      //   this.map.removeLayer(this.selectedLayer);
+      //   delete this.selectedLayer;
+      // }
     },
 
     doneLoading: function() {
