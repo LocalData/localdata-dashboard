@@ -418,9 +418,9 @@ define(function(require, exports, module) {
       if (this.activeLayers.length === 1) {
         this.$('.response-count').hide();
         return;
-      } else {
-        this.$('.response-count').show();
       }
+
+      this.$('.response-count').show();
 
       var totaled = [];
       var total = 0;
@@ -537,7 +537,7 @@ define(function(require, exports, module) {
         this.selectedItemListView = null;
       }
 
-      // Show the overview controls and restrict the map to the right-hand column.sldfjlsdkjfldkf sfdlkj slfdj
+      // Show the overview controls and restrict the map to the right-hand column.
       $('#overview-container').show();
       $('#map-view-container').addClass('b');
 

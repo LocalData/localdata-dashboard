@@ -10,7 +10,7 @@ define(function(require, exports, module) {
   var Backbone = require('backbone');
   var events = require('lib/tinypubsub');
   var moment = require('moment');
-  
+
   var api = require('api');
 
   // Models
@@ -153,7 +153,7 @@ define(function(require, exports, module) {
         } else {
           $error.html('');
         }
-        
+
         mapView.goToLatLng(results.coords);
       });
     },
@@ -195,21 +195,22 @@ define(function(require, exports, module) {
       if (event.data) {
         objectId = event.data.object_id;
       }
-      
-      if (this.mode === 'overview') {
-        if (objectId) {  
-          events.publish('navigate', ['surveys/' + this.survey.get('slug') + '/dive/' + objectId]);
-        } else {
-          events.publish('navigate', ['surveys/' + this.survey.get('slug') + '/dive']);
-        }
-      } else if (objectId) {
-        // Update the URL
-        events.publish('navigate', [
-          'surveys/' + this.survey.get('slug') + '/dive/' + objectId,
-          { trigger: false }
-        ]);
-        this.selectItem(objectId);
-      }
+
+      // if (this.mode === 'overview') {
+      //   if (objectId) {
+      //     events.publish('navigate', ['surveys/' + this.survey.get('slug') + '/dive/' + objectId]);
+      //   } else {
+      //     events.publish('navigate', ['surveys/' + this.survey.get('slug') + '/dive']);
+      //   }
+      // } else if (objectId) {
+      //   // Update the URL
+      //   events.publish('navigate', [
+      //     'surveys/' + this.survey.get('slug') + '/dive/' + objectId,
+      //     { trigger: false }
+      //   ]);
+      // }
+
+      this.selectItem(objectId);
     },
 
     update: function() {
@@ -252,7 +253,7 @@ define(function(require, exports, module) {
         this.selectedItemListView = null;
       }
 
-      // Show the overview controls and restrict the map to the right-hand column.sldfjlsdkjfldkf sfdlkj slfdj 
+      // Show the overview controls and restrict the map to the right-hand column.
       $('#overview-container').show();
       $('#map-view-container').addClass('b');
 
@@ -394,7 +395,7 @@ define(function(require, exports, module) {
       $('.factoid').addClass('small-factoid');
       this.$el.addClass('bigb');
     },
-    
+
     search: function(event) {
       event.preventDefault();
       var address = this.$('#address-search').val();
@@ -407,7 +408,7 @@ define(function(require, exports, module) {
         } else {
           $error.html('');
         }
-        
+
         mapView.goToLatLng(results.coords);
       });
     },
