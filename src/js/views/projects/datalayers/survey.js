@@ -1,5 +1,5 @@
 /*jslint nomen: true */
-/*globals define, cartodb, Rickshaw: true */
+/*globals define */
 
 define(function (require) {
   'use strict';
@@ -9,9 +9,6 @@ define(function (require) {
   var async = require('lib/async');
   var Backbone = require('backbone');
   var L = require('lib/leaflet/leaflet.tilejson');
-
-  // LocalData
-  var settings = require('settings');
 
   // Models
   var Surveys = require('models/surveys');
@@ -54,20 +51,23 @@ define(function (require) {
         'getForms',
         'setCount',
         'fitBounds',
-        'getTileJSON',
         'addTileLayer',
 
         // Settings
         'setupSettings',
-        'showSettings',
-        'changeFilter',
-        'changeLegend'
+        'showSettings'
       );
 
       console.log("Creating survey layer with options", options);
       this.layerName = options.layerName;
       this.surveyId = options.layerId;
-      this.filter = options.filter;
+      this.layerDef = {
+        query: options.query,
+        select: options.select,
+        styles: options.styles
+      };
+      this.color = options.color;
+      this.exploration = options.exploration;
 
       this.survey = new Surveys.Model({ id: this.surveyId });
       this.stats = new Stats.Model({ id: this.surveyId });
@@ -88,7 +88,7 @@ define(function (require) {
         }
       ], function (error) {
         self.render();
-        self.getTileJSON(self.filter);
+        self.getTileJSON();
       });
 
       this.survey.on('change:responseBounds', this.fitBounds);
@@ -102,25 +102,30 @@ define(function (require) {
     /**
      * Set up and fetch the tilejson neede to add the survey to the map.
      */
-    getTileJSON: function(filter) {
-      // Build the appropriate TileJSON URL.
-      var url = '/tiles/' + this.survey.get('id');
-      if (filter) {
-        if(filter.question) {
-          url = url + '/filter/' + filter.question;
-        }
-        if(filter.answer) {
-          url = url + '/' + filter.answer;
-        }
+    getTileJSON: function (filter) {
+      var data;
+      if (!filter || !filter.question) {
+        data = this.layerDef;
+      } else if (filter.question && !filter.answer) {
+        // TODO: Switch nomenclature to "category" and "value" instead of
+        // "question" and "answer".
+        data = _.find(this.exploration, { name: filter.question }).layer;
+      } else {
+        var filterDefs = _.find(this.exploration, {
+          name: filter.question
+        }).values;
+        data = _.find(filterDefs, { text: filter.answer }).layer;
       }
-      url = url + '/tile.json';
 
       // Get TileJSON
+      // TODO: Switch this to a POST once we support proxying the post to the
+      // tile server through the API.
       $.ajax({
-        url: url,
+        url: '/tiles/surveys/' + this.survey.get('id') + '/tile.json',
         type: 'GET',
         dataType: 'json',
-        cache: false
+        cache: false,
+        data: { layerDefinition: JSON.stringify(data) }
       }).done(this.addTileLayer)
       .fail(function(jqXHR, textStatus, errorThrown) {
         console.log("Error fetching tilejson", jqXHR, textStatus, errorThrown);
@@ -208,7 +213,7 @@ define(function (require) {
         survey: this.survey,
         forms: this.forms,
         stats: this.stats,
-        filter: this.filter
+        exploration: this.exploration
       });
 
       this.listenTo(this.settings, 'filterSet', this.changeFilter);
@@ -233,7 +238,7 @@ define(function (require) {
     },
 
     changeLegend: function($legend) {
-      this.$el.find('.legend').html($legend);
+      this.$el.find('.legend').empty().append($legend);
     },
 
     getForms: function() {
@@ -256,8 +261,8 @@ define(function (require) {
         meta: { }
       };
 
-      if(this.filter) {
-        context.meta.color = this.filter.color;
+      if(this.color) {
+        context.meta.color = this.color;
         context.meta.count = '';
         this.stats.on('reset', this.setCount);
       }else {

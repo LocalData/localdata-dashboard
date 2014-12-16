@@ -24,19 +24,18 @@
       <h3>Select a question to explore</h3>
 
       <div class="options">
-      <% _.each(_.keys(questions), function (name) {%>
-        <% if(! _.has(questions, name)) { return; } %>
-        <div class="question" data-question="<%- name %>">
+      <% _.each(categories, function (category) {%>
+        <div class="question" data-question="<%- category.name %>">
           <span class="question-title">
-            <%- questions[name].text %>
+            <%- category.name %>
           </span>
           <span class="toggle"><i class="fa fa-angle-down"></i></span>
 
           <div class="answers">
-            <% _.each(questions[name].answers, function (answer) {%>
-              <span class="answer" data-answer="<%- answer.value %>" data-question="<%- name %>">
-                <span class="circle" style="background-color: <%- answer.color %>; border-color: <%- answer.color %>;"></span>
-                <%- answer.text %> (<%- answer.count %>)
+            <% _.each(category.values, function (value) {%>
+              <span class="answer" data-answer="<%- value.text %>" data-question="<%- category.name %>">
+                <span class="circle" style="background-color: <%- value.color %>; border-color: <%- value.color %>;"></span>
+                <%- value.text %>
               </span>
             <% }); %>
           </div>
