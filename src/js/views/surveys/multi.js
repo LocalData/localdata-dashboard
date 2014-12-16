@@ -108,6 +108,7 @@ define(function(require, exports, module) {
     },
     walkscope: {
       description: '<p>WALKscope is a mobile tool developed by WalkDenver and PlaceMatters for collecting data related to sidewalks, intersections, and pedestrian counts in the Denver metro area. This information will help create an inventory of pedestrian infrastructure, identify gaps, and build the case for improvements.  Click on the map or one of the categories below to explore the data collected to date.</p>',
+      location: "Denver, Colorado",
       surveys: [{
         layerName: 'Sidewalk Quality Reports',
         layerId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
