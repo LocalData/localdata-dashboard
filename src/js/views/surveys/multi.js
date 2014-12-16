@@ -78,6 +78,7 @@ define(function(require, exports, module) {
       surveys: [{
         layerName: 'Sidewalk Quality Reports',
         layerId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
+        color: '#10a030',
         query: {
           'entries.responses.What-would-you-like-to-record': 'Sidewalk-Quality'
         },
@@ -124,6 +125,7 @@ define(function(require, exports, module) {
       }, {
         layerName: 'Intersection Quality Reports',
         layerId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
+        color: '#1030a0',
         query: {
           'entries.responses.What-would-you-like-to-record': 'Intersection-Quality'
         },

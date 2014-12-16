@@ -67,6 +67,7 @@ define(function (require) {
         select: options.select,
         styles: options.styles
       };
+      this.color = options.color;
       this.exploration = options.exploration;
 
       this.survey = new Surveys.Model({ id: this.surveyId });
@@ -213,8 +214,8 @@ define(function (require) {
         meta: { }
       };
 
-      if(this.filter) {
-        context.meta.color = this.filter.color;
+      if(this.color) {
+        context.meta.color = this.color;
         context.meta.count = '';
         this.stats.on('reset', this.setCount);
       }else {
