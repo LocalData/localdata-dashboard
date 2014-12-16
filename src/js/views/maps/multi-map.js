@@ -64,10 +64,12 @@ define(function(require, exports, module) {
     },
 
     addTileLayer: function (layer) {
+      console.log("Adding layer", layer);
       this.map.addLayer(layer);
     },
 
     removeTileLayer: function (layer) {
+      console.log("Removing layer", layer);
       this.map.removeLayer(layer);
     },
 
@@ -81,6 +83,7 @@ define(function(require, exports, module) {
     },
 
     removeGridLayer: function (layer) {
+      console.log("Removing grid layer", layer);
       this.map.removeLayer(layer);
     },
 

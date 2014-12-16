@@ -162,7 +162,7 @@ define(function (require) {
         $answer = $answer.parent();
         this.filters.answer = $answer.attr('data-answer');
       }
-      
+
       // We're manipulating the answer styling in both the legend and the
       // survey-layer settings box, so we need to find both answer elements.
       // TODO: This is a hack. We should probably factor the legend out into
@@ -173,8 +173,6 @@ define(function (require) {
       $answer = $('span[data-question="' + this.filters.question + '"][data-answer="' + this.filters.answer + '"]');
 
       this.trigger('filterSet', this.filters);
-
-      console.log("Activating", $answer);
 
       $question.find('.answer').addClass('inactive');
       $question.find('.answer').removeClass('active');

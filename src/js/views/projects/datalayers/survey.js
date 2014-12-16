@@ -166,10 +166,9 @@ define(function (require) {
       this.gridLayer = new L.UtfGrid(tilejson.grids[0], {
         resolution: 4
       });
-
-      console.log("Using grid layer", this.gridLayer);
-
       this.gridLayer.on('click', this.handleClick);
+
+      console.log("Adding tile layer", tilejson, this.tileLayer);
 
       this.mapView.addTileLayer(this.tileLayer);
       this.mapView.addTileLayer(this.gridLayer);
