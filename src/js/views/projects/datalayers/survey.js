@@ -10,6 +10,8 @@ define(function (require) {
   var Backbone = require('backbone');
   var L = require('lib/leaflet/leaflet.tilejson');
 
+  var settings = require('settings');
+
   // Models
   var Surveys = require('models/surveys');
   var Forms = require('models/forms');
@@ -59,15 +61,17 @@ define(function (require) {
       );
 
       console.log("Creating survey layer with options", options);
-      this.layerName = options.layerName;
-      this.surveyId = options.layerId;
+      this.layerName = options.survey.layerName;
+      this.surveyId = options.survey.layerId;
       this.layerDef = {
-        query: options.query,
-        select: options.select,
-        styles: options.styles
+        query: options.survey.query,
+        select: options.survey.select,
+        styles: options.survey.styles
       };
-      this.color = options.color;
-      this.exploration = options.exploration;
+      this.color = options.survey.color;
+      this.exploration = options.survey.exploration;
+
+      this.mapView = options.mapView;
 
       this.survey = new Surveys.Model({ id: this.surveyId });
       this.stats = new Stats.Model({ id: this.surveyId });
@@ -140,18 +144,18 @@ define(function (require) {
         return;
       }
       var newBounds = [flip(bounds[0]), flip(bounds[1])];
-      this.trigger('newBounds', newBounds);
+      this.mapView.fitBounds(newBounds);
     },
 
     addTileLayer: function(tilejson) {
       if(this.tileLayer) {
-        this.trigger('removeLayer', this.tileLayer);
+        this.mapView.removeTileLayer(this.tileLayer);
       }
       this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
 
       // Create the grid layer
       if (this.gridLayer) {
-        this.trigger('removeLayer', this.gridLayer);
+        this.mapView.removeTileLayer(this.gridLayer);
       }
       this.gridLayer = new L.UtfGrid(tilejson.grids[0], {
         resolution: 4
@@ -161,8 +165,8 @@ define(function (require) {
 
       this.gridLayer.on('click', this.handleClick);
 
-      this.trigger('tileLayerReady', this.tileLayer);
-      this.trigger('gridLayerReady', this.gridLayer);
+      this.mapView.addTileLayer(this.tileLayer);
+      this.mapView.addTileLayer(this.gridLayer);
     },
 
     handleClick: function(event) {

@@ -439,25 +439,6 @@ define(function(require, exports, module) {
       this.$el.find('.response-count .count').html(util.numberWithCommas(total));
     },
 
-    removeLayer: function(layer) {
-      this.mapView.removeTileLayer(layer);
-    },
-
-    addTileLayer: function(layer) {
-
-      this.mapView.addTileLayer(layer);
-    },
-
-    addGridLayer: function(layer) {
-      // XXX TODO We may need to make sure grid layers are on top
-      this.mapView.addTileLayer(layer);
-    },
-
-    fitBounds: function(bounds) {
-      console.log("Fit bounds", bounds);
-      this.mapView.fitBounds(bounds);
-    },
-
     append: function ($el) {
       this.$el.find('.layers').append($el);
     },
@@ -508,51 +489,15 @@ define(function(require, exports, module) {
 
       // Render survey layers
       _.each(this.project.surveys, function (survey) {
-        var surveyLayer = new SurveyLayer(survey);
+        var surveyLayer = new SurveyLayer({
+          survey: survey,
+          mapView: mapView
+        });
 
         this.activeLayers[survey.layerId] = surveyLayer;
 
-        // Add the survey to the list
-        // Will automatically update as we get data
-        // XXX REMOVE this.$el.find('.layers').append(surveyLayer.render());
-
         this.listenTo(surveyLayer, 'rendered', this.append);
         this.listenTo(surveyLayer, 'renderedSettings', this.appendSettings);
-        this.listenTo(surveyLayer, 'newBounds', this.fitBounds);
-        this.listenTo(surveyLayer, 'removeLayer', this.removeLayer);
-        this.listenTo(surveyLayer, 'tileLayerReady', this.addTileLayer);
-        this.listenTo(surveyLayer, 'gridLayerReady', this.addGridLayer);
-
-        // surveyLayer.on('settingsReady', function($el) {
-        //   console.log("Settings are ready");
-        //   // XXX TODO
-        //   // Filters
-        //   // Append the el at the right point.
-        // });
-
-        // XXX TODO do we still need to total up?
-        // Should be handled by survey's layerControl
-        // this.listenTo(surveyLayer.survey, 'change', this.totalUp);
-
-        // Save it to activeLayers for future reference.
-        // this.activeLayers.push(surveyLayer);
-
-
-        // XXX Old material
-        // var $filterEl;
-        // if (i === 0) {
-        //   $filterEl = this.$('#filter-view-container');
-        // }
-        // // Create a model
-        // var surveyLayer = new SurveyView({
-        //   $el: this.$el.find('.layers'),
-        //   mapView: this.mapView,
-        //   layerId: survey.surveyId,
-        //   infoEl: '#responses-list',
-        //   filterEl: $filterEl,
-        //   filter: survey.filter
-        // });
-
       }.bind(this));
 
       if (this.mode === 'deep-dive') {
