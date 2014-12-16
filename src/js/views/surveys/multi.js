@@ -452,6 +452,11 @@ define(function(require, exports, module) {
       console.log("Got settings to append", $el);
     },
 
+    appendDetails: function($el) {
+      this.$el.find('details').append($el);
+      console.log("Got details to append", $el);
+    },
+
     render: function () {
       var context = {
         description: this.project.description
@@ -498,6 +503,7 @@ define(function(require, exports, module) {
 
         this.listenTo(surveyLayer, 'rendered', this.append);
         this.listenTo(surveyLayer, 'renderedSettings', this.appendSettings);
+        this.listenTo(surveyLayer, 'renderedDetails', this.appendDetails);
       }.bind(this));
 
       if (this.mode === 'deep-dive') {

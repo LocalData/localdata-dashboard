@@ -8,16 +8,19 @@ define(function (require) {
   var _ = require('lib/lodash');
   var async = require('lib/async');
   var Backbone = require('backbone');
+  var events = require('lib/tinypubsub');
   var L = require('lib/leaflet/leaflet.tilejson');
 
   var settings = require('settings');
 
   // Models
-  var Surveys = require('models/surveys');
   var Forms = require('models/forms');
   var Stats = require('models/stats');
+  var Surveys = require('models/surveys');
+  var Responses = require('models/responses');
 
   // Views
+  var ResponseListView = require('views/responses/list');
   var SettingsView = require('views/projects/datalayers/survey/settings-survey');
 
   // Templates
@@ -169,8 +172,60 @@ define(function (require) {
       this.mapView.addTileLayer(this.gridLayer);
     },
 
-    handleClick: function(event) {
-      console.log(event);
+    selectItem: function (objectId) {
+      // FIXME: If this gets called because of a direct navigation to a
+      // surveys/:slug/dive/:oid URL, then there was never a click on the
+      // map, and so the object in question hasn't been highlighted on the map.
+      var rc = new Responses.Collection({
+        surveyId: this.survey.get('id'),
+        objectId: objectId
+      });
+
+      var surveyOptions = this.survey.get('surveyOptions') || {};
+      this.selectedItemListView = new ResponseListView({
+        el: '#responses-list',
+        collection: rc,
+        labels: this.forms.getQuestions(),
+        forms: this.forms,
+        surveyOptions: surveyOptions
+      });
+      var $el = this.selectedItemListView.render();
+      this.trigger('renderedDetails', $el);
+
+      this.selectedItemListView.on('remove', function() {
+        this.mapView.deselectObject();
+        events.publish('navigate', [
+          'surveys/' + this.survey.get('slug') + '/dive',
+          { trigger: false }
+        ]);
+      }.bind(this));
+
+      rc.on('destroy', function() {
+        this.mapView.update();
+      }.bind(this));
+    },
+
+    handleClick: function (event) {
+      var objectId;
+
+      if (event.data) {
+        objectId = event.data.object_id;
+      }
+
+      if (this.mode === 'overview') {
+        if (objectId) {
+          events.publish('navigate', ['surveys/' + this.survey.get('slug') + '/dive/' + objectId]);
+        } else {
+          events.publish('navigate', ['surveys/' + this.survey.get('slug') + '/dive']);
+        }
+      } else if (objectId) {
+        // Update the URL
+        events.publish('navigate', [
+          'surveys/' + this.survey.get('slug') + '/dive/' + objectId,
+          { trigger: false }
+        ]);
+        this.selectItem(objectId);
+      }
     },
 
     /**
