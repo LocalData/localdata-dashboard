@@ -295,6 +295,7 @@ define(function (require) {
 
       this.listenTo(this.settings, 'filterSet', this.changeFilter);
       this.listenTo(this.settings, 'legendSet', this.changeLegend);
+      this.listenTo(this.settings, 'legendRemoved', this.removeLegend);
 
       var $el = this.settings.render();
       this.$settings = $el;
@@ -314,7 +315,13 @@ define(function (require) {
       // this.$el.find('.legend').html($legend);
     },
 
+    removeLegend: function() {
+      this.$el.find('.legend').empty();
+      this.$el.find('.show-settings').removeClass('legend-active');
+    },
+
     changeLegend: function($legend) {
+      this.$el.find('.show-settings').addClass('legend-active');
       this.$el.find('.legend').empty().append($legend);
     },
 

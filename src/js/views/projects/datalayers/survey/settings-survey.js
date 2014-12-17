@@ -68,6 +68,7 @@ define(function (require) {
 
       if (!category) {
         this.$legend = null;
+        this.trigger('legendRemoved');
       } else {
         var legend = this.legendTemplate({
           filters: this.filters,
@@ -78,12 +79,12 @@ define(function (require) {
         // TODO: Use delegated events?
         this.$legend.find('.question-title').on('click', this.selectQuestion.bind(this));
         this.$legend.find('.answer').on('click', this.selectAnswer.bind(this));
-      }
 
-      // TODO: Factor the legend into its own view, instead of passing DOM
-      // nodes between two views and spreading around the events and
-      // insertion/removal.
-      this.trigger('legendSet', this.$legend);
+        // TODO: Factor the legend into its own view, instead of passing DOM
+        // nodes between two views and spreading around the events and
+        // insertion/removal.
+        this.trigger('legendSet', this.$legend);
+      }
     },
 
     showOptions: function(event) {
