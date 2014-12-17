@@ -49,9 +49,13 @@ define(function (require) {
     template: _.template(template),
     tableTemplate: _.template(tableTemplate),
 
+    // active, inactive, filtered
+    state: 'active',
+
     events: {
       'click .close': 'close',
-      'click .show-settings': 'showSettings'
+      'click .toggle-layer': 'toggleLayer',
+      'click .show-settings .title': 'showSettings'
     },
 
     className: 'layer',
@@ -187,6 +191,24 @@ define(function (require) {
 
       this.mapView.addTileLayer(this.tileLayer);
       this.mapView.addTileLayer(this.gridLayer);
+    },
+
+    toggleLayer: function () {
+      if (this.state === 'active') {
+        this.state = 'inactive';
+        this.mapView.removeTileLayer(this.tileLayer);
+        this.mapView.removeTileLayer(this.gridLayer);
+        this.changeLegend();
+      } else if (this.state === 'inactive') {
+        this.state = 'active';
+        this.mapView.addTileLayer(this.tileLayer);
+        this.mapView.addTileLayer(this.gridLayer);
+        this.removeLegend();
+      } else if (this.state === 'filtered') {
+        this.state = 'active';
+        this.changeFilter();
+        this.removeLegend();
+      }
     },
 
     selectItem: function (objectId) {

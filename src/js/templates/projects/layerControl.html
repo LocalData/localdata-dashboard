@@ -1,9 +1,11 @@
 <h4 class="show-settings">
     <% if (meta.color) { %>
-    <span class="circle" style="background-color: <%= meta.color %>;border-color: <%= meta.color %>;"></span>
+    <span class="circle toggle-layer" style="background-color: <%= meta.color %>;border-color: <%= meta.color %>;"></span>
     <% } %>
-    <%= meta.count %>
-    <%= name %> &nbsp; <i class="fa fa-angle-right"></i>
+    <span class="title">
+      <%= meta.count %>
+      <%= name %> &nbsp; <i class="fa fa-angle-right"></i>
+    </span>
 </h4>
 
 <!-- <i class="fa fa-spinner fa-spin loading"></i>
