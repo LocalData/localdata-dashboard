@@ -84,12 +84,16 @@ define(function (require) {
         d.detach();
         d.appendTo($('#disqus_target'));
 
-        window.DISQUS_reset(
-          this.collection.surveyId + '/' + this.collection.objectId,
-          'https://app.localdata.com/#surveys/' + this.surveyId + '/dive/' + this.objectId,
-          name,
-          'en'
-        );
+        try {
+          window.DISQUS_reset(
+            this.collection.surveyId + '/' + this.collection.objectId,
+            'https://app.localdata.com/#surveys/' + this.surveyId + '/dive/' + this.objectId,
+            name,
+            'en'
+          );
+        } catch (e) {
+          console.log(e);
+        }
       }
 
       this.$el.show();
