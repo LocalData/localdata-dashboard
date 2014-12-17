@@ -57,7 +57,15 @@ function($, _, Backbone, events, settings, api, Responses, template) {
     render: function() {
       var $el = $(this.el);
 
-      this.surveyOptions.loggedIn = settings.user.isLoggedIn();
+      // If this is meant for anonymous consumption, then ignore the fact
+      // that the user might be logged in through the primary dashboard.
+      // TODO: If the entire interface is meant for anonymous consumption,
+      // then we should not even be asking the API for the user's info.
+      if (this.surveyOptions.anonymous) {
+        this.surveyOptions.loggedIn = false;
+      } else {
+        this.surveyOptions.loggedIn = settings.user.isLoggedIn();
+      }
 
       var options = {
         r: this.model.toJSON(),
