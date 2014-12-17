@@ -263,6 +263,16 @@
     }
   }
 
+  h4.layer-callout {
+    margin-bottom: 10px;
+    a {
+      color: inherit;
+    }
+    a:hover {
+      color: $blue;
+    }
+  }
+
   .show-settings {
     cursor: pointer;
   }

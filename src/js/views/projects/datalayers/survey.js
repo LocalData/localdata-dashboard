@@ -37,6 +37,13 @@ define(function (require) {
     };
   }
 
+  function dotPath(obj, path) {
+    return path.split('.').reduce(function (memo, index) {
+      if (!memo) { return memo; }
+      return memo[index];
+    }, obj);
+  }
+
   // The View
   var LayerControl = Backbone.View.extend({
     template: _.template(template),
@@ -102,6 +109,10 @@ define(function (require) {
             surveyOptions: _.defaults(options.surveyOptions, surveyOptions)
           });
         }
+        self.trigger('count', dotPath({
+          stats: self.stats.toJSON(),
+          survey: self.survey.toJSON()
+        }, options.survey.countPath));
         self.render();
         self.getTileJSON();
       });
@@ -290,7 +301,7 @@ define(function (require) {
       this.trigger('renderedSettings', $el);
     },
 
-    showSettings: function() {
+    showSettings: function (event) {
       console.log("Showing settings", this.$settings);
       this.$settings.show();
     },

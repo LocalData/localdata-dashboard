@@ -26,6 +26,10 @@ define(function(require, exports, module) {
     selectedLayer: null,
     markers: {},
 
+    events: {
+      'click': 'clickHandler'
+    },
+
     initialize: function(options) {
       L.Icon.Default.imagePath = '/js/lib/leaflet/images';
       _.bindAll(this,
@@ -142,6 +146,10 @@ define(function(require, exports, module) {
       });
 
       return this;
+    },
+
+    clickHandler: function (event) {
+      this.trigger('click', event);
     },
 
     /**

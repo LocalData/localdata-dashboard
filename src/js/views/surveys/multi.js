@@ -19,6 +19,7 @@ define(function(require, exports, module) {
 
   // Templates
   var embeddedSurveyTemplate = require('text!templates/responses/embed-multi.html');
+  var layerTitleTemplate = require('text!templates/projects/surveys/layer-title.html');
   var exploreStyles = require('text!templates/projects/surveys/explore-styles.mss');
   var simpleStyles = require('text!templates/projects/surveys/simple-styles.mss');
   var disqusTemplate = require('text!templates/disqus.html');
@@ -112,8 +113,8 @@ define(function(require, exports, module) {
     walkscope: {
       description: '<p>WALKscope is a mobile tool developed by WalkDenver and PlaceMatters for collecting data related to sidewalks, intersections, and pedestrian counts in the Denver metro area. This information will help create an inventory of pedestrian infrastructure, identify gaps, and build the case for improvements.  Click on the map or one of the categories below to explore the data collected to date.</p>',
       location: "Denver, Colorado",
-      center: [-104.9848590, 39.7384360],
-      zoom: 17,
+      center: [-104.9831330, 39.7589070],
+      zoom: 16,
       commentsId: 'ptxdev', // XXX
       surveys: [{
         layerName: 'Sidewalk Quality Reports',
@@ -123,6 +124,7 @@ define(function(require, exports, module) {
           comments: true,
           anonymous: true
         },
+        countPath: 'stats.What-would-you-like-to-record.Sidewalk-Quality',
         query: {
           'entries.responses.What-would-you-like-to-record': 'Sidewalk-Quality'
         },
@@ -210,6 +212,7 @@ define(function(require, exports, module) {
           comments: true,
           anonymous: true
         },
+        countPath: 'stats.What-would-you-like-to-record.Intersection-Quality',
         query: {
           'entries.responses.What-would-you-like-to-record': 'Intersection-Quality'
         },
@@ -325,7 +328,12 @@ define(function(require, exports, module) {
       }, {
         layerName: 'Pedestrian Observations',
         layerId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
+        options: {
+          comments: true,
+          anonymous: true
+        },
         color: '#8da0cb',
+        countPath: 'stats.What-would-you-like-to-record.Number-of-Pedestrians-',
         query: {
           'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians'
         },
@@ -400,11 +408,13 @@ define(function(require, exports, module) {
     mode: 'overview',
 
     template: _.template(embeddedSurveyTemplate),
+    layerTitleTemplate: _.template(layerTitleTemplate),
     el: '#container',
 
     events: {
       'click .action-show-filters': 'toggleFilters',
-      'click .address-search-button': 'search'
+      'click .address-search-button': 'search',
+      'click .layer-callout': 'showDeepDive'
     },
 
     initialize: function(options) {
@@ -425,33 +435,22 @@ define(function(require, exports, module) {
       this.render();
     },
 
-    // Get a total count of responses so far
-    // XXX TODO
-    // This should ask the view for a count, not address the view's model
-    // directly.
-    totalUp: function() {
-      if (this.activeLayers.length === 1) {
-        this.$('.response-count').hide();
-        return;
-      }
+    // Render the response counts
+    totalCount: 0,
+    renderCount: function(surveyConfig, count) {
+      this.totalCount += count;
+      //if (this.activeLayers.length === 1) {
+      //  this.$('.response-count').hide();
+      //  return;
+      //}
 
       this.$('.response-count').show();
-
-      var totaled = [];
-      var total = 0;
-      _.each(this.activeLayers, function(surveyView) {
-        var id = surveyView.survey.get('id');
-
-        // Don't double-count surveys
-        if (_.contains(totaled, id)) {
-          return;
-        }
-
-        total = total + surveyView.survey.get('responseCount') || 0;
-        totaled.push(id);
-      });
-
-      this.$el.find('.response-count .count').html(util.numberWithCommas(total));
+      this.$el.find('.response-count .count').html(util.numberWithCommas(this.totalCount));
+      this.$('#overview-container').append(this.layerTitleTemplate({
+        name: surveyConfig.layerName,
+        count: count,
+        color: surveyConfig.color
+      }));
     },
 
     append: function ($el) {
@@ -520,6 +519,9 @@ define(function(require, exports, module) {
         this.listenTo(surveyLayer, 'rendered', this.append);
         this.listenTo(surveyLayer, 'renderedSettings', this.appendSettings);
         this.listenTo(surveyLayer, 'renderedDetails', this.appendDetails);
+        this.listenTo(surveyLayer, 'count', function (count) {
+          this.renderCount(survey, count);
+        });
       }.bind(this));
 
       if (this.mode === 'deep-dive') {
