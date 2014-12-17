@@ -78,16 +78,25 @@ define(function (require) {
         this.$el.append(item.render().el);
       }.bind(this));
 
+      // TODO: clean up the disqus commenting stuff
       if (this.surveyOptions.comments) {
-        this.$el.append(this.commentTemplate({}));
         var d = $('#disqus_thread');
-        d.detach();
-        d.appendTo($('#disqus_target'));
+        if (d.length === 0) {
+          this.$el.append(this.commentTemplate({
+            thread: true
+          }));
+        } else {
+          this.$el.append(this.commentTemplate({
+            thread: false
+          }));
+          d.detach();
+          d.appendTo($('#disqus_target'));
+        }
 
         try {
           window.DISQUS_reset(
             this.collection.surveyId + '/' + this.collection.objectId,
-            'https://app.localdata.com/#surveys/' + this.surveyId + '/dive/' + this.objectId,
+            'https://app.localdata.com/#!surveys/' + this.collection.surveyId + '/dive/' + this.collection.objectId,
             name,
             'en'
           );
