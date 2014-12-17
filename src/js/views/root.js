@@ -13,6 +13,9 @@ define(function(require, exports, module) {
   var settings = require('settings');
   var IndexRouter = require('routers/index');
 
+  // Models
+  var Users = require('models/users');
+
   // Views
   var HomeView = require('views/home');
   var DashboardView = require('views/dashboard');
@@ -60,11 +63,6 @@ define(function(require, exports, module) {
       // Bind local methods
       _.bindAll(this);
 
-      // Keep track of the user.
-      this.userView = new AllViews.UserBarView({
-        user: settings.user // created on init in app.js
-      });
-
       // Set up global router
       this._router = new IndexRouter({ controller: this });
 
@@ -75,6 +73,13 @@ define(function(require, exports, module) {
       // TODO: factor out the embedded script-tag templates and turn the
       // following into .html instead of .prepend
       this.cleanup();
+      // Keep track of the user.
+      settings.user = new Users.Model();
+      settings.user.fetch();
+      this.userView = new AllViews.UserBarView({
+        user: settings.user
+      });
+
       this.$el.prepend(dashboardTemplate());
     }),
 

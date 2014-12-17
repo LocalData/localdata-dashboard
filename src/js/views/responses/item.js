@@ -64,7 +64,7 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       if (this.surveyOptions.anonymous) {
         this.surveyOptions.loggedIn = false;
       } else {
-        this.surveyOptions.loggedIn = settings.user.isLoggedIn();
+        this.surveyOptions.loggedIn = settings.user && settings.user.isLoggedIn();
       }
 
       var options = {
