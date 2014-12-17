@@ -55,7 +55,6 @@ define(function (require) {
         'doneLoading',
         'getForms',
         'setCount',
-        'fitBounds',
         'addTileLayer',
 
         // Settings
@@ -97,11 +96,16 @@ define(function (require) {
           self.forms.once('reset', downgrade(next));
         }
       ], function (error) {
+        if (options.surveyOptions) {
+          var surveyOptions = self.survey.get('surveyOptions');
+          self.survey.set({
+            surveyOptions: _.defaults(options.surveyOptions, surveyOptions)
+          });
+        }
         self.render();
         self.getTileJSON();
       });
 
-      this.survey.on('change:responseBounds', this.fitBounds);
       this.survey.fetch();
     },
 

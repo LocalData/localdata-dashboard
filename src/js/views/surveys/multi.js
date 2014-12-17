@@ -65,6 +65,8 @@ define(function(require, exports, module) {
     gtech: {
       description: '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>',
       location: 'Pittsburgh, PA',
+      center: [-79.9958860,40.4406250],
+      zoom: 17,
       surveys: [{
         surveyId: 'ac5c3b60-10dd-11e4-ad2d-2fff103144af'
 //        filter: {
@@ -109,10 +111,16 @@ define(function(require, exports, module) {
     walkscope: {
       description: '<p>WALKscope is a mobile tool developed by WalkDenver and PlaceMatters for collecting data related to sidewalks, intersections, and pedestrian counts in the Denver metro area. This information will help create an inventory of pedestrian infrastructure, identify gaps, and build the case for improvements.  Click on the map or one of the categories below to explore the data collected to date.</p>',
       location: "Denver, Colorado",
+      center: [-104.9848590, 39.7384360],
+      zoom: 17,
       surveys: [{
         layerName: 'Sidewalk Quality Reports',
         layerId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
         color: '#66c2a5',
+        options: {
+          comments: 'prashtx', // XXX
+          anonymous: true
+        },
         query: {
           'entries.responses.What-would-you-like-to-record': 'Sidewalk-Quality'
         },
@@ -196,6 +204,10 @@ define(function(require, exports, module) {
         layerName: 'Intersection Quality Reports',
         layerId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
         color: '#fc8d62',
+        options: {
+          comments: 'prashtx', // XXX
+          anonymous: true
+        },
         query: {
           'entries.responses.What-would-you-like-to-record': 'Intersection-Quality'
         },
@@ -469,8 +481,8 @@ define(function(require, exports, module) {
         this.mapView = new MapView({
           el: '#map-view-container',
           config: {
-            center: [40.715678,-74.213848],
-            zoom: 15
+            center: this.project.center,
+            zoom: this.project.zoom
           }
         });
         this.listenTo(this.mapView, 'click', this.mapClickHandler);
@@ -497,7 +509,8 @@ define(function(require, exports, module) {
       _.each(this.project.surveys, function (survey) {
         var surveyLayer = new SurveyLayer({
           survey: survey,
-          mapView: mapView
+          mapView: mapView,
+          surveyOptions: survey.options
         });
 
         this.activeLayers[survey.layerId] = surveyLayer;

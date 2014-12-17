@@ -113,7 +113,7 @@ define(function(require, exports, module) {
       // Initialize the map
       this.map = new L.map(this.$('#map')[0], {
         zoom: this.config.zoom,
-        center: this.config.center,
+        center: [_.last(this.config.center), _.first(this.config.center)],
         zoomControl: false
       });
 
