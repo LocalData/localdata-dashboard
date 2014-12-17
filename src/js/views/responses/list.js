@@ -4,6 +4,7 @@
 define(function (require) {
   'use strict';
   var _ = require('lib/lodash');
+  var $ = require('jquery');
   var Backbone = require('backbone');
 
   // LocalData
@@ -40,6 +41,7 @@ define(function (require) {
 
     remove: function() {
       this.$el.hide();
+      this.$('#disqus_thread').detach().appendTo($('#disqus_hide'));
       this.$el.empty();
       this.trigger('remove');
       this.stopListening();
@@ -77,11 +79,17 @@ define(function (require) {
       }.bind(this));
 
       if (this.surveyOptions.comments) {
-        this.$el.append(this.commentTemplate({
-          id: 'ptxdev', // FIXME: read from the survey options
-          surveyId: this.surveyId,
-          objectId: this.objectId
-        }));
+        this.$el.append(this.commentTemplate({}));
+        var d = $('#disqus_thread');
+        d.detach();
+        d.appendTo($('#disqus_target'));
+
+        window.DISQUS_reset(
+          this.collection.surveyId + '/' + this.collection.objectId,
+          'https://app.localdata.com/#surveys/' + this.surveyId + '/dive/' + this.objectId,
+          name,
+          'en'
+        );
       }
 
       this.$el.show();

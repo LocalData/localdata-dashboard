@@ -179,10 +179,14 @@ define(function (require) {
     },
 
     selectItem: function (objectId) {
+      if (this.selectedItemListView) {
+        this.selectedItemListView.remove();
+      }
+
       // FIXME: If this gets called because of a direct navigation to a
       // surveys/:slug/dive/:oid URL, then there was never a click on the
       // map, and so the object in question hasn't been highlighted on the map.
-      var rc = new Responses.Collection({
+      var rc = new Responses.Collection([], {
         surveyId: this.survey.get('id'),
         objectId: objectId
       });
@@ -198,13 +202,7 @@ define(function (require) {
       var $el = this.selectedItemListView.render();
       this.trigger('renderedDetails', $el);
 
-      this.selectedItemListView.on('remove', function() {
-        this.mapView.deselectObject();
-        events.publish('navigate', [
-          'surveys/' + this.survey.get('slug') + '/dive',
-          { trigger: false }
-        ]);
-      }.bind(this));
+      this.listenTo(this.selectedItemListView, 'remove', this.mapView.deselectObject);
 
       rc.on('destroy', function() {
         this.mapView.update();
@@ -221,20 +219,16 @@ define(function (require) {
         return;
       }
 
-      // XXX TODO
-      // Re-enable navigation support
+      var hash = document.location.hash.substr(1);
+
+      // Navigate to the deep-dive version of this view.
+      // TODO: The MultiSurveyView (multi.js) should handle this, not the
+      // SurveyLayer.
       if (this.mode === 'overview') {
-        if (objectId) {
-          events.publish('navigate', ['surveys/' + this.survey.get('slug') + '/dive/' + objectId]);
-        } else {
-          events.publish('navigate', ['surveys/' + this.survey.get('slug') + '/dive']);
-        }
-      } else if (objectId) {
-        // Update the URL
-        events.publish('navigate', [
-          'surveys/' + this.survey.get('slug') + '/dive/' + objectId,
-          { trigger: false }
-        ]);
+        events.publish('navigate', [hash + '/dive']);
+      }
+
+      if (objectId) {
         this.selectItem(objectId);
       }
 

@@ -5,13 +5,8 @@ define(function(require, exports, module) {
   'use strict';
 
   // Libs
-  var $ = require('jquery');
   var _ = require('lib/lodash');
   var Backbone = require('backbone');
-
-  // App
-  var settings = require('settings');
-  var api = require('api');
 
   // Models
   var Responses = require('models/responses');
@@ -42,7 +37,7 @@ define(function(require, exports, module) {
       this.forms = options.forms;
 
       // Set the response collection
-      this.collection = new Responses.Collection({
+      this.collection = new Responses.Collection([], {
         surveyId: this.survey.get('id'),
         limit: 1,
         filters: {

@@ -158,7 +158,7 @@ define(function (require) {
         return;
       }
 
-      var rc = new Responses.Collection({
+      var rc = new Responses.Collection([], {
         surveyId: this.survey.get('id'),
         objectId: event.data.object_id
       });

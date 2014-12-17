@@ -162,7 +162,7 @@ define(function(require, exports, module) {
       // FIXME: If this gets called because of a direct navigation to a
       // surveys/:slug/dive/:oid URL, then there was never a click on the
       // map, and so the object in question hasn't been highlighted on the map.
-      var rc = new Responses.Collection({
+      var rc = new Responses.Collection([], {
         surveyId: this.survey.get('id'),
         objectId: objectId
       });
@@ -196,19 +196,19 @@ define(function(require, exports, module) {
         objectId = event.data.object_id;
       }
 
-      // if (this.mode === 'overview') {
-      //   if (objectId) {
-      //     events.publish('navigate', ['surveys/' + this.survey.get('slug') + '/dive/' + objectId]);
-      //   } else {
-      //     events.publish('navigate', ['surveys/' + this.survey.get('slug') + '/dive']);
-      //   }
-      // } else if (objectId) {
-      //   // Update the URL
-      //   events.publish('navigate', [
-      //     'surveys/' + this.survey.get('slug') + '/dive/' + objectId,
-      //     { trigger: false }
-      //   ]);
-      // }
+      if (this.mode === 'overview') {
+        if (objectId) {
+          events.publish('navigate', ['surveys/' + this.survey.get('slug') + '/dive/' + objectId]);
+        } else {
+          events.publish('navigate', ['surveys/' + this.survey.get('slug') + '/dive']);
+        }
+      } else if (objectId) {
+        // Update the URL
+        events.publish('navigate', [
+          'surveys/' + this.survey.get('slug') + '/dive/' + objectId,
+          { trigger: false }
+        ]);
+      }
 
       this.selectItem(objectId);
     },

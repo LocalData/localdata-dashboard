@@ -50,7 +50,7 @@ function($, _, Backbone, moment, settings, api) {
     filters: null,
     unfilteredModels: null,
 
-    initialize: function(options) {
+    initialize: function(models, options) {
       if (options !== undefined) {
         this.surveyId = options.surveyId;
         this.objectId = options.objectId;

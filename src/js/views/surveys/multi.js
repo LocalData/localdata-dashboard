@@ -21,6 +21,7 @@ define(function(require, exports, module) {
   var embeddedSurveyTemplate = require('text!templates/responses/embed-multi.html');
   var exploreStyles = require('text!templates/projects/surveys/explore-styles.mss');
   var simpleStyles = require('text!templates/projects/surveys/simple-styles.mss');
+  var disqusTemplate = require('text!templates/disqus.html');
 
 
   function makeBasicExploration(options) {
@@ -113,12 +114,13 @@ define(function(require, exports, module) {
       location: "Denver, Colorado",
       center: [-104.9848590, 39.7384360],
       zoom: 17,
+      commentsId: 'ptxdev', // XXX
       surveys: [{
         layerName: 'Sidewalk Quality Reports',
         layerId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
         color: '#66c2a5',
         options: {
-          comments: 'prashtx', // XXX
+          comments: true,
           anonymous: true
         },
         query: {
@@ -205,7 +207,7 @@ define(function(require, exports, module) {
         layerId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
         color: '#fc8d62',
         options: {
-          comments: 'prashtx', // XXX
+          comments: true,
           anonymous: true
         },
         query: {
@@ -524,6 +526,12 @@ define(function(require, exports, module) {
         this.showDeepDive();
       } else {
         this.showOverview();
+      }
+
+      if (this.project.commentsId) {
+        this.$el.append(_.template(disqusTemplate)({
+          commentsId: this.project.commentsId
+        }));
       }
     },
 
