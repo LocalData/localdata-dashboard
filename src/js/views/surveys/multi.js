@@ -474,18 +474,20 @@ define(function(require, exports, module) {
     totalCount: 0,
     renderCount: function(surveyConfig, count) {
       this.totalCount += count;
-      //if (this.activeLayers.length === 1) {
-      //  this.$('.response-count').hide();
-      //  return;
-      //}
-
-      this.$('.response-count').show();
       this.$el.find('.response-count .count').html(util.numberWithCommas(this.totalCount));
+
+      if (this.activeLayers.length === 1) {
+        this.$('.response-count').hide();
+      } else {
+        this.$('.response-count').show();
+      }
+
       this.$('#overview-container').append(this.layerTitleTemplate({
         name: surveyConfig.layerName,
         count: count,
         color: surveyConfig.color
       }));
+
     },
 
     append: function ($el) {
