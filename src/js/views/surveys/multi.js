@@ -153,6 +153,13 @@ define(function(require, exports, module) {
         styles: _.template(simpleStyles)({color: '#66c2a5'}),
         exploration: [
           makeBasicExploration({
+            name: 'Overall Pedestrian Environment Rating',
+            question: 'How-would-you-rate-the-pedestrian-environment-overall-1-5-5highest',
+            values: ['5', '4', '3', '2', '1'],
+            valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
+            colors: ['#1a9641', '#a6d96a', '#ffffbf', '#fdae61', '#d7191c']
+          }),
+          makeBasicExploration({
             name: 'Sidewalk Type',
             question: 'What-type-of-sidewalk',
             values: ['No-sidewalk',
@@ -240,6 +247,13 @@ define(function(require, exports, module) {
         select: {},
         styles: _.template(simpleStyles)({color: '#fc8d62'}),
         exploration: [
+          makeBasicExploration({
+            name: 'Overall Pedestrian Environment Rating',
+            question: 'How-would-you-rate-the-pedestrian-environment-1-5-5highest',
+            values: ['5', '4', '3', '2', '1'],
+            valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
+            colors: ['#1a9641', '#a6d96a', '#ffffbf', '#fdae61', '#d7191c']
+          }),
           makeBasicExploration({
             name: 'Lanes to cross',
             question: 'How-many-lanes-are-there-to-cross',
@@ -356,14 +370,14 @@ define(function(require, exports, module) {
         color: '#8da0cb',
         countPath: 'stats.What-would-you-like-to-record.Number-of-Pedestrians-',
         query: {
-          'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians'
+          'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
         },
         select: {},
         styles: _.template(simpleStyles)({color: '#8da0cb'}),
         exploration: [
           makeBasicExploration({
             name: 'Overall Pedestrian Environment Rating',
-            question: 'How-would-you-rate-the-pedestrian-environment-overall-1-5-5highest',
+            question: 'How-would-you-rate-the-pedestrian-environment-overall-1-5-5-highest',
             values: ['5', '4', '3', '2', '1'],
             valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
             colors: ['#1a9641', '#a6d96a', '#ffffbf', '#fdae61', '#d7191c']
