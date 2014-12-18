@@ -67,24 +67,45 @@ define(function(require, exports, module) {
     gtech: {
       description: '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>',
       location: 'Pittsburgh, PA',
-      center: [-79.9958860,40.4406250],
-      zoom: 17,
+      center: [-80.04,40.44],
+      zoom: 16,
+      commentsId: 'ptxdev', // XXX
       surveys: [{
-        surveyId: 'ac5c3b60-10dd-11e4-ad2d-2fff103144af'
-//        filter: {
-//          question: 'Is-the-property-maintained',
-//          answer: 'Yes',
-//          legend: 'Maintained properties',
-//          color: '#f15a24'
-//        }
-//      }, {
-//        surveyId: '44f94b00-4005-11e4-b627-69499f28b4e5',
-//        filter: {
-//          question: 'Is-there-dumping-on-the-property',
-//          answer: 'No',
-//          legend: 'No dumping',
-//          color: '#a743c3'
-//        }
+        layerName: 'Lots to Love Projects',
+        layerId: 'ac5c3b60-10dd-11e4-ad2d-2fff103144af',
+        color: '#66c2a5',
+        options: {
+          suppressStreetview: true,
+          comments: true,
+          anonymous: true
+        },
+        countPath: 'survey.responseCount',
+        query: {},
+        select: {},
+        styles: _.template(simpleStyles)({color: '#66c2a5'}),
+        exploration: [
+          makeBasicExploration({
+            name: 'Building type',
+            question: 'What-type-of-building-is-on-site',
+            values: ['Single-family-dwelling',
+                     'Multi-family-dwelling-2-4-units',
+                     'Multi-family-dwelling-more-than-4-units',
+                     'CommercialOffice',
+                     'Industrial-',
+                     'Institutional-',
+                     'Mixed-use-with-residential-',
+                      'Mixed-used-without-residential-'],
+            valueNames: ['Single family',
+                         'Multi-family 2-4 units',
+                         'Multi-family >4 units',
+                         'Commercial/office',
+                         'Industrial',
+                         'Institutional',
+                         'Mixed-use w/ residential',
+                         'Mixed-use w/o residential'],
+            colors: ['#d73027', '#fc8d59', '#fee08b', '#d9ef8b', '#91cf60', '#1a9850', '#b7aba5', '#102030']
+          })
+        ]
       }],
       foreignInteractive: [{
         type: 'cartodb',
