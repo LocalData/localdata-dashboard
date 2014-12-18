@@ -34,6 +34,7 @@ define(function (require) {
       this.listenTo(this.collection, 'add', this.render);
       this.labels = options.labels;
       this.forms = options.forms;
+      this.survey = options.survey;
       this.surveyOptions = options.surveyOptions;
       this.surveyId = options.surveyId;
       this.objectId = options.objectId;
@@ -65,6 +66,7 @@ define(function (require) {
       this.$el.html(this.template({
         name: name,
         responses: this.collection.toJSON(),
+        surveyOptions: this.surveyOptions,
         googleKey: settings.GoogleKey
       }));
 
@@ -95,8 +97,8 @@ define(function (require) {
 
         try {
           window.DISQUS_reset(
-            this.collection.surveyId + '/' + this.collection.objectId,
-            'https://app.localdata.com/#!surveys/' + this.collection.surveyId + '/dive/' + this.collection.objectId,
+            this.survey.id + '/' + this.collection.objectId,
+            'https://app.localdata.com/#!surveys/' + this.survey.get('slug') + '/dive/' + this.collection.objectId,
             name,
             'en'
           );

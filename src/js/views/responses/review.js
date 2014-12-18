@@ -61,7 +61,8 @@ define(function(require, exports, module) {
         collection: this.collection,
         forms: this.forms,
         labels: this.forms.getQuestions(),
-        surveyOptions: surveyOptions
+        surveyOptions: surveyOptions,
+        survey: this.survey
       });
       responseView.render();
     },

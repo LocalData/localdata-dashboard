@@ -173,6 +173,7 @@ define(function(require, exports, module) {
         collection: rc,
         labels: this.forms.getQuestions(),
         forms: this.forms,
+        survey: this.survey,
         surveyOptions: surveyOptions
       });
 
@@ -431,6 +432,7 @@ define(function(require, exports, module) {
         collection: rc,
         labels: this.forms.getQuestions(),
         forms: this.forms,
+        survey: this.survey,
         surveyOptions: surveyOptions,
         surveyId: this.survey.get('id'),
         objectId: event.data.object_id

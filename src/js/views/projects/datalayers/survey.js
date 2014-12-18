@@ -230,7 +230,8 @@ define(function (require) {
         collection: rc,
         labels: this.forms.getQuestions(),
         forms: this.forms,
-        surveyOptions: surveyOptions
+        surveyOptions: surveyOptions,
+        survey: this.survey
       });
       var $el = this.selectedItemListView.render();
       this.trigger('renderedDetails', $el);
