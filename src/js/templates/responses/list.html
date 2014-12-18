@@ -2,6 +2,6 @@
 <a class="close mini"><i class="fa fa-times"></i></a>
 
 <!-- streetview -->
-<% if(responses[0].geo_info != undefined) { %>
+<% if (!surveyOptions.supressStreeview && responses[0].geo_info != undefined) { %>
   <img src="//maps.googleapis.com/maps/api/streetview?size=500x250&location=<%= responses[0].geo_info.centroid[1] %>,<%= responses[0].geo_info.centroid[0] %>&key=<%= googleKey %>" height="250" width="500" class="streetview">
 <% } %>
