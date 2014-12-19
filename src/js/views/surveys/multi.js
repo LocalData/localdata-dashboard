@@ -381,7 +381,121 @@ define(function(require, exports, module) {
             values: ['5', '4', '3', '2', '1'],
             valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
             colors: ['#1a9641', '#a6d96a', '#ffffbf', '#fdae61', '#d7191c']
-          }),
+          }), {
+            name: 'Pedestrian activity',
+            layer: {
+              query: {
+                'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
+              },
+              select: {
+                'entries.responses.How-many-pedestrians-did-you-count-on-this-street-section': 1,
+                'entries.responses.How-long-did-you-observe-this-street-segment': 1
+              },
+              styles: '@high: #88419d;@medium: #8c96c6;@low: #b3cde3;@vlow: #edf8fb;\n' +
+              'Map { background-color: rgba(0,0,0,0); }\n' +
+              '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section">=15]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
+              '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=45]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
+              '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=75]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
+              '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=105]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
+              '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=135]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
+              ' { polygon-fill: @high;polygon-opacity:0.85; }\n' +
+              '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section">=10]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<15]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
+              '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=30]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<45]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
+              '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=50]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<75]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
+              '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=70]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<105]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
+              '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=90]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<135]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
+              '{ polygon-fill: @medium;polygon-opacity:0.85; }\n' +
+              '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section">=8]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<10]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
+              '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=23]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<30]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
+              '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=38]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<50]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
+              '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=53]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<70]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
+              '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=68]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<90]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
+              '{ polygon-fill: @low;polygon-opacity:0.85; }\n' +
+              '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section"<8]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
+              '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<23]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
+              '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<38]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
+              '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<53]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
+              '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<68]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
+              '{ polygon-fill: @vlow;polygon-opacity:0.85; }'
+            },
+            values: [{
+              text: 'High',
+              color: '#88419d',
+              layer: {
+                query: {
+                  'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
+                },
+                select: {
+                  'entries.responses.How-many-pedestrians-did-you-count-on-this-street-section': 1,
+                  'entries.responses.How-long-did-you-observe-this-street-segment': 1
+                },
+                styles: '@high: #88419d;\nMap { background-color: rgba(0,0,0,0); }\n' +
+                '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section">=15]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
+                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=45]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
+                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=75]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
+                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=105]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
+                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=135]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
+                ' { polygon-fill: @high;polygon-opacity:0.85; }'
+              }
+            }, {
+              text: 'Medium',
+              color: '#8c96c6',
+              layer: {
+                query: {
+                  'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
+                },
+                select: {
+                  'entries.responses.How-many-pedestrians-did-you-count-on-this-street-section': 1,
+                  'entries.responses.How-long-did-you-observe-this-street-segment': 1
+                },
+                styles: '@medium: #8c96c6;\nMap { background-color: rgba(0,0,0,0); }\n' +
+                '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section">=10]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<15]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
+                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=30]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<45]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
+                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=50]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<75]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
+                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=70]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<105]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
+                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=90]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<135]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
+                '{ polygon-fill: @medium;polygon-opacity:0.85; }'
+              }
+            }, {
+              text: 'Low',
+              color: '#b3cde3',
+              layer: {
+                query: {
+                  'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
+                },
+                select: {
+                  'entries.responses.How-many-pedestrians-did-you-count-on-this-street-section': 1,
+                  'entries.responses.How-long-did-you-observe-this-street-segment': 1
+                },
+                styles: '@low: #b3cde3;\nMap { background-color: rgba(0,0,0,0); }\n' +
+                '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section">=8]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<10]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
+                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=23]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<30]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
+                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=38]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<50]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
+                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=53]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<70]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
+                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=68]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<90]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
+                '{ polygon-fill: @low;polygon-opacity:0.85; }'
+              }
+            }, {
+              text: 'Very Low',
+              color: '#edf8fb',
+              layer: {
+                query: {
+                  'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
+                },
+                select: {
+                  'entries.responses.How-many-pedestrians-did-you-count-on-this-street-section': 1,
+                  'entries.responses.How-long-did-you-observe-this-street-segment': 1
+                },
+                styles: '@vlow: #edf8fb;\nMap { background-color: rgba(0,0,0,0); }\n' +
+                '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section"<8]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
+                '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<23]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
+                '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<38]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
+                '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<53]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
+                '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<68]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
+                '{ polygon-fill: @vlow;polygon-opacity:0.85; }'
+              }
+            }]
+          },
           makeBasicExploration({
             name: 'Observeration duration',
             question: 'How-long-did-you-observe-this-street-segment',
@@ -399,7 +513,7 @@ define(function(require, exports, module) {
           name: 'Photos',
           layer: {
             query: {
-              'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians',
+              'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-',
               'entries.files.0': {
                 $type: 2
               }
@@ -412,7 +526,7 @@ define(function(require, exports, module) {
             color: '#810f7c',
             layer: {
               query: {
-                'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians',
+                'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-',
                 'entries.files.0': {
                   $type: 2
                 }
