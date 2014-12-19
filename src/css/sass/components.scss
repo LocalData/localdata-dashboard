@@ -145,47 +145,8 @@
   color: #ffad00;;
 }
 
-
-/* Reports ----------------------------------------------------------------- */
-#report-list {
-  background:#fff;
-  padding: 20px;
-  overflow: auto;
-  clear:left;
-}
-
-.reports {
-  .report {
-    width: 40%;
-    padding: 0 10% 5% 0;
-    float: left;
-
-    h3 {
-      font-size: 22px;
-      line-height: 1.2;
-      font-family: $bold;
-    }
-  }
-
-  .bar {
-    height: 30px;
-    background: #58aeff;
-  }
-
-  #chart-user-activity {
-    .c3-circle {
-      stroke-width: 3;
-      stroke: #fff;
-    }
-    .c3-line {
-      stroke-width: 3;
-    }
-  }
-
-}
-
-
 /* Forms ------------------------------------------------------------------- */
 @import "components/forms";
 @import "components/preview";
 @import "components/editor";
+@import "components/reports";

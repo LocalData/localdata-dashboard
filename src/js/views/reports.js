@@ -65,14 +65,11 @@ function($, _, Backbone, Chart, d3, c3, moment, settings, api, Stats, template, 
     initialize: function(options) {
       _.bindAll(this, 'render', 'report', 'graph');
 
-      console.log("GOT C3?", c3, d3);
-
       this.survey = options.survey;
       this.stats = options.stats;
       this.forms = options.forms;
 
       this.stats.on('change', this.render);
-
 
       this.titles = this.forms.getFlattenedForm();
     },
@@ -156,25 +153,33 @@ function($, _, Backbone, Chart, d3, c3, moment, settings, api, Stats, template, 
       $('#report-list').append(this.reportTemplate(context));
     },
 
-    makeBarChart: function(question, title, ctx) {
-      var data = {
-        labels: this.labelize(_.keys(question)),
-        datasets: [
-          {
-            label: "Dataset!",
-            fillColor: "#58aeff",
-            strokeColor: "#daedff",
-            highlightFill: "#ffad00",
-            highlightStroke: "#fff3da",
-            data: _.values(question)
-          }
-        ]
-      };
+    makeBarChart: function(data, title, selector) {
+      console.log("Making bar chart", data, title, selector);
 
-      var myBarChart = new Chart(ctx).Bar(data, {
-        scaleFontFamily: 'NeuzeitOfficeW01-Regula',
-        tooltipFontFamily: 'NeuzeitOfficeW01-Regula',
-        tooltipTitleFontFamily: 'NeuzeitOfficeW01-Regula'
+      var values = _.values(data).unshift('count');
+      var labels = _.keys(data).unshift('x');
+
+      var columns = [];
+      _.each(data, function (value, key) {
+        columns.push([key, value]);
+      });
+
+      console.log("Using columns", columns);
+
+      // TODO - rig up the data
+      var chart = c3.generate({
+        bindto: selector,
+        data: {
+            columns: columns,
+            type: 'bar'
+        },
+        bar: {
+            width: {
+                ratio: 0.5 // this makes bar width 50% of length between ticks
+            }
+            // or
+            //width: 100 // this makes bar width 100px
+        }
       });
     },
 
@@ -193,48 +198,21 @@ function($, _, Backbone, Chart, d3, c3, moment, settings, api, Stats, template, 
       return data;
     },
 
-
-    makeCheckboxChart: function(question, title, ctx) {
-      console.log("Making checkbox chart", question, title);
-
-      var data = {
-        labels: this.labelize(question.answers, question),
-        datasets: [
-          {
-            label: "Dataset!",
-            fillColor: "#58aeff",
-            strokeColor: "#daedff",
-            highlightFill: "#ffad00",
-            highlightStroke: "#fff3da",
-            data: this.getCheckboxData(question)
-          }
-        ]
-      };
-
-      var myBarChart = new Chart(ctx).Bar(data, {
-        scaleFontFamily: 'NeuzeitOfficeW01-Regula',
-        tooltipFontFamily: 'NeuzeitOfficeW01-Regula',
-        tooltipTitleFontFamily: 'NeuzeitOfficeW01-Regula'
-      });
-    },
-
     makeUserActivityChart: function() {
       // Render the chart of users over time.
       var userActivityChart = $('#chart-user-activity').get(0);
       if (!userActivityChart) {
         return;
       }
-      // var ctx = userActivityChart.getContext('2d');
 
-
-
-
+      // XXX TODO
+      // Use the survey ID
       $.get('https://localhost:3443/api/surveys/06a311f0-4b1a-11e3-aca4-1bb74719513f/stats/activity?after=1385320961495&resolution=296000000&until=1416857080118')
         .done(function(stats) {
           console.log("Got user activity data", stats);
 
-          var labels = ['x'];
-          var data = ['counts'];
+          var labels = ['Responses'];
+          var data = ['Responses per days'];
           _.each(stats.stats.activity, function(a) {
             data.push(a.count);
             var created = moment(a.ts).format("Do YYYY");
@@ -246,86 +224,36 @@ function($, _, Backbone, Chart, d3, c3, moment, settings, api, Stats, template, 
           });
 
           var chart = c3.generate({
-              bindto: '#chart-user-activity',
-              data: {
-                x: 'x',
-                columns: [
-                  labels,
-                  data
-                ],
-                colors: {
-                    counts: '#58aeff'
-                }
-              },
-              size: {
-                height: 200
-              },
-              interaction: {
-                enabled: false
-              },
-              axis: {
-                x: {
-                  type: 'category',
-                  tick: {
-                    // this also works for non timeseries data
-                    values: labels // ['2013-01-05', '2013-01-10']
-                  }
+            bindto: '#chart-user-activity',
+            data: {
+              x: 'Responses',
+              columns: [
+                labels,
+                data
+              ],
+              colors: {
+                  counts: '#58aeff'
+              }
+            },
+            size: {
+              height: 200
+            },
+            interaction: {
+              enabled: false
+            },
+            axis: {
+              x: {
+                type: 'category',
+                tick: {
+                  // this also works for non timeseries data
+                  values: labels // ['2013-01-05', '2013-01-10']
                 }
               }
-        });
-
-          // var chartOptions = {
-          //   labels: labels,
-          //   datasets: [
-          //     {
-          //       label: "Responses over time",
-          //       fillColor: "#58aeff",
-          //       strokeColor: "#58aeff",
-          //       pointColor: "#58aeff",
-          //       pointStrokeColor: "#fff",
-          //       pointHighlightFill: "#fff",
-          //       pointHighlightStroke: "rgba(220,220,220,1)",
-          //       data: data
-          //     }
-          //   ]
-          // };
-//
-          // console.log("using options", labels, data);
-//
-          // var myLineChart = new Chart(ctx).Line(chartOptions, {
-          //   scaleShowGridLines: false,
-          //   scaleShowLabels: false,
-          //   responsive: true,
-          //   maintainAspectRatio: false
-          // }) ;
-
+            }
+          });
         });
     },
 
-    makePieChart: function(question, title, ctx) {
-      // console.log("Making pie chart", question, title, ctx);
-      // Set up the colors for the pie chart
-      var colors = {};
-      _.each(_.keys(question), function(key, index ) {
-        colors[key] = settings.colorRange[index + 1];
-      });
-      colors['no response'] = settings.colorRange[0];
-
-      // Set up the data
-      var data = [];
-      _.each(question, function(value, answer) {
-        data.push({
-          value: value,
-          color: colors[answer],
-          highlight: '#ffe000',
-          label: answer
-        });
-      });
-
-      var myPieChart = new Chart(ctx).Pie(data, {
-        animation: false
-      });
-    },
 
     /**
      * Graph the questions
@@ -344,20 +272,20 @@ function($, _, Backbone, Chart, d3, c3, moment, settings, api, Stats, template, 
       this.report(question, slug);
 
       // Find the element we just created and create a Canvas context for it
-      var $elt = $('#' + slug).get(0);
+      var selector = '#' + slug;
+      var $elt = $(selector).get(0);
       if (!$elt) {
         return;
       }
-      var ctx = $elt.getContext('2d');
 
       // Decide what type of chart to use.
       // We'll use pie charts for yes / no questions
-      if (question.type === 'checkbox') {
-        this.makeCheckboxChart(question, slug, ctx);  // this.makeBarChart(question, slug, ctx);
-      } else if (question.type === undefined) {
-        question = stats[question.name];
-        this.makePieChart(question, slug, ctx);
-      }
+      // if (question.type === 'checkbox') {
+      //   //this.makeCheckboxChart(question, slug, selector);  // this.makeBarChart(question, slug, ctx);
+      // } else if (question.type === undefined)
+      var data = stats[question.name];
+      console.log("Getting stats for question", question, stats, data);
+      this.makeBarChart(data, slug, selector);
 
     }
   });
