@@ -158,7 +158,7 @@ define(function(require, exports, module) {
             question: 'How-would-you-rate-the-pedestrian-environment-overall-1-5-5highest',
             values: ['5', '4', '3', '2', '1'],
             valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
-            colors: ['#1a9641', '#a6d96a', '#ffffbf', '#fdae61', '#d7191c']
+            colors: ['#4dac26', '#b8e186', '#f7f7f7', '#f1b6da', '#d01c8b']
           }),
           makeBasicExploration({
             name: 'Sidewalk Type',
@@ -253,7 +253,7 @@ define(function(require, exports, module) {
             question: 'How-would-you-rate-the-pedestrian-environment-1-5-5highest',
             values: ['5', '4', '3', '2', '1'],
             valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
-            colors: ['#1a9641', '#a6d96a', '#ffffbf', '#fdae61', '#d7191c']
+            colors: ['#4dac26', '#b8e186', '#f7f7f7', '#f1b6da', '#d01c8b']
           }),
           makeBasicExploration({
             name: 'Lanes to cross',
@@ -381,7 +381,7 @@ define(function(require, exports, module) {
             question: 'How-would-you-rate-the-pedestrian-environment-overall-1-5-5-highest',
             values: ['5', '4', '3', '2', '1'],
             valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
-            colors: ['#1a9641', '#a6d96a', '#ffffbf', '#fdae61', '#d7191c']
+            colors: ['#4dac26', '#b8e186', '#f7f7f7', '#f1b6da', '#d01c8b']
           }), {
             name: 'Pedestrian activity',
             layer: {
