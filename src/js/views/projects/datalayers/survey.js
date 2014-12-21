@@ -22,10 +22,10 @@ define(function (require) {
   // Views
   var ObjectView = require('views/projects/datalayers/survey/object-view');
   var SettingsView = require('views/projects/datalayers/survey/settings-survey');
+  var StatsView = require('views/projects/datalayers/survey/stats-survey');
 
   // Templates
   var template = require('text!templates/projects/layerControl.html');
-  var tableTemplate = require('text!templates/projects/surveys/table-survey.html');
 
   function flip(a) {
     return [a[1], a[0]];
@@ -47,7 +47,6 @@ define(function (require) {
   // The View
   var LayerControl = Backbone.View.extend({
     template: _.template(template),
-    tableTemplate: _.template(tableTemplate),
 
     // active, inactive, filtered
     state: 'active',
@@ -327,6 +326,20 @@ define(function (require) {
       this.$settings.show();
     },
 
+    setupStats: function() {
+      console.log("setting up stats");
+      this.statsView = new SettingsView({
+        survey: this.survey,
+        forms: this.forms,
+        stats: this.stats,
+        filter: this.filter
+      });
+
+      var $el = this.statsView.render();
+      this.$stats = $el;
+      this.trigger('renderedStats', $el);
+    },
+
     changeFilter: function(filter) {
       console.log("Got filter", filter);
       this.getTileJSON(filter);
@@ -381,6 +394,7 @@ define(function (require) {
       this.trigger('rendered', this.$el);
 
       console.log('Created survey $el', this.$el);
+      this.setupStats();
       this.setupSettings();
       // return this.$el;
     }

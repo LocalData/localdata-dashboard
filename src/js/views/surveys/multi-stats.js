@@ -16,7 +16,6 @@ define(function(require, exports, module) {
   var MapView = require('views/maps/multi-map');
   var SurveyLayer = require('views/projects/datalayers/survey');
   var CartoDBLayer = require('views/maps/cartodb-layer');
-  var InfoWindow = require('views/projects/info-window');
 
   // Templates
   var embeddedSurveyTemplate = require('text!templates/responses/embed-multi.html');
@@ -68,45 +67,24 @@ define(function(require, exports, module) {
     gtech: {
       description: '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>',
       location: 'Pittsburgh, PA',
-      center: [-80.04,40.44],
-      zoom: 16,
-      commentsId: 'ptxdev', // XXX
-      suppressStreetview: true,
+      center: [-79.9958860,40.4406250],
+      zoom: 17,
       surveys: [{
-        layerName: 'Lots to Love Projects',
-        layerId: 'ac5c3b60-10dd-11e4-ad2d-2fff103144af',
-        color: '#66c2a5',
-        options: {
-          comments: true,
-          anonymous: true
-        },
-        countPath: 'survey.responseCount',
-        query: {},
-        select: {},
-        styles: _.template(simpleStyles)({color: '#66c2a5'}),
-        exploration: [
-          makeBasicExploration({
-            name: 'Building type',
-            question: 'What-type-of-building-is-on-site',
-            values: ['Single-family-dwelling',
-                     'Multi-family-dwelling-2-4-units',
-                     'Multi-family-dwelling-more-than-4-units',
-                     'CommercialOffice',
-                     'Industrial-',
-                     'Institutional-',
-                     'Mixed-use-with-residential-',
-                      'Mixed-used-without-residential-'],
-            valueNames: ['Single family',
-                         'Multi-family 2-4 units',
-                         'Multi-family >4 units',
-                         'Commercial/office',
-                         'Industrial',
-                         'Institutional',
-                         'Mixed-use w/ residential',
-                         'Mixed-use w/o residential'],
-            colors: ['#d73027', '#fc8d59', '#fee08b', '#d9ef8b', '#91cf60', '#1a9850', '#b7aba5', '#102030']
-          })
-        ]
+        surveyId: 'ac5c3b60-10dd-11e4-ad2d-2fff103144af'
+//        filter: {
+//          question: 'Is-the-property-maintained',
+//          answer: 'Yes',
+//          legend: 'Maintained properties',
+//          color: '#f15a24'
+//        }
+//      }, {
+//        surveyId: '44f94b00-4005-11e4-b627-69499f28b4e5',
+//        filter: {
+//          question: 'Is-there-dumping-on-the-property',
+//          answer: 'No',
+//          legend: 'No dumping',
+//          color: '#a743c3'
+//        }
       }],
       foreignInteractive: [{
         type: 'cartodb',
@@ -153,13 +131,6 @@ define(function(require, exports, module) {
         select: {},
         styles: _.template(simpleStyles)({color: '#66c2a5'}),
         exploration: [
-          makeBasicExploration({
-            name: 'Overall Pedestrian Environment Rating',
-            question: 'How-would-you-rate-the-pedestrian-environment-overall-1-5-5highest',
-            values: ['5', '4', '3', '2', '1'],
-            valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
-            colors: ['#4dac26', '#b8e186', '#f7f7f7', '#f1b6da', '#d01c8b']
-          }),
           makeBasicExploration({
             name: 'Sidewalk Type',
             question: 'What-type-of-sidewalk',
@@ -248,13 +219,6 @@ define(function(require, exports, module) {
         select: {},
         styles: _.template(simpleStyles)({color: '#fc8d62'}),
         exploration: [
-          makeBasicExploration({
-            name: 'Overall Pedestrian Environment Rating',
-            question: 'How-would-you-rate-the-pedestrian-environment-1-5-5highest',
-            values: ['5', '4', '3', '2', '1'],
-            valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
-            colors: ['#4dac26', '#b8e186', '#f7f7f7', '#f1b6da', '#d01c8b']
-          }),
           makeBasicExploration({
             name: 'Lanes to cross',
             question: 'How-many-lanes-are-there-to-cross',
@@ -371,132 +335,18 @@ define(function(require, exports, module) {
         color: '#8da0cb',
         countPath: 'stats.What-would-you-like-to-record.Number-of-Pedestrians-',
         query: {
-          'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
+          'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians'
         },
         select: {},
         styles: _.template(simpleStyles)({color: '#8da0cb'}),
         exploration: [
           makeBasicExploration({
             name: 'Overall Pedestrian Environment Rating',
-            question: 'How-would-you-rate-the-pedestrian-environment-overall-1-5-5-highest',
+            question: 'How-would-you-rate-the-pedestrian-environment-overall-1-5-5highest',
             values: ['5', '4', '3', '2', '1'],
             valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
-            colors: ['#4dac26', '#b8e186', '#f7f7f7', '#f1b6da', '#d01c8b']
-          }), {
-            name: 'Pedestrian activity',
-            layer: {
-              query: {
-                'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
-              },
-              select: {
-                'entries.responses.How-many-pedestrians-did-you-count-on-this-street-section': 1,
-                'entries.responses.How-long-did-you-observe-this-street-segment': 1
-              },
-              styles: '@high: #88419d;@medium: #8c96c6;@low: #b3cde3;@vlow: #edf8fb;\n' +
-              'Map { background-color: rgba(0,0,0,0); }\n' +
-              '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section">=15]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
-              '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=45]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
-              '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=75]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
-              '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=105]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
-              '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=135]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
-              ' { polygon-fill: @high;polygon-opacity:0.85; }\n' +
-              '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section">=10]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<15]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
-              '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=30]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<45]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
-              '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=50]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<75]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
-              '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=70]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<105]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
-              '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=90]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<135]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
-              '{ polygon-fill: @medium;polygon-opacity:0.85; }\n' +
-              '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section">=8]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<10]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
-              '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=23]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<30]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
-              '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=38]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<50]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
-              '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=53]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<70]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
-              '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=68]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<90]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
-              '{ polygon-fill: @low;polygon-opacity:0.85; }\n' +
-              '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section"<8]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
-              '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<23]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
-              '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<38]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
-              '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<53]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
-              '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<68]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
-              '{ polygon-fill: @vlow;polygon-opacity:0.85; }'
-            },
-            values: [{
-              text: 'High',
-              color: '#88419d',
-              layer: {
-                query: {
-                  'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
-                },
-                select: {
-                  'entries.responses.How-many-pedestrians-did-you-count-on-this-street-section': 1,
-                  'entries.responses.How-long-did-you-observe-this-street-segment': 1
-                },
-                styles: '@high: #88419d;\nMap { background-color: rgba(0,0,0,0); }\n' +
-                '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section">=15]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
-                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=45]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
-                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=75]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
-                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=105]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
-                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=135]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
-                ' { polygon-fill: @high;polygon-opacity:0.85; }'
-              }
-            }, {
-              text: 'Medium',
-              color: '#8c96c6',
-              layer: {
-                query: {
-                  'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
-                },
-                select: {
-                  'entries.responses.How-many-pedestrians-did-you-count-on-this-street-section': 1,
-                  'entries.responses.How-long-did-you-observe-this-street-segment': 1
-                },
-                styles: '@medium: #8c96c6;\nMap { background-color: rgba(0,0,0,0); }\n' +
-                '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section">=10]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<15]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
-                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=30]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<45]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
-                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=50]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<75]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
-                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=70]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<105]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
-                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=90]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<135]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
-                '{ polygon-fill: @medium;polygon-opacity:0.85; }'
-              }
-            }, {
-              text: 'Low',
-              color: '#b3cde3',
-              layer: {
-                query: {
-                  'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
-                },
-                select: {
-                  'entries.responses.How-many-pedestrians-did-you-count-on-this-street-section': 1,
-                  'entries.responses.How-long-did-you-observe-this-street-segment': 1
-                },
-                styles: '@low: #b3cde3;\nMap { background-color: rgba(0,0,0,0); }\n' +
-                '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section">=8]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<10]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
-                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=23]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<30]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
-                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=38]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<50]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
-                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=53]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<70]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
-                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=68]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<90]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
-                '{ polygon-fill: @low;polygon-opacity:0.85; }'
-              }
-            }, {
-              text: 'Very Low',
-              color: '#edf8fb',
-              layer: {
-                query: {
-                  'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
-                },
-                select: {
-                  'entries.responses.How-many-pedestrians-did-you-count-on-this-street-section': 1,
-                  'entries.responses.How-long-did-you-observe-this-street-segment': 1
-                },
-                styles: '@vlow: #edf8fb;\nMap { background-color: rgba(0,0,0,0); }\n' +
-                '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section"<8]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
-                '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<23]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
-                '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<38]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
-                '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<53]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
-                '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<68]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
-                '{ polygon-fill: @vlow;polygon-opacity:0.85; }'
-              }
-            }]
-          },
+            colors: ['#1a9641', '#a6d96a', '#ffffbf', '#fdae61', '#d7191c']
+          }),
           makeBasicExploration({
             name: 'Observeration duration',
             question: 'How-long-did-you-observe-this-street-segment',
@@ -514,7 +364,7 @@ define(function(require, exports, module) {
           name: 'Photos',
           layer: {
             query: {
-              'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-',
+              'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians',
               'entries.files.0': {
                 $type: 2
               }
@@ -527,7 +377,7 @@ define(function(require, exports, module) {
             color: '#810f7c',
             layer: {
               query: {
-                'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-',
+                'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians',
                 'entries.files.0': {
                   $type: 2
                 }
@@ -589,20 +439,18 @@ define(function(require, exports, module) {
     totalCount: 0,
     renderCount: function(surveyConfig, count) {
       this.totalCount += count;
+      //if (this.activeLayers.length === 1) {
+      //  this.$('.response-count').hide();
+      //  return;
+      //}
+
+      this.$('.response-count').show();
       this.$el.find('.response-count .count').html(util.numberWithCommas(this.totalCount));
-
-      if (this.activeLayers.length === 1) {
-        this.$('.response-count').hide();
-      } else {
-        this.$('.response-count').show();
-      }
-
       this.$('#overview-container').append(this.layerTitleTemplate({
         name: surveyConfig.layerName,
-        count: util.numberWithCommas(count),
+        count: count,
         color: surveyConfig.color
       }));
-
     },
 
     append: function ($el) {
@@ -615,6 +463,12 @@ define(function(require, exports, module) {
       // where to put the element?
       $el.hide();
       this.$el.find('.settings-container').append($el);
+      console.log("Got settings to append", $el);
+    },
+
+    appendDetails: function($el) {
+      this.$el.find('details').append($el);
+      console.log("Got details to append", $el);
     },
 
     render: function () {
@@ -641,29 +495,19 @@ define(function(require, exports, module) {
       // Render foreign data layers
       var mapView = this.mapView;
       if (this.project.foreignInteractive) {
-        this.foreignLayers = _.map(this.project.foreignInteractive, function (layer, i) {
+        this.foreignLayers = _.map(this.project.foreignInteractive, function (layer) {
           if (layer.type === 'cartodb') {
-            var view = new CartoDBLayer({
+            return new CartoDBLayer({
               mapView: mapView,
-              layer: layer
+              layer: layer,
+              el: '#responses-list'
             });
-
-            // Hook item-selection up to the info window.
-            this.listenTo(view, 'itemSelected', function (data) {
-              this.addItemView({
-                view: data.view,
-                latlng: data.latlng,
-                order: this.project.surveys.length + i
-              });
-            });
-
-            return view;
           }
-        }, this);
+        });
       }
 
       // Render survey layers
-      _.each(this.project.surveys, function (survey, i) {
+      _.each(this.project.surveys, function (survey) {
         var surveyLayer = new SurveyLayer({
           survey: survey,
           mapView: mapView,
@@ -673,20 +517,10 @@ define(function(require, exports, module) {
         this.activeLayers[survey.layerId] = surveyLayer;
 
         this.listenTo(surveyLayer, 'rendered', this.append);
-        this.listenTo(surveyLayer, 'renderedStats', function($el){
-          console.log("Got rendered stats html", $el);
-          this.$el.html($el);
-        });
         this.listenTo(surveyLayer, 'renderedSettings', this.appendSettings);
+        this.listenTo(surveyLayer, 'renderedDetails', this.appendDetails);
         this.listenTo(surveyLayer, 'count', function (count) {
           this.renderCount(survey, count);
-        });
-        this.listenTo(surveyLayer, 'itemSelected', function (data) {
-          this.addItemView({
-            view: data.view,
-            latlng: data.latlng,
-            order: i
-          });
         });
       }.bind(this));
 
@@ -701,34 +535,6 @@ define(function(require, exports, module) {
           commentsId: this.project.commentsId
         }));
       }
-    },
-
-    addItemView: function (data) {
-      if (this.infoWindow && !this.infoWindow.latlng.equals(data.latlng)) {
-        this.infoWindow.remove();
-        this.infoWindow = null;
-      }
-
-      if (!this.infoWindow) {
-        // TODO: pass along streetview suppression option. We should probably
-        // move streetview suppresion option to the project level.
-        this.infoWindow = new InfoWindow({
-          suppressStreetview: this.project.suppressStreetview,
-          latlng: data.latlng
-        }).render();
-        var $infoWindowContainer = this.$('#info-window');
-        $infoWindowContainer.append(this.infoWindow.el);
-        $infoWindowContainer.show();
-        this.listenToOnce(this.infoWindow, 'remove', function () {
-          $infoWindowContainer.hide();
-          this.infoWindow = null;
-        });
-      }
-
-      this.infoWindow.addView({
-        view: data.view,
-        order: data.order
-      });
     },
 
     showDeepDive: function() {
@@ -767,10 +573,12 @@ define(function(require, exports, module) {
       if (this.mode === 'overview') {
         this.showDeepDive();
       }
-      // TODO: If we receive a click that doesn't hit any object, we should
-      // dismiss the info window (this.infoWindow.remove()). That's nontrivial,
-      // though, because we need to listen to all of the UTF Grid layer clicks
-      // and determine that none of them have data.
+
+      if (!event.data || !event.data.object_id) {
+        return;
+      }
+
+      return;
     },
 
     toggleFilters: function () {
