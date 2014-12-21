@@ -16,6 +16,7 @@ define(function(require, exports, module) {
   var MapView = require('views/maps/multi-map');
   var SurveyLayer = require('views/projects/datalayers/survey');
   var CartoDBLayer = require('views/maps/cartodb-layer');
+  var InfoWindow = require('views/projects/info-window');
 
   // Templates
   var embeddedSurveyTemplate = require('text!templates/responses/embed-multi.html');
@@ -70,12 +71,12 @@ define(function(require, exports, module) {
       center: [-80.04,40.44],
       zoom: 16,
       commentsId: 'ptxdev', // XXX
+      suppressStreetview: true,
       surveys: [{
         layerName: 'Lots to Love Projects',
         layerId: 'ac5c3b60-10dd-11e4-ad2d-2fff103144af',
         color: '#66c2a5',
         options: {
-          suppressStreetview: true,
           comments: true,
           anonymous: true
         },
@@ -614,12 +615,6 @@ define(function(require, exports, module) {
       // where to put the element?
       $el.hide();
       this.$el.find('.settings-container').append($el);
-      console.log("Got settings to append", $el);
-    },
-
-    appendDetails: function($el) {
-      this.$el.find('details').append($el);
-      console.log("Got details to append", $el);
     },
 
     render: function () {
@@ -646,19 +641,29 @@ define(function(require, exports, module) {
       // Render foreign data layers
       var mapView = this.mapView;
       if (this.project.foreignInteractive) {
-        this.foreignLayers = _.map(this.project.foreignInteractive, function (layer) {
+        this.foreignLayers = _.map(this.project.foreignInteractive, function (layer, i) {
           if (layer.type === 'cartodb') {
-            return new CartoDBLayer({
+            var view = new CartoDBLayer({
               mapView: mapView,
-              layer: layer,
-              el: '#responses-list'
+              layer: layer
             });
+
+            // Hook item-selection up to the info window.
+            this.listenTo(view, 'itemSelected', function (data) {
+              this.addItemView({
+                view: data.view,
+                latlng: data.latlng,
+                order: this.project.surveys.length + i
+              });
+            });
+
+            return view;
           }
-        });
+        }, this);
       }
 
       // Render survey layers
-      _.each(this.project.surveys, function (survey) {
+      _.each(this.project.surveys, function (survey, i) {
         var surveyLayer = new SurveyLayer({
           survey: survey,
           mapView: mapView,
@@ -669,9 +674,15 @@ define(function(require, exports, module) {
 
         this.listenTo(surveyLayer, 'rendered', this.append);
         this.listenTo(surveyLayer, 'renderedSettings', this.appendSettings);
-        this.listenTo(surveyLayer, 'renderedDetails', this.appendDetails);
         this.listenTo(surveyLayer, 'count', function (count) {
           this.renderCount(survey, count);
+        });
+        this.listenTo(surveyLayer, 'itemSelected', function (data) {
+          this.addItemView({
+            view: data.view,
+            latlng: data.latlng,
+            order: i
+          });
         });
       }.bind(this));
 
@@ -686,6 +697,34 @@ define(function(require, exports, module) {
           commentsId: this.project.commentsId
         }));
       }
+    },
+    
+    addItemView: function (data) {
+      if (this.infoWindow && !this.infoWindow.latlng.equals(data.latlng)) {
+        this.infoWindow.remove();
+        this.infoWindow = null;
+      }
+
+      if (!this.infoWindow) {
+        // TODO: pass along streetview suppression option. We should probably
+        // move streetview suppresion option to the project level.
+        this.infoWindow = new InfoWindow({
+          suppressStreetview: this.project.suppressStreetview,
+          latlng: data.latlng
+        }).render();
+        var $infoWindowContainer = this.$('#info-window');
+        $infoWindowContainer.append(this.infoWindow.el);
+        $infoWindowContainer.show();
+        this.listenToOnce(this.infoWindow, 'remove', function () {
+          $infoWindowContainer.hide();
+          this.infoWindow = null;
+        });
+      }
+
+      this.infoWindow.addView({
+        view: data.view,
+        order: data.order
+      });
     },
 
     showDeepDive: function() {
@@ -724,12 +763,10 @@ define(function(require, exports, module) {
       if (this.mode === 'overview') {
         this.showDeepDive();
       }
-
-      if (!event.data || !event.data.object_id) {
-        return;
-      }
-
-      return;
+      // TODO: If we receive a click that doesn't hit any object, we should
+      // dismiss the info window (this.infoWindow.remove()). That's nontrivial,
+      // though, because we need to listen to all of the UTF Grid layer clicks
+      // and determine that none of them have data.
     },
 
     toggleFilters: function () {

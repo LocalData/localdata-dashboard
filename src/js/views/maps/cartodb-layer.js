@@ -13,18 +13,44 @@ define(function (require, exports, module) {
   var settings = require('settings');
 
   var infoTemplate = require('text!templates/cartodb-info.html');
+  
+  var ItemView = Backbone.View.extend({
+    template: _.template(infoTemplate),
+    
+    events: {
+      'click .close': 'remove'
+    },
+    
+    initialize: function (options) {
+      this.layerOptions = options.layerOptions;
+      this.data = options.data;
+    },
+    
+    render: function () {
+      var context = {
+        name: this.data[this.layerOptions.humanReadableField],
+        centroid: JSON.parse(this.data.centroid),
+        googleKey: settings.GoogleKey
+      };
+      
+      var names = this.layerOptions.fieldNames;
+      context.fields = _.map(_.keys(names), function (name) {
+        return {
+          name: names[name],
+          value: this.data[name]
+        };
+      }, this);
+      this.$el.html(this.template(context));
+      return this;
+    },
+  });
 
   // The View
   // We don't make much use of the Backbone.View facilities, but we may need
   // later need to have this layer behave more like the survey layer, which
   // renders some summary data and reacts to models.
   module.exports = Backbone.View.extend({
-    template: _.template(infoTemplate),
 
-    events: {
-      'click .close': 'remove'
-    },
-    
     initialize: function(options) {
       this.mapView = options.mapView;
       this.dataQuery = options.layer.dataQuery;
@@ -55,35 +81,12 @@ define(function (require, exports, module) {
           resolution: 4
         });
         self.mapView.addGridLayer(gridLayer);
-        gridLayer.on('click', self.handleGridClick.bind(self));
+        gridLayer.on('click', self.handleGridClick, self);
       }).catch(function (error) {
         console.log('Failed to fetch cartodb map config', error);
       });
     },
 
-    render: function (data) {
-      var context = {
-        name: data[this.layerOptions.humanReadableField],
-        centroid: JSON.parse(data.centroid),
-        googleKey: settings.GoogleKey
-      };
-      
-      var names = this.layerOptions.fieldNames;
-      context.fields = _.map(_.keys(names), function (name) {
-        return {
-          name: names[name],
-          value: data[name]
-        };
-      });
-      this.$el.html(this.template(context));
-      this.$el.show();
-    },
-    
-    remove: function () {
-      this.$el.hide();
-      this.$el.empty();
-    },
-    
     handleGridClick: function (event) {
       if (!event.data) {
         return;
@@ -100,7 +103,13 @@ define(function (require, exports, module) {
         }
       })).then(function (data) {
         if (data.rows && data.rows.length > 0) {
-          self.render(data.rows[0]);
+          self.trigger('itemSelected', {
+            view: new ItemView({
+              data: data.rows[0],
+              layerOptions: self.layerOptions
+            }),
+            latlng: event.latlng
+          });
         }
       }).catch(function (error) {
         console.log('Error getting data from cartodb', error);

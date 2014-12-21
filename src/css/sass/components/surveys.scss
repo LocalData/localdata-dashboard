@@ -331,6 +331,15 @@
     padding: 3vh;
   }
 
+  #info-window {
+    height: 94vh;
+    padding: 6vh 3vh 3vh 3vh;
+    #responses-list {
+      height: auto;
+      padding: 0;
+    }
+  }
+
   .filters {
     .date-filters {
       display: none;

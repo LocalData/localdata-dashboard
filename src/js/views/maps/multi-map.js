@@ -26,10 +26,6 @@ define(function(require, exports, module) {
     selectedLayer: null,
     markers: {},
 
-    events: {
-      'click': 'clickHandler'
-    },
-
     initialize: function(options) {
       L.Icon.Default.imagePath = '/js/lib/leaflet/images';
       _.bindAll(this,
@@ -68,12 +64,10 @@ define(function(require, exports, module) {
     },
 
     addTileLayer: function (layer) {
-      console.log("Adding layer", layer);
       this.map.addLayer(layer);
     },
 
     removeTileLayer: function (layer) {
-      console.log("Removing layer", layer);
       this.map.removeLayer(layer);
     },
 
@@ -87,7 +81,6 @@ define(function(require, exports, module) {
     },
 
     removeGridLayer: function (layer) {
-      console.log("Removing grid layer", layer);
       this.map.removeLayer(layer);
     },
 
@@ -120,6 +113,8 @@ define(function(require, exports, module) {
         center: [_.last(this.config.center), _.first(this.config.center)],
         zoomControl: false
       });
+
+      this.map.on('click', this.clickHandler, this);
 
       this.map.addControl(L.control.zoom({ position: 'topright' }));
 

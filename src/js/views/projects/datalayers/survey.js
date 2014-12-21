@@ -1,5 +1,5 @@
 /*jslint nomen: true */
-/*globals define */
+/*globals define, document */
 
 define(function (require) {
   'use strict';
@@ -20,7 +20,7 @@ define(function (require) {
   var Responses = require('models/responses');
 
   // Views
-  var ResponseListView = require('views/responses/list');
+  var ObjectView = require('views/projects/datalayers/survey/object-view');
   var SettingsView = require('views/projects/datalayers/survey/settings-survey');
 
   // Templates
@@ -187,22 +187,20 @@ define(function (require) {
       });
       this.gridLayer.on('click', this.handleClick);
 
-      console.log("Adding tile layer", tilejson, this.tileLayer);
-
       this.mapView.addTileLayer(this.tileLayer);
-      this.mapView.addTileLayer(this.gridLayer);
+      this.mapView.addGridLayer(this.gridLayer);
     },
 
     toggleLayer: function () {
       if (this.state === 'active') {
         this.state = 'inactive';
         this.mapView.removeTileLayer(this.tileLayer);
-        this.mapView.removeTileLayer(this.gridLayer);
+        this.mapView.removeGridLayer(this.gridLayer);
         this.changeLegend();
       } else if (this.state === 'inactive') {
         this.state = 'active';
         this.mapView.addTileLayer(this.tileLayer);
-        this.mapView.addTileLayer(this.gridLayer);
+        this.mapView.addGridLayer(this.gridLayer);
         this.removeLegend();
       } else if (this.state === 'filtered') {
         this.state = 'active';
@@ -211,11 +209,7 @@ define(function (require) {
       }
     },
 
-    selectItem: function (objectId) {
-      if (this.selectedItemListView) {
-        this.selectedItemListView.remove();
-      }
-
+    selectItem: function (objectId, latlng) {
       // FIXME: If this gets called because of a direct navigation to a
       // surveys/:slug/dive/:oid URL, then there was never a click on the
       // map, and so the object in question hasn't been highlighted on the map.
@@ -225,16 +219,19 @@ define(function (require) {
       });
 
       var surveyOptions = this.survey.get('surveyOptions') || {};
-      this.selectedItemListView = new ResponseListView({
-        el: '#responses-list',
+      this.selectedItemListView = new ObjectView({
+        id: 'responses-list',
         collection: rc,
         labels: this.forms.getQuestions(),
         forms: this.forms,
         surveyOptions: surveyOptions,
         survey: this.survey
       });
-      var $el = this.selectedItemListView.render();
-      this.trigger('renderedDetails', $el);
+
+      this.trigger('itemSelected', {
+        view: this.selectedItemListView,
+        latlng: latlng
+      });
 
       this.listenTo(this.selectedItemListView, 'remove', this.mapView.deselectObject);
 
@@ -263,7 +260,7 @@ define(function (require) {
       }
 
       if (objectId) {
-        this.selectItem(objectId);
+        this.selectItem(objectId, event.latlng);
       }
 
 
