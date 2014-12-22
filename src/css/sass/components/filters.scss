@@ -3,14 +3,15 @@
   background: #fff;
   position: absolute;
   width: 70%; /* leaves a little bit of a gap so you can see the map behind */
-  left: 350px;
-  top: 10px;
+  left: 300px;
+  top: 0px;
   z-index: 1250; /* leaflet zoom controls are at 999 */
   margin-bottom: 20px;
 
   .filters-in {
     padding: 20px;
     border: 5px solid $pink;
+    border-width: 0 5px;
     overflow: auto;
   }
 
