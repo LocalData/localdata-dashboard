@@ -359,6 +359,14 @@
     }
   }
 
+  .legend,
+  .filters {
+    .question-title:hover,
+    span.answer:hover {
+      color: $blue;
+    }
+  }
+
 }
 
 .multi.map-list-view {
