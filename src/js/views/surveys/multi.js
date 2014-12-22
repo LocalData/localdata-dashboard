@@ -599,7 +599,7 @@ define(function(require, exports, module) {
 
       this.$('#overview-container').append(this.layerTitleTemplate({
         name: surveyConfig.layerName,
-        count: count,
+        count: util.numberWithCommas(count),
         color: surveyConfig.color
       }));
 
@@ -698,7 +698,7 @@ define(function(require, exports, module) {
         }));
       }
     },
-    
+
     addItemView: function (data) {
       if (this.infoWindow && !this.infoWindow.latlng.equals(data.latlng)) {
         this.infoWindow.remove();
