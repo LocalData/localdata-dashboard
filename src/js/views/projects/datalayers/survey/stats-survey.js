@@ -6,15 +6,24 @@ define(function (require) {
 
   var $ = require('jquery');
   var _ = require('lib/lodash');
+  var d3 = require('d3');
+  var c3 = require('lib/c3');
   var Backbone = require('backbone');
+  var util = require('util');
 
   // LocalData
   var settings = require('settings');
 
+  // Models
+  var Activity = require('models/activity');
+
   // Templates
   var template = require('text!templates/projects/surveys/stats-survey.html');
+  var graphTemplate = require('text!templates/projects/surveys/stats-survey-graph.html');
 
   var DURATION = 100;
+
+  c3 = window.c3;
 
   /**
    * Intended for shorter lists of responses (arbitrarily <25)
@@ -26,22 +35,26 @@ define(function (require) {
     $legend: null,
 
     template: _.template(template),
+    graphTemplate: _.template(graphTemplate),
 
     events: {
-      "click .select": "showOptions",
-      "click .question-title": "selectQuestion",
-      "click .answer": "selectAnswer",
-      "click .clear": "reset",
       "click .close-settings": "close"
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'reset');
+      _.bindAll(
+        this,
+        'render',
+        'graph',
+        'activityGraph'
+      );
 
-      console.log("Init stats");
       this.survey = options.survey;
       this.forms = options.forms;
       this.stats = options.stats;
+      this.layerDef = options.layerDef;
+      this.exploration = options.exploration;
+      this.title = options.title;
     },
 
     close: function() {
@@ -49,147 +62,127 @@ define(function (require) {
     },
 
     render: function() {
-      console.log("Render stats");
+      var count = util.numberWithCommas(this.survey.get('queryCount'));
+      this.activityId = _.uniqueId('activity-'); // used for the activity graph
+
       var context = {
-        categories: this.exploration
+        activityId: this.activityId,
+        title: this.title,
+        type: this.layerName || 'responses',
+        count: count,
+        slug: this.survey.get('slug')
       };
       this.$el.html(this.template(context));
+
+      _.each(this.exploration, this.graph);
+
+      var key = _.keys(this.layerDef.query)[0];
+      var val = this.layerDef.query[key];
+      var responseFilters = {};
+      responseFilters[key.replace('entries.responses.', '')] = val;
+      this.activity = new Activity.Model({
+        id: this.survey.get('id'),
+        params: {
+          responses: responseFilters
+        }
+      });
+      // TODO
+      // Reset doesn't get noticed (even with reset: true)
+      this.activity.on('change', this.activityGraph);
+      this.activity.fetch();
+
       return this.$el;
     },
 
-    generateLegend: function () {
-      var category;
-      if (this.filters.question) {
-        category = _.find(this.exploration, { name: this.filters.question });
-      }
+    activityGraph: function () {
+      var data = this.activity.toJSON();
+      var counts = ['responses'];
+      var times = ['x'];
 
-      if (!category) {
-        this.$legend = null;
-      } else {
-        var legend = this.legendTemplate({
-          filters: this.filters,
-          category: category
-        });
-        this.$legend = $(legend);
-
-        // TODO: Use delegated events?
-        this.$legend.find('.question-title').on('click', this.selectQuestion.bind(this));
-        this.$legend.find('.answer').on('click', this.selectAnswer.bind(this));
-      }
-
-      // TODO: Factor the legend into its own view, instead of passing DOM
-      // nodes between two views and spreading around the events and
-      // insertion/removal.
-      this.trigger('legendSet', this.$legend);
-    },
-
-    showOptions: function(event) {
-      event.preventDefault();
-      $('.filters .options').show();
-    },
-
-    /**
-     * Reset any filters
-     */
-    reset: function(event) {
-      if(event) {
-        event.preventDefault();
-      }
-
-      // Reset to the original filters, or none
-      if (this.originalFilter) {
-        this.filters = this.originalFilter;
-      } else {
-        this.filters = {};
-      }
-
-
-      this.trigger('filterSet', this.filters);
-
-      $('.filters .clear').slideUp(DURATION);
-      $('.filters .options .answers').slideUp(DURATION);
-      $('.filters .answer').removeClass('active');
-
-      this.generateLegend();
-      this.close();
-    },
-
-    selectQuestion: function(event) {
-      // Clear out any filters
-      if(this.filters.answer) {
-        this.filters = {};
-      }
-
-      // Set up handy shortcuts
-      var $question = $(event.target).parent();
-      var question = $question.attr('data-question');
-      this.filters.question = question;
-
-      // Show the sub-answers
-      // TODO: The following slides operate on two different matches. One
-      // seems to be hidden with a display:none, the other is a descendant of
-      // this.$el, so we can scope the search.
-      $('.filters .options .answers').slideUp(DURATION);
-      $question.find('.answers').slideDown(DURATION);
-      $('.filters .clear').slideDown(DURATION);
-      $question.find('.toggle').slideUp(DURATION);
-
-      this.trigger('filterSet', this.filters);
-
-      this.generateLegend();
-
-      this.close();
-
-      // XXX TODO
-      // Mark this question as selected
-    },
-
-    /**
-     * Show only responses with a specific answer
-     */
-    selectAnswer: function(event) {
-      var $answer = $(event.target);
-      this.filters.answer = $answer.attr('data-answer');
-
-      // Make sure we have the right question selected
-      this.filters.question = $answer.attr('data-question');
-      var $question = $('div[data-question="' + this.filters.question + '"]');
-
-      if(!this.filters.answer) {
-        $answer = $answer.parent();
-        this.filters.answer = $answer.attr('data-answer');
-      }
-
-      // We're manipulating the answer styling in both the legend and the
-      // survey-layer settings box, so we need to find both answer elements.
-      // TODO: This is a hack. We should probably factor the legend out into
-      // its own view and let it manage its own styling. The legend and
-      // settings views can both listen to the appropriate events. The current
-      // technique is bound to interfere with other layers that have
-      // coincidentally-named questions/answers.
-      $answer = $('span[data-question="' + this.filters.question + '"][data-answer="' + this.filters.answer + '"]');
-
-      this.trigger('filterSet', this.filters);
-
-      $question.find('.answer').addClass('inactive');
-      $question.find('.answer').removeClass('active');
-      $answer.addClass('active');
-      $answer.removeClass('inactive');
-    },
-
-    /**
-     * Associate a unqie color with each answer in a list
-     */
-    colors: function(keys) {
-      var answers = {};
-      _.each(keys, function(key, index) {
-        answers[key] = {
-          color: settings.colorRange[index + 1]
-        };
+      // Format counts and labels in the way that c3 expects.
+      var vals = _.each(data, function(d){
+        counts.push(d.count);
+        times.push(d.date.month + '-' + d.date.year);
       });
-      return answers;
-    }
 
+      var chart = c3.generate({
+        bindto: '#' + this.activityId,
+        data: {
+          x: 'x',
+          columns: [
+            times,
+            counts
+          ],
+          xFormat: '%m-%Y'
+        },
+        axis: {
+          x: {
+            type: 'timeseries',
+            tick: {
+              format: '%b \'%y',
+              culling: {
+                max: 5 // max 5 ticks displayed
+              }
+            }
+          },
+          y: {
+            show: false
+          }
+        },
+        legend: {
+          show: false
+        },
+        point: {
+          r: 6,
+          select: {
+            r: 8
+          }
+        }
+      });
+
+    },
+
+    // Generate a graph for a question
+    // XXX TODO
+    // use the exploration options instead.
+    graph: function (question) {
+      if (!question.question) {
+        return;
+      }
+
+      // Skip photo / text questions for now
+      if(question.values.length === 1) {
+        return;
+      }
+
+      // Add stats to each value
+      var stats = this.stats.toJSON()[question.question];
+
+      // Get the sum of all the answeres we care about
+      // Used later to caclulate percentages
+      var sum = 0;
+
+      _.each(question.values, function(value) {
+        sum += stats[value.name];
+      });
+
+      // We could instead get the sum of all answers to the question,
+      // but that includes deceptive 'no response' answers.
+      // var sum = _.reduce(_.values(stats), function(memo, num){ return memo + num; }, 0);
+
+      _.each(question.values, function(value, index) {
+        if (!stats[value.name]) {
+          console.log("Missing", value, stats);
+          return;
+        }
+        question.values[index].count = stats[value.name];
+        question.values[index].prettyCount = util.numberWithCommas(stats[value.name]);
+        question.values[index].percent = stats[value.name] / sum * 100;
+      });
+
+      var $el = this.graphTemplate(question);
+      this.$el.find('.graphs').append($el);
+    }
   });
 
   return StatsView;

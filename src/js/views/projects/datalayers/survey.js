@@ -71,6 +71,9 @@ define(function (require) {
         'setupSettings',
         'showSettings',
 
+        // Reports
+        'setupStats',
+
         // Interaction
         'handleClick'
       );
@@ -116,6 +119,12 @@ define(function (require) {
           stats: self.stats.toJSON(),
           survey: self.survey.toJSON()
         }, options.survey.countPath));
+
+        self.survey.set('queryCount', dotPath({
+          stats: self.stats.toJSON(),
+          survey: self.survey.toJSON()
+        }, options.survey.countPath));
+
         self.render();
         self.getTileJSON();
       });
@@ -186,8 +195,10 @@ define(function (require) {
       });
       this.gridLayer.on('click', this.handleClick);
 
-      this.mapView.addTileLayer(this.tileLayer);
-      this.mapView.addGridLayer(this.gridLayer);
+      if(this.mapView) {
+        this.mapView.addTileLayer(this.tileLayer);
+        this.mapView.addGridLayer(this.gridLayer);
+      }
     },
 
     toggleLayer: function () {
@@ -301,10 +312,6 @@ define(function (require) {
     },
 
     setupSettings: function() {
-      // XXX TODO
-      // Settings are getting rendered multiple times
-      console.log("Getting settings", this.forms);
-
       this.settings = new SettingsView({
         survey: this.survey,
         forms: this.forms,
@@ -327,12 +334,13 @@ define(function (require) {
     },
 
     setupStats: function() {
-      console.log("setting up stats");
-      this.statsView = new SettingsView({
+      this.statsView = new StatsView({
+        title: this.layerName,
         survey: this.survey,
         forms: this.forms,
         stats: this.stats,
-        filter: this.filter
+        layerDef: this.layerDef,
+        exploration: this.exploration
       });
 
       var $el = this.statsView.render();
@@ -396,15 +404,8 @@ define(function (require) {
       console.log('Created survey $el', this.$el);
       this.setupStats();
       this.setupSettings();
-      // return this.$el;
+      return this.$el;
     }
-
-    // close: function() {
-    //   if(this.tileLayer) {
-    //     this.map.removeLayer(this.tileLayer);
-    //   }
-    //   this.remove();
-    // }
   });
 
   return LayerControl;

@@ -43,6 +43,9 @@
 @import "shared/buttons";
 @import "shared/navigation";
 
+/* Third-party libraries ---------------------------------------------------- */
+@import "components/lib/c3.scss";
+
 /* Components specific to the dashboard ------------------------------------- */
 @import "components/header";
 @import "components/surveys";
