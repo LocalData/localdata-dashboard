@@ -1,0 +1,143 @@
+.multi {
+
+  .count {
+    display: block;
+  }
+
+  h3 {
+    line-height: 0.9;
+    letter-spacing: -2px;
+    color: #58aeff;
+    padding-right: 20px; /* to make room for the close button */
+
+    .count {
+      display: block;
+      font-size: 120px;
+    }
+  }
+
+  h4 {
+    font-size: 36px;
+    line-height: 0.9;
+    letter-spacing: -2px;
+
+    .count {
+      font-size: 90px;
+    }
+  }
+
+  h4.layer-callout {
+    margin-top: 2em;
+
+    a {
+      color: inherit;
+    }
+
+    a:hover {
+      color: $blue;
+    }
+
+    .count {
+      font-size: 90px;
+    }
+  }
+
+  .show-settings {
+    cursor: pointer;
+  }
+
+  .layer {
+    margin-bottom: 2em;
+
+    h4 {
+      letter-spacing: -1px;
+      font-size: 1.1em;
+      line-height: 1em;
+    }
+
+    .circle {
+      border: 3px solid;
+      border-radius: 14px;
+      display: inline-block;
+      height: 14px;
+      width: 14px;
+      margin-bottom: -3px;
+    }
+
+    .legend-active .circle {
+      background-color: transparent !important;
+    }
+
+    .inactive .circle {
+      background-color: transparent !important;
+      border-color: transparent !important;
+    }
+
+    .question {
+      line-height: 1em;
+      margin-top: 0.5em;
+    }
+
+    .answer {
+      display: block;
+      cursor: pointer;
+      line-height: 27px;
+    }
+  }
+
+  #map {
+    height: 100vh;
+  }
+
+  #map-view-container {
+    height: 100vh;
+  }
+
+  #map-tools {
+    position: absolute;
+    padding: 12px;
+  }
+
+  #responses-list {
+    height: 94vh;
+    padding: 3vh;
+  }
+
+  #info-window {
+    height: 94vh;
+    padding: 6vh 3vh 3vh 3vh;
+    #responses-list {
+      height: auto;
+      padding: 0;
+    }
+  }
+
+  .filters {
+    .date-filters {
+      display: none;
+    }
+  }
+
+  .legend {
+    .question-title {
+      cursor: pointer;
+    }
+  }
+
+  .legend,
+  .filters {
+    a.clear {
+      color: $body-med;
+    }
+
+    .question-title:hover,
+    span.answer:hover {
+      color: $blue;
+    }
+  }
+
+}
+
+.multi.map-list-view {
+  height: 100%;
+}
