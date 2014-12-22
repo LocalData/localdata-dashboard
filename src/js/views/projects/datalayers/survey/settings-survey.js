@@ -79,6 +79,7 @@ define(function (require) {
         // TODO: Use delegated events?
         this.$legend.find('.question-title').on('click', this.selectQuestion.bind(this));
         this.$legend.find('.answer').on('click', this.selectAnswer.bind(this));
+        this.$legend.find('.clear').on('click', this.reset.bind(this));
 
         // TODO: Factor the legend into its own view, instead of passing DOM
         // nodes between two views and spreading around the events and

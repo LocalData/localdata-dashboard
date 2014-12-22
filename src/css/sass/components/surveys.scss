@@ -361,6 +361,10 @@
 
   .legend,
   .filters {
+    a.clear {
+      color: $body-med;
+    }
+
     .question-title:hover,
     span.answer:hover {
       color: $blue;
