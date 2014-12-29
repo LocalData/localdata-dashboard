@@ -40,6 +40,7 @@ function($, _, Backbone, settings, api) {
       '(!)multi/surveys/:slug': 'multi',
       '(!)projects/:slug': 'multi',
       '(!)projects/:slug/dive': 'multiDetails',
+      '(!)projects/:slug/reports': 'multiReports',
 
       "*actions": "default_route"
     },
@@ -121,6 +122,10 @@ function($, _, Backbone, settings, api) {
       this.controller.gotoMultiSurvey(slug, {
         mode: 'deep-dive'
       });
+    },
+
+    multiReports: function (slug) {
+      this.controller.gotoMultiReports(slug);
     },
 
 

@@ -27,6 +27,7 @@ define(function(require, exports, module) {
   // Embed views
   var SurveyEmbedView = require('views/survey-embed');
   var MultiSurveyEmbedView = require('views/surveys/multi');
+  var MultiSurveyReportsView = require('views/projects/reports');
 
   // Templates
   var dashboardTemplateText = require('text!templates/dashboard.html');
@@ -243,6 +244,17 @@ define(function(require, exports, module) {
         slug: slug,
         mode: 'overview'
       }));
+    },
+
+    gotoMultiReports: function (slug) {
+      this.renderEmbed();
+      console.log("Going to reports");
+
+      // We won't navigate between surveys in a single-survey embed view, so we
+      // don't need to use the factory.
+      this.currentContentView = new MultiSurveyReportsView({
+        slug: slug
+      });
     }
 
   });

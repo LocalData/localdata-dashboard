@@ -22,10 +22,10 @@ define(function (require) {
   // Views
   var ObjectView = require('views/projects/datalayers/survey/object-view');
   var SettingsView = require('views/projects/datalayers/survey/settings-survey');
+  var StatsView = require('views/projects/datalayers/survey/stats-survey');
 
   // Templates
   var template = require('text!templates/projects/layerControl.html');
-  var tableTemplate = require('text!templates/projects/surveys/table-survey.html');
 
   function flip(a) {
     return [a[1], a[0]];
@@ -47,7 +47,6 @@ define(function (require) {
   // The View
   var LayerControl = Backbone.View.extend({
     template: _.template(template),
-    tableTemplate: _.template(tableTemplate),
 
     // active, inactive, filtered
     state: 'active',
@@ -71,6 +70,9 @@ define(function (require) {
         // Settings
         'setupSettings',
         'showSettings',
+
+        // Reports
+        'setupStats',
 
         // Interaction
         'handleClick'
@@ -117,6 +119,12 @@ define(function (require) {
           stats: self.stats.toJSON(),
           survey: self.survey.toJSON()
         }, options.survey.countPath));
+
+        self.survey.set('queryCount', dotPath({
+          stats: self.stats.toJSON(),
+          survey: self.survey.toJSON()
+        }, options.survey.countPath));
+
         self.render();
         self.getTileJSON();
       });
@@ -187,8 +195,10 @@ define(function (require) {
       });
       this.gridLayer.on('click', this.handleClick);
 
-      this.mapView.addTileLayer(this.tileLayer);
-      this.mapView.addGridLayer(this.gridLayer);
+      if(this.mapView) {
+        this.mapView.addTileLayer(this.tileLayer);
+        this.mapView.addGridLayer(this.gridLayer);
+      }
     },
 
     toggleLayer: function () {
@@ -302,10 +312,6 @@ define(function (require) {
     },
 
     setupSettings: function() {
-      // XXX TODO
-      // Settings are getting rendered multiple times
-      console.log("Getting settings", this.forms);
-
       this.settings = new SettingsView({
         survey: this.survey,
         forms: this.forms,
@@ -325,6 +331,21 @@ define(function (require) {
     showSettings: function (event) {
       console.log("Showing settings", this.$settings);
       this.$settings.show();
+    },
+
+    setupStats: function() {
+      this.statsView = new StatsView({
+        title: this.layerName,
+        survey: this.survey,
+        forms: this.forms,
+        stats: this.stats,
+        layerDef: this.layerDef,
+        exploration: this.exploration
+      });
+
+      var $el = this.statsView.render();
+      this.$stats = $el;
+      this.trigger('renderedStats', $el);
     },
 
     changeFilter: function(filter) {
@@ -381,16 +402,10 @@ define(function (require) {
       this.trigger('rendered', this.$el);
 
       console.log('Created survey $el', this.$el);
+      this.setupStats();
       this.setupSettings();
-      // return this.$el;
+      return this.$el;
     }
-
-    // close: function() {
-    //   if(this.tileLayer) {
-    //     this.map.removeLayer(this.tileLayer);
-    //   }
-    //   this.remove();
-    // }
   });
 
   return LayerControl;

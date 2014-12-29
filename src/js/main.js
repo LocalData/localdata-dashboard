@@ -5,6 +5,7 @@
 
 require.config({
   paths: {
+    d3: "lib/d3.v3.min",
     text: 'lib/text',
     jquery: 'lib/jquery-1.7.1',
     backbone: 'lib/backbone',
@@ -51,7 +52,11 @@ require.config({
       exports: '_kmq'
     },
 
-    'lib/bootstrap' : ['jquery']
+    'lib/bootstrap' : ['jquery'],
+    'lib/c3': {
+      deps: ['d3'],
+      exports: 'c3'
+    }
   }
 
 });

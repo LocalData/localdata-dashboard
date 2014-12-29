@@ -136,8 +136,96 @@
     }
   }
 
+  #stats-view-container {
+    position: absolute;
+    border: 5px solid $thinpink;
+    background: #fff;
+    width: 80%;
+    left: 10%;
+    top: 20px;
+
+    .report {
+      margin: 3%;
+      overflow: auto;
+      border-bottom: 3px solid #thinpink;
+    }
+
+    .piece {
+      width: 47%;
+      margin-right: 2%;
+      display: inline-block;
+      vertical-align: top;
+      margin-bottom: 2em;
+
+      h2 {
+        font-size: 40px;
+        .count {
+          font-size: 120px;
+          line-height: 1em;
+        }
+      }
+
+      h4 {
+        margin-bottom: 0.5em;
+      }
+    }
+
+    .piece:nth-child(even) {
+      margin-right: 0;
+      margin-left: 2%;
+    }
+
+    .activity {
+      height: 175px;
+    }
+
+    .label {
+      overflow: auto;
+      line-height: 1.2em;
+      margin-bottom: 3px;
+    }
+
+    .bar {
+      float: left;
+      text-align: right;
+      height: 1.2em;
+      line-height: 1.2em;
+      padding: 0px 5px;
+      margin-right: 5px;
+      color: #fff;
+    }
+
+    /* Graph styles ---------------------- */
+    .c3-axis-x {
+
+    }
+
+    .c3-line-responses {
+      stroke-width: 5px;
+      stroke: $blue;
+    }
+
+    .c3-circle {
+      stroke-width: 2px;
+      stroke: #fff;
+    }
+
+    .c3-axis-y .domain,
+    .c3-axis-x .domain,
+    .c3-axis-x .tick line
+     {
+      display: none;
+    }
+
+  }
 }
 
 .multi.map-list-view {
   height: 100%;
+}
+
+.c3 svg {
+  font-family: $font;
+  color: $body-color;
+  font-size: 12px;
 }
