@@ -137,6 +137,10 @@ define(function (require) {
           select: {
             r: 8
           }
+        },
+        padding: {
+          left: 15,
+          right: 15
         }
       });
 
