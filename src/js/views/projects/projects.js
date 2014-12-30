@@ -4,8 +4,21 @@
 define(function(require, exports, module) {
   'use strict';
 
-  var exploreStyles = require('text!templates/projects/surveys/explore-styles.mss');
-  var simpleStyles = require('text!templates/projects/surveys/simple-styles.mss');
+  var _ = require('lib/lodash');
+  var exploreStylesTemplate = require('text!templates/projects/surveys/explore-styles.mss');
+  var simpleStylesTemplate = require('text!templates/projects/surveys/simple-styles.mss');
+
+  var exploreStyles = (function (template) {
+    return function (options) {
+      return template(_.defaults(options, { pointSize: 18 }));
+    };
+  }(_.template(exploreStylesTemplate)));
+
+  var simpleStyles = (function (template) {
+    return function (options) {
+      return template(_.defaults(options, { pointSize: 18 }));
+    };
+  }(_.template(simpleStylesTemplate)));
 
   function makeBasicExploration(options) {
     // name: 'Unsafe due to traffic speed/volume',
@@ -21,7 +34,7 @@ define(function(require, exports, module) {
       layer: {
         query: {},
         select: { 'entries.responses': 1 },
-        styles: _.template(exploreStyles)({
+        styles: exploreStyles({
           showNoResponse: false,
           pairs: _.map(options.values, function (val, i) {
             var ret = {
@@ -30,7 +43,8 @@ define(function(require, exports, module) {
               color: options.colors[i]
             };
             return ret;
-          })
+          }),
+          pointSize: options.pointSize
         })
       },
       values:  _.map(options.values, function (val, i) {
@@ -41,8 +55,9 @@ define(function(require, exports, module) {
           layer: {
             query: {},
             select: {},
-            styles: _.template(simpleStyles)({ color: options.colors[i] })
-          }
+            styles: simpleStyles({ color: options.colors[i], pointSize: options.pointSize })
+          },
+          pointSize: options.pointSize
         };
         ret.layer.query['entries.responses.' + options.question] = val;
         return ret;
@@ -74,7 +89,7 @@ define(function(require, exports, module) {
         countPath: 'survey.responseCount',
         query: {},
         select: {},
-        styles: _.template(simpleStyles)({color: '#a743c3'}),
+        styles: simpleStyles({color: '#a743c3'}),
         exploration: [
           makeBasicExploration({
             name: 'Building type',
@@ -197,7 +212,7 @@ define(function(require, exports, module) {
       location: "Denver, Colorado",
       center: [-104.9831330, 39.7589070],
       zoom: 16,
-      commentsId: 'ptxdev', // XXX
+      commentsId: 'walkscope',
       surveys: [{
         layerName: 'Sidewalk Quality Reports',
         layerId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
@@ -211,14 +226,14 @@ define(function(require, exports, module) {
           'entries.responses.What-would-you-like-to-record': 'Sidewalk-Quality'
         },
         select: {},
-        styles: _.template(simpleStyles)({color: '#66c2a5'}),
+        styles: simpleStyles({color: '#66c2a5'}),
         exploration: [
           makeBasicExploration({
             name: 'Overall Pedestrian Environment Rating',
             question: 'How-would-you-rate-the-pedestrian-environment-overall-1-5-5highest',
             values: ['5', '4', '3', '2', '1'],
             valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
-            colors: ['#4dac26', '#b8e186', '#f7f7f7', '#f1b6da', '#d01c8b']
+            colors: ['#4dac26', '#b8e186', '#fde0ef', '#f1b6da', '#d01c8b']
           }),
           makeBasicExploration({
             name: 'Sidewalk Type',
@@ -244,28 +259,28 @@ define(function(require, exports, module) {
             question: 'Are-there-obstructions-in-the-sidewalk',
             values: ['Yes', 'No'],
             valueNames: ['Obstructed', 'Unobstructed'],
-            colors: ['#d73027', '#1a9850']
+            colors: ['#c51b7d', '#4d9221']
           }),
           makeBasicExploration({
             name: 'Significantly cracked or uneven sidewalks',
             question: 'Is-the-sidewalk-significantly-cracked-or-uneven',
             values: ['Yes', 'No'],
             valueNames: ['Significantly cracked/uneven', 'No significant issue'],
-            colors: ['#d73027', '#1a9850']
+            colors: ['#c51b7d', '#4d9221']
           }),
           makeBasicExploration({
             name: 'Unsafe due to poor visibility/lighting',
             question: 'Do-you-feel-unsafe-because-of-poor-visibility-or-lighting',
             values: ['Yes', 'No'],
             valueNames: ['Unsafe', 'No significant issue'],
-            colors: ['#d73027', '#1a9850']
+            colors: ['#c51b7d', '#4d9221']
           }),
           makeBasicExploration({
             name: 'Unsafe due to traffic speed/volume',
             question: 'Do-you-feel-unsafe-because-of-a-high-volume-or-high-speed-traffic',
             values: ['Yes', 'No'],
             valueNames: ['Unsafe', 'No significant issue'],
-            colors: ['#d73027', '#1a9850']
+            colors: ['#c51b7d', '#4d9221']
           }), {
             name: 'Other safety concerns',
             layer: {
@@ -275,7 +290,7 @@ define(function(require, exports, module) {
                 }
               },
               select: {},
-              styles: _.template(simpleStyles)({ color: '#d73027' })
+              styles: simpleStyles({ color: '#d73027' })
             },
             values: [{
               text: 'Safety concerns',
@@ -287,7 +302,7 @@ define(function(require, exports, module) {
                   }
                 },
                 select: {},
-                styles: _.template(simpleStyles)({color: '#d73027'})
+                styles: simpleStyles({color: '#d73027'})
               }
             }]
           }, {
@@ -300,7 +315,7 @@ define(function(require, exports, module) {
                 }
               },
               select: {},
-              styles: _.template(simpleStyles)({ color: '#810f7c' })
+              styles: simpleStyles({ color: '#810f7c' })
           },
           values: [{
             text: 'Photo',
@@ -313,7 +328,7 @@ define(function(require, exports, module) {
                 }
               },
               select: {},
-              styles: _.template(simpleStyles)({color: '#810f7c'})
+              styles: simpleStyles({color: '#810f7c'})
             }
           }]
         }]
@@ -330,49 +345,49 @@ define(function(require, exports, module) {
           'entries.responses.What-would-you-like-to-record': 'Intersection-Quality'
         },
         select: {},
-        styles: _.template(simpleStyles)({color: '#fc8d62'}),
+        styles: simpleStyles({color: '#fc8d62'}),
         exploration: [
           makeBasicExploration({
             name: 'Overall Pedestrian Environment Rating',
             question: 'How-would-you-rate-the-pedestrian-environment-1-5-5highest',
             values: ['5', '4', '3', '2', '1'],
             valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
-            colors: ['#4dac26', '#b8e186', '#f7f7f7', '#f1b6da', '#d01c8b']
+            colors: ['#4dac26', '#b8e186', '#fde0ef', '#f1b6da', '#d01c8b']
           }),
           makeBasicExploration({
             name: 'Lanes to cross',
             question: 'How-many-lanes-are-there-to-cross',
             values: ['1', '2', '3', '4', '5', '6', '7-or-more'],
             valueNames: ['1', '2', '3', '4', '5', '6', '7 or more'],
-            colors: ['#1a9850', '#91cf60', '#d9ef8b', '#ffffbf', '#fee08b', '#fc8d59', '#d73027']
+            colors: ['#4d9221', '#a1d76a', '#e6f5d0', '#f7f7f7', '#fde0ef', '#e9a3c9', '#c51b7d']
           }),
           makeBasicExploration({
             name: 'Painted crosswalks',
             question: 'Are-there-painted-crosswalks',
-            values: ['Yes.', 'No.'],
-            valueNames: ['Yes', 'No'],
-            colors: ['#1a9850', '#d73027']
+            values: ['Yes-for-all-crossing-directions', 'Yes-for-some-crossing-directions', 'No'],
+            valueNames: ['All crossing directions', 'Some crossing directions', 'No crosswalks'],
+            colors: ['#4dac26', '#fde0ef', '#d01c8b']
           }),
           makeBasicExploration({
             name: 'Stop sign obedience',
             question: 'Are-drivers-obeying-stop-signs',
             values: ['Yes', 'No'],
             valueNames: ['Drivers obeying stop signs', 'Drivers disobeying stop signs'],
-            colors: ['#1a9850', '#d73027']
+            colors: ['#4dac26', '#d01c8b']
           }),
           makeBasicExploration({
             name: 'Speed limit obedience',
             question: 'Are-drivers-generally-following-speed-limits',
             values: ['Yes', 'No'],
             valueNames: ['Drivers obeying speed limits', 'Drivers disobeying speed limits'],
-            colors: ['#1a9850', '#d73027']
+            colors: ['#4dac26', '#d01c8b']
           }),
           makeBasicExploration({
             name: 'Drivers yielding to pedestrians',
             question: 'Are-drivers-generally-yielding-to-pedestrians',
             values: ['Yes', 'No'],
             valueNames: ['Yes', 'No'],
-            colors: ['#1a9850', '#d73027']
+            colors: ['#4dac26', '#d01c8b']
           }),
           makeBasicExploration({
             name: 'Stop signs',
@@ -380,20 +395,44 @@ define(function(require, exports, module) {
             values: ['Yes-all-way-stop-signs', 'Yes-two-way-stop-signs', 'No'],
             valueNames: ['All-way stop sign', 'Two-way stop sign', 'No stop sign'],
             colors: ['#1a9850', '#fee08b', '#b7aba5']
-          }),
+          }), {
+          name: 'Other safety concerns',
+          layer: {
+            query: {
+              'entries.responses.Are-there-other-safety-concerns': {
+                $type: 2
+              }
+            },
+            select: {},
+            styles: simpleStyles({ color: '#d73027' })
+          },
+          values: [{
+            text: 'Safety concerns',
+            color: '#d73027',
+            layer: {
+              query: {
+                'entries.responses.Are-there-other-safety-concerns': {
+                  $type: 2
+                }
+              },
+              select: {},
+              styles: simpleStyles({color: '#d73027'})
+            }
+          }]
+          },
           makeBasicExploration({
             name: 'Median islands/bulb-outs',
             question: 'Are-there-median-islands-or-bulb-outs',
             values: ['Yes-both', 'Yes-median-islands', 'Yes-bulb-outs', 'No'],
             valueNames: ['Both', 'Median islands', 'Bulb-outs', 'Neither'],
-            colors: ['#1a9641', '#92c5de', '#b2abd2' ,'#d7191c']
+            colors: ['#4dac26', '#92c5de', '#b2abd2' ,'#d01c8b']
           }),
           makeBasicExploration({
             name: 'Traffic lights/crossing signals',
             question: 'Are-there-traffic-lights-andor-pedestrian-crossing-signals',
             values: ['Yes-both-traffic-lights-and-pedestrian-crossing-signals', 'Yes-traffic-lights-only', 'Yes-pedestrian-crossing-signals-only', 'No'],
             valueNames: ['Both', 'Traffic lights only', 'Pedestrian signals only', 'Neither'],
-            colors: ['#1a9641', '#92c5de', '#b2abd2' ,'#d7191c']
+            colors: ['#1a9641', '#92c5de', '#b2abd2' ,'#d01c8b']
           }), {
           name: 'Photos',
           layer: {
@@ -404,7 +443,7 @@ define(function(require, exports, module) {
               }
             },
             select: {},
-            styles: _.template(simpleStyles)({ color: '#810f7c' })
+            styles: simpleStyles({ color: '#810f7c' })
           },
           values: [{
             text: 'Photo',
@@ -417,7 +456,7 @@ define(function(require, exports, module) {
                 }
               },
               select: {},
-              styles: _.template(simpleStyles)({color: '#810f7c'})
+              styles: simpleStyles({color: '#810f7c'})
             }
           }]
         }]
@@ -434,14 +473,15 @@ define(function(require, exports, module) {
           'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
         },
         select: {},
-        styles: _.template(simpleStyles)({color: '#8da0cb'}),
+        styles: simpleStyles({color: '#8da0cb', pointSize: 24}),
         exploration: [
           makeBasicExploration({
             name: 'Overall Pedestrian Environment Rating',
             question: 'How-would-you-rate-the-pedestrian-environment-overall-1-5-5-highest',
             values: ['5', '4', '3', '2', '1'],
             valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
-            colors: ['#4dac26', '#b8e186', '#f7f7f7', '#f1b6da', '#d01c8b']
+            colors: ['#4dac26', '#b8e186', '#fde0ef', '#f1b6da', '#d01c8b'],
+            pointSize: 24
           }), {
             name: 'Pedestrian activity',
             layer: {
@@ -454,30 +494,34 @@ define(function(require, exports, module) {
               },
               styles: '@high: #88419d;@medium: #8c96c6;@low: #b3cde3;@vlow: #edf8fb;\n' +
               'Map { background-color: rgba(0,0,0,0); }\n' +
+              '#localdata{\n' +
+              'marker-line-width: 1; marker-width: 16; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
+              '[zoom > 14] { marker-line-width: 4; marker-width: 24; }\n' +
+              '}\n' +
               '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section">=15]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
               '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=45]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
               '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=75]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
               '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=105]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
               '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=135]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
-              ' { polygon-fill: @high;polygon-opacity:0.85; }\n' +
+              '{ marker-type: ellipse; marker-line-color: @high; marker-fill: @high;}\n' +
               '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section">=10]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<15]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
               '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=30]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<45]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
               '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=50]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<75]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
               '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=70]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<105]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
               '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=90]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<135]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
-              '{ polygon-fill: @medium;polygon-opacity:0.85; }\n' +
+              '{ marker-type: ellipse; marker-line-color: @medium; marker-fill: @medium;}\n' +
               '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section">=8]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<10]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
               '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=23]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<30]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
               '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=38]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<50]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
               '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=53]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<70]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
               '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=68]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<90]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
-              '{ polygon-fill: @low;polygon-opacity:0.85; }\n' +
+              '{ marker-type: ellipse; marker-line-color: @low; marker-fill: @low;}\n' +
               '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section"<8]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
               '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<23]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
               '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<38]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
               '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<53]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
               '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<68]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
-              '{ polygon-fill: @vlow;polygon-opacity:0.85; }'
+              '{ marker-type: ellipse; marker-line-color: @vlow; marker-fill: @vlow;}'
             },
             values: [{
               text: 'High',
@@ -496,7 +540,10 @@ define(function(require, exports, module) {
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=75]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=105]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=135]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
-                ' { polygon-fill: @high;polygon-opacity:0.85; }'
+                '{marker-type: ellipse; marker-line-color: @high; marker-fill: @high;' +
+                'marker-line-width: 1; marker-width: 16; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
+                '[zoom > 14] { marker-line-width: 4; marker-width: 24; }\n' +
+                '}\n'
               }
             }, {
               text: 'Medium',
@@ -515,7 +562,10 @@ define(function(require, exports, module) {
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=50]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<75]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=70]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<105]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=90]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<135]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
-                '{ polygon-fill: @medium;polygon-opacity:0.85; }'
+                '{marker-type: ellipse; marker-line-color: @medium; marker-fill: @medium;' +
+                'marker-line-width: 1; marker-width: 16; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
+                '[zoom > 14] { marker-line-width: 4; marker-width: 24; }\n' +
+                '}\n'
               }
             }, {
               text: 'Low',
@@ -534,7 +584,10 @@ define(function(require, exports, module) {
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=38]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<50]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=53]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<70]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=68]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<90]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
-                '{ polygon-fill: @low;polygon-opacity:0.85; }'
+                '{marker-type: ellipse; marker-line-color: @low; marker-fill: @low;' +
+                'marker-line-width: 1; marker-width: 16; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
+                '[zoom > 14] { marker-line-width: 4; marker-width: 24; }\n' +
+                '}\n'
               }
             }, {
               text: 'Very Low',
@@ -553,23 +606,28 @@ define(function(require, exports, module) {
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<38]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<53]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<68]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
-                '{ polygon-fill: @vlow;polygon-opacity:0.85; }'
+                '{marker-type: ellipse; marker-line-color: @vlow; marker-fill: @vlow;' +
+                'marker-line-width: 1; marker-width: 16; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
+                '[zoom > 14] { marker-line-width: 4; marker-width: 24; }\n' +
+                '}\n'
               }
             }]
           },
           makeBasicExploration({
-            name: 'Observeration duration',
+            name: 'Observation duration',
             question: 'How-long-did-you-observe-this-street-segment',
             values: ['Less-than-15-minutes', '15-30-minutes', '30-45-minutes', '45-60-minutes', 'more-than-60-minutes'],
             valueNames: ['Less than 15 minutes', '15-30 minutes', '30-45 minutes', '45-60 minutes', 'More than 60 minutes'],
-            colors: ['#edf8fb', '#b3cde3', '#8c96c6', '#8856a7', '#810f7c']
+            colors: ['#edf8fb', '#b3cde3', '#8c96c6', '#8856a7', '#810f7c'],
+            pointSize: 24
           }),
           makeBasicExploration({
             name: 'Temperature during observation',
             question: 'What-is-the-temperature-like',
             values: ['Warm-80-or-more', 'Mild-40-79', 'Cold-39-or-less'],
             valueNames: ['Warm (80º; or more)', 'Mild (40-79º)', 'Cold (39º; or less)'],
-            colors: ['#7bc3f4', '#408dda', '#8856a7']
+            colors: ['#7bc3f4', '#408dda', '#8856a7'],
+            pointSize: 24
           }), {
           name: 'Photos',
           layer: {
@@ -580,7 +638,7 @@ define(function(require, exports, module) {
               }
             },
             select: {},
-            styles: _.template(simpleStyles)({ color: '#810f7c' })
+            styles: simpleStyles({ color: '#810f7c', pointSize: 24 })
           },
           values: [{
             text: 'Photo',
@@ -593,7 +651,7 @@ define(function(require, exports, module) {
                 }
               },
               select: {},
-              styles: _.template(simpleStyles)({color: '#810f7c'})
+              styles: simpleStyles({color: '#810f7c', pointSize: 24})
             }
           }]
         }]
