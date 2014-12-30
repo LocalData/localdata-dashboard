@@ -54,6 +54,7 @@ define(function (require) {
         'slugify',
 
         'editQuestionFactory',
+        'makeQuestionRequiredFactory',
         'setQuestionType',
         'deleteQuestion',
         'createQuestionFactory',
@@ -163,7 +164,6 @@ define(function (require) {
     editQuestionFactory: function(question) {
       return function(event) {
         console.log('Updating question');
-        _kmq.push(['record', 'Question edited']);
         var text = $(event.target).val(); //$(this).val();
         var name = this.slugify(text);
 
@@ -176,6 +176,21 @@ define(function (require) {
             answer.value = 'yes';
           }.bind(this));
         }
+      };
+    },
+
+    makeQuestionRequiredFactory: function(question) {
+      return function(event) {
+        var required = $(event.target).is(':checked');
+
+        if (required) {
+          question.required = 'required';
+        } else {
+          delete question.required;
+        }
+
+        console.log('Changing required status of question', $(event.target), required, question);
+
       };
     },
 
@@ -374,11 +389,14 @@ define(function (require) {
       var editQuestionProxy = $.proxy(this.editQuestionFactory(question), this);
       $question.find('> div input').keyup(editQuestionProxy);
 
+      // Listen for the question to be marked required
+      var makeQuestionRequiredProxy = $.proxy(this.makeQuestionRequiredFactory(question), this);
+      $question.find('.required').change(makeQuestionRequiredProxy);
+
       // Listen for a request to remove a question
       // TODO: confirm delete
       var deleteQuestionProxy = $.proxy(this.deleteQuestion($question, parent, questionIndex), this);
       $question.find('> div .remove').click(deleteQuestionProxy);
-
 
       // Listen for a request to add a question
       var createQuestionProxy = $.proxy(this.createQuestionFactory(parent, questionIndex), this);
