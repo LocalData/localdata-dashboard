@@ -65,6 +65,7 @@ define(function (require) {
       var count = util.numberWithCommas(this.survey.get('queryCount'));
       this.activityId = _.uniqueId('activity-'); // used for the activity graph
 
+      // Set up and render the stats
       var context = {
         activityId: this.activityId,
         title: this.title,
@@ -74,12 +75,17 @@ define(function (require) {
       };
       this.$el.html(this.template(context));
 
+      // Graph each exploration
       _.each(this.exploration, this.graph);
 
+      // Create the activity graph
+      // Some graphs need to be based on a specific sub-question
       var key = _.keys(this.layerDef.query)[0];
       var val = this.layerDef.query[key];
       var responseFilters = {};
-      responseFilters[key.replace('entries.responses.', '')] = val;
+      if (key) {
+        responseFilters[key.replace('entries.responses.', '')] = val;
+      }
       this.activity = new Activity.Model({
         id: this.survey.get('id'),
         params: {
