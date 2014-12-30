@@ -353,7 +353,7 @@ define(function(require, exports, module) {
           }]
         }]
       }, {
-        layerName: 'Pedestrian Observations',
+        layerName: 'Pedestrian Counts',
         layerId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
         options: {
           comments: true,
