@@ -323,7 +323,7 @@ define(function(require, exports, module) {
             name: 'Traffic lights/crossing signals',
             question: 'Are-there-traffic-lights-andor-pedestrian-crossing-signals',
             values: ['Yes-both-traffic-lights-and-pedestrian-crossing-signals', 'Yes-traffic-lights-only', 'Yes-pedestrian-crossing-signals-only', 'No'],
-            valueNames: ['Both', 'Traffic lights', 'Pedestrian signals', 'Neither'],
+            valueNames: ['Both', 'Traffic lights only', 'Pedestrian signals only', 'Neither'],
             colors: ['#1a9641', '#92c5de', '#b2abd2' ,'#d7191c']
           }), {
           name: 'Photos',
