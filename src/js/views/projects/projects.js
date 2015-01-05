@@ -157,16 +157,16 @@ define(function(require, exports, module) {
             values: ['No-sidewalk',
                      'Less-than-3-feet-rollover-curb',
                      'Less-than-5-feet-attached',
+                     '5-feet-or-more-attached',
                      'Less-than-5-feet-detached',
                      '5-feet-or-more-detached',
-                     '5-feet-or-more-attached',
                      'Other'],
             valueNames: ['No sidewalk',
                          'Less than 3 feet rollover curb',
                          'Less than 5 feet attached',
+                         '5 feet or more attached',
                          'Less than 5 feet detached',
                          '5 feet or more detached',
-                         '5 feet or more attached',
                          'Other'],
             colors: ['#d73027', '#fc8d59', '#fee08b', '#d9ef8b', '#91cf60', '#1a9850', '#b7aba5']
           }),
@@ -499,7 +499,7 @@ define(function(require, exports, module) {
             name: 'Temperature during observation',
             question: 'What-is-the-temperature-like',
             values: ['Warm-80-or-more', 'Mild-40-79', 'Cold-39-or-less'],
-            valueNames: ['Warm (80&deg; or more)', 'Mild (40-79&deg;)', 'Cold (39&deg; or less)'],
+            valueNames: ['Warm (80º; or more)', 'Mild (40-79º)', 'Cold (39º; or less)'],
             colors: ['#e0ecf4', '#9ebcda', '#8856a7']
           }), {
           name: 'Photos',
