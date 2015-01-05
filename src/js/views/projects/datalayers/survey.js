@@ -251,7 +251,6 @@ define(function (require) {
     },
 
     handleClick: function (event) {
-      console.log("Handle click", event);
       var objectId;
 
       if (event.data) {

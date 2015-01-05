@@ -54,6 +54,18 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       this.forms = options.forms;
     },
 
+    makeAnswerLabels: function() {
+      var form = this.forms.getFlattenedForm();
+      var questions = {};
+      _.each(form, function(question, key) {
+        questions[key] = {};
+        _.each(question.answers, function(answer) {
+          questions[key][answer.value] = answer.text;
+        });
+      });
+      return questions;
+    },
+
     render: function() {
       var $el = $(this.el);
 
@@ -70,6 +82,7 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       var options = {
         r: this.model.toJSON(),
         labels: this.labels,
+        questionLabels: this.makeAnswerLabels(),
         form: this.forms.getFlattenedForm(),
         surveyOptions: this.surveyOptions
       };
