@@ -198,16 +198,40 @@ define(function(require, exports, module) {
             valueNames: ['Unsafe', 'No significant issue'],
             colors: ['#d73027', '#1a9850']
           }), {
-          name: 'Photos',
-          layer: {
-            query: {
-              'entries.responses.What-would-you-like-to-record': 'Sidewalk-Quality',
-              'entries.files.0': {
-                $type: 2
-              }
+            name: 'Other safety concerns',
+            layer: {
+              query: {
+                'entries.responses.Are-there-other-safety-concerns': {
+                  $type: 2
+                }
+              },
+              select: {},
+              styles: _.template(simpleStyles)({ color: '#d73027' })
             },
-            select: {},
-            styles: _.template(simpleStyles)({ color: '#810f7c' })
+            values: [{
+              text: 'Safety concerns',
+              color: '#d73027',
+              layer: {
+                query: {
+                  'entries.responses.Are-there-other-safety-concerns': {
+                    $type: 2
+                  }
+                },
+                select: {},
+                styles: _.template(simpleStyles)({color: '#d73027'})
+              }
+            }]
+          }, {
+            name: 'Photos',
+            layer: {
+              query: {
+                'entries.responses.What-would-you-like-to-record': 'Sidewalk-Quality',
+                'entries.files.0': {
+                  $type: 2
+                }
+              },
+              select: {},
+              styles: _.template(simpleStyles)({ color: '#810f7c' })
           },
           values: [{
             text: 'Photo',
@@ -287,31 +311,7 @@ define(function(require, exports, module) {
             values: ['Yes-all-way-stop-signs', 'Yes-two-way-stop-signs', 'No'],
             valueNames: ['All-way stop sign', 'Two-way stop sign', 'No stop sign'],
             colors: ['#1a9850', '#fee08b', '#b7aba5']
-          }), {
-          name: 'Other safety concerns',
-          layer: {
-            query: {
-              'entries.responses.Are-there-other-safety-concerns': {
-                $type: 2
-              }
-            },
-            select: {},
-            styles: _.template(simpleStyles)({ color: '#d73027' })
-          },
-          values: [{
-            text: 'Safety concerns',
-            color: '#d73027',
-            layer: {
-              query: {
-                'entries.responses.Are-there-other-safety-concerns': {
-                  $type: 2
-                }
-              },
-              select: {},
-              styles: _.template(simpleStyles)({color: '#d73027'})
-            }
-          }]
-          },
+          }),
           makeBasicExploration({
             name: 'Median islands/bulb-outs',
             question: 'Are-there-median-islands-or-bulb-outs',
