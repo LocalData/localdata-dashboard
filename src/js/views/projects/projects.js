@@ -500,7 +500,7 @@ define(function(require, exports, module) {
             question: 'What-is-the-temperature-like',
             values: ['Warm-80-or-more', 'Mild-40-79', 'Cold-39-or-less'],
             valueNames: ['Warm (80º; or more)', 'Mild (40-79º)', 'Cold (39º; or less)'],
-            colors: ['#e0ecf4', '#9ebcda', '#8856a7']
+            colors: ['#7bc3f4', '#408dda', '#8856a7']
           }), {
           name: 'Photos',
           layer: {
