@@ -9,30 +9,29 @@ define(function (require, exports, module) {
   var Backbone = require('backbone');
   var L = require('lib/leaflet/leaflet.tilejson');
   var Promise = require('lib/bluebird');
-  
+
   var settings = require('settings');
 
-  var infoTemplate = require('text!templates/cartodb-info.html');
-  
+  var infoTemplate = require('text!templates/projects/layerControl.html');
+
   var ItemView = Backbone.View.extend({
     template: _.template(infoTemplate),
-    
+
     events: {
       'click .close': 'remove'
     },
-    
+
     initialize: function (options) {
       this.layerOptions = options.layerOptions;
       this.data = options.data;
     },
-    
+
     render: function () {
       var context = {
-        name: this.data[this.layerOptions.humanReadableField],
-        centroid: JSON.parse(this.data.centroid),
-        googleKey: settings.GoogleKey
+        name: this.layerOptions.layerName,
+        count: ''
       };
-      
+
       var names = this.layerOptions.fieldNames;
       context.fields = _.map(_.keys(names), function (name) {
         return {
@@ -42,7 +41,7 @@ define(function (require, exports, module) {
       }, this);
       this.$el.html(this.template(context));
       return this;
-    },
+    }
   });
 
   // The View
@@ -57,7 +56,7 @@ define(function (require, exports, module) {
       this.layerOptions = options.layer;
 
       var self = this;
-      
+
       Promise.resolve($.ajax({
         url: 'https://localdata.cartodb.com/api/v1/map',
         type: 'GET',
@@ -67,22 +66,29 @@ define(function (require, exports, module) {
           config: JSON.stringify(options.layer.config)
         }
       })).then(function (data) {
+
         // Add image tiles
         var url = 'https://' + data.cdn_url.https +
             '/localdata/api/v1/map/' + data.layergroupid +
             '/{z}/{x}/{y}.png';
         self.mapView.addTileLayer(L.tileLayer(url));
 
+        // We can skip adding the UTF grids on purely informational layers.
+        if(this.layerOptions.config.disableGrid) {
+          return;
+        }
+
         // Add grid
         var gridUrl = 'https://' + data.cdn_url.https +
-            '/localdata/api/v1/map/' + data.layergroupid + 
+            '/localdata/api/v1/map/' + data.layergroupid +
             '/0/{z}/{x}/{y}.grid.json?callback={cb}';
         var gridLayer = new L.UtfGrid(gridUrl, {
           resolution: 4
         });
         self.mapView.addGridLayer(gridLayer);
         gridLayer.on('click', self.handleGridClick, self);
-      }).catch(function (error) {
+
+      }.bind(this)).catch(function (error) {
         console.log('Failed to fetch cartodb map config', error);
       });
     },

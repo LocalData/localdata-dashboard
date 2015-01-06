@@ -146,6 +146,8 @@ define(function(require, exports, module) {
               });
             });
 
+            this.listenTo(view, 'rendered', this.append);
+
             return view;
           }
         }, this);

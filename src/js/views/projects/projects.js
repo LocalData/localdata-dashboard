@@ -97,29 +97,89 @@ define(function(require, exports, module) {
           })
         ]
       }],
-      foreignInteractive: [{
-        type: 'cartodb',
-        dataQuery: 'select usedesc, property_2, propertyow, ST_AsGeoJSON(ST_Centroid(the_geom)) AS centroid from (select * from allegheny_assessed_parcels) as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>',
-        humanReadableField: 'property_2',
-        fieldNames: {
-          usedesc: 'Use',
-          propertyow: 'Property Owner'
+
+      // Foreign layers
+      foreignInteractive: [
+
+        // Use and property info from Carto
+        {
+          type: 'cartodb',
+          dataQuery: 'select usedesc, property_2, propertyow, ST_AsGeoJSON(ST_Centroid(the_geom)) AS centroid from (select * from allegheny_assessed_parcels) as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>',
+          humanReadableField: 'property_2',
+          fieldNames: {
+            usedesc: 'Use',
+            propertyow: 'Property Owner'
+          },
+          config: {
+            version: '1.0.1',
+            stat_tag:'c8c949c0-7ce7-11e4-a232-0e853d047bba',
+            layers:[{
+              type:'cartodb',
+              options:{
+                sql: 'select * from allegheny_assessed_parcels',
+                cartocss: '/** category visualization */ #allegheny_assessed_parcels { polygon-opacity: 0.3; line-color: #FFF; line-width: 1; line-opacity: 0.7; }\n #allegheny_assessed_parcels[usecode!=100] { polygon-fill: #dddddd; }\n #allegheny_assessed_parcels[usecode=100] { polygon-fill: #101010; polygon-opacity: 0.6; }\n #allegheny_assessed_parcels { polygon-fill: #DDDDDD; }',
+                cartocss_version: '2.1.1',
+                interactivity: ['cartodb_id']
+              }
+            }]
+          },
+          layerId: 'b7860d2e2bc29ae2702f611e2044284a:1418115328687.24'
         },
-        config: {
-          version: '1.0.1',
-          stat_tag:'c8c949c0-7ce7-11e4-a232-0e853d047bba',
-          layers:[{
-            type:'cartodb',
-            options:{
-              sql: 'select * from allegheny_assessed_parcels',
-              cartocss: '/** category visualization */ #allegheny_assessed_parcels { polygon-opacity: 0.3; line-color: #FFF; line-width: 1; line-opacity: 0.7; }\n #allegheny_assessed_parcels[usecode!=100] { polygon-fill: #dddddd; }\n #allegheny_assessed_parcels[usecode=100] { polygon-fill: #101010; polygon-opacity: 0.6; }\n #allegheny_assessed_parcels { polygon-fill: #DDDDDD; }',
-              cartocss_version: '2.1.1',
-              interactivity: ['cartodb_id']
-            }
-          }]
+
+        // Static council districts
+        {
+          type: 'cartodb',
+          dataQuery: 'select * from pittsburgh_council_districts_2012 as _cartodbjs_alias',
+          humanReadableField: 'council',
+          layerName: 'Pittsburgh Council Districts',
+          // fieldNames: {
+          //   usedesc: 'Use',
+          //   propertyow: 'Property Owner'
+          // },
+          config: {
+            version: '1.0.1',
+            stat_tag: '', // 'c8c949c0-7ce7-11e4-a232-0e853d047bba',
+            disableGrid: true,
+            layers:[{
+              type:'cartodb',
+              options:{
+                sql: 'select * from pittsburgh_council_districts_2012',
+                cartocss: "/** simple visualization */  #pittsburgh_council_districts_2012{   polygon-fill: #FF6600;   polygon-opacity: 0;   line-color: #ffad00;   line-width: 2.5;   line-opacity: 1; }  #pittsburgh_council_districts_2012::labels {   text-name: [council];   text-face-name: 'Open Sans Regular';   text-size: 16;   text-label-position-tolerance: 0;   text-fill: #45403e;   text-halo-fill: #FFF;   text-halo-radius: 2.5;   text-dy: -15;   text-allow-overlap: true;   text-placement: point;   text-placement-type: dummy; }",
+                cartocss_version: '2.1.1'
+                // interactivity: ['cartodb_id']
+              }
+            }]
+          },
+          layerId: 'pittsburgh-council-districts'
         },
-        layerId: 'b7860d2e2bc29ae2702f611e2044284a:1418115328687.24'
-      }]
+
+        // Static neighborhood bounds
+        {
+          type: 'cartodb',
+          dataQuery: 'select * from pittsburgh_neighborhoods as _cartodbjs_alias',
+          humanReadableField: 'neighborhood',
+          layerName: 'Pittsburgh Neighborhoods',
+          // fieldNames: {
+          //   usedesc: 'Use',
+          //   propertyow: 'Property Owner'
+          // },
+          config: {
+            version: '1.0.1',
+            stat_tag: '', // 'c8c949c0-7ce7-11e4-a232-0e853d047bba',
+            disableGrid: true,
+            layers:[{
+              type:'cartodb',
+              options:{
+                sql: 'select * from pittsburgh_neighborhoods',
+                cartocss: "/** simple visualization */  #pittsburgh_neighborhoods{   polygon-fill: #FF6600;   polygon-opacity: 0;   line-color: #ffad00;   line-width: 2.5;   line-opacity: 1; }  #pittsburgh_neighborhoods::labels {   text-name: [neighborhood];   text-face-name: 'Open Sans Regular';   text-size: 12;   text-label-position-tolerance: 0;   text-fill: #45403e;   text-halo-fill: #FFF;   text-halo-radius: 1.5;   text-dy: -10;   text-allow-overlap: true;   text-placement: point;   text-placement-type: dummy; } ",
+                cartocss_version: '2.1.1'
+                // interactivity: ['cartodb_id']
+              }
+            }]
+          },
+          layerId: 'pittsburgh-neighborhoods'
+        }
+      ]
     },
 
     // WALKSCOPE -----------------------------------------------------------------

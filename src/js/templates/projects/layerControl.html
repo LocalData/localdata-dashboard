@@ -3,7 +3,9 @@
     <span class="circle toggle-layer" style="background-color: <%= meta.color %>;border-color: <%= meta.color %>;"></span>
     <% } %>
     <span class="title">
-      <%= meta.count %>
+      <% if (meta.count) { %>
+        <%= meta.count %>
+      <% } %>
       <%= name %> &nbsp; <i class="fa fa-angle-right"></i>
     </span>
 </h4>
