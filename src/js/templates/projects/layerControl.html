@@ -1,6 +1,9 @@
 <h4 class="show-settings">
     <% if (meta.color) { %>
-    <span class="circle toggle-layer" style="background-color: <%= meta.color %>;border-color: <%= meta.color %>;"></span>
+    <span class="toggle-layer" style="color: <%= meta.color %>;">
+        <i class="fa fa-check-square-o selected"></i>
+        <i class="fa fa-square-o deselected"></i>
+    </span>
     <% } %>
     <span class="title">
       <% if (meta.count) { %>

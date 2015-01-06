@@ -34,7 +34,13 @@
         <%- key %>
       <% } %>
     </span>
-    <span class="value"><strong><%- resp %></strong></span>
+    <span class="value"><strong>
+      <% if (_.has(questionLabels, key) && _.has(questionLabels[key], resp)) { %>
+        <%- questionLabels[key][resp] %>
+      <% } else { %>
+        <%- resp %>
+      <% } %>
+    </strong></span>
 
     <select class="edit" data-question="<%- key %>">
       <% if (form[key]) { %>

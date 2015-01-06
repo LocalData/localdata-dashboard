@@ -217,15 +217,15 @@ define(function(require, exports, module) {
             values: ['No-sidewalk',
                      'Less-than-3-feet-rollover-curb',
                      'Less-than-5-feet-attached',
-                     'Less-than-5-feet-detached',
                      '5-feet-or-more-attached',
+                     'Less-than-5-feet-detached',
                      '5-feet-or-more-detached',
                      'Other'],
             valueNames: ['No sidewalk',
                          'Less than 3 feet rollover curb',
                          'Less than 5 feet attached',
-                         'Less than 5 feet detached',
                          '5 feet or more attached',
+                         'Less than 5 feet detached',
                          '5 feet or more detached',
                          'Other'],
             colors: ['#d73027', '#fc8d59', '#fee08b', '#d9ef8b', '#91cf60', '#1a9850', '#b7aba5']
@@ -258,16 +258,40 @@ define(function(require, exports, module) {
             valueNames: ['Unsafe', 'No significant issue'],
             colors: ['#d73027', '#1a9850']
           }), {
-          name: 'Photos',
-          layer: {
-            query: {
-              'entries.responses.What-would-you-like-to-record': 'Sidewalk-Quality',
-              'entries.files.0': {
-                $type: 2
-              }
+            name: 'Other safety concerns',
+            layer: {
+              query: {
+                'entries.responses.Are-there-other-safety-concerns': {
+                  $type: 2
+                }
+              },
+              select: {},
+              styles: _.template(simpleStyles)({ color: '#d73027' })
             },
-            select: {},
-            styles: _.template(simpleStyles)({ color: '#810f7c' })
+            values: [{
+              text: 'Safety concerns',
+              color: '#d73027',
+              layer: {
+                query: {
+                  'entries.responses.Are-there-other-safety-concerns': {
+                    $type: 2
+                  }
+                },
+                select: {},
+                styles: _.template(simpleStyles)({color: '#d73027'})
+              }
+            }]
+          }, {
+            name: 'Photos',
+            layer: {
+              query: {
+                'entries.responses.What-would-you-like-to-record': 'Sidewalk-Quality',
+                'entries.files.0': {
+                  $type: 2
+                }
+              },
+              select: {},
+              styles: _.template(simpleStyles)({ color: '#810f7c' })
           },
           values: [{
             text: 'Photo',
@@ -347,31 +371,7 @@ define(function(require, exports, module) {
             values: ['Yes-all-way-stop-signs', 'Yes-two-way-stop-signs', 'No'],
             valueNames: ['All-way stop sign', 'Two-way stop sign', 'No stop sign'],
             colors: ['#1a9850', '#fee08b', '#b7aba5']
-          }), {
-          name: 'Other safety concerns',
-          layer: {
-            query: {
-              'entries.responses.Are-there-other-safety-concerns': {
-                $type: 2
-              }
-            },
-            select: {},
-            styles: _.template(simpleStyles)({ color: '#d73027' })
-          },
-          values: [{
-            text: 'Safety concerns',
-            color: '#d73027',
-            layer: {
-              query: {
-                'entries.responses.Are-there-other-safety-concerns': {
-                  $type: 2
-                }
-              },
-              select: {},
-              styles: _.template(simpleStyles)({color: '#d73027'})
-            }
-          }]
-          },
+          }),
           makeBasicExploration({
             name: 'Median islands/bulb-outs',
             question: 'Are-there-median-islands-or-bulb-outs',
@@ -383,7 +383,7 @@ define(function(require, exports, module) {
             name: 'Traffic lights/crossing signals',
             question: 'Are-there-traffic-lights-andor-pedestrian-crossing-signals',
             values: ['Yes-both-traffic-lights-and-pedestrian-crossing-signals', 'Yes-traffic-lights-only', 'Yes-pedestrian-crossing-signals-only', 'No'],
-            valueNames: ['Both', 'Traffic lights', 'Pedestrian signals', 'Neither'],
+            valueNames: ['Both', 'Traffic lights only', 'Pedestrian signals only', 'Neither'],
             colors: ['#1a9641', '#92c5de', '#b2abd2' ,'#d7191c']
           }), {
           name: 'Photos',
@@ -413,7 +413,7 @@ define(function(require, exports, module) {
           }]
         }]
       }, {
-        layerName: 'Pedestrian Observations',
+        layerName: 'Pedestrian Counts',
         layerId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
         options: {
           comments: true,
@@ -559,8 +559,8 @@ define(function(require, exports, module) {
             name: 'Temperature during observation',
             question: 'What-is-the-temperature-like',
             values: ['Warm-80-or-more', 'Mild-40-79', 'Cold-39-or-less'],
-            valueNames: ['Warm (80&deg; or more)', 'Mild (40-79&deg;)', 'Cold (39&deg; or less)'],
-            colors: ['#e0ecf4', '#9ebcda', '#8856a7']
+            valueNames: ['Warm (80º; or more)', 'Mild (40-79º)', 'Cold (39º; or less)'],
+            colors: ['#7bc3f4', '#408dda', '#8856a7']
           }), {
           name: 'Photos',
           layer: {
