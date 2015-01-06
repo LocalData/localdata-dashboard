@@ -95,6 +95,7 @@ define(function(require, exports, module) {
     },
 
     append: function ($el) {
+      console.log("Appending", $el);
       this.$el.find('.layers').append($el);
     },
 
@@ -132,6 +133,7 @@ define(function(require, exports, module) {
       if (this.project.foreignInteractive) {
         this.foreignLayers = _.map(this.project.foreignInteractive, function (layer, i) {
           if (layer.type === 'cartodb') {
+
             var view = new CartoDBLayer({
               mapView: mapView,
               layer: layer
@@ -144,6 +146,10 @@ define(function(require, exports, module) {
                 latlng: data.latlng,
                 order: this.project.surveys.length + i
               });
+            });
+
+            this.listenTo(view, 'rendered', function(){
+              console.log("I heard rendered");
             });
 
             this.listenTo(view, 'rendered', this.append);

@@ -12,8 +12,11 @@ define(function (require, exports, module) {
 
   var settings = require('settings');
 
-  var infoTemplate = require('text!templates/projects/layerControl.html');
+  var infoTemplate = require('text!templates/cartodb-info.html');
+  var template = require('text!templates/projects/layerControl.html');
 
+
+  // Render an infowindow for a selected cartodb map item
   var ItemView = Backbone.View.extend({
     template: _.template(infoTemplate),
 
@@ -28,8 +31,9 @@ define(function (require, exports, module) {
 
     render: function () {
       var context = {
-        name: this.layerOptions.layerName,
-        count: ''
+        name: this.data[this.layerOptions.humanReadableField],
+        centroid: JSON.parse(this.data.centroid),
+        googleKey: settings.GoogleKey
       };
 
       var names = this.layerOptions.fieldNames;
@@ -49,20 +53,26 @@ define(function (require, exports, module) {
   // later need to have this layer behave more like the survey layer, which
   // renders some summary data and reacts to models.
   module.exports = Backbone.View.extend({
+    template: _.template(template),
 
     initialize: function(options) {
+      _.bindAll(this, 'render');
+
       this.mapView = options.mapView;
       this.dataQuery = options.layer.dataQuery;
       this.layerOptions = options.layer;
 
+      this.render();
+
       var self = this;
 
+      // Now we need to start loading the tiles
       Promise.resolve($.ajax({
         url: 'https://localdata.cartodb.com/api/v1/map',
         type: 'GET',
         dataType: 'jsonp',
         data: {
-          stat_tag: options.layer.stat_tag,
+          stat_tag: options.layer.stat_tag, // doesn't seem to be required
           config: JSON.stringify(options.layer.config)
         }
       })).then(function (data) {
@@ -91,6 +101,19 @@ define(function (require, exports, module) {
       }.bind(this)).catch(function (error) {
         console.log('Failed to fetch cartodb map config', error);
       });
+
+    },
+
+    render: function () {
+      console.log("Rendering carto stuff");
+      var context = {
+        name: this.layerOptions.layerName,
+        meta: {}
+      };
+
+      this.$el.html(this.template(context));
+      this.trigger('rendered', this.$el);
+      return this.$el;
     },
 
     handleGridClick: function (event) {
