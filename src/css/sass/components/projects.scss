@@ -17,9 +17,9 @@
   }
 
   h4 {
-    font-size: 36px;
+    font-size: 24px;
     line-height: 0.9;
-    letter-spacing: -2px;
+    letter-spacing: -1px;
 
     .count {
       font-size: 90px;
@@ -27,7 +27,7 @@
   }
 
   h4.layer-callout {
-    margin-top: 2em;
+    margin-top: 1.5em;
 
     a {
       color: inherit;
@@ -38,7 +38,7 @@
     }
 
     .count {
-      font-size: 90px;
+      font-size: 36px;
     }
   }
 
@@ -51,7 +51,7 @@
 
     h4 {
       letter-spacing: -1px;
-      font-size: 1.1em;
+      font-size: 24px;
       line-height: 1em;
     }
 
@@ -68,6 +68,15 @@
       background-color: transparent !important;
     }
 
+    /* Checkboxes / hide-show control for layer */
+    .selected {
+      display: inline-block;
+    }
+
+    .deselected {
+      display: none;
+    }
+
     .inactive .circle {
       background-color: transparent !important;
       border-color: transparent !important;
@@ -82,6 +91,20 @@
       display: block;
       cursor: pointer;
       line-height: 27px;
+    }
+  }
+
+  .layer.legend-inactive {
+    .selected {
+      display: none;
+    }
+
+    .deselected {
+      display: inline-block;
+    }
+
+    .legend {
+      display: none;
     }
   }
 
