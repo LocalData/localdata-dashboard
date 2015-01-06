@@ -110,6 +110,7 @@ define(function(require, exports, module) {
 
     render: function () {
       var context = {
+        name: this.project.name,
         description: this.project.description
       };
       this.$el.html(this.template(context));
