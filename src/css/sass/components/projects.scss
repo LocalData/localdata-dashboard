@@ -251,3 +251,27 @@
   color: $body-color;
   font-size: 12px;
 }
+
+.popup {
+  width: 46vw;
+  margin: 0px auto;
+  background: #fff;
+  position: absolute;
+  top: 10vh;
+  left: 28vw;
+
+  .popup-in {
+    padding: 20px;
+  border: 5px solid $thinpink;
+  }
+}
+
+.popup-cover {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 100vw;
+  opacity: 0.9;
+  background: #fcf5f0;
+}
