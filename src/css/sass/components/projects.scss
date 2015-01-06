@@ -70,23 +70,12 @@
 
     /* Checkboxes / hide-show control for layer */
     .selected {
-      display: none;
-    }
-
-    .deselected {
       display: inline-block;
     }
 
-    .legend-active {
-      .selected {
-        display: inline-block;
-      }
-
-      .deselected {
-        display: none;
-      }
+    .deselected {
+      display: none;
     }
-
 
     .inactive .circle {
       background-color: transparent !important;
@@ -102,6 +91,20 @@
       display: block;
       cursor: pointer;
       line-height: 27px;
+    }
+  }
+
+  .layer.legend-inactive {
+    .selected {
+      display: none;
+    }
+
+    .deselected {
+      display: inline-block;
+    }
+
+    .legend {
+      display: none;
     }
   }
 

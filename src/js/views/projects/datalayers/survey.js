@@ -48,7 +48,7 @@ define(function (require) {
   var LayerControl = Backbone.View.extend({
     template: _.template(template),
 
-    // active, inactive, filtered
+    // active, inactive
     state: 'active',
 
     events: {
@@ -207,17 +207,14 @@ define(function (require) {
         this.state = 'inactive';
         this.mapView.removeTileLayer(this.tileLayer);
         this.mapView.removeGridLayer(this.gridLayer);
-        this.changeLegend();
-        this.$el.find('.show-settings').removeClass('legend-active');
+        //this.changeLegend();
+        this.$el.addClass('legend-inactive');
       } else if (this.state === 'inactive') {
         this.state = 'active';
         this.mapView.addTileLayer(this.tileLayer);
         this.mapView.addGridLayer(this.gridLayer);
-        this.removeLegend();
-      } else if (this.state === 'filtered') {
-        this.state = 'active';
-        this.changeFilter();
-        this.removeLegend();
+        // this.removeLegend();
+        this.$el.removeClass('legend-inactive');
       }
     },
 
@@ -359,11 +356,11 @@ define(function (require) {
 
     removeLegend: function() {
       this.$el.find('.legend').empty();
-      this.$el.find('.show-settings').removeClass('legend-active');
+      this.$el.addClass('legend-inactive');
     },
 
     changeLegend: function($legend) {
-      this.$el.find('.show-settings').addClass('legend-active');
+      this.$el.removeClass('legend-inactive');
       this.$el.find('.legend').empty().append($legend);
     },
 
@@ -376,8 +373,6 @@ define(function (require) {
 
     setCount: function() {
       var count = this.stats.get(this.filter.question)[this.filter.answer] || '';
-
-      console.log("GOT COUNT", count);
     },
 
     render: function() {
