@@ -68,6 +68,26 @@
       background-color: transparent !important;
     }
 
+    /* Checkboxes / hide-show control for layer */
+    .selected {
+      display: none;
+    }
+
+    .deselected {
+      display: inline-block;
+    }
+
+    .legend-active {
+      .selected {
+        display: inline-block;
+      }
+
+      .deselected {
+        display: none;
+      }
+    }
+
+
     .inactive .circle {
       background-color: transparent !important;
       border-color: transparent !important;

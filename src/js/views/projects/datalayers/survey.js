@@ -202,11 +202,13 @@ define(function (require) {
     },
 
     toggleLayer: function () {
+      console.log("Toggling layer, start state", this.state);
       if (this.state === 'active') {
         this.state = 'inactive';
         this.mapView.removeTileLayer(this.tileLayer);
         this.mapView.removeGridLayer(this.gridLayer);
         this.changeLegend();
+        this.$el.find('.show-settings').removeClass('legend-active');
       } else if (this.state === 'inactive') {
         this.state = 'active';
         this.mapView.addTileLayer(this.tileLayer);
