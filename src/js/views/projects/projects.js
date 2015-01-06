@@ -55,6 +55,7 @@ define(function(require, exports, module) {
 
     // GTECH ---------------------------------------------------------------------
     gtech: {
+      name: "Lots to Love",
       description: '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>',
       location: 'Pittsburgh, PA',
       center: [-80.04,40.44],
@@ -186,7 +187,8 @@ define(function(require, exports, module) {
 
     // WALKSCOPE -----------------------------------------------------------------
     walkscope: {
-      description: '<p>WALKscope is a mobile tool developed by WalkDenver and PlaceMatters for collecting data related to sidewalks, intersections, and pedestrian counts in the Denver metro area. This information will help create an inventory of pedestrian infrastructure, identify gaps, and build the case for improvements.  Click on the map or one of the categories below to explore the data collected to date.</p>',
+      name: "WALKscope Denver",
+      description: '<p>WALKscope is a mobile tool developed by WalkDenver and PlaceMatters for collecting data related to sidewalks, intersections, and pedestrian counts in the Denver metro area. This information will help create an inventory of pedestrian infrastructure, identify gaps, and build the case for improvements. Use the map to explore the data collected to date.</p>',
       location: "Denver, Colorado",
       center: [-104.9831330, 39.7589070],
       zoom: 16,
