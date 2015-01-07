@@ -55,6 +55,9 @@ define(function (require, exports, module) {
   module.exports = Backbone.View.extend({
     template: _.template(template),
 
+    state: 'active',
+    className: 'layer',
+
     events: {
       'click .toggle-layer': 'toggleLayer'
     },
@@ -65,7 +68,8 @@ define(function (require, exports, module) {
       this.mapView = options.mapView;
       this.dataQuery = options.layer.dataQuery;
       this.layerOptions = options.layer;
-      this.state = 'active';
+
+      this.state = this.layerOptions.state || 'active';
 
       var self = this;
 
@@ -85,7 +89,10 @@ define(function (require, exports, module) {
             '/localdata/api/v1/map/' + data.layergroupid +
             '/{z}/{x}/{y}.png';
         this.tileLayer = L.tileLayer(url);
-        self.mapView.addTileLayer(this.tileLayer);
+
+        if (this.state === 'active') {
+          self.mapView.addTileLayer(this.tileLayer);
+        }
 
         // We can skip adding the UTF grids on purely informational layers.
         if(this.layerOptions.config.disableGrid) {
@@ -99,7 +106,11 @@ define(function (require, exports, module) {
         this.gridLayer = new L.UtfGrid(gridUrl, {
           resolution: 4
         });
-        self.mapView.addGridLayer(this.gridLayer);
+
+        if (this.state === 'active') {
+          self.mapView.addGridLayer(this.gridLayer);
+        }
+
         this.gridLayer.on('click', self.handleGridClick, self);
 
       }.bind(this)).catch(function (error) {
@@ -109,13 +120,21 @@ define(function (require, exports, module) {
     },
 
     render: function () {
-      console.log("Rendering carto stuff", this, this.$el);
+      if (this.layerOptions.noLegend) {
+        return;
+      }
+
       var context = {
         name: this.layerOptions.layerName,
         meta: {
           color: this.layerOptions.color
         }
       };
+
+      if (this.state === 'inactive') {
+        this.$el.addClass('legend-inactive');
+      }
+
       this.trigger('rendered', this.$el);
 
       this.$el.html(this.template(context));

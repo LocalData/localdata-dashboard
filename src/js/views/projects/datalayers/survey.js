@@ -50,6 +50,7 @@ define(function (require) {
 
     // active, inactive
     state: 'active',
+    className: 'layer',
 
     events: {
       'click .close': 'close',
@@ -57,7 +58,6 @@ define(function (require) {
       'click .show-settings .title': 'showSettings'
     },
 
-    className: 'layer',
     initialize: function(options) {
       _.bindAll(this,
         'render',

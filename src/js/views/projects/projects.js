@@ -105,6 +105,7 @@ define(function(require, exports, module) {
         // Use and property info from Carto
         {
           type: 'cartodb',
+          noLegend: true,
           dataQuery: 'select usedesc, property_2, propertyow, ST_AsGeoJSON(ST_Centroid(the_geom)) AS centroid from (select * from allegheny_assessed_parcels) as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>',
           humanReadableField: 'property_2',
           fieldNames: {
@@ -159,6 +160,7 @@ define(function(require, exports, module) {
         {
           type: 'cartodb',
           layerName: 'Pittsburgh Neighborhoods',
+          state: 'inactive',
           color: '#ffad00',
           dataQuery: 'select * from pittsburgh_neighborhoods as _cartodbjs_alias',
           humanReadableField: 'neighborhood',

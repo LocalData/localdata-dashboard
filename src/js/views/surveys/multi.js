@@ -97,8 +97,11 @@ define(function(require, exports, module) {
     },
 
     append: function ($el) {
-      console.log("Appending", $el);
       this.$el.find('.layers').append($el);
+    },
+
+    appendStatic: function ($el) {
+      this.$el.find('.static-layers').append($el);
     },
 
     appendSettings: function($el) {
@@ -144,7 +147,7 @@ define(function(require, exports, module) {
             });
 
             // Render the nav
-            this.listenTo(view, 'rendered', this.append);
+            this.listenTo(view, 'rendered', this.appendStatic);
             view.render();
 
             // Hook item-selection up to the info window.
