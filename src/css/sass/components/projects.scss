@@ -108,6 +108,27 @@
     }
   }
 
+  .static-layers {
+    h3 {
+      font-size: 16px;
+      color: $body-color;
+      font-family: $bold;
+      letter-spacing: -1px;
+    }
+
+    h4 {
+      font-size: 16px;
+    }
+
+    .layer {
+      margin: 0.75em 0 1em;
+
+      .control-arrow {
+        display: none; /* we don't have filters for base layers */
+      }
+    }
+  }
+
   #map {
     height: 100vh;
   }
@@ -129,6 +150,8 @@
   #info-window {
     height: 94vh;
     padding: 6vh 3vh 3vh 3vh;
+    border-left: 5px solid $thinpink;
+
     #responses-list {
       height: auto;
       padding: 0;
@@ -144,6 +167,7 @@
   .legend {
     .question-title {
       cursor: pointer;
+      font-family: $bold;
     }
   }
 

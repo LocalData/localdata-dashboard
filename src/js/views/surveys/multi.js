@@ -100,6 +100,10 @@ define(function(require, exports, module) {
       this.$el.find('.layers').append($el);
     },
 
+    appendStatic: function ($el) {
+      this.$el.find('.static-layers').append($el);
+    },
+
     appendSettings: function($el) {
       // XXX TODO
       // Set up a container for each datasource + id so we know exactly
@@ -111,19 +115,27 @@ define(function(require, exports, module) {
     render: function () {
       var context = {
         name: this.project.name,
-        description: this.project.description
+        description: this.project.description,
+        baselayers: this.project.foreignInteractive
       };
       this.$el.html(this.template(context));
 
       // Set up the map view, now that the root exists.
       if (this.mapView === null) {
-        this.mapView = new MapView({
+        var mapOptions = {
           el: '#map-view-container',
           config: {
             center: this.project.center,
             zoom: this.project.zoom
           }
-        });
+        };
+
+        // Support a custom baselayer
+        if (this.project.baselayer) {
+          mapOptions.baselayer = this.project.baselayer;
+        }
+
+        this.mapView = new MapView(mapOptions);
         this.listenTo(this.mapView, 'click', this.mapClickHandler);
       }
 
@@ -132,13 +144,19 @@ define(function(require, exports, module) {
 
       // Render foreign data layers
       var mapView = this.mapView;
+
       if (this.project.foreignInteractive) {
         this.foreignLayers = _.map(this.project.foreignInteractive, function (layer, i) {
           if (layer.type === 'cartodb') {
+
             var view = new CartoDBLayer({
               mapView: mapView,
               layer: layer
             });
+
+            // Render the nav
+            this.listenTo(view, 'rendered', this.appendStatic);
+            view.render();
 
             // Hook item-selection up to the info window.
             this.listenTo(view, 'itemSelected', function (data) {
