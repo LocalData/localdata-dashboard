@@ -100,11 +100,12 @@ define(function(require, exports, module) {
       }],
       foreignInteractive: [{
         type: 'cartodb',
-        dataQuery: 'select usedesc, property_2, propertyow, ST_AsGeoJSON(ST_Centroid(the_geom)) AS centroid from (select * from allegheny_assessed_parcels) as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>',
+        dataQuery: "select usedesc, property_2, propertyow, (case delinquent when true then 'Yes' else 'No' end) as d, ST_AsGeoJSON(ST_Centroid(the_geom)) AS centroid from (select * from allegheny_assessed_parcels) as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>",
         humanReadableField: 'property_2',
         fieldNames: {
           usedesc: 'Use',
-          propertyow: 'Property Owner'
+          propertyow: 'Property Owner',
+          d: 'Is the property delinquent?'
         },
         config: {
           version: '1.0.1',
