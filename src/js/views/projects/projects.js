@@ -115,7 +115,7 @@ define(function(require, exports, module) {
             type:'cartodb',
             options:{
               sql: 'select * from allegheny_assessed_parcels',
-              cartocss: '/** category visualization */ #allegheny_assessed_parcels { polygon-opacity: 0.3; line-color: #FFF; line-width: 1; line-opacity: 0.7; }\n #allegheny_assessed_parcels[usecode!=100] { polygon-fill: #dddddd; }\n #allegheny_assessed_parcels[usecode=100] { polygon-fill: #101010; polygon-opacity: 0.6; }\n #allegheny_assessed_parcels { polygon-fill: #DDDDDD; }',
+              cartocss: '/** category visualization */ #allegheny_assessed_parcels { polygon-opacity: 0; line-color: #FFF; line-width: 1; line-opacity: 0.7; }\n #allegheny_assessed_parcels[usecode!=100] { polygon-fill: #dddddd; }\n #allegheny_assessed_parcels[usecode=100] { polygon-fill: #101010; polygon-opacity: 0.6; }\n #allegheny_assessed_parcels { polygon-fill: #DDDDDD; }',
               cartocss_version: '2.1.1',
               interactivity: ['cartodb_id']
             }
