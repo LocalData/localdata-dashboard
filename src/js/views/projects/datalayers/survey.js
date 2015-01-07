@@ -64,7 +64,7 @@ define(function (require) {
         'update',
         'doneLoading',
         'getForms',
-        'setCount',
+        //'setCount',
         'addTileLayer',
 
         // Settings
@@ -270,8 +270,6 @@ define(function (require) {
       if (objectId) {
         this.selectItem(objectId, event.latlng);
       }
-
-
     },
 
     /**
@@ -371,9 +369,9 @@ define(function (require) {
       this.forms.fetch({ reset: true });
     },
 
-    setCount: function() {
-      var count = this.stats.get(this.filter.question)[this.filter.answer] || '';
-    },
+    // setCount: function() {
+    //   var count =
+    // },
 
     render: function() {
       var context = {
@@ -382,13 +380,18 @@ define(function (require) {
         meta: { }
       };
 
-      if(this.color) {
+      if (this.color) {
         context.meta.color = this.color;
         context.meta.count = '';
-        this.stats.on('reset', this.setCount);
-      }else {
-        context.meta.count = this.survey.get('responseCount') || '';
+        //this.stats.on('reset', this.setCount);
       }
+
+      // if (this.filter) {
+        context.meta.count = this.survey.get('queryCount');// this.stats.get(this.filter.question)[this.filter.answer];
+      // } else {
+      //   context.meta.count = this.survey.get('responseCount') || '';
+      // }
+
 
       this.$el.html(this.template(context));
       if(this.survey.get('name')) {
