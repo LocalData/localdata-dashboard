@@ -52,6 +52,8 @@ define(function(require, exports, module) {
 
     events: {
       'click .action-show-filters': 'toggleFilters',
+      'click .close-popup': 'closePopup',
+      'click .popup-cover': 'closePopup',
       'click .address-search-button': 'search',
       'click .layer-callout': 'showDeepDive'
     },
@@ -108,6 +110,7 @@ define(function(require, exports, module) {
 
     render: function () {
       var context = {
+        name: this.project.name,
         description: this.project.description
       };
       this.$el.html(this.template(context));
@@ -282,6 +285,11 @@ define(function(require, exports, module) {
 
         mapView.goToLatLng(results.coords);
       });
+    },
+
+    closePopup: function() {
+      $('.popup').hide();
+      $('.popup-cover').hide();
     }
   });
 
