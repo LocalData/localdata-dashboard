@@ -23,6 +23,7 @@ define(function (require) {
   var ObjectView = require('views/projects/datalayers/survey/object-view');
   var SettingsView = require('views/projects/datalayers/survey/settings-survey');
   var StatsView = require('views/projects/datalayers/survey/stats-survey');
+  var ExportView = require('views/export');
 
   // Templates
   var template = require('text!templates/projects/layerControl.html');
@@ -73,6 +74,7 @@ define(function (require) {
 
         // Reports
         'setupStats',
+        'setupExport',
 
         // Interaction
         'handleClick'
@@ -344,6 +346,16 @@ define(function (require) {
       var $el = this.statsView.render();
       this.$stats = $el;
       this.trigger('renderedStats', $el);
+    },
+
+    setupExport: function() {
+      this.exportView = new ExportView({
+        isEmbed: true,
+        survey: this.survey
+      });
+      var $el = this.exportView.render();
+      console.log("setting up export", $el);
+      this.trigger('renderedExport', $el);
     },
 
     changeFilter: function(filter) {

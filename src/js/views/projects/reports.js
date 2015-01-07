@@ -17,12 +17,12 @@ define(function(require, exports, module) {
   var projects = require('views/projects/projects');
 
   // Templates
-  var embeddedSurveyTemplate = require('text!templates/projects/reports.html');
+  var template = require('text!templates/projects/reports.html');
 
   var ReportsView = Backbone.View.extend({
     activeLayers: {},
 
-    template: _.template(embeddedSurveyTemplate),
+    template: _.template(template),
 
     el: '#container',
 
@@ -50,25 +50,37 @@ define(function(require, exports, module) {
       this.$el.find('.stats-container').append($el);
     },
 
+    appendExport: function($el) {
+      console.log("Got an export view", $el);
+      this.$el.find('.exports-container').append($el);
+    },
+
     render: function () {
       var context = {
         description: this.project.description
       };
       this.$el.html(this.template(context));
 
+      var addedLayerIds = {};
 
       // Render survey layers
       _.each(this.project.surveys, function (survey, i) {
+        console.log("Adding survey", survey);
         var surveyLayer = new SurveyLayer({
           survey: survey,
           surveyOptions: survey.options
         });
 
+        // If we don't have an export for this layer already:
+        if(!this.activeLayers[survey.layerId]) {
+          this.listenTo(surveyLayer, 'renderedExport', this.appendExport);
+          surveyLayer.setupExport();
+        }
+
         this.activeLayers[survey.layerId] = surveyLayer;
 
         this.listenTo(surveyLayer, 'renderedStats', this.appendStats);
       }.bind(this));
-
     }
   });
 
