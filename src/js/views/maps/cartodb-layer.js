@@ -55,14 +55,17 @@ define(function (require, exports, module) {
   module.exports = Backbone.View.extend({
     template: _.template(template),
 
+    events: {
+      'click .toggle-layer': 'toggleLayer'
+    },
+
     initialize: function(options) {
       _.bindAll(this, 'render');
 
       this.mapView = options.mapView;
       this.dataQuery = options.layer.dataQuery;
       this.layerOptions = options.layer;
-
-      this.render();
+      this.state = 'active';
 
       var self = this;
 
@@ -81,7 +84,8 @@ define(function (require, exports, module) {
         var url = 'https://' + data.cdn_url.https +
             '/localdata/api/v1/map/' + data.layergroupid +
             '/{z}/{x}/{y}.png';
-        self.mapView.addTileLayer(L.tileLayer(url));
+        this.tileLayer = L.tileLayer(url);
+        self.mapView.addTileLayer(this.tileLayer);
 
         // We can skip adding the UTF grids on purely informational layers.
         if(this.layerOptions.config.disableGrid) {
@@ -92,11 +96,11 @@ define(function (require, exports, module) {
         var gridUrl = 'https://' + data.cdn_url.https +
             '/localdata/api/v1/map/' + data.layergroupid +
             '/0/{z}/{x}/{y}.grid.json?callback={cb}';
-        var gridLayer = new L.UtfGrid(gridUrl, {
+        this.gridLayer = new L.UtfGrid(gridUrl, {
           resolution: 4
         });
-        self.mapView.addGridLayer(gridLayer);
-        gridLayer.on('click', self.handleGridClick, self);
+        self.mapView.addGridLayer(this.gridLayer);
+        this.gridLayer.on('click', self.handleGridClick, self);
 
       }.bind(this)).catch(function (error) {
         console.log('Failed to fetch cartodb map config', error);
@@ -105,15 +109,40 @@ define(function (require, exports, module) {
     },
 
     render: function () {
-      console.log("Rendering carto stuff");
+      console.log("Rendering carto stuff", this, this.$el);
       var context = {
         name: this.layerOptions.layerName,
-        meta: {}
+        meta: {
+          color: this.layerOptions.color
+        }
       };
+      this.trigger('rendered', this.$el);
 
       this.$el.html(this.template(context));
-      this.trigger('rendered', this.$el);
       return this.$el;
+    },
+
+    toggleLayer: function () {
+      console.log("Toggling layer, start state", this.state);
+      if (this.state === 'active') {
+        this.state = 'inactive';
+        this.mapView.removeTileLayer(this.tileLayer);
+
+        if(this.gridLayer) {
+          this.mapView.removeGridLayer(this.gridLayer);
+        }
+
+        this.$el.addClass('legend-inactive');
+      } else if (this.state === 'inactive') {
+        this.state = 'active';
+        this.mapView.addTileLayer(this.tileLayer);
+
+        if(this.gridLayer) {
+          this.mapView.addGridLayer(this.gridLayer);
+        }
+
+        this.$el.removeClass('legend-inactive');
+      }
     },
 
     handleGridClick: function (event) {

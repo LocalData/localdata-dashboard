@@ -130,6 +130,7 @@ define(function(require, exports, module) {
 
       // Render foreign data layers
       var mapView = this.mapView;
+
       if (this.project.foreignInteractive) {
         this.foreignLayers = _.map(this.project.foreignInteractive, function (layer, i) {
           if (layer.type === 'cartodb') {
@@ -139,6 +140,10 @@ define(function(require, exports, module) {
               layer: layer
             });
 
+            // Render the nav
+            this.listenTo(view, 'rendered', this.append);
+            view.render();
+
             // Hook item-selection up to the info window.
             this.listenTo(view, 'itemSelected', function (data) {
               this.addItemView({
@@ -147,12 +152,6 @@ define(function(require, exports, module) {
                 order: this.project.surveys.length + i
               });
             });
-
-            this.listenTo(view, 'rendered', function(){
-              console.log("I heard rendered");
-            });
-
-            this.listenTo(view, 'rendered', this.append);
 
             return view;
           }

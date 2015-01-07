@@ -129,9 +129,10 @@ define(function(require, exports, module) {
         // Static council districts
         {
           type: 'cartodb',
+          layerName: 'Pittsburgh Council Districts',
+          color: '#ffad00',
           dataQuery: 'select * from pittsburgh_council_districts_2012 as _cartodbjs_alias',
           humanReadableField: 'council',
-          layerName: 'Pittsburgh Council Districts',
           // fieldNames: {
           //   usedesc: 'Use',
           //   propertyow: 'Property Owner'
@@ -156,9 +157,10 @@ define(function(require, exports, module) {
         // Static neighborhood bounds
         {
           type: 'cartodb',
+          layerName: 'Pittsburgh Neighborhoods',
+          color: '#ffad00',
           dataQuery: 'select * from pittsburgh_neighborhoods as _cartodbjs_alias',
           humanReadableField: 'neighborhood',
-          layerName: 'Pittsburgh Neighborhoods',
           // fieldNames: {
           //   usedesc: 'Use',
           //   propertyow: 'Property Owner'
