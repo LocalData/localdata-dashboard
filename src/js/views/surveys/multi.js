@@ -117,13 +117,20 @@ define(function(require, exports, module) {
 
       // Set up the map view, now that the root exists.
       if (this.mapView === null) {
-        this.mapView = new MapView({
+        var mapOptions = {
           el: '#map-view-container',
           config: {
             center: this.project.center,
             zoom: this.project.zoom
           }
-        });
+        };
+
+        // Support a custom baselayer
+        if (this.project.baselayer) {
+          mapOptions.baselayer = this.project.baselayer;
+        }
+
+        this.mapView = new MapView(mapOptions);
         this.listenTo(this.mapView, 'click', this.mapClickHandler);
       }
 

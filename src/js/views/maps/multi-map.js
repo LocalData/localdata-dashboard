@@ -37,6 +37,10 @@ define(function(require, exports, module) {
         'addTileLayer'
       );
 
+      if (options.baselayer) {
+        this.baselayer = options.baselayer;
+      }
+
       this.defaultStyle = settings.farZoomStyle;
       this.defaultPointToLayer = function (feature, latlng) {
         return L.circleMarker(latlng, settings.circleMarker);
@@ -119,7 +123,7 @@ define(function(require, exports, module) {
       this.map.addControl(L.control.zoom({ position: 'topright' }));
 
       // Set up the base maps
-      this.baseLayer = L.tileLayer(settings.baseLayer);
+      this.baseLayer = L.tileLayer(this.baselayer || settings.baseLayer);
       this.satelliteLayer = L.tileLayer(settings.satelliteLayer);
       this.printLayer = L.tileLayer(settings.printLayer);
       this.map.addLayer(this.baseLayer);

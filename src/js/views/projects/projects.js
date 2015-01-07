@@ -62,10 +62,11 @@ define(function(require, exports, module) {
       zoom: 16,
       commentsId: 'ptxdev', // XXX
       suppressStreetview: true,
+      baselayer: '//a.tiles.mapbox.com/v3/matth.kmf6l3h1/{z}/{x}/{y}.png',
       surveys: [{
         layerName: 'Lots to Love Projects',
         layerId: 'ac5c3b60-10dd-11e4-ad2d-2fff103144af',
-        color: '#66c2a5',
+        color: '#a743c3',
         options: {
           comments: true,
           anonymous: true
@@ -73,7 +74,7 @@ define(function(require, exports, module) {
         countPath: 'survey.responseCount',
         query: {},
         select: {},
-        styles: _.template(simpleStyles)({color: '#66c2a5'}),
+        styles: _.template(simpleStyles)({color: '#a743c3'}),
         exploration: [
           makeBasicExploration({
             name: 'Building type',
