@@ -6,7 +6,9 @@
     </span>
     <% } %>
     <span class="title">
-      <%= meta.count %>
+      <% if (meta.count) { %>
+        <%= meta.count %>
+      <% } %>
       <%= name %> &nbsp; <i class="fa fa-angle-right"></i>
     </span>
 </h4>
