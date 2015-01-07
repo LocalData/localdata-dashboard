@@ -113,7 +113,7 @@ define(function(require, exports, module) {
           fieldNames: {
             usedesc: 'Use',
             propertyow: 'Property Owner',
-          d: 'Is the property delinquent?'
+            d: 'Is the property delinquent?'
           },
           config: {
             version: '1.0.1',
