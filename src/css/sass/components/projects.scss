@@ -129,6 +129,8 @@
   #info-window {
     height: 94vh;
     padding: 6vh 3vh 3vh 3vh;
+    border-left: 5px solid $thinpink;
+
     #responses-list {
       height: auto;
       padding: 0;
@@ -144,6 +146,7 @@
   .legend {
     .question-title {
       cursor: pointer;
+      font-family: $bold;
     }
   }
 

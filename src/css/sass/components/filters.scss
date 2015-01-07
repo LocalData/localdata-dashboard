@@ -22,6 +22,7 @@
   label,
   .question-title {
     cursor: pointer;
+    font-family: $bold;
   }
 
   .question {
@@ -72,6 +73,8 @@
     display: block;
     cursor: pointer;
     line-height: 27px;
+    padding-left: 25px;
+    text-indent: -25px;
   }
 
   .circle {

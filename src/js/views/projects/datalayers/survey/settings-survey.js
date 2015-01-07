@@ -108,12 +108,12 @@ define(function (require) {
         this.filters = {};
       }
 
-
       this.trigger('filterSet', this.filters);
 
       $('.filters .clear').slideUp(DURATION);
       $('.filters .options .answers').slideUp(DURATION);
       $('.filters .answer').removeClass('active');
+      $('.filters .answer').removeClass('inactive');
 
       this.generateLegend();
       this.close();
@@ -138,15 +138,13 @@ define(function (require) {
       $question.find('.answers').slideDown(DURATION);
       $('.filters .clear').slideDown(DURATION);
       $question.find('.toggle').slideUp(DURATION);
+      $question.find('.answer').removeClass('inactive');
 
       this.trigger('filterSet', this.filters);
 
       this.generateLegend();
 
       this.close();
-
-      // XXX TODO
-      // Mark this question as selected
     },
 
     /**
