@@ -12,6 +12,7 @@ define(function (require) {
   var L = require('lib/leaflet/leaflet.tilejson');
 
   var settings = require('settings');
+  var util = require('util');
 
   // Models
   var Forms = require('models/forms');
@@ -64,7 +65,6 @@ define(function (require) {
         'update',
         'doneLoading',
         'getForms',
-        'setCount',
         'addTileLayer',
 
         // Settings
@@ -270,8 +270,6 @@ define(function (require) {
       if (objectId) {
         this.selectItem(objectId, event.latlng);
       }
-
-
     },
 
     /**
@@ -371,10 +369,6 @@ define(function (require) {
       this.forms.fetch({ reset: true });
     },
 
-    setCount: function() {
-      var count = this.stats.get(this.filter.question)[this.filter.answer] || '';
-    },
-
     render: function() {
       var context = {
         name: this.layerName || this.survey.get('name') || 'LocalData Survey',
@@ -382,13 +376,11 @@ define(function (require) {
         meta: { }
       };
 
-      if(this.color) {
+      if (this.color) {
         context.meta.color = this.color;
-        context.meta.count = '';
-        this.stats.on('reset', this.setCount);
-      }else {
-        context.meta.count = this.survey.get('responseCount') || '';
       }
+
+      context.meta.count = util.numberWithCommas(this.survey.get('queryCount')) || '';
 
       this.$el.html(this.template(context));
       if(this.survey.get('name')) {
