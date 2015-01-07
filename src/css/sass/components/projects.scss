@@ -108,6 +108,27 @@
     }
   }
 
+  .static-layers {
+    h3 {
+      font-size: 16px;
+      color: $body-color;
+      font-family: $bold;
+      letter-spacing: -1px;
+    }
+
+    h4 {
+      font-size: 16px;
+    }
+
+    .layer {
+      margin: 0.75em 0 1em;
+
+      .control-arrow {
+        display: none; /* we don't have filters for base layers */
+      }
+    }
+  }
+
   #map {
     height: 100vh;
   }

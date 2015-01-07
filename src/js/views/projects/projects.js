@@ -106,7 +106,8 @@ define(function(require, exports, module) {
         // Use and property info from Carto
         {
           type: 'cartodb',
-          noLegend: true,
+          layerName: 'Vacant Properties',
+          color: '#505050',
           dataQuery: "select usedesc, property_2, propertyow, (case delinquent when true then 'Yes' else 'No' end) as d,  ST_AsGeoJSON(ST_Centroid(the_geom)) AS centroid from (select * from allegheny_assessed_parcels) as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>",
           humanReadableField: 'property_2',
           fieldNames: {
