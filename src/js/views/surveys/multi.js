@@ -115,7 +115,8 @@ define(function(require, exports, module) {
     render: function () {
       var context = {
         name: this.project.name,
-        description: this.project.description
+        description: this.project.description,
+        baselayers: this.project.foreignInteractive
       };
       this.$el.html(this.template(context));
 
