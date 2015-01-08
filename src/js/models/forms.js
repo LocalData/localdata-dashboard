@@ -33,8 +33,12 @@ function($, _, Backbone, settings) {
     // immediate question info (text and possible answers)
     // { 'are-you-cool': {text: 'Are you cool?', answers: [{value: 'yes', text: 'Yes'}, {value: 'no', text: 'No'}]}}
     // TODO: It may be better to return an array of questions.
-    getFlattenedForm: function getFlattenedForm() {
+    getFlattenedForm: function getFlattenedForm(questions) {
       var result = {};
+
+      if(!questions) {
+        questions = this.get('questions');
+      }
 
       function makeUnique(name) {
         if (result[name] === undefined) {
@@ -125,9 +129,25 @@ function($, _, Backbone, settings) {
         }
       }
 
-      _.each(this.get('questions'), flattenHelper);
+      _.each(questions, flattenHelper);
 
       return result;
+    },
+
+    /**
+     * Return the flattened form for subquestions of a particular question.
+     * Only works for top-level questions.
+     * @param  {String} question
+     * @param  {String} answer
+     * @return {Object}          Flattened form
+     */
+    getSubquestionsFor: function(question, answer) {
+      var questions = this.get('questions');
+      var q = _.findWhere(questions, { name: question} );
+      var a = _.findWhere(q.answers, { value: answer } );
+      var subquestions = a.questions;
+      console.log("GOT QUESTION....", q);
+      return this.getFlattenedForm(subquestions);
     }
   });
 
@@ -173,6 +193,9 @@ function($, _, Backbone, settings) {
     // immediate question info.
     // { 'are-you-cool': {text: 'Are you cool?', answers: [{value: 'yes', text: 'Yes'}, {value: 'no', text: 'No'}]}}
     getFlattenedForm: function getFlattenedForm() {
+      if (!this.getMostRecentForm()) {
+        return undefined;
+      }
       return this.getMostRecentForm().getFlattenedForm();
     },
 
@@ -183,6 +206,13 @@ function($, _, Backbone, settings) {
         questions[name] = flattenedForm[name].text;
       });
       return questions;
+    },
+
+    getSubquestionsFor: function(question, answer) {
+      if (!this.getMostRecentForm()) {
+        return undefined;
+      }
+      return this.getMostRecentForm().getSubquestionsFor(question, answer);
     }
   });
 

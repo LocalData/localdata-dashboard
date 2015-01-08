@@ -1,0 +1,11 @@
+<h3><%= name %></h3>
+
+<% _.each(fields, function (field) { %>
+  <div class="answer">
+    <span class="key">
+      <%= field.name %>
+    </span>
+    <span class="value"><strong><%- field.value %></strong></span>
+  </div>
+<% }); %>
+</div>

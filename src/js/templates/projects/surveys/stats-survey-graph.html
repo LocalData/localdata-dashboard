@@ -1,0 +1,16 @@
+<div class="piece">
+    <h4><%= name %></h4>
+
+    <% _.each(values, function(answer) { %>
+        <div class="label">
+            <div class="bar" style="width: <%= answer.percent %>%; background: <%= answer.color %>">
+                <% if(answer.percent > 50) { %>
+                    <%= answer.text %> (<%= answer.prettyCount %>)
+                <% } %>
+            </div>
+            <% if(answer.percent < 50) { %>
+                <%= answer.text %> (<%= answer.prettyCount %>)
+            <% } %>
+        </div>
+    <% }); %>
+</div>

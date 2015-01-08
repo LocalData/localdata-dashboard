@@ -54,14 +54,35 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       this.forms = options.forms;
     },
 
+    makeAnswerLabels: function() {
+      var form = this.forms.getFlattenedForm();
+      var questions = {};
+      _.each(form, function(question, key) {
+        questions[key] = {};
+        _.each(question.answers, function(answer) {
+          questions[key][answer.value] = answer.text;
+        });
+      });
+      return questions;
+    },
+
     render: function() {
       var $el = $(this.el);
 
-      this.surveyOptions.loggedIn = settings.user.isLoggedIn();
+      // If this is meant for anonymous consumption, then ignore the fact
+      // that the user might be logged in through the primary dashboard.
+      // TODO: If the entire interface is meant for anonymous consumption,
+      // then we should not even be asking the API for the user's info.
+      if (this.surveyOptions.anonymous) {
+        this.surveyOptions.loggedIn = false;
+      } else {
+        this.surveyOptions.loggedIn = settings.user && settings.user.isLoggedIn();
+      }
 
       var options = {
         r: this.model.toJSON(),
         labels: this.labels,
+        questionLabels: this.makeAnswerLabels(),
         form: this.forms.getFlattenedForm(),
         surveyOptions: this.surveyOptions
       };

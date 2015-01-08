@@ -8,70 +8,27 @@ define(function(require, exports, module) {
   var $ = require('jquery');
   var _ = require('lib/lodash');
   var Backbone = require('backbone');
-  var moment = require('moment');
   var util = require('util');
 
-  // Models
-  var Responses = require('models/responses');
+  var api = require('api');
 
   // Views
-  var ResponseCountView = require('views/surveys/count');
-  var ResponseListView = require('views/responses/list');
-  var FilterView = require('views/responses/filter');
   var MapView = require('views/maps/multi-map');
-  var CollectorStatsView = require('views/surveys/stats-collector');
-
-  var SurveyView = require('views/surveys/survey');
+  var SurveyLayer = require('views/projects/datalayers/survey');
+  var CartoDBLayer = require('views/maps/cartodb-layer');
+  var InfoWindow = require('views/projects/info-window');
+  var projects = require('views/projects/projects');
 
   // Templates
   var embeddedSurveyTemplate = require('text!templates/responses/embed-multi.html');
+  var layerTitleTemplate = require('text!templates/projects/surveys/layer-title.html');
+  var disqusTemplate = require('text!templates/disqus.html');
 
 
   // TODO: Fetch the project configuration data from the API via a Project
   // model, which should reference Survey models, which should potentially
   // allow for pre-filtering.
-  var projects = {
-    gtech: {
-      description: '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>',
-      surveys: [{
-        surveyId: '44f94b00-4005-11e4-b627-69499f28b4e5',
-        filter: {
-          question: 'Is-the-property-maintained',
-          answer: 'Yes',
-          legend: 'Maintained properties',
-          color: '#f15a24'
-        }
-      }, {
-        surveyId: '44f94b00-4005-11e4-b627-69499f28b4e5',
-        filter: {
-          question: 'Is-there-dumping-on-the-property',
-          answer: 'No',
-          legend: 'No dumping',
-          color: '#a743c3'
-        }
-      }]
-    },
-    walkscope: {
-      description: '<p>WALKscope is a mobile tool developed by WalkDenver and PlaceMatters for collecting data related to sidewalks, intersections, and pedestrian counts in the Denver metro area. This information will help create an inventory of pedestrian infrastructure, identify gaps, and build the case for improvements.  Click on the map or one of the categories below to explore the data collected to date.</p>',
-      surveys: [{
-        surveyId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
-        filter: {
-          question: 'What-would-you-like-to-record',
-          answer: 'Sidewalk-Quality',
-          legend: 'Sidewalk Quality Reports',
-          color: '#a743c3'
-        }
-      }, {
-        surveyId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
-        filter: {
-          question: 'What-would-you-like-to-record',
-          answer: 'Intersection-Quality',
-          legend: 'Intersection Quality Reports',
-          color: '#f15a24'
-        }
-      }]
-    }
-  };
+
   /*
    * Multi-survey, embedded view.
    *
@@ -80,21 +37,28 @@ define(function(require, exports, module) {
    *     If there is no filter property, all responses will be shown.
    */
   var MultiSurveyView = Backbone.View.extend({
-    activeLayers: [],
+    activeLayers: {},
+    activeTileLayers: {},
+    activeGridLayers: {},
     mapView: null,
 
+
+    // overview vs deep-dive
+    mode: 'overview',
+
     template: _.template(embeddedSurveyTemplate),
+    layerTitleTemplate: _.template(layerTitleTemplate),
     el: '#container',
 
     events: {
-      'click .action-show-filters': 'toggleFilters'
+      'click .action-show-filters': 'toggleFilters',
+      'click .close-popup': 'closePopup',
+      'click .popup-cover': 'closePopup',
+      'click .address-search-button': 'search',
+      'click .layer-callout': 'showDeepDive'
     },
 
     initialize: function(options) {
-      _.bindAll(this,
-        'mapClickHandler'
-      );
-
       // XXX TODO
       // Pull from survey options?
       // Load the right layers for each survey.
@@ -105,94 +69,245 @@ define(function(require, exports, module) {
         this.project = projects.gtech;
       }
 
+      this.mode = options.mode;
+
+      _.bind(this.search, this);
+
       this.render();
     },
 
-    totalUp: function() {
-      var totaled = [];
-      var total = 0;
-      _.each(this.activeLayers, function(surveyView) {
-        var id = surveyView.survey.get('id');
+    // Render the response counts
+    totalCount: 0,
+    renderCount: function(surveyConfig, count) {
+      this.totalCount += count;
+      this.$el.find('.response-count .count').html(util.numberWithCommas(this.totalCount));
 
-        // Don't double-count surveys
-        if (_.contains(totaled, id)) {
-          return;
-        }
+      if (this.activeLayers.length === 1) {
+        this.$('.response-count').hide();
+      } else {
+        this.$('.response-count').show();
+      }
 
-        total = total + surveyView.survey.get('responseCount') || 0;
-        totaled.push(id);
-      });
+      this.$('#overview-container').append(this.layerTitleTemplate({
+        name: surveyConfig.layerName,
+        count: util.numberWithCommas(count),
+        color: surveyConfig.color
+      }));
 
-      this.$el.find('.response-count .count').html(util.numberWithCommas(total));
+    },
+
+    append: function ($el) {
+      this.$el.find('.layers').append($el);
+    },
+
+    appendStatic: function ($el) {
+      this.$el.find('.static-layers').append($el);
+    },
+
+    appendSettings: function($el) {
+      // XXX TODO
+      // Set up a container for each datasource + id so we know exactly
+      // where to put the element?
+      $el.hide();
+      this.$el.find('.settings-container').append($el);
     },
 
     render: function () {
-      // Actually render the page
       var context = {
-        description: this.project.description
+        name: this.project.name,
+        description: this.project.description,
+        baselayers: this.project.foreignInteractive
       };
       this.$el.html(this.template(context));
 
       // Set up the map view, now that the root exists.
       if (this.mapView === null) {
-        this.mapView = new MapView({
-          $el: $('#map-view-container'),
+        var mapOptions = {
+          el: '#map-view-container',
           config: {
-            center: [40.715678,-74.213848],
-            zoom: 15
-          },
-          clickHandler: this.mapClickHandler
-        });
+            center: this.project.center,
+            zoom: this.project.zoom
+          }
+        };
+
+        // Support a custom baselayer
+        if (this.project.baselayer) {
+          mapOptions.baselayer = this.project.baselayer;
+        }
+
+        this.mapView = new MapView(mapOptions);
+        this.listenTo(this.mapView, 'click', this.mapClickHandler);
       }
 
       // Render the map
       this.mapView.render();
 
-      _.each(this.project.surveys, function(survey) {
-        // Create a model
-        var surveyLayer = new SurveyView({
-          $el: this.$el.find('.layers'),
-          map: this.mapView.map,
-          layerId: survey.surveyId,
-          filter: survey.filter
-        });
+      // Render foreign data layers
+      var mapView = this.mapView;
 
-        this.listenTo(surveyLayer.survey, 'change', this.totalUp);
+      if (this.project.foreignInteractive) {
+        this.foreignLayers = _.map(this.project.foreignInteractive, function (layer, i) {
+          if (layer.type === 'cartodb') {
 
+            var view = new CartoDBLayer({
+              mapView: mapView,
+              layer: layer
+            });
 
-        // Add the survey to the list
-        this.$el.find('.layers').append(surveyLayer.$el);
+            // Render the nav
+            this.listenTo(view, 'rendered', this.appendStatic);
+            view.render();
 
-        // Save it to activeLayers for future reference.
-        this.activeLayers.push(surveyLayer);
-      }.bind(this));
-    },
+            // Hook item-selection up to the info window.
+            this.listenTo(view, 'itemSelected', function (data) {
+              this.addItemView({
+                view: data.view,
+                latlng: data.latlng,
+                order: this.project.surveys.length + i
+              });
+            });
 
-    mapClickHandler: function (event) {
-      if (!event.data || !event.data.object_id) {
-        return;
+            return view;
+          }
+        }, this);
       }
 
-      var rc = new Responses.Collection({
-        surveyId: this.survey.get('id'),
-        objectId: event.data.object_id
-      });
+      // Render survey layers
+      _.each(this.project.surveys, function (survey, i) {
+        var surveyLayer = new SurveyLayer({
+          survey: survey,
+          mapView: mapView,
+          surveyOptions: survey.options
+        });
 
-      var surveyOptions = this.survey.get('surveyOptions') || {};
-      var selectedItemListView = new ResponseListView({
-        el: '#responses-list-container',
-        collection: rc,
-        labels: this.forms.getQuestions(),
-        surveyOptions: surveyOptions
-      });
+        this.activeLayers[survey.layerId] = surveyLayer;
 
-      selectedItemListView.on('remove', function () {
-        this.mapView.deselectObject();
+        this.listenTo(surveyLayer, 'rendered', this.append);
+        this.listenTo(surveyLayer, 'renderedSettings', this.appendSettings);
+        this.listenTo(surveyLayer, 'count', function (count) {
+          this.renderCount(survey, count);
+        });
+        this.listenTo(surveyLayer, 'itemSelected', function (data) {
+          this.addItemView({
+            view: data.view,
+            latlng: data.latlng,
+            order: i
+          });
+        });
       }.bind(this));
 
-      rc.on('destroy', function () {
-        this.mapView.update();
-      }.bind(this));
+      if (this.mode === 'deep-dive') {
+        this.showDeepDive();
+      } else {
+        this.showOverview();
+      }
+
+      if (this.project.commentsId) {
+        this.$el.append(_.template(disqusTemplate)({
+          commentsId: this.project.commentsId
+        }));
+      }
+    },
+
+    addItemView: function (data) {
+      if (this.infoWindow && !this.infoWindow.latlng.equals(data.latlng)) {
+        this.infoWindow.remove();
+        this.infoWindow = null;
+      }
+
+      if (!this.infoWindow) {
+        // TODO: pass along streetview suppression option. We should probably
+        // move streetview suppresion option to the project level.
+        this.infoWindow = new InfoWindow({
+          suppressStreetview: this.project.suppressStreetview,
+          latlng: data.latlng
+        }).render();
+        var $infoWindowContainer = this.$('#info-window');
+        $infoWindowContainer.append(this.infoWindow.el);
+        $infoWindowContainer.show();
+        this.listenToOnce(this.infoWindow, 'remove', function () {
+          $infoWindowContainer.hide();
+          this.infoWindow = null;
+        });
+      }
+
+      this.infoWindow.addView({
+        view: data.view,
+        order: data.order
+      });
+    },
+
+    showDeepDive: function() {
+      this.mode = 'deep-dive';
+      // Show the deep dive controls.
+      $('.control-pane').show();
+      $('#filter-view-container').show();
+
+      // Hide the overview controls and expand the map.
+      $('#overview-container').hide();
+      $('#map-view-container').removeClass('b');
+
+      this.mapView.map.invalidateSize();
+    },
+
+    showOverview: function() {
+      this.mode = 'overview';
+
+      // Hide the deep dive controls.
+      $('.control-pane').hide();
+      $('#filter-view-container').hide();
+      if (this.selectedItemListView) {
+        this.selectedItemListView.remove();
+        this.selectedItemListView = null;
+      }
+
+      // Show the overview controls and restrict the map to the right-hand column.
+      $('#overview-container').show();
+      $('#map-view-container').addClass('b');
+
+      this.mapView.map.invalidateSize();
+    },
+
+
+    mapClickHandler: function (event) {
+      if (this.mode === 'overview') {
+        this.showDeepDive();
+      }
+      // TODO: If we receive a click that doesn't hit any object, we should
+      // dismiss the info window (this.infoWindow.remove()). That's nontrivial,
+      // though, because we need to listen to all of the UTF Grid layer clicks
+      // and determine that none of them have data.
+    },
+
+    toggleFilters: function () {
+      // Render the filter
+      this.$('.filters').toggle();
+      //this.$('.settings-container').toggle();
+    },
+
+    /**
+     * Search for an address
+     */
+    search: function(event) {
+      event.preventDefault();
+      var address = this.$('#address-search').val();
+      var location = this.project.location;
+      var $error = this.$('#map-tools .error');
+      var mapView = this.mapView;
+      api.codeAddress(address, location, function (error, results) {
+        if (error) {
+          $error.html(error.message);
+        } else {
+          $error.html('');
+        }
+
+        mapView.goToLatLng(results.coords);
+      });
+    },
+
+    closePopup: function() {
+      $('.popup').hide();
+      $('.popup-cover').hide();
     }
   });
 

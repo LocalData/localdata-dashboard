@@ -100,7 +100,6 @@
   width: 30%;
   height: 470px;
   background: #fff;
-  opacity: 0.9;
   padding: 20px 20px 10px 20px;
   top: 0;
   right: 0;
@@ -115,11 +114,15 @@
     bottom: 10px;
   }
 
-  button.close {
+  a.close {
     float: none;
     position: absolute;
-    right: 20px;
+    right: 0px;
     top: 20px;
+    background: #fff;
+    width: 3em;
+    cursor: pointer;
+    color: $body-color;
   }
 
   button.action-save-edit,
@@ -238,39 +241,3 @@
   }
 }
 
-
-/* Multi-survey ------------------------- */
-.multi {
-  h3 {
-    line-height: 1.1;
-    letter-spacing: -2px;
-    color: #58aeff;
-
-    .count {
-      display: block;
-      font-size: 60px;
-    }
-  }
-
-  h4 {
-    font-size: 36px;
-    line-height: 1.1;
-    letter-spacing: -2px;
-
-    .count {
-      display: block;
-      font-size: 60px;
-    }
-  }
-
-  .layer {
-    margin-bottom: 2em;
-  }
-
-  #map {
-    height: 100vh;
-  }
-  #map-view-container {
-    height: 100vh;
-  }
-}
