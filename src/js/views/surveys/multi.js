@@ -185,7 +185,7 @@ define(function(require, exports, module) {
         this.listenTo(surveyLayer, 'rendered', this.append);
         this.listenTo(surveyLayer, 'renderedSettings', this.appendSettings);
         this.listenTo(surveyLayer, 'count', function (count) {
-          this.renderCount(survey, count);
+          this.renderCount(survey, count || 0);
         });
         this.listenTo(surveyLayer, 'itemSelected', function (data) {
           this.addItemView({

@@ -62,7 +62,7 @@ define(function (require) {
     },
 
     render: function() {
-      var count = util.numberWithCommas(this.survey.get('queryCount'));
+      var count = util.numberWithCommas(this.survey.get('queryCount') || 0);
       this.activityId = _.uniqueId('activity-'); // used for the activity graph
 
       // Set up and render the stats
@@ -166,14 +166,14 @@ define(function (require) {
       }
 
       // Add stats to each value
-      var stats = this.stats.toJSON()[question.question];
+      var stats = this.stats.toJSON()[question.question] || {};
 
       // Get the sum of all the answeres we care about
       // Used later to caclulate percentages
       var sum = 0;
 
       _.each(question.values, function(value) {
-        sum += stats[value.name];
+        sum += stats[value.name] || 0;
       });
 
       // We could instead get the sum of all answers to the question,

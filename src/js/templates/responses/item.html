@@ -25,7 +25,7 @@
 
 <div class="answers">
 
-<% _.each(r.responses, function(resp, key) { %>
+<% _.each(_.keys(r.responses).reverse(), function(key) { var resp = r.responses[key]; %>
   <div class="answer">
     <span class="key">
       <% if(labels[key]) { %>
