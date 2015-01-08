@@ -59,7 +59,7 @@ define(function(require, exports, module) {
       description: '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>',
       location: 'Pittsburgh, PA',
       center: [-80.04,40.44],
-      zoom: 16,
+      zoom: 15,
       commentsId: 'ptxdev', // XXX
       suppressStreetview: true,
       baselayer: '//a.tiles.mapbox.com/v3/matth.kmf6l3h1/{z}/{x}/{y}.png',
@@ -122,7 +122,7 @@ define(function(require, exports, module) {
               type:'cartodb',
               options:{
                 sql: 'select * from allegheny_assessed_parcels',
-                cartocss: '/** category visualization */ #allegheny_assessed_parcels { polygon-opacity: 0; line-color: #FFF; line-width: 1; line-opacity: 0.7; }\n #allegheny_assessed_parcels[usecode!=100] { polygon-fill: #dddddd; }\n #allegheny_assessed_parcels[usecode=100] { polygon-fill: #101010; polygon-opacity: 0.6; }\n #allegheny_assessed_parcels { polygon-fill: #DDDDDD; }',
+                cartocss: '/** category visualization */ #allegheny_assessed_parcels { polygon-opacity: 0; line-color: #FFF; line-width: 1; line-opacity: 0.7; [zoom<15]{ line-width: 0;}}\n #allegheny_assessed_parcels[usecode!=100] { polygon-fill: #dddddd; }\n #allegheny_assessed_parcels[usecode=100] { polygon-fill: #101010; polygon-opacity: 0.6; }\n #allegheny_assessed_parcels { polygon-fill: #DDDDDD; }',
                 cartocss_version: '2.1.1',
                 interactivity: ['cartodb_id']
               }
