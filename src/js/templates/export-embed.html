@@ -1,0 +1,25 @@
+  <h3>Export the data</h3>
+
+  <p>These export options include all responses. Working in Excel or Access? Download the CSV file to see all your results.</p>
+
+  <div class="button-container">
+    <% if (loading.shapefile) { %>
+    <a class="button ok shapefile flex"><span class="fa fa-gear fa-spin"></span> Preparing Shapefile...</a>
+    <% } else { %>
+    <a class="button ok shapefile flex"><span class="fa fa-globe"></span> Download Shapefile</a>
+    <% } %>
+
+    <% if (loading.csv) { %>
+    <a class="button ok csv flex"><span class="fa fa-gear fa-spin"></span> Preparing CSV...</a>
+    <% } else { %>
+    <a class="button ok csv flex"><span class="fa fa-table"></span> Download CSV</a>
+    <% } %>
+
+    <% if (loading.csvLatest) { %>
+    <a class="button ok csvLatest flex"><span class="fa fa-gear fa-spin"></span> Preparing CSV...</a>
+    <% } else { %>
+    <a class="button ok csvLatest flex"><span class="fa fa-table"></span> Download latest results as CSV</a>
+    <% } %>
+
+    <div class="error">Error exporting data. Please try again later or contact LocalData for help.</div>
+  </div>

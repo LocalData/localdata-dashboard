@@ -9,18 +9,20 @@ define([
   'api',
 
   // Templates
-  'text!templates/export.html'
+  'text!templates/export.html',
+  'text!templates/export-embed.html'
 ],
 
-function($, _, Backbone, settings, api, exportTemplate) {
+function($, _, Backbone, settings, api, exportTemplate, embedTemplate) {
   'use strict';
 
   var exportTimeout = 2 * 60 * 1000; // 2 minutes
 
   var ExportView = Backbone.View.extend({
-    el: '#export-view-container',
+    // el: '#export-view-container',
 
     template: _.template(exportTemplate),
+    embedTemplate: _.template(embedTemplate),
 
     events: {
       'click .shapefile': 'getShapefile',
@@ -31,6 +33,12 @@ function($, _, Backbone, settings, api, exportTemplate) {
 
     initialize: function(options) {
       _.bindAll(this, 'render', 'pingExport');
+
+      if(options.isEmbed) {
+        console.log("IS this an embed?", options.isEmbed);
+        delete this.el;
+        this.template = this.embedTemplate;
+      }
 
       // Show a given survey
       this.survey = options.survey;
@@ -46,6 +54,8 @@ function($, _, Backbone, settings, api, exportTemplate) {
       };
 
       this.$el.html(this.template(context));
+      console.log("Rendered export view", context, this.template(context), this.$el);
+      return this.$el;
     },
 
     loading: {},
