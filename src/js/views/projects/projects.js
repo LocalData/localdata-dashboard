@@ -73,14 +73,14 @@ define(function(require, exports, module) {
       name: "Lots to Love",
       description: '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>',
       location: 'Pittsburgh, PA',
-      center: [-80.04,40.44],
+      center: [-79.99072551727295, 40.4186258489413],
       zoom: 15,
       commentsId: 'ptxdev', // XXX
       suppressStreetview: true,
       baselayer: '//a.tiles.mapbox.com/v3/matth.kmf6l3h1/{z}/{x}/{y}.png',
       surveys: [{
         layerName: 'Lots to Love Projects',
-        layerId: 'ac5c3b60-10dd-11e4-ad2d-2fff103144af',
+        layerId: 'fb6dbc30-7bd9-11e4-abaf-a39ffd5c50e6',
         color: '#a743c3',
         options: {
           comments: true,
@@ -92,25 +92,31 @@ define(function(require, exports, module) {
         styles: simpleStyles({color: '#a743c3'}),
         exploration: [
           makeBasicExploration({
-            name: 'Building type',
-            question: 'What-type-of-building-is-on-site',
-            values: ['Single-family-dwelling',
-                     'Multi-family-dwelling-2-4-units',
-                     'Multi-family-dwelling-more-than-4-units',
-                     'CommercialOffice',
-                     'Industrial-',
-                     'Institutional-',
-                     'Mixed-use-with-residential-',
-                      'Mixed-used-without-residential-'],
-            valueNames: ['Single family',
-                         'Multi-family 2-4 units',
-                         'Multi-family >4 units',
-                         'Commercial/office',
-                         'Industrial',
-                         'Institutional',
-                         'Mixed-use w/ residential',
-                         'Mixed-use w/o residential'],
-            colors: ['#d73027', '#fc8d59', '#fee08b', '#d9ef8b', '#91cf60', '#1a9850', '#b7aba5', '#102030']
+            name: 'Project Type',
+            question: 'Type-of-project',
+            values: [
+              'Parkparklet',
+              'Playspace',
+              'Rain-gardenbioswale',
+              'Flower-garden',
+              'Food-garden',
+              'Gateway-with-signage',
+              'Public-Art',
+              'TrailPathway',
+              'Greenwaywooded-lot'
+            ],
+            valueNames: [
+              'Park/parklet',
+              'Playspace',
+              'Rain garden/bioswale',
+              'Flower garden',
+              'Food garden',
+              'Gateway with signage',
+              'Public Art',
+              'Trail/Pathway',
+              'Greenway/wooded lot'
+            ],
+            colors: ['#8dd3c7', '#ffffb3', '#bebada', '#fb8072', '#8dd5ea', '#fdb462', '#b3de69', '#be76b1', '#d9d9d9']
           })
         ]
       }],
