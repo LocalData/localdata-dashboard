@@ -7,6 +7,7 @@ define(function(require, exports, module) {
   var _ = require('lib/lodash');
   var exploreStylesTemplate = require('text!templates/projects/surveys/explore-styles.mss');
   var simpleStylesTemplate = require('text!templates/projects/surveys/simple-styles.mss');
+  var checkboxStylesTemplate = require('text!templates/projects/surveys/checkbox-styles.mss');
 
   var exploreStyles = (function (template) {
     return function (options) {
@@ -20,6 +21,12 @@ define(function(require, exports, module) {
     };
   }(_.template(simpleStylesTemplate)));
 
+  var checkboxStyles = (function (template) {
+    return function (options) {
+      return template(_.defaults(options, { pointSize: 18 }));
+    };
+  }(_.template(checkboxStylesTemplate)));
+
   function makeBasicExploration(options) {
     // name: 'Unsafe due to traffic speed/volume',
     // question: 'Do-you-feel-unsafe-because-of-a-high-volume-or-high-speed-traffic',
@@ -32,10 +39,10 @@ define(function(require, exports, module) {
       question: options.question,
 
       layer: {
-        query: {},
+        query: options.query,
         select: { 'entries.responses': 1 },
         styles: exploreStyles({
-          showNoResponse: false,
+          showNoResponse: !!options.showNoResponse,
           pairs: _.map(options.values, function (val, i) {
             var ret = {
               key: 'responses.' + options.question,
@@ -63,6 +70,66 @@ define(function(require, exports, module) {
         return ret;
       })
     };
+    return data;
+  }
+
+  function makeCheckboxExploration(options) {
+    // name: 'Sidewalk obstructions ',
+    // question: 'Are-there-any-problems-with-the-sidewalk--Select-all-that-apply-Obstructions-in-the-sidewalk',
+    // query: {
+    //   'entries.responses.What-would-you-like-to-record': 'Sidewalk-Quality'
+    // },
+    // values: ['yes', 'no'],
+    // valueNames: ['Yes', 'No'],
+    // colors: ['#c51b7d', '#4d9221']
+
+    var queryYes = {};
+    queryYes['entries.responses.' + options.question] = 'yes';
+    queryYes = _.defaults(queryYes, options.query);
+
+    var queryNo = {};
+    queryNo['entries.responses.' + options.question] = {
+      $ne: 'yes'
+    };
+    queryNo = _.defaults(queryNo, options.query);
+
+    var data = {
+      name: options.name,
+      question: options.question,
+
+      layer: {
+        query: options.query,
+        select: { 'entries.responses': 1 },
+        styles: checkboxStyles({
+          key: 'responses.' + options.question,
+          colorYes: options.colors[0],
+          colorNo: options.colors[1],
+          pointSize: options.pointSize
+        })
+      },
+      values: [ {
+        text: options.valueNames[0],
+        name: 'yes',
+        color: options.colors[0],
+        layer: {
+          query: queryYes,
+          select: {},
+          styles: simpleStyles({ color: options.colors[0], pointSize: options.pointSize })
+        },
+        pointSize: options.pointSize
+      }, {
+        text: options.valueNames[1],
+        name: 'no',
+        color: options.colors[1],
+        layer: {
+          query: queryNo,
+          select: {},
+          styles: simpleStyles({ color: options.colors[1], pointSize: options.pointSize })
+        },
+        pointSize: options.pointSize
+      } ]
+    };
+
     return data;
   }
 
@@ -260,25 +327,64 @@ define(function(require, exports, module) {
                          'Other'],
             colors: ['#d73027', '#fc8d59', '#fee08b', '#d9ef8b', '#91cf60', '#1a9850', '#b7aba5']
           }),
-          makeBasicExploration({
+          makeCheckboxExploration({
             name: 'Sidewalk obstructions',
-            question: 'Are-there-obstructions-in-the-sidewalk',
-            values: ['Yes', 'No'],
-            valueNames: ['Obstructed', 'Unobstructed'],
+            question: 'Are-there-any-problems-with-the-sidewalk--Select-all-that-apply-Obstructions-in-the-sidewalk',
+            query: {
+              'entries.responses.What-would-you-like-to-record': 'Sidewalk-Quality'
+            },
+            values: ['yes', 'no'],
+            valueNames: ['Yes', 'No'],
             colors: ['#c51b7d', '#4d9221']
           }),
-          makeBasicExploration({
+          makeCheckboxExploration({
             name: 'Significantly cracked or uneven sidewalks',
-            question: 'Is-the-sidewalk-significantly-cracked-or-uneven',
-            values: ['Yes', 'No'],
+            question: 'Are-there-any-problems-with-the-sidewalk--Select-all-that-apply-The-sidewalk-is-significantly-cracked-or-uneven',
+            query: {
+              'entries.responses.What-would-you-like-to-record': 'Sidewalk-Quality'
+            },
+            values: ['yes', 'no'],
             valueNames: ['Significantly cracked/uneven', 'No significant issue'],
             colors: ['#c51b7d', '#4d9221']
           }),
-          makeBasicExploration({
+          makeCheckboxExploration({
+            name: 'Other sidewalk issues',
+            question: 'Are-there-any-problems-with-the-sidewalk--Select-all-that-apply-Other',
+            query: {
+              'entries.responses.What-would-you-like-to-record': 'Sidewalk-Quality'
+            },
+            values: ['yes', 'no'],
+            valueNames: ['Yes', 'No'],
+            colors: ['#c51b7d', '#4d9221']
+          }),
+          makeCheckboxExploration({
             name: 'Unsafe due to poor visibility/lighting',
-            question: 'Do-you-feel-unsafe-because-of-poor-visibility-or-lighting',
-            values: ['Yes', 'No'],
-            valueNames: ['Unsafe', 'No significant issue'],
+            question: 'Do-you-feel-unsafe-for-any-reason--Select-all-that-apply-Poor-visibility-or-lighting',
+            query: {
+              'entries.responses.What-would-you-like-to-record': 'Sidewalk-Quality'
+            },
+            values: ['yes', 'no'],
+            valueNames: ['Yes', 'No'],
+            colors: ['#c51b7d', '#4d9221']
+          }),
+          makeCheckboxExploration({
+            name: 'Unsafe due to traffic speed/volume',
+            question: 'Do-you-feel-unsafe-for-any-reason--Select-all-that-apply-High-volume-or-speed-of-traffic',
+            query: {
+              'entries.responses.What-would-you-like-to-record': 'Sidewalk-Quality'
+            },
+            values: ['yes', 'no'],
+            valueNames: ['Yes', 'No'],
+            colors: ['#c51b7d', '#4d9221']
+          }),
+          makeCheckboxExploration({
+            name: 'Other safety concerns',
+            question: 'Do-you-feel-unsafe-for-any-reason--Select-all-that-apply-Other',
+            query: {
+              'entries.responses.What-would-you-like-to-record': 'Sidewalk-Quality'
+            },
+            values: ['yes', 'no'],
+            valueNames: ['Yes', 'No'],
             colors: ['#c51b7d', '#4d9221']
           }),
           makeBasicExploration({
@@ -288,30 +394,6 @@ define(function(require, exports, module) {
             valueNames: ['Unsafe', 'No significant issue'],
             colors: ['#c51b7d', '#4d9221']
           }), {
-            name: 'Other safety concerns',
-            layer: {
-              query: {
-                'entries.responses.Are-there-other-safety-concerns': {
-                  $type: 2
-                }
-              },
-              select: {},
-              styles: simpleStyles({ color: '#d73027' })
-            },
-            values: [{
-              text: 'Safety concerns',
-              color: '#d73027',
-              layer: {
-                query: {
-                  'entries.responses.Are-there-other-safety-concerns': {
-                    $type: 2
-                  }
-                },
-                select: {},
-                styles: simpleStyles({color: '#d73027'})
-              }
-            }]
-          }, {
             name: 'Photos',
             layer: {
               query: {
@@ -374,71 +456,156 @@ define(function(require, exports, module) {
             valueNames: ['All crossing directions', 'Some crossing directions', 'No crosswalks'],
             colors: ['#4dac26', '#fde0ef', '#d01c8b']
           }),
-          makeBasicExploration({
-            name: 'Stop sign obedience',
-            question: 'Are-drivers-obeying-stop-signs',
-            values: ['Yes', 'No'],
-            valueNames: ['Drivers obeying stop signs', 'Drivers disobeying stop signs'],
-            colors: ['#4dac26', '#d01c8b']
-          }),
-          makeBasicExploration({
-            name: 'Speed limit obedience',
-            question: 'Are-drivers-generally-following-speed-limits',
-            values: ['Yes', 'No'],
-            valueNames: ['Drivers obeying speed limits', 'Drivers disobeying speed limits'],
-            colors: ['#4dac26', '#d01c8b']
-          }),
-          makeBasicExploration({
-            name: 'Drivers yielding to pedestrians',
-            question: 'Are-drivers-generally-yielding-to-pedestrians',
-            values: ['Yes', 'No'],
+          makeCheckboxExploration({
+            name: 'Median islands',
+            question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Median-islands',
+            query: {
+              'entries.responses.What-would-you-like-to-record': 'Intersection-Quality'
+            },
+            values: ['yes', 'no'],
             valueNames: ['Yes', 'No'],
-            colors: ['#4dac26', '#d01c8b']
+            colors: ['#4d9221', '#c51b7d']
+          }),
+          makeCheckboxExploration({
+            name: 'Bulb-outs',
+            question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Bulb-outs',
+            query: {
+              'entries.responses.What-would-you-like-to-record': 'Intersection-Quality'
+            },
+            values: ['yes', 'no'],
+            valueNames: ['Yes', 'No'],
+            colors: ['#4d9221', '#c51b7d']
+          }),
+          makeCheckboxExploration({
+            name: 'Accessible curb ramps',
+            question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Accessible-curb-ramps-for-wheelchairs',
+            query: {
+              'entries.responses.What-would-you-like-to-record': 'Intersection-Quality'
+            },
+            values: ['yes', 'no'],
+            valueNames: ['Yes', 'No'],
+            colors: ['#4d9221', '#c51b7d']
+          }),
+          makeCheckboxExploration({
+            name: 'Other pedestrian amenities',
+            question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Other',
+            query: {
+              'entries.responses.What-would-you-like-to-record': 'Intersection-Quality'
+            },
+            values: ['yes', 'no'],
+            valueNames: ['Yes', 'No'],
+            colors: ['#4d9221', '#c51b7d']
+          }),
+          makeCheckboxExploration({
+            name: 'Traffic signals',
+            question: 'Are-there-traffic-controls-Select-all-that-apply-Traffic-signal',
+            query: {
+              'entries.responses.What-would-you-like-to-record': 'Intersection-Quality'
+            },
+            values: ['yes', 'no'],
+            valueNames: ['Yes', 'No'],
+            colors: ['#4d9221', '#c51b7d']
+          }),
+          makeCheckboxExploration({
+            name: 'Pedestrian signals',
+            question: 'Are-there-traffic-controls-Select-all-that-apply-Pedestrian-signal',
+            query: {
+              'entries.responses.What-would-you-like-to-record': 'Intersection-Quality'
+            },
+            values: ['yes', 'no'],
+            valueNames: ['Yes', 'No'],
+            colors: ['#4d9221', '#c51b7d']
           }),
           makeBasicExploration({
             name: 'Stop signs',
-            question: 'Are-there-stop-signs',
-            values: ['Yes-all-way-stop-signs', 'Yes-two-way-stop-signs', 'No'],
-            valueNames: ['All-way stop sign', 'Two-way stop sign', 'No stop sign'],
-            colors: ['#1a9850', '#fee08b', '#b7aba5']
-          }), {
-          name: 'Other safety concerns',
-          layer: {
             query: {
-              'entries.responses.Are-there-other-safety-concerns': {
-                $type: 2
-              }
+              'entries.responses.What-would-you-like-to-record': 'Intersection-Quality'
             },
-            select: {},
-            styles: simpleStyles({ color: '#d73027' })
-          },
-          values: [{
-            text: 'Safety concerns',
-            color: '#d73027',
-            layer: {
-              query: {
-                'entries.responses.Are-there-other-safety-concerns': {
-                  $type: 2
-                }
-              },
-              select: {},
-              styles: simpleStyles({color: '#d73027'})
-            }
-          }]
-          },
-          makeBasicExploration({
-            name: 'Median islands/bulb-outs',
-            question: 'Are-there-median-islands-or-bulb-outs',
-            values: ['Yes-both', 'Yes-median-islands', 'Yes-bulb-outs', 'No'],
-            valueNames: ['Both', 'Median islands', 'Bulb-outs', 'Neither'],
-            colors: ['#4dac26', '#92c5de', '#b2abd2' ,'#d01c8b']
+            question: 'How-many-stop-signs',
+            values: ['All-way', '2-way', 'Other'],
+            valueNames: ['All-way stop sign', 'Two-way stop sign', 'Other stop sign'],
+            colors: ['#1a9850', '#7570b3', '#386cb0'],
+            showNoResponse: true
           }),
-          makeBasicExploration({
-            name: 'Traffic lights/crossing signals',
-            question: 'Are-there-traffic-lights-andor-pedestrian-crossing-signals',
-            values: ['Yes-both-traffic-lights-and-pedestrian-crossing-signals', 'Yes-traffic-lights-only', 'Yes-pedestrian-crossing-signals-only', 'No'],
-            valueNames: ['Both', 'Traffic lights only', 'Pedestrian signals only', 'Neither'],
-            colors: ['#1a9641', '#92c5de', '#b2abd2' ,'#d01c8b']
+          makeCheckboxExploration({
+            name: 'Shade trees',
+            question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Shade-trees',
+            query: {
+              'entries.responses.What-would-you-like-to-record': 'Intersection-Quality'
+            },
+            values: ['yes', 'no'],
+            valueNames: ['Yes', 'No'],
+            colors: ['#4d9221', '#c51b7d']
+          }),
+          makeCheckboxExploration({
+            name: 'Nice landscaping',
+            question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Nice-landscaping',
+            query: {
+              'entries.responses.What-would-you-like-to-record': 'Intersection-Quality'
+            },
+            values: ['yes', 'no'],
+            valueNames: ['Yes', 'No'],
+            colors: ['#4d9221', '#c51b7d']
+          }),
+          makeCheckboxExploration({
+            name: 'Benches',
+            question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Benches',
+            query: {
+              'entries.responses.What-would-you-like-to-record': 'Intersection-Quality'
+            },
+            values: ['yes', 'no'],
+            valueNames: ['Yes', 'No'],
+            colors: ['#4d9221', '#c51b7d']
+          }),
+          makeCheckboxExploration({
+            name: 'Public art',
+            question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Public-art',
+            query: {
+              'entries.responses.What-would-you-like-to-record': 'Intersection-Quality'
+            },
+            values: ['yes', 'no'],
+            valueNames: ['Yes', 'No'],
+            colors: ['#4d9221', '#c51b7d']
+          }),
+          makeCheckboxExploration({
+            name: 'Other pedestrian amenities',
+            question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Other',
+            query: {
+              'entries.responses.What-would-you-like-to-record': 'Intersection-Quality'
+            },
+            values: ['yes', 'no'],
+            valueNames: ['Yes', 'No'],
+            colors: ['#4d9221', '#c51b7d']
+          }),
+          makeCheckboxExploration({
+            name: 'Drivers disobeying stop signs/traffic signals',
+            question: 'Are-there-problems-with-driver-behavior-Select-all-that-apply-Not-obeying-stop-signs-or-traffic-signals',
+            query: {
+              'entries.responses.What-would-you-like-to-record': 'Intersection-Quality'
+            },
+            values: ['yes', 'no'],
+            valueNames: ['Yes', 'No'],
+            colors: ['#c51b7d', '#4d9221']
+          }),
+          makeCheckboxExploration({
+            name: 'Drivers disobeying speed limit',
+            question: 'Are-there-problems-with-driver-behavior-Select-all-that-apply-Not-obeying-the-speed-limit',
+            query: {
+              'entries.responses.What-would-you-like-to-record': 'Intersection-Quality'
+            },
+            values: ['yes', 'no'],
+            valueNames: ['Yes', 'No'],
+            colors: ['#c51b7d', '#4d9221']
+          }),
+          makeCheckboxExploration({
+            name: 'Drivers not yielding to pedestrians',
+            question: 'Are-there-problems-with-driver-behavior-Select-all-that-apply-Not-yielding-to-pedestrians',
+            query: {
+              'entries.responses.What-would-you-like-to-record': 'Intersection-Quality'
+            },
+            values: ['yes', 'no'],
+            valueNames: ['Yes', 'No'],
+            colors: ['#c51b7d', '#4d9221']
           }), {
           name: 'Photos',
           layer: {
@@ -479,7 +646,7 @@ define(function(require, exports, module) {
           'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
         },
         select: {},
-        styles: simpleStyles({color: '#8da0cb', pointSize: 24}),
+        styles: simpleStyles({color: '#8da0cb', pointSize: 15}),
         exploration: [
           makeBasicExploration({
             name: 'Overall Pedestrian Environment Rating',
@@ -487,7 +654,7 @@ define(function(require, exports, module) {
             values: ['5', '4', '3', '2', '1'],
             valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
             colors: ['#4dac26', '#b8e186', '#fde0ef', '#f1b6da', '#d01c8b'],
-            pointSize: 24
+            pointSize: 15
           }), {
             name: 'Pedestrian activity',
             layer: {
@@ -502,7 +669,7 @@ define(function(require, exports, module) {
               'Map { background-color: rgba(0,0,0,0); }\n' +
               '#localdata{\n' +
               'marker-line-width: 1; marker-width: 16; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
-              '[zoom > 14] { marker-line-width: 4; marker-width: 24; }\n' +
+              '[zoom > 14] { marker-line-width: 4; marker-width: 15; }\n' +
               '}\n' +
               '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section">=15]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
               '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=45]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
@@ -548,7 +715,7 @@ define(function(require, exports, module) {
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=135]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
                 '{marker-type: ellipse; marker-line-color: @high; marker-fill: @high;' +
                 'marker-line-width: 1; marker-width: 16; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
-                '[zoom > 14] { marker-line-width: 4; marker-width: 24; }\n' +
+                '[zoom > 14] { marker-line-width: 4; marker-width: 15; }\n' +
                 '}\n'
               }
             }, {
@@ -570,7 +737,7 @@ define(function(require, exports, module) {
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=90]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<135]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
                 '{marker-type: ellipse; marker-line-color: @medium; marker-fill: @medium;' +
                 'marker-line-width: 1; marker-width: 16; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
-                '[zoom > 14] { marker-line-width: 4; marker-width: 24; }\n' +
+                '[zoom > 14] { marker-line-width: 4; marker-width: 15; }\n' +
                 '}\n'
               }
             }, {
@@ -592,7 +759,7 @@ define(function(require, exports, module) {
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=68]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<90]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
                 '{marker-type: ellipse; marker-line-color: @low; marker-fill: @low;' +
                 'marker-line-width: 1; marker-width: 16; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
-                '[zoom > 14] { marker-line-width: 4; marker-width: 24; }\n' +
+                '[zoom > 14] { marker-line-width: 4; marker-width: 15; }\n' +
                 '}\n'
               }
             }, {
@@ -614,7 +781,7 @@ define(function(require, exports, module) {
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<68]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
                 '{marker-type: ellipse; marker-line-color: @vlow; marker-fill: @vlow;' +
                 'marker-line-width: 1; marker-width: 16; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
-                '[zoom > 14] { marker-line-width: 4; marker-width: 24; }\n' +
+                '[zoom > 14] { marker-line-width: 4; marker-width: 15; }\n' +
                 '}\n'
               }
             }]
@@ -625,7 +792,7 @@ define(function(require, exports, module) {
             values: ['Less-than-15-minutes', '15-30-minutes', '30-45-minutes', '45-60-minutes', 'more-than-60-minutes'],
             valueNames: ['Less than 15 minutes', '15-30 minutes', '30-45 minutes', '45-60 minutes', 'More than 60 minutes'],
             colors: ['#edf8fb', '#b3cde3', '#8c96c6', '#8856a7', '#810f7c'],
-            pointSize: 24
+            pointSize: 15
           }),
           makeBasicExploration({
             name: 'Temperature during observation',
@@ -633,7 +800,7 @@ define(function(require, exports, module) {
             values: ['Warm-80-or-more', 'Mild-40-79', 'Cold-39-or-less'],
             valueNames: ['Warm (80º; or more)', 'Mild (40-79º)', 'Cold (39º; or less)'],
             colors: ['#7bc3f4', '#408dda', '#8856a7'],
-            pointSize: 24
+            pointSize: 15
           }), {
           name: 'Photos',
           layer: {
@@ -644,7 +811,7 @@ define(function(require, exports, module) {
               }
             },
             select: {},
-            styles: simpleStyles({ color: '#810f7c', pointSize: 24 })
+            styles: simpleStyles({ color: '#810f7c', pointSize: 15 })
           },
           values: [{
             text: 'Photo',
@@ -657,7 +824,7 @@ define(function(require, exports, module) {
                 }
               },
               select: {},
-              styles: simpleStyles({color: '#810f7c', pointSize: 24})
+              styles: simpleStyles({color: '#810f7c', pointSize: 15})
             }
           }]
         }]

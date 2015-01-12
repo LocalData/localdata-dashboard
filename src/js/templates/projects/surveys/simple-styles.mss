@@ -20,14 +20,14 @@ Map { background-color: rgba(0,0,0,0); }
   [GEOMETRY=Point] {
     marker-line-width: 1;
     marker-width: <% if (pointSize !== undefined) { %> <%= pointSize * 2 / 3%> <% } else { %> 12 <% }%>;
-    [zoom >= 15] {
-      marker-line-width: 4;
+    [zoom >= 16] {
+      marker-line-width: 2;
       marker-width: <% if (pointSize !== undefined) { %> <%= pointSize %> <% } else { %> 18 <% }%>;
     }
     marker-type: ellipse;
     marker-line-color: <%= color %>;
     marker-fill: <%= color %>;
-    marker-fill-opacity: 0.6;
+    marker-fill-opacity: 0.9;
     marker-line-opacity: 1;
   }
 }
