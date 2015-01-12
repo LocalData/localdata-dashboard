@@ -489,7 +489,7 @@ define(function(require, exports, module) {
             }]
           },
           makeBasicExploration({
-            name: 'Observeration duration',
+            name: 'Observation duration',
             question: 'How-long-did-you-observe-this-street-segment',
             values: ['Less-than-15-minutes', '15-30-minutes', '30-45-minutes', '45-60-minutes', 'more-than-60-minutes'],
             valueNames: ['Less than 15 minutes', '15-30 minutes', '30-45 minutes', '45-60 minutes', 'More than 60 minutes'],
