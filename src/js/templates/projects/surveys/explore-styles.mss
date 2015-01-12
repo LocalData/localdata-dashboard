@@ -24,14 +24,14 @@ background-color: rgba(0,0,0,0);
   [GEOMETRY = Point] {
     marker-line-width: 1;
     marker-width: <%= pointSize * 2 / 3 %>;
-    [zoom >= 15] {
+    [zoom >= 16] {
       marker-line-width: 4;
       marker-width: <%= pointSize %>;
     }
     marker-type: ellipse;
     marker-line-color: #b7aba5;
     marker-fill: #b7aba5;
-    marker-fill-opacity: 0.6;
+    marker-fill-opacity: 0.9;
     marker-line-opacity: 1;
   }
 }
@@ -60,14 +60,14 @@ background-color: rgba(0,0,0,0);
   [GEOMETRY = Point] {
     marker-line-width: 1;
     marker-width: <%= pointSize * 2 / 3 %>;
-    [zoom >= 15] {
-      marker-line-width: 4;
+    [zoom >= 16] {
+      marker-line-width: 2;
       marker-width: <%= pointSize %>;
     }
     marker-type: ellipse;
     marker-line-color: <%= pair.color %>;
     marker-fill: <%= pair.color %>;
-    marker-fill-opacity: 0.6;
+    marker-fill-opacity: 0.9;
     marker-line-opacity: 1;
   }
 }
