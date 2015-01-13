@@ -345,7 +345,6 @@ define(function (require) {
         survey: this.survey
       });
       var $el = this.exportView.render();
-      console.log("setting up export", $el);
       this.trigger('renderedExport', $el);
     },
 
@@ -394,7 +393,6 @@ define(function (require) {
 
       this.trigger('rendered', this.$el);
 
-      console.log('Created survey $el', this.$el);
       this.setupStats();
       this.setupSettings();
       return this.$el;

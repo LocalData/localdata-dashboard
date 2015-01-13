@@ -51,7 +51,6 @@ define(function(require, exports, module) {
     },
 
     appendExport: function($el) {
-      console.log("Got an export view", $el);
       this.$el.find('.exports-container').append($el);
     },
 
