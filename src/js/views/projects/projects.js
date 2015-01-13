@@ -138,7 +138,7 @@ define(function(require, exports, module) {
     // GTECH ---------------------------------------------------------------------
     gtech: {
       name: "Lots to Love",
-      description: '<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>',
+      description: '<p></p>',
       location: 'Pittsburgh, PA',
       center: [-79.99072551727295, 40.4186258489413],
       zoom: 15,
@@ -196,9 +196,11 @@ define(function(require, exports, module) {
           type: 'cartodb',
           layerName: 'Vacant Properties',
           color: '#505050',
-          dataQuery: "select usedesc, property_2, propertyow, (case delinquent when true then 'Yes' else 'No' end) as d,  ST_AsGeoJSON(ST_Centroid(the_geom)) AS centroid from (select * from allegheny_assessed_parcels) as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>",
+          dataQuery: "select mapblolot, usedesc, mundesc, property_2, propertyow, (case delinquent when true then 'Yes' else 'No' end) as d,  ST_AsGeoJSON(ST_Centroid(the_geom)) AS centroid from (select * from allegheny_assessed_parcels) as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>",
           humanReadableField: 'property_2',
           fieldNames: {
+            mapblolot: 'Parcel ID',
+            mundesc: 'Municipality',
             usedesc: 'Use',
             propertyow: 'Property Owner',
             d: 'Is the property delinquent?'
@@ -222,6 +224,64 @@ define(function(require, exports, module) {
         // Static council districts
         {
           type: 'cartodb',
+          layerName: 'Municipalities',
+          color: '#ffad00',
+          dataQuery: 'select * from pittsburgh_municipalities as _cartodbjs_alias',
+          humanReadableField: 'municipalities',
+          // fieldNames: {
+          //   usedesc: 'Use',
+          //   propertyow: 'Property Owner'
+          // },
+          config: {
+            version: '1.0.1',
+            stat_tag: '', // 'c8c949c0-7ce7-11e4-a232-0e853d047bba',
+            disableGrid: true,
+            layers:[{
+              type:'cartodb',
+              options:{
+                sql: 'select * from pittsburgh_municipalities',
+                cartocss: "/** simple visualization */#pittsburgh_municipalities{  polygon-fill: #FF6600;  polygon-opacity: 0;  line-color: #ffad00;  line-width: 2.5;  line-opacity: 1;}#pittsburgh_municipalities::labels {  text-name: [label];  text-face-name: 'Open Sans Regular';  text-size: 12;  text-label-position-tolerance: 0;  text-fill: #45403e;  text-halo-fill: #FFF;  text-halo-radius: 1.5;  text-dy: -10;  text-allow-overlap: true;  text-placement: point;  text-placement-type: dummy;}",
+                cartocss_version: '2.1.1'
+                // interactivity: ['cartodb_id']
+              }
+            }]
+          },
+          layerId: 'pittsburgh-municipalities'
+        },
+
+        // Static neighborhood bounds
+        {
+          type: 'cartodb',
+          layerName: 'Pittsburgh Neighborhoods',
+          state: 'inactive',
+          color: '#ffad00',
+          dataQuery: 'select * from pittsburgh_neighborhoods as _cartodbjs_alias',
+          humanReadableField: 'neighborhood',
+          // fieldNames: {
+          //   usedesc: 'Use',
+          //   propertyow: 'Property Owner'
+          // },
+          config: {
+            version: '1.0.1',
+            stat_tag: '', // 'c8c949c0-7ce7-11e4-a232-0e853d047bba',
+            disableGrid: true,
+            layers:[{
+              type:'cartodb',
+              options:{
+                sql: 'select * from pittsburgh_neighborhoods',
+                cartocss: "/** simple visualization */  #pittsburgh_neighborhoods{   polygon-fill: #FF6600;   polygon-opacity: 0;   line-color: #ffad00;   line-width: 2.5;   line-opacity: 1; }  #pittsburgh_neighborhoods::labels {   text-name: [neighborhood];   text-face-name: 'Open Sans Regular';   text-size: 18;   text-label-position-tolerance: 0;   text-fill: #45403e;   text-halo-fill: #FFF;   text-halo-radius: 1.5;   text-dy: -10;   text-allow-overlap: true;   text-placement: point;   text-placement-type: dummy; } ",
+                cartocss_version: '2.1.1'
+                // interactivity: ['cartodb_id']
+              }
+            }]
+          },
+          layerId: 'pittsburgh-neighborhoods'
+        },
+
+        // Static council districts
+        {
+          type: 'cartodb',
+          state: 'inactive',
           layerName: 'Pittsburgh Council Districts',
           color: '#ffad00',
           dataQuery: 'select * from pittsburgh_council_districts_2012 as _cartodbjs_alias',
@@ -245,35 +305,6 @@ define(function(require, exports, module) {
             }]
           },
           layerId: 'pittsburgh-council-districts'
-        },
-
-        // Static neighborhood bounds
-        {
-          type: 'cartodb',
-          layerName: 'Pittsburgh Neighborhoods',
-          state: 'inactive',
-          color: '#ffad00',
-          dataQuery: 'select * from pittsburgh_neighborhoods as _cartodbjs_alias',
-          humanReadableField: 'neighborhood',
-          // fieldNames: {
-          //   usedesc: 'Use',
-          //   propertyow: 'Property Owner'
-          // },
-          config: {
-            version: '1.0.1',
-            stat_tag: '', // 'c8c949c0-7ce7-11e4-a232-0e853d047bba',
-            disableGrid: true,
-            layers:[{
-              type:'cartodb',
-              options:{
-                sql: 'select * from pittsburgh_neighborhoods',
-                cartocss: "/** simple visualization */  #pittsburgh_neighborhoods{   polygon-fill: #FF6600;   polygon-opacity: 0;   line-color: #ffad00;   line-width: 2.5;   line-opacity: 1; }  #pittsburgh_neighborhoods::labels {   text-name: [neighborhood];   text-face-name: 'Open Sans Regular';   text-size: 12;   text-label-position-tolerance: 0;   text-fill: #45403e;   text-halo-fill: #FFF;   text-halo-radius: 1.5;   text-dy: -10;   text-allow-overlap: true;   text-placement: point;   text-placement-type: dummy; } ",
-                cartocss_version: '2.1.1'
-                // interactivity: ['cartodb_id']
-              }
-            }]
-          },
-          layerId: 'pittsburgh-neighborhoods'
         }
       ]
     },

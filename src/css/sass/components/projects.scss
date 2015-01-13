@@ -110,14 +110,14 @@
 
   .static-layers {
     h3 {
-      font-size: 16px;
+      font-size: 24px;
       color: $body-color;
-      font-family: $bold;
       letter-spacing: -1px;
     }
 
     h4 {
       font-size: 16px;
+      letter-spacing: inherit;
     }
 
     .layer {
