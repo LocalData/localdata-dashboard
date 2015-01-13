@@ -11,9 +11,6 @@ define(function (require) {
   var Backbone = require('backbone');
   var util = require('util');
 
-  // LocalData
-  var settings = require('settings');
-
   // Models
   var Activity = require('models/activity');
 
@@ -172,23 +169,40 @@ define(function (require) {
       // Used later to caclulate percentages
       var sum = 0;
 
-      _.each(question.values, function(value) {
-        sum += stats[value.name] || 0;
-      });
+      if (question.type === 'checkbox') {
+        sum = util.dotPath({
+          stats: this.stats.toJSON(),
+          survey: this.survey.toJSON()
+        }, question.countPath);
+      } else {
+        _.each(question.values, function(value) {
+          sum += stats[value.name] || 0;
+        });
+      }
 
       // We could instead get the sum of all answers to the question,
       // but that includes deceptive 'no response' answers.
       // var sum = _.reduce(_.values(stats), function(memo, num){ return memo + num; }, 0);
 
+      var noIndex;
       _.each(question.values, function(value, index) {
-        if (!stats[value.name]) {
-          console.log("Missing", value, stats);
+        if (value.name === 'no' && question.type === 'checkbox') {
+          noIndex = index;
+          return;
+        } else if (!stats[value.name]) {
           return;
         }
         question.values[index].count = stats[value.name];
         question.values[index].prettyCount = util.numberWithCommas(stats[value.name]);
         question.values[index].percent = stats[value.name] / sum * 100;
       });
+
+      if (noIndex !== undefined) {
+        var noVal = question.values[noIndex];
+        noVal.count = sum - question.values[1 - noIndex].count;
+        noVal.prettyCount = util.numberWithCommas(noVal.count);
+        noVal.percent = (noVal.count / sum) * 100;
+      }
 
       var $el = this.graphTemplate(question);
       this.$el.find('.graphs').append($el);
