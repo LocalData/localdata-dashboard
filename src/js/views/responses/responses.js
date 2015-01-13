@@ -248,7 +248,7 @@ define(function(require, exports, module) {
 
       // Hide the deep dive controls.
       $('.control-pane').hide();
-      $('#filter-view-container').hide();
+      $('.filters').hide();
       if (this.selectedItemListView) {
         this.selectedItemListView.remove();
         this.selectedItemListView = null;
@@ -314,6 +314,7 @@ define(function(require, exports, module) {
     }
 
   });
+
 
   /*
    * Map-oriented view for embedded pages.
