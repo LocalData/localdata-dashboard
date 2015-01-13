@@ -39,13 +39,6 @@ define(function (require) {
     };
   }
 
-  function dotPath(obj, path) {
-    return path.split('.').reduce(function (memo, index) {
-      if (!memo) { return memo; }
-      return memo[index];
-    }, obj);
-  }
-
   // The View
   var LayerControl = Backbone.View.extend({
     template: _.template(template),
@@ -117,12 +110,12 @@ define(function (require) {
             surveyOptions: _.defaults(options.surveyOptions, surveyOptions)
           });
         }
-        self.trigger('count', dotPath({
+        self.trigger('count', util.dotPath({
           stats: self.stats.toJSON(),
           survey: self.survey.toJSON()
         }, options.survey.countPath));
 
-        self.survey.set('queryCount', dotPath({
+        self.survey.set('queryCount', util.dotPath({
           stats: self.stats.toJSON(),
           survey: self.survey.toJSON()
         }, options.survey.countPath));
@@ -352,7 +345,6 @@ define(function (require) {
         survey: this.survey
       });
       var $el = this.exportView.render();
-      console.log("setting up export", $el);
       this.trigger('renderedExport', $el);
     },
 
@@ -401,7 +393,6 @@ define(function (require) {
 
       this.trigger('rendered', this.$el);
 
-      console.log('Created survey $el', this.$el);
       this.setupStats();
       this.setupSettings();
       return this.$el;

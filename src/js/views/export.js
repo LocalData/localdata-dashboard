@@ -54,7 +54,6 @@ function($, _, Backbone, settings, api, exportTemplate, embedTemplate) {
       };
 
       this.$el.html(this.template(context));
-      console.log("Rendered export view", context, this.template(context), this.$el);
       return this.$el;
     },
 
