@@ -2,24 +2,25 @@
 
   <h3>Filter by question</h3>
 
+  <div class="options">
   <% _.each(_.keys(questions), function (name) {%>
     <% if(! _.has(questions, name)) { return; } %>
-
     <div class="question" data-question="<%- name %>">
-      <label>
-        <%- questions[name].text %>
-      </label>
+      <span class="question-title"><%- questions[name].text %></span>
+      <span class="toggle"><i class="fa fa-angle-down"></i></span>
 
       <div class="answers">
         <% _.each(questions[name].answers, function (answer) {%>
           <div class="answer" data-answer="<%- answer.value %>" data-question="<%- name %>">
-            <div class="circle" style="background-color: <%- answer.color %>;"></div>
+            <div class="circle" style="background-color: <%- answer.color %>; border-color: <%- answer.color %>"></div>
             <div class="print circle" style="border-color:<%- answer.color %>;"></div>
-            <%- answer.text %> <%- answer.count %>
+            <%- answer.text %> (<%- answer.count %>)
           </div>
         <% }); %>
       </div>
-
     </div>
+
   <% }); %>
+  </div>
+
 </div>

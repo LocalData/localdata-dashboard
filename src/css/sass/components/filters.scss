@@ -29,9 +29,12 @@
     display: inline-block;
     vertical-align: top;
 
+    line-height: 1em;
+
     width: 20%;
     padding: 1%;
     margin-right: 2%;
+    margin-top: 0.5em;
     min-height: 50px;
     border-top: 4px solid $thinpink;
 
@@ -68,6 +71,26 @@
   .answers button {
     margin-top: 10px;
   }
+}
+
+.selected-filters {
+  h3 {
+    font-size: 24px;
+    margin-bottom: 0;
+  }
+}
+
+/* Styles shared between the legend and the filters */
+.legend,
+.filters {
+  a.clear {
+    color: $body-med;
+  }
+
+  .question-title:hover,
+  span.answer:hover {
+    color: $blue;
+  }
 
   .answer {
     display: block;
@@ -78,10 +101,11 @@
   }
 
   .circle {
-    border-radius: 9px;
+    border: 3px solid;
+    border-radius: 14px;
     display: inline-block;
-    height: 18px;
-    width: 18px;
+    height: 14px;
+    width: 14px;
     margin-bottom: -3px;
   }
 
@@ -95,7 +119,7 @@
 
     .circle {
       background: #6e6663;
-      display: block;
+      display: inline-block;
     }
 
     .answers button {
@@ -108,13 +132,12 @@
   }
 }
 
-.selected-filters {
-  h3 {
-    font-size: 24px;
-    margin-bottom: 0;
+.legend {
+  .question-title {
+    cursor: pointer;
+    font-family: $bold;
   }
 }
-
 
 /**
  * Filters in projects.
@@ -128,4 +151,25 @@
 }
 
 
+.legend-active .circle {
+  background-color: transparent !important;
+}
 
+.inactive .circle {
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+
+.legend-inactive {
+    .selected {
+      display: none;
+    }
+
+    .deselected {
+      display: inline-block;
+    }
+
+    .legend {
+      display: none;
+    }
+  }

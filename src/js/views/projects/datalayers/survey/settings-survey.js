@@ -11,6 +11,9 @@ define(function (require) {
   // LocalData
   var settings = require('settings');
 
+  // Views
+  var LegendView = require('views/surveys/legend');
+
   // Templates
   var template = require('text!templates/projects/surveys/settings-survey.html');
   var loadingTemplate = require('text!templates/filters/loading.html');
@@ -61,6 +64,7 @@ define(function (require) {
     },
 
     generateLegend: function () {
+      console.log("Filter set", this.filters);
       var category;
       if (this.filters.question) {
         category = _.find(this.exploration, { name: this.filters.question });
@@ -70,20 +74,18 @@ define(function (require) {
         this.$legend = null;
         this.trigger('legendRemoved');
       } else {
-        var legend = this.legendTemplate({
+
+        var legendView = new LegendView({
           filters: this.filters,
           category: category
         });
-        this.$legend = $(legend);
 
-        // TODO: Use delegated events?
-        this.$legend.find('.question-title').on('click', this.selectQuestion.bind(this));
-        this.$legend.find('.answer').on('click', this.selectAnswer.bind(this));
-        this.$legend.find('.clear').on('click', this.reset.bind(this));
+        this.$legend = legendView.render();
 
-        // TODO: Factor the legend into its own view, instead of passing DOM
-        // nodes between two views and spreading around the events and
-        // insertion/removal.
+        this.listenTo(legendView, 'filterReset', this.reset);
+        this.listenTo(legendView, 'questionSelected', this.selectQuestion);
+        this.listenTo(legendView, 'answerSelected', this.selectAnswer);
+
         this.trigger('legendSet', this.$legend);
       }
     },
@@ -120,15 +122,22 @@ define(function (require) {
     },
 
     selectQuestion: function(event) {
-      // Clear out any filters
-      if(this.filters.answer) {
-        this.filters = {};
+      // Set up handy shortcuts
+      var $question = $(event.target);
+      var question = $question.attr('data-question');
+      if(!question) {
+        $question = $question.parent();
+        question = $question.attr('data-question');
       }
 
-      // Set up handy shortcuts
-      var $question = $(event.target).parent();
-      var question = $question.attr('data-question');
+      // Clear out any filters
+      if(this.filters.answer) {
+        delete this.filters.answer;
+      }
+
       this.filters.question = question;
+
+      console.log("Set question to", this.filters.question);
 
       // Show the sub-answers
       // TODO: The following slides operate on two different matches. One

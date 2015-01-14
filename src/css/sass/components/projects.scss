@@ -55,18 +55,6 @@
       line-height: 1em;
     }
 
-    .circle {
-      border: 3px solid;
-      border-radius: 14px;
-      display: inline-block;
-      height: 14px;
-      width: 14px;
-      margin-bottom: -3px;
-    }
-
-    .legend-active .circle {
-      background-color: transparent !important;
-    }
 
     /* Checkboxes / hide-show control for layer */
     .selected {
@@ -77,35 +65,12 @@
       display: none;
     }
 
-    .inactive .circle {
-      background-color: transparent !important;
-      border-color: transparent !important;
-    }
-
-    .question {
-      line-height: 1em;
-      margin-top: 0.5em;
-    }
-
+    /*
     .answer {
       display: block;
       cursor: pointer;
       line-height: 27px;
-    }
-  }
-
-  .layer.legend-inactive {
-    .selected {
-      display: none;
-    }
-
-    .deselected {
-      display: inline-block;
-    }
-
-    .legend {
-      display: none;
-    }
+    }*/
   }
 
   .static-layers {
@@ -158,28 +123,10 @@
     }
   }
 
+  /* Hide the date filters on project views (for now) */
   .filters {
     .date-filters {
       display: none;
-    }
-  }
-
-  .legend {
-    .question-title {
-      cursor: pointer;
-      font-family: $bold;
-    }
-  }
-
-  .legend,
-  .filters {
-    a.clear {
-      color: $body-med;
-    }
-
-    .question-title:hover,
-    span.answer:hover {
-      color: $blue;
     }
   }
 
