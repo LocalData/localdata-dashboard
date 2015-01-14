@@ -19,7 +19,6 @@
 
     <div class="question-filters filter"></div>
     <div class="questions">
-      <!-- <strong class="clear">Show all repsonses</strong>-->
 
       <h3>Select a question to explore</h3>
 
@@ -33,7 +32,7 @@
 
           <div class="answers">
             <% _.each(category.values, function (value) {%>
-              <span class="answer" data-answer="<%- value.text %>" data-question="<%- category.name %>">
+              <span class="answer" data-answer="<%- value.name %>" data-question="<%- category.name %>">
                 <span class="circle" style="background-color: <%- value.color %>; border-color: <%- value.color %>;"></span>
                 <%- value.text %>
               </span>

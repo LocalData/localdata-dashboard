@@ -1,11 +1,12 @@
 <div class="question" data-question="<%- filters.question %>">
   <span class="question-title">
-    <%- category.name %> <a href="#" class="clear"><i class="fa fa-times"></i></a>
+    <%- category.text %>
+    <!--<a href="#" class="clear"><i class="fa fa-times"></i></a>-->
   </span>
 
   <div class="answers">
     <% _.each(category.values, function (value) {%>
-      <span class="answer" data-answer="<%- value.text %>" data-question="<%- category.name %>">
+      <span class="answer <% if(filters.answer && (filters.answer !== value.value)) { %> inactive<% } %>" data-answer="<%- value.value || value.name %>" data-question="<%- category.name %>">
         <span class="circle" style="background-color: <%- value.color %>; border-color: <%- value.color %>;"></span>
         <%- value.text %>
       </span>

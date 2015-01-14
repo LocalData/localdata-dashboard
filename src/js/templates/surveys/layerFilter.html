@@ -6,8 +6,6 @@
   </div>
 
   <div class="questions">
-    <!-- <strong class="clear">Show all repsonses</strong>-->
-
     <div class="select">Select a question</div>
 
     <div class="options">
@@ -20,14 +18,12 @@
         <div class="answers">
           <% _.each(questions[name].answers, function (answer) {%>
             <div class="answer" data-answer="<%- answer.value %>" data-question="<%- name %>">
-              <div class="circle" style="background-color: <%- answer.color %>;"></div>
+              <div class="circle" style="background-color: <%- answer.color %>; border-color: <%- answer.color %>;"></div>
               <div class="print circle" style="border-color:<%- answer.color %>;"></div>
               <%- answer.text %> (<%- answer.count %>)
             </div>
           <% }); %>
         </div>
-      </div>
-
     <% }); %>
     </div>
   </div>

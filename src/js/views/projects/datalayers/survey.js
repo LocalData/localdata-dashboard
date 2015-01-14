@@ -146,7 +146,7 @@ define(function (require) {
         var filterDefs = _.find(this.exploration, {
           name: filter.question
         }).values;
-        data = _.find(filterDefs, { text: filter.answer }).layer;
+        data = _.find(filterDefs, { name: filter.answer }).layer;
       }
 
       // Get TileJSON
