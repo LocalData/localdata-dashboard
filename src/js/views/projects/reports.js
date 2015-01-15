@@ -50,8 +50,8 @@ define(function(require, exports, module) {
       this.$el.find('.stats-container').append($el);
     },
 
-    appendExport: function($el) {
-      this.$el.find('.exports-container').append($el);
+    appendExport: function(exportView) {
+      this.$el.find('.exports-container').append(exportView.$el);
     },
 
     render: function () {

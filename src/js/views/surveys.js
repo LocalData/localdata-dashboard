@@ -287,7 +287,10 @@ define(function(require, exports, module) {
       }
 
       // Export, Settings views
-      this.exportView = new ExportView({survey: this.survey });
+      this.exportView = new ExportView({
+        el: this.$('#export-view-container'),
+        survey: this.survey
+      });
       this.settingsView = new SettingsView({
         survey: this.survey,
         forms: this.forms
