@@ -63,14 +63,23 @@
     .deselected {
       display: none;
     }
-
-    /*
-    .answer {
-      display: block;
-      cursor: pointer;
-      line-height: 27px;
-    }*/
   }
+
+
+  .layer.legend-inactive {
+    .selected {
+      display: none;
+    }
+
+    .deselected {
+      display: inline-block;
+    }
+
+    .legend {
+      display: none;
+    }
+  }
+
 
   .static-layers {
     h3 {
