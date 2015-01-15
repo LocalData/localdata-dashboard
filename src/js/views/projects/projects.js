@@ -448,6 +448,7 @@ define(function(require, exports, module) {
         layerName: 'Intersection Quality Reports',
         layerId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
         color: '#fc8d62',
+        state: 'inactive',
         options: {
           comments: true,
           anonymous: true
@@ -632,6 +633,7 @@ define(function(require, exports, module) {
       }, {
         layerName: 'Pedestrian Counts',
         layerId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
+        state: 'inactive',
         options: {
           comments: true,
           anonymous: true
