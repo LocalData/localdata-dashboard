@@ -163,7 +163,13 @@ define(function (require) {
       }
 
       // Add stats to each value
-      var stats = this.stats.toJSON()[question.question] || {};
+      var stats = this.stats.toJSON()[question.question];
+
+      // Skip questions with no stats for now.
+      if (!stats) {
+        console.log("Skipping", question.question);
+        return;
+      }
 
       // Get the sum of all the answeres we care about
       // Used later to caclulate percentages
