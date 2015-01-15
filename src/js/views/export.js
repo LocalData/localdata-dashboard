@@ -19,8 +19,6 @@ function($, _, Backbone, settings, api, exportTemplate, embedTemplate) {
   var exportTimeout = 2 * 60 * 1000; // 2 minutes
 
   var ExportView = Backbone.View.extend({
-    // el: '#export-view-container',
-
     template: _.template(exportTemplate),
     embedTemplate: _.template(embedTemplate),
 
@@ -54,7 +52,7 @@ function($, _, Backbone, settings, api, exportTemplate, embedTemplate) {
       };
 
       this.$el.html(this.template(context));
-      return this.$el;
+      return this;
     },
 
     loading: {},
