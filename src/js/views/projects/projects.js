@@ -145,8 +145,8 @@ define(function(require, exports, module) {
       name: "Lots to Love",
       description: '<p></p>',
       location: 'Pittsburgh, PA',
-      center: [-79.99072551727295, 40.4186258489413],
-      zoom: 15,
+      center: [-79.995886, 40.440625],
+      zoom: 12,
       commentsId: 'ptxdev', // XXX
       suppressStreetview: true,
       baselayer: '//a.tiles.mapbox.com/v3/matth.kmf6l3h1/{z}/{x}/{y}.png',
@@ -245,7 +245,7 @@ define(function(require, exports, module) {
               type:'cartodb',
               options:{
                 sql: 'select * from pittsburgh_municipalities',
-                cartocss: "/** simple visualization */#pittsburgh_municipalities{  polygon-fill: #FF6600;  polygon-opacity: 0;  line-color: #ffad00;  line-width: 2.5;  line-opacity: 1;}#pittsburgh_municipalities::labels {  text-name: [label];  text-face-name: 'Open Sans Regular';  text-size: 12;  text-label-position-tolerance: 0;  text-fill: #45403e;  text-halo-fill: #FFF;  text-halo-radius: 1.5;  text-dy: -10;  text-allow-overlap: true;  text-placement: point;  text-placement-type: dummy;}",
+                cartocss: "/** simple visualization */#pittsburgh_municipalities{  polygon-fill: #FF6600;  polygon-opacity: 0;  line-color: #ffad00;  line-width: 2.5;  line-opacity: 1;}#pittsburgh_municipalities::labels {  text-name: [label];  text-face-name: 'Open Sans Regular';  text-size: 12;  text-label-position-tolerance: 0;  text-fill: #45403e;  text-halo-fill: #FFF;  text-halo-radius: 1.5;  text-dy: -10;  text-allow-overlap: true;  text-placement: point;  text-placement-type: dummy; [label='Pittsburgh'] { text-size: 0; }}",
                 cartocss_version: '2.1.1'
                 // interactivity: ['cartodb_id']
               }
