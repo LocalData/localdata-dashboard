@@ -70,7 +70,7 @@ define(function(require, exports, module) {
           surveyOptions: survey.options
         });
 
-        // If we don't have an export for this layer already:
+        // Add an export section if we don't already have one for this survey
         if(!this.activeLayers[survey.layerId]) {
           this.listenTo(surveyLayer, 'renderedExport', this.appendExport);
           surveyLayer.setupExport();

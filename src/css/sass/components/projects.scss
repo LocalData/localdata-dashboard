@@ -51,10 +51,9 @@
 
     h4 {
       letter-spacing: -1px;
-      font-size: 20px;
+      font-size: $small-header-size;
       line-height: 1em;
     }
-
 
     /* Checkboxes / hide-show control for layer */
     .selected {
@@ -64,24 +63,33 @@
     .deselected {
       display: none;
     }
-
-    /*
-    .answer {
-      display: block;
-      cursor: pointer;
-      line-height: 27px;
-    }*/
   }
+
+
+  .layer.legend-inactive {
+    .selected {
+      display: none;
+    }
+
+    .deselected {
+      display: inline-block;
+    }
+
+    .legend {
+      display: none;
+    }
+  }
+
 
   .static-layers {
     h3 {
-      font-size: 24px;
+      font-size: $small-header-size;
       color: $body-color;
       letter-spacing: -1px;
     }
 
     h4 {
-      font-size: 16px;
+      font-size: $body-size;
       letter-spacing: inherit;
     }
 
@@ -116,6 +124,12 @@
     height: 94vh;
     padding: 6vh 3vh 3vh 3vh;
     border-left: 5px solid $thinpink;
+
+    h3 {
+      font-size: $small-header-size;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
 
     #responses-list {
       height: auto;
@@ -237,7 +251,7 @@
 
   .popup-in {
     padding: 20px;
-  border: 5px solid $thinpink;
+    border: 5px solid $thinpink;
   }
 }
 

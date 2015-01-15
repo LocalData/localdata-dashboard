@@ -83,6 +83,7 @@ define(function (require) {
       };
       this.color = options.survey.color;
       this.exploration = options.survey.exploration;
+      this.state = options.survey.state || 'active';
 
       this.mapView = options.mapView;
 
@@ -190,7 +191,7 @@ define(function (require) {
       });
       this.gridLayer.on('click', this.handleClick);
 
-      if(this.mapView) {
+      if(this.mapView && this.state === 'active') {
         this.mapView.addTileLayer(this.tileLayer);
         this.mapView.addGridLayer(this.gridLayer);
       }
@@ -389,6 +390,10 @@ define(function (require) {
       this.$el.html(this.template(context));
       if(this.survey.get('name')) {
         this.doneLoading();
+      }
+
+      if (this.state === 'inactive') {
+        this.$el.addClass('legend-inactive');
       }
 
       this.trigger('rendered', this.$el);

@@ -33,7 +33,6 @@ function($, _, Backbone, settings, api, exportTemplate, embedTemplate) {
       _.bindAll(this, 'render', 'pingExport');
 
       if(options.isEmbed) {
-        console.log("IS this an embed?", options.isEmbed);
         delete this.el;
         this.template = this.embedTemplate;
       }

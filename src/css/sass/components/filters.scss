@@ -150,7 +150,6 @@
   display: initial;
 }
 
-
 .legend-active .circle {
   background-color: transparent !important;
 }
@@ -159,17 +158,3 @@
   background-color: transparent !important;
   border-color: transparent !important;
 }
-
-.legend-inactive {
-    .selected {
-      display: none;
-    }
-
-    .deselected {
-      display: inline-block;
-    }
-
-    .legend {
-      display: none;
-    }
-  }
