@@ -1,0 +1,29 @@
+<div id="disqus_hide" style="display:none;">
+  <div id="disqus_thread"></div>
+</div>
+<script type="text/javascript">
+  if (!window.DISQUS) {
+    var disqus_shortname = '<%= commentsId %>';
+    //var disqus_identifier = 'foo';
+    //var disqus_url = 'app.localdata.com';
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+  }
+  /* * * Disqus Reset Function * * */
+  window.DISQUS_reset = function (newIdentifier, newUrl, newTitle, newLanguage) {
+      DISQUS.reset({
+          reload: true,
+          config: function () {
+              this.page.identifier = newIdentifier;
+              this.page.url = newUrl;
+              this.page.title = newTitle;
+              this.language = newLanguage;
+          }
+      });
+  };
+</script>
+

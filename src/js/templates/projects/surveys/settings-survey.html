@@ -1,0 +1,53 @@
+<div class="filters">
+  <div class="filters-in">
+    <button href="" class="button mini flex close-settings"><i class="fa fa-times"> </i> Close</button>
+    <button href="" class="button mini flex clear">Clear filters</button>
+
+    <div class="date-filters filter">
+      <h3>
+        Filter by date
+        <select id="datefilter">
+          <option value="all">All responses</option>
+          <option value="hour">Past hour</option>
+          <option value="today">Today</option>
+          <option value="week">Past 7 days</option>
+          <!-- <option value="other">Custom range</option> -->
+        </select>
+
+      </h3>
+    </div>
+
+    <div class="question-filters filter"></div>
+    <div class="questions">
+
+      <h3>Select a question to explore</h3>
+
+      <div class="options">
+      <% _.each(categories, function (category) {%>
+        <div class="question" data-question="<%- category.name %>">
+          <span class="question-title">
+            <%- category.name %>
+          </span>
+          <span class="toggle"><i class="fa fa-angle-down"></i></span>
+
+          <div class="answers">
+            <% _.each(category.values, function (value) {%>
+              <span class="answer" data-answer="<%- value.name %>" data-question="<%- category.name %>">
+                <span class="circle" style="background-color: <%- value.color %>; border-color: <%- value.color %>;"></span>
+                <%- value.text %>
+              </span>
+            <% }); %>
+          </div>
+        </div>
+
+      <% }); %>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+
+

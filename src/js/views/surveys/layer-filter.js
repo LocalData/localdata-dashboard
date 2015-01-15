@@ -1,5 +1,5 @@
 /*jslint nomen: true */
-/*globals define, cartodb, Rickshaw: true */
+/*globals define */
 
 define(function (require) {
   'use strict';
@@ -11,9 +11,6 @@ define(function (require) {
   // LocalData
   var settings = require('settings');
 
-  // Models
-  var Responses = require('models/responses');
-
   // Templates
   var template = require('text!templates/surveys/layerFilter.html');
   // var loadingTemplate = require('text!templates/filters/loading.html');
@@ -22,7 +19,7 @@ define(function (require) {
   var NOANSWER = 'no response';
 
   var FilterView = Backbone.View.extend({
-    className: 'settings',
+    className: 'settings filters',
     filters: {},
 
     template: _.template(template),
@@ -177,8 +174,11 @@ define(function (require) {
 
       this.trigger('filterSet', this.filters);
 
-      // XXX TODO
       // Mark this question as selected
+      this.$('.filters .question').removeClass('selected');
+
+      // Then, add the selected class to this question
+      $question.addClass('selected');
     },
 
     /**
@@ -188,14 +188,14 @@ define(function (require) {
       var $answer = $(event.target);
       this.filters.answer = $answer.attr('data-answer');
 
-      // Make sure we have the right question selected
-      this.filters.question = $answer.attr('data-question');
-      var $question = $('div[data-question=' + this.filters.question + ']');
-
       if(!this.filters.answer) {
         $answer = $answer.parent();
         this.filters.answer = $answer.attr('data-answer');
       }
+
+      // Make sure we have the right question selected
+      this.filters.question = $answer.attr('data-question');
+      //var $question = $('div[data-question=' + this.filters.question + ']');
 
       this.trigger('filterSet', this.filters);
 

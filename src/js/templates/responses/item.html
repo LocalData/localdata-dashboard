@@ -18,14 +18,14 @@
 
 <% if(r.files != undefined) { %>
   <% _.each(r.files, function(file){ %>
-    <img src="<%= file %>" alt="" style="width: 90%" class="response-image">
+    <img src="<%= file %>" alt="" style="width: 100%" class="response-image">
   <% });%>
 <% } %>
 
 
 <div class="answers">
 
-<% _.each(r.responses, function(resp, key) { %>
+<% _.each(_.keys(r.responses).reverse(), function(key) { var resp = r.responses[key]; %>
   <div class="answer">
     <span class="key">
       <% if(labels[key]) { %>
@@ -34,7 +34,13 @@
         <%- key %>
       <% } %>
     </span>
-    <span class="value"><strong><%- resp %></strong></span>
+    <span class="value"><strong>
+      <% if (_.has(questionLabels, key) && _.has(questionLabels[key], resp)) { %>
+        <%- questionLabels[key][resp] %>
+      <% } else { %>
+        <%- resp %>
+      <% } %>
+    </strong></span>
 
     <select class="edit" data-question="<%- key %>">
       <% if (form[key]) { %>

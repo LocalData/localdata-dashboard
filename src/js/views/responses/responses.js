@@ -162,7 +162,7 @@ define(function(require, exports, module) {
       // FIXME: If this gets called because of a direct navigation to a
       // surveys/:slug/dive/:oid URL, then there was never a click on the
       // map, and so the object in question hasn't been highlighted on the map.
-      var rc = new Responses.Collection({
+      var rc = new Responses.Collection([], {
         surveyId: this.survey.get('id'),
         objectId: objectId
       });
@@ -173,6 +173,7 @@ define(function(require, exports, module) {
         collection: rc,
         labels: this.forms.getQuestions(),
         forms: this.forms,
+        survey: this.survey,
         surveyOptions: surveyOptions
       });
 
@@ -208,8 +209,9 @@ define(function(require, exports, module) {
           'surveys/' + this.survey.get('slug') + '/dive/' + objectId,
           { trigger: false }
         ]);
-        this.selectItem(objectId);
       }
+
+      this.selectItem(objectId);
     },
 
     update: function() {
@@ -312,6 +314,7 @@ define(function(require, exports, module) {
     }
 
   });
+
 
   /*
    * Map-oriented view for embedded pages.
@@ -430,6 +433,7 @@ define(function(require, exports, module) {
         collection: rc,
         labels: this.forms.getQuestions(),
         forms: this.forms,
+        survey: this.survey,
         surveyOptions: surveyOptions,
         surveyId: this.survey.get('id'),
         objectId: event.data.object_id

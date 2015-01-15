@@ -1,0 +1,6 @@
+<a class="close mini"><i class="fa fa-times"></i></a>
+<% if (!suppressStreetview) { %>
+  <img src="//maps.googleapis.com/maps/api/streetview?size=500x250&location=<%= latlng.lat %>,<%= latlng.lng %>&key=<%= googleKey %>" height="250" width="500" class="streetview">
+<% } %>
+
+<div id="info-item-list"></div>

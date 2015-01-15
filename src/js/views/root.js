@@ -22,12 +22,12 @@ define(function(require, exports, module) {
   var UserViews = require('views/users');
   var SurveyViews = require('views/surveys');
   var DesignViews = require('views/design');
-  var SettingsViews = require('views/settings');
   var ReviewView = require('views/responses/review');
 
   // Embed views
   var SurveyEmbedView = require('views/survey-embed');
   var MultiSurveyEmbedView = require('views/surveys/multi');
+  var MultiSurveyReportsView = require('views/projects/reports');
 
   // Templates
   var dashboardTemplateText = require('text!templates/dashboard.html');
@@ -64,11 +64,6 @@ define(function(require, exports, module) {
       // Bind local methods
       _.bindAll(this);
 
-      // Keep track of the user.
-      this.userView = new AllViews.UserBarView({
-        user: settings.user // created on init in app.js
-      });
-
       // Set up global router
       this._router = new IndexRouter({ controller: this });
 
@@ -79,6 +74,13 @@ define(function(require, exports, module) {
       // TODO: factor out the embedded script-tag templates and turn the
       // following into .html instead of .prepend
       this.cleanup();
+      // Keep track of the user.
+      settings.user = new Users.Model();
+      settings.user.fetch();
+      this.userView = new AllViews.UserBarView({
+        user: settings.user
+      });
+
       this.$el.prepend(dashboardTemplate());
     }),
 
@@ -226,7 +228,6 @@ define(function(require, exports, module) {
 
     gotoSurveyEmbed: function () {
       this.renderEmbed();
-      console.log('Naviating to embedded survey view'); // XXX
       // We won't navigate between surveys in a single-survey embed view, so we
       // don't need to use the factory.
       this.currentContentView = new SurveyEmbedView({
@@ -234,12 +235,24 @@ define(function(require, exports, module) {
       });
     },
 
-    gotoMultiSurvey: function (slug) {
+    gotoMultiSurvey: function (slug, options) {
       this.renderEmbed();
-      console.log('Naviating to embedded multi-survey view'); // XXX
+      options = options || {};
       // We won't navigate between surveys in a single-survey embed view, so we
       // don't need to use the factory.
-      this.currentContentView = new MultiSurveyEmbedView({
+      this.currentContentView = new MultiSurveyEmbedView(_.defaults(options, {
+        slug: slug,
+        mode: 'overview'
+      }));
+    },
+
+    gotoMultiReports: function (slug) {
+      this.renderEmbed();
+      console.log("Going to reports");
+
+      // We won't navigate between surveys in a single-survey embed view, so we
+      // don't need to use the factory.
+      this.currentContentView = new MultiSurveyReportsView({
         slug: slug
       });
     }

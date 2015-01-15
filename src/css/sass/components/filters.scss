@@ -3,15 +3,15 @@
   background: #fff;
   position: absolute;
   width: 70%; /* leaves a little bit of a gap so you can see the map behind */
-  left: 29%;
-  top: 0;
+  left: 300px;
+  top: 0px;
   z-index: 1250; /* leaflet zoom controls are at 999 */
   margin-bottom: 20px;
 
   .filters-in {
     padding: 20px;
     border: 5px solid $pink;
-    border-top-width: 0px;
+    border-width: 0 5px;
     overflow: auto;
   }
 
@@ -20,17 +20,21 @@
   }
 
   label,
-  .question {
+  .question-title {
     cursor: pointer;
+    font-family: $bold;
   }
 
   .question {
     display: inline-block;
     vertical-align: top;
 
+    line-height: 1em;
+
     width: 20%;
     padding: 1%;
     margin-right: 2%;
+    margin-top: 0.5em;
     min-height: 50px;
     border-top: 4px solid $thinpink;
 
@@ -45,7 +49,6 @@
 
   h3 {
     font-size: 24px;
-    margin-bottom: 0;
   }
 
   label {
@@ -60,7 +63,6 @@
   }
 
   .answers {
-    .circle,
     button {
       display: none;
     }
@@ -69,23 +71,42 @@
   .answers button {
     margin-top: 10px;
   }
+}
+
+.selected-filters {
+  h3 {
+    font-size: 24px;
+    margin-bottom: 0;
+  }
+}
+
+/* Styles shared between the legend and the filters */
+.legend,
+.filters {
+  a.clear {
+    color: $body-med;
+  }
+
+  .question-title:hover,
+  span.answer:hover {
+    color: $blue;
+  }
 
   .answer {
-    position: relative;
-    line-height: 20px;
-    padding-left: 32px;
-    clear: both;
-    margin-top: 10px
+    display: block;
+    cursor: pointer;
+    line-height: 27px;
+    padding-left: 25px;
+    text-indent: -25px;
   }
 
   .circle {
-    position: absolute;
-    left: 5px;
-    border-radius: 50%;
-    width: 20px;
-    height: 20px;
-    bborder: 3px solid #fff;
-    background: transparent;
+    border: 3px solid;
+    border-radius: 14px;
+    display: inline-block;
+    height: 14px;
+    width: 14px;
+    margin-bottom: -3px;
   }
 
   .selected {
@@ -98,7 +119,7 @@
 
     .circle {
       background: #6e6663;
-      display: block;
+      display: inline-block;
     }
 
     .answers button {
@@ -106,17 +127,49 @@
     }
   }
 
-  .circle.inactive {
+  .inactive .circle {
     background: transparent ! important;
   }
 }
 
-
-.selected-filters {
-  h3 {
-    font-size: 24px;
-    margin-bottom: 0;
+.legend {
+  .question-title {
+    cursor: pointer;
+    font-family: $bold;
   }
 }
 
+/**
+ * Filters in projects.
+ */
+.settings-container {
+  display: none;
+}
 
+.settings-container .filters {
+  display: initial;
+}
+
+
+.legend-active .circle {
+  background-color: transparent !important;
+}
+
+.inactive .circle {
+  background-color: transparent !important;
+  border-color: transparent !important;
+}
+
+.legend-inactive {
+    .selected {
+      display: none;
+    }
+
+    .deselected {
+      display: inline-block;
+    }
+
+    .legend {
+      display: none;
+    }
+  }

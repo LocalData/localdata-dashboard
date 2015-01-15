@@ -1,34 +1,34 @@
 <div class="out contrast">
   <div class="in">
 
-    <h3>Export your data</h3>
+    <h3>Export the data</h3>
 
-    <p>Export your all your survey data with one click. These export options include all responses.</p>
+    <p>These export options include all responses.</p>
     <p>Working in Excel or Access? Download the CSV file to see all your results.</p>
 
     <div class="button-container">
       <% if (loading.shapefile) { %>
-      <a class="button ok shapefile flex"><span class="fa fa-gear fa-spin"></span> Downloading Shapefile...</a>
+      <a class="button ok shapefile flex"><span class="fa fa-gear fa-spin"></span> Preparing Shapefile...</a>
       <% } else { %>
-      <a class="button ok shapefile flex"><span class="fa fa-globe"></span> Download Shapefile<a>
+      <a class="button ok shapefile flex"><span class="fa fa-globe"></span> Download Shapefile</a>
       <% } %>
 
       <% if (loading.csv) { %>
-      <a class="button ok csv flex"><span class="fa fa-gear fa-spin"></span> Downloading CSV...</a>
+      <a class="button ok csv flex"><span class="fa fa-gear fa-spin"></span> Preparing CSV...</a>
       <% } else { %>
-      <a class="button ok csv flex"><span class="fa fa-table"></span> Download CSV<a>
+      <a class="button ok csv flex"><span class="fa fa-table"></span> Download CSV</a>
       <% } %>
 
       <% if (loading.csvLatest) { %>
-      <a class="button ok csvLatest flex"><span class="fa fa-gear fa-spin"></span> Downloading CSV...</a>
+      <a class="button ok csvLatest flex"><span class="fa fa-gear fa-spin"></span> Preparing CSV...</a>
       <% } else { %>
-      <a class="button ok csvLatest flex"><span class="fa fa-table"></span> Download latest results as CSV<a>
+      <a class="button ok csvLatest flex"><span class="fa fa-table"></span> Download latest results as CSV</a>
       <% } %>
 
       <% if (loading.kml) { %>
-      <a class="button ok kml flex"><span class="fa fa-gear fa-spin"></span> Downloading KML...</a>
+      <a class="button ok kml flex"><span class="fa fa-gear fa-spin"></span> Preparing KML...</a>
       <% } else { %>
-      <a class="button ok kml flex"><span class="fa fa-map-marker"></span> Download KML (points)<a>
+      <a class="button ok kml flex"><span class="fa fa-map-marker"></span> Download KML (points)</a>
       <% } %>
 
       <div class="error">Error exporting data. Please try again later or contact LocalData for help.</div>

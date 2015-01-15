@@ -16,29 +16,31 @@ function($, _, Backbone, settings, api) {
     routes: {
       "": "home",
 
-      "register": "register",
-      "reset": "reset_password",
-      "reset/:resetInfo": "change_password",
+      "(!)register": "register",
+      "(!)reset": "reset_password",
+      "(!)reset/:resetInfo": "change_password",
 
-      "surveys/new": "new_survey",
-      "surveys/:slug/dive": "dive",
-      "surveys/:slug/dive/:oid": "objectDetails",
-      "surveys/:slug/export": "survey_export",
-      "surveys/:slug/design": "design",
-      "surveys/:slug/review": "review",
-      "surveys/:slug": "survey",
+      "(!)surveys/new": "new_survey",
+      "(!)surveys/:slug/dive": "dive",
+      "(!)surveys/:slug/dive/:oid(#:commentId)": "objectDetails",
+      "(!)surveys/:slug/export": "survey_export",
+      "(!)surveys/:slug/design": "design",
+      "(!)surveys/:slug/review": "review",
+      "(!)surveys/:slug": "survey",
 
-      "surveys/:slug/form/edit": "form_edit",
-      "surveys/:slug/form": "form",
+      "(!)surveys/:slug/form/edit": "form_edit",
+      "(!)surveys/:slug/form": "form",
 
-      "surveys/:slug/settings": "settings",
+      "(!)surveys/:slug/settings": "settings",
 
-      'embed/surveys/:slug': 'embed',
+      '(!)embed/surveys/:slug': 'embed',
       // TODO: a multi-dataset view is a project that can reference multiple surveys,
       // so 'multi/survey/:slug' is not totally intuitive, but we're keeping it
       // around for now for backward compatibility.
-      'multi/surveys/:slug': 'multi',
-      'projects/:slug': 'multi',
+      '(!)multi/surveys/:slug': 'multi',
+      '(!)projects/:slug': 'multi',
+      '(!)projects/:slug/dive': 'multiDetails',
+      '(!)projects/:slug/reports': 'multiReports',
 
       "*actions": "default_route"
     },
@@ -115,6 +117,17 @@ function($, _, Backbone, settings, api) {
     multi: function (slug) {
       this.controller.gotoMultiSurvey(slug);
     },
+
+    multiDetails: function (slug) {
+      this.controller.gotoMultiSurvey(slug, {
+        mode: 'deep-dive'
+      });
+    },
+
+    multiReports: function (slug) {
+      this.controller.gotoMultiReports(slug);
+    },
+
 
     default_route: function(actions) {
       // console.log(actions);

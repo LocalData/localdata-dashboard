@@ -4,6 +4,7 @@
 define(function (require) {
   'use strict';
   var _ = require('lib/lodash');
+  var $ = require('jquery');
   var Backbone = require('backbone');
 
   // LocalData
@@ -33,6 +34,7 @@ define(function (require) {
       this.listenTo(this.collection, 'add', this.render);
       this.labels = options.labels;
       this.forms = options.forms;
+      this.survey = options.survey;
       this.surveyOptions = options.surveyOptions;
       this.surveyId = options.surveyId;
       this.objectId = options.objectId;
@@ -40,6 +42,7 @@ define(function (require) {
 
     remove: function() {
       this.$el.hide();
+      this.$('#disqus_thread').detach().appendTo($('#disqus_hide'));
       this.$el.empty();
       this.trigger('remove');
       this.stopListening();
@@ -63,6 +66,7 @@ define(function (require) {
       this.$el.html(this.template({
         name: name,
         responses: this.collection.toJSON(),
+        surveyOptions: this.surveyOptions,
         googleKey: settings.GoogleKey
       }));
 
@@ -76,12 +80,31 @@ define(function (require) {
         this.$el.append(item.render().el);
       }.bind(this));
 
+      // TODO: clean up the disqus commenting stuff
       if (this.surveyOptions.comments) {
-        this.$el.append(this.commentTemplate({
-          id: 'ptxdev', // FIXME: read from the survey options
-          surveyId: this.surveyId,
-          objectId: this.objectId
-        }));
+        var d = $('#disqus_thread');
+        if (d.length === 0) {
+          this.$el.append(this.commentTemplate({
+            thread: true
+          }));
+        } else {
+          this.$el.append(this.commentTemplate({
+            thread: false
+          }));
+          d.detach();
+          d.appendTo($('#disqus_target'));
+        }
+
+        try {
+          window.DISQUS_reset(
+            this.survey.id + '/' + this.collection.objectId,
+            'https://app.localdata.com/#!surveys/' + this.survey.get('slug') + '/dive/' + this.collection.objectId,
+            name,
+            'en'
+          );
+        } catch (e) {
+          console.log(e);
+        }
       }
 
       this.$el.show();

@@ -15,6 +15,9 @@ define(function(require, exports, module) {
   // Models
   var Stats = require('models/stats');
 
+  // Views
+  var LegendView = require('views/surveys/legend');
+
   // Templates
   var template = require('text!templates/filters/filters.html');
   var questionFiltersTemplate = require('text!templates/filters/question-filters.html');
@@ -36,10 +39,10 @@ define(function(require, exports, module) {
     selectedFiltersTemplate: _.template(selectedFiltersTemplate),
 
     events: {
-      "click .question": "selectQuestion",
+      "click .question-title": "selectQuestion",
       "click .answer": "selectAnswer",
       "click .clear": "reset",
-      "click .close": "close",
+      "click .close-settings": "close",
 
       "change #datefilter": "selectDate"
     },
@@ -211,7 +214,7 @@ define(function(require, exports, module) {
       if(this.filters.question) {
         // TODO: scope this search to less than the whole document
         var $question = $('div[data-question=' + this.filters.question + ']');
-        this.markQuestionSelected($question);
+        this.markQuestionSelected();
       }
       if(this.filters.answer) {
         // TODO: scope this search to less than the whole document
@@ -219,7 +222,7 @@ define(function(require, exports, module) {
                         this.filters.question +
                         '][data-answer=' +
                         this.filters.answer + ']');
-        this.markAnswerSelected($answer);
+        this.markAnswerSelected();
       }
 
       return this;
@@ -250,41 +253,42 @@ define(function(require, exports, module) {
       this.map.clearFilter();
 
       $('.question').removeClass('selected');
-      $('.answers .circle').removeClass('inactive');
+      $('.answer').removeClass('inactive');
 
       // Clear out the sidebar
       this.updateSidebar();
     },
 
-    // TODO: indicate filter selection/clearing through an event; move the
-    // rendering piece to the appropriate view.
+    // Display the selected question on the sidbar.
     updateSidebar: function() {
-      // Display the selected filter on the sidbar.
       if (!this.filters.question) {
         $('.selected-filters').html('');
         return;
       }
 
-      var question =  this.questions[this.filters.question].text;
-      var answer = '';
-      if (this.filters.answer) {
-        answer = _.findWhere(this.questions[this.filters.question].answers, { value: this.filters.answer }).text || '';
-      }
+      var question =  this.questions[this.filters.question];
 
-      var selectedFilters = this.selectedFiltersTemplate({
-        filters: {
-          question: question,
-          answer: answer
-        }
+      var legendView = new LegendView({
+        filters: this.filters,
+        category: question
       });
-      $('.selected-filters').html(selectedFilters);
+
+      this.$legend = legendView.render();
+
+      this.listenTo(legendView, 'filterReset', this.reset);
+      this.listenTo(legendView, 'questionSelected', this.selectQuestion);
+      this.listenTo(legendView, 'answerSelected', this.selectAnswer);
+
+      $('.selected-filters').html(this.$legend);
     },
 
-    markQuestionSelected: function($question) {
+    markQuestionSelected: function() {
       // Mark this filter as selected and show answers
       // First, clear out any selected questions
-      console.log("Marking question selected", $question);
       $('.filters .question').removeClass('selected');
+      $('.answer').removeClass('inactive');
+
+      var $question = $('div.question[data-question=' + this.filters.question + ']');
 
       // Then, add the selected class to this question
       $question.addClass('selected');
@@ -292,31 +296,19 @@ define(function(require, exports, module) {
       this.updateSidebar();
     },
 
-    markAnswerSelected: function($answer) {
-      // Make sure we have the right question selected
-      this.filters.question = $answer.attr('data-question');
-      var $question = $('div.question[data-question=' + this.filters.question + ']');
-      this.markQuestionSelected($question);
-
-      if(!this.filters.answer) {
-        // $answer = $answer.parent();
-        this.filters.answer = $answer.attr('data-answer');
-      }
-
+    markAnswerSelected: function() {
       // Remove the "selected" class from any of the circles.
-      $('.answers .circle').removeClass('selected');
-      $('.answers .circle').addClass('inactive');
+      $('.answer').addClass('inactive');
 
-      // Mark the circle as selected
-      $answer.find('.circle').addClass('selected');
-      $answer.find('.circle').removeClass('inactive');
+      var $question = $('div.question[data-question=' + this.filters.question + ']');
+      var $answer = $question.find('div.answer[data-answer="' + this.filters.answer + '"]');
+
+      $answer.removeClass('inactive');
 
       // Color the responses on the map
       this.map.setFilter(this.filters.question, this.filters.answer);
 
       this.updateSidebar();
-
-      console.log("Selected answer", $answer, this.filters.answer);
     },
 
     selectQuestion: function(event) {
@@ -327,20 +319,15 @@ define(function(require, exports, module) {
         question = $question.attr('data-question');
       }
 
-      // Don't double select the question.
-      if (this.filters.question === question) {
-        return;
-      }
-
       // Clear out any existing filters
       if(this.filters.answer) {
-        this.reset();
+        delete this.filters.answer;
       }
 
       // Record the filter
       this.filters.question = question;
 
-      this.markQuestionSelected($question);
+      this.markQuestionSelected();
 
       // Color the responses on the map
       this.map.setFilter(question);

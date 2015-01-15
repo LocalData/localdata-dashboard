@@ -43,10 +43,14 @@
 @import "shared/buttons";
 @import "shared/navigation";
 
+/* Third-party libraries ---------------------------------------------------- */
+@import "components/lib/c3.scss";
+
 /* Components specific to the dashboard ------------------------------------- */
 @import "components/header";
 @import "components/surveys";
 @import "components/filters";
+@import "components/projects";
 //@import "components/settings";
 
 /* Factoids ----------------------------------------------------------------- */
@@ -108,21 +112,34 @@
   position: absolute;
   left: 0px;
   top: 0px;
-  padding: 20px;
+  padding: 20px 20px 10px 20px;
   background: white;
-  max-width: 300px;
-  height: 100%;
-  opacity: 0.9;
+  width: 340px;
+
+  button {
+    display: block;
+  }
+  button.address-search-button {
+    display: inline-block;
+  }
+
+  form {
+    margin-bottom: 11px;
+  }
 }
 
 #map-tools {
+  background: #fff;
+  right: 70px;
+  top: 10px;
+
   input[type=text] {
     display: inline;
     margin-bottom: 0;
   }
 
   button {
-    margin-bottom: 5px;
+    margin: 0;
   }
 }
 
