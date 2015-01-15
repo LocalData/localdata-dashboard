@@ -15,6 +15,7 @@ define(function (require) {
   var addTopQuestionTemplate = require('text!templates/surveys/editor/add-top-question.html');
   var photoQuestionTemplate = require('text!templates/surveys/editor/photo-question.html');
   var textQuestionTemplate = require('text!templates/surveys/editor/text-question.html');
+  var counterQuestionTemplate = require('text!templates/surveys/editor/counter-question.html');
   var multipleChoiceTemplate = require('text!templates/surveys/editor/multiple-choice.html');
   var answerTemplate = require('text!templates/surveys/editor/answer.html');
   var Form = require('models/forms');
@@ -36,6 +37,7 @@ define(function (require) {
       question: _.template(multipleChoiceTemplate),
       photoQuestion: _.template(photoQuestionTemplate),
       textQuestion: _.template(textQuestionTemplate),
+      counterQuestion: _.template(counterQuestionTemplate),
       answer: _.template(answerTemplate)
     },
 
@@ -207,6 +209,11 @@ define(function (require) {
         question.type = 'text';
         delete question.answers;
       }
+
+      if (dataRole === 'counter-question') {
+        question.type = 'counter';
+        delete question.answers;
+      }
     },
 
     deleteQuestion: function($question, parent, questionIndex) {
@@ -365,6 +372,9 @@ define(function (require) {
       }
       if(question.type === 'text') {
         $question = $(this.templates.textQuestion({question: question}));
+      }
+      if(question.type === 'counter') {
+        $question = $(this.templates.counterQuestion({question: question}));
       }
 
       // Listen for changes to the question ...................................
