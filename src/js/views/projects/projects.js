@@ -666,8 +666,8 @@ define(function(require, exports, module) {
               styles: '@high: #88419d;@medium: #8c96c6;@low: #b3cde3;@vlow: #edf8fb;\n' +
               'Map { background-color: rgba(0,0,0,0); }\n' +
               '#localdata{\n' +
-              'marker-line-width: 1; marker-width: 16; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
-              '[zoom > 14] { marker-line-width: 4; marker-width: 15; }\n' +
+              'marker-line-width: 1; marker-width: 10; marker-fill-opacity: 0.9; marker-line-opacity: 1;\n' +
+              '[zoom >= 16] { marker-line-width: 2; marker-width: 15; }\n' +
               '}\n' +
               '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section">=15]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
               '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=45]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
@@ -712,8 +712,8 @@ define(function(require, exports, module) {
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=105]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=135]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
                 '{marker-type: ellipse; marker-line-color: @high; marker-fill: @high;' +
-                'marker-line-width: 1; marker-width: 16; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
-                '[zoom > 14] { marker-line-width: 4; marker-width: 15; }\n' +
+                'marker-line-width: 1; marker-width: 10; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
+                '[zoom >= 16] { marker-line-width: 2; marker-width: 15; }\n' +
                 '}\n'
               }
             }, {
@@ -734,8 +734,8 @@ define(function(require, exports, module) {
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=70]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<105]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=90]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<135]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
                 '{marker-type: ellipse; marker-line-color: @medium; marker-fill: @medium;' +
-                'marker-line-width: 1; marker-width: 16; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
-                '[zoom > 14] { marker-line-width: 4; marker-width: 15; }\n' +
+                'marker-line-width: 1; marker-width: 10; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
+                '[zoom >= 16] { marker-line-width: 2; marker-width: 15; }\n' +
                 '}\n'
               }
             }, {
@@ -756,8 +756,8 @@ define(function(require, exports, module) {
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=53]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<70]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=68]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<90]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
                 '{marker-type: ellipse; marker-line-color: @low; marker-fill: @low;' +
-                'marker-line-width: 1; marker-width: 16; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
-                '[zoom > 14] { marker-line-width: 4; marker-width: 15; }\n' +
+                'marker-line-width: 1; marker-width: 10; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
+                '[zoom >= 16] { marker-line-width: 2; marker-width: 15; }\n' +
                 '}\n'
               }
             }, {
@@ -778,8 +778,8 @@ define(function(require, exports, module) {
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<53]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<68]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
                 '{marker-type: ellipse; marker-line-color: @vlow; marker-fill: @vlow;' +
-                'marker-line-width: 1; marker-width: 16; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
-                '[zoom > 14] { marker-line-width: 4; marker-width: 15; }\n' +
+                'marker-line-width: 1; marker-width: 10; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
+                '[zoom >= 16] { marker-line-width: 2; marker-width: 15; }\n' +
                 '}\n'
               }
             }]
