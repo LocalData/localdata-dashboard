@@ -196,6 +196,11 @@ define(function (require) {
           noIndex = index;
           return;
         } else if (!stats[value.name]) {
+          // If a question is not present in the stats, then there were no
+          // entries for question.
+          question.values[index].count = 0;
+          question.values[index].prettyCount = 0;
+          question.values[index].percent = 0;
           return;
         }
         question.values[index].count = stats[value.name];
