@@ -342,7 +342,7 @@ define(function(require, exports, module) {
             question: 'How-would-you-rate-the-pedestrian-environment-overall-1-5-5highest',
             values: ['5', '4', '3', '2', '1'],
             valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
-            colors: ['#4dac26', '#b8e186', '#fde0ef', '#f1b6da', '#d01c8b']
+            colors: ['#05A17D', '#8BB272', '#ead02b', '#ef8e3a', '#e94027']
           }),
           makeBasicExploration({
             name: 'Sidewalk Type',
@@ -361,7 +361,7 @@ define(function(require, exports, module) {
                          'Less than 5 feet detached',
                          '5 feet or more detached',
                          'Other'],
-            colors: ['#d73027', '#fc8d59', '#fee08b', '#d9ef8b', '#91cf60', '#1a9850', '#b7aba5']
+            colors: ['#e94027', '#ec6d39', '#CF9F15', '#ABB070', '#9ec74c', '#04b485', '#b7aba5']
           }),
           makeCheckboxExploration({
             name: 'Sidewalk obstructions',
@@ -369,7 +369,7 @@ define(function(require, exports, module) {
             predicate: ['What-would-you-like-to-record', 'Sidewalk-Quality'],
             values: ['yes', 'no'],
             valueNames: ['Yes', 'No'],
-            colors: ['#c51b7d', '#4d9221']
+            colors: ['#e64212', '#78706d']
           }),
           makeCheckboxExploration({
             name: 'Significantly cracked or uneven sidewalks',
@@ -377,7 +377,7 @@ define(function(require, exports, module) {
             predicate: ['What-would-you-like-to-record', 'Sidewalk-Quality'],
             values: ['yes', 'no'],
             valueNames: ['Significantly cracked/uneven', 'No significant issue'],
-            colors: ['#c51b7d', '#4d9221']
+            colors: ['#e64212', '#78706d']
           }),
           makeCheckboxExploration({
             name: 'Other sidewalk issues',
@@ -385,7 +385,7 @@ define(function(require, exports, module) {
             predicate: ['What-would-you-like-to-record', 'Sidewalk-Quality'],
             values: ['yes', 'no'],
             valueNames: ['Yes', 'No'],
-            colors: ['#c51b7d', '#4d9221']
+            colors: ['#e64212', '#78706d']
           }),
           makeCheckboxExploration({
             name: 'Unsafe due to poor visibility/lighting',
@@ -393,7 +393,7 @@ define(function(require, exports, module) {
             predicate: ['What-would-you-like-to-record', 'Sidewalk-Quality'],
             values: ['yes', 'no'],
             valueNames: ['Yes', 'No'],
-            colors: ['#c51b7d', '#4d9221']
+            colors: ['#e64212', '#78706d']
           }),
           makeCheckboxExploration({
             name: 'Unsafe due to traffic speed/volume',
@@ -401,7 +401,7 @@ define(function(require, exports, module) {
             predicate: ['What-would-you-like-to-record', 'Sidewalk-Quality'],
             values: ['yes', 'no'],
             valueNames: ['Yes', 'No'],
-            colors: ['#c51b7d', '#4d9221']
+            colors: ['#e64212', '#78706d']
           }),
           makeCheckboxExploration({
             name: 'Other safety concerns',
@@ -409,14 +409,14 @@ define(function(require, exports, module) {
             predicate: ['What-would-you-like-to-record', 'Sidewalk-Quality'],
             values: ['yes', 'no'],
             valueNames: ['Yes', 'No'],
-            colors: ['#c51b7d', '#4d9221']
+            colors: ['#e64212', '#78706d']
           }),
           makeBasicExploration({
             name: 'Unsafe due to traffic speed/volume',
             question: 'Do-you-feel-unsafe-because-of-a-high-volume-or-high-speed-traffic',
             values: ['Yes', 'No'],
             valueNames: ['Unsafe', 'No significant issue'],
-            colors: ['#c51b7d', '#4d9221']
+            colors: ['#e64212', '#78706d']
           }), {
             name: 'Photos',
             layer: {
@@ -465,21 +465,21 @@ define(function(require, exports, module) {
             question: 'How-would-you-rate-the-pedestrian-environment-1-5-5highest',
             values: ['5', '4', '3', '2', '1'],
             valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
-            colors: ['#4dac26', '#b8e186', '#fde0ef', '#f1b6da', '#d01c8b']
+            colors: ['#05A17D', '#8BB272', '#ead02b', '#ef8e3a', '#e94027']
           }),
           makeBasicExploration({
             name: 'Lanes to cross',
             question: 'How-many-lanes-are-there-to-cross',
             values: ['1', '2', '3', '4', '5', '6', '7-or-more'],
             valueNames: ['1', '2', '3', '4', '5', '6', '7 or more'],
-            colors: ['#4d9221', '#a1d76a', '#e6f5d0', '#f7f7f7', '#fde0ef', '#e9a3c9', '#c51b7d']
+            colors: ['#04b485', '#9ec74c', '#ABB070', '#e5de0d', '#CF9F15', '#ec6d39', '#e94027']
           }),
           makeBasicExploration({
             name: 'Painted crosswalks',
             question: 'Are-there-painted-crosswalks',
             values: ['Yes-for-all-crossing-directions', 'Yes-for-some-crossing-directions', 'No'],
             valueNames: ['All crossing directions', 'Some crossing directions', 'No crosswalks'],
-            colors: ['#4dac26', '#fde0ef', '#d01c8b']
+            colors: ['#04b485', '#e5de0d', '#e94027']
           }),
           makeCheckboxExploration({
             name: 'Median islands',
@@ -487,7 +487,7 @@ define(function(require, exports, module) {
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
             values: ['yes', 'no'],
             valueNames: ['Yes', 'No'],
-            colors: ['#4d9221', '#c51b7d']
+            colors: ['#0eb308', '#78706d']
           }),
           makeCheckboxExploration({
             name: 'Bulb-outs',
@@ -495,7 +495,7 @@ define(function(require, exports, module) {
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
             values: ['yes', 'no'],
             valueNames: ['Yes', 'No'],
-            colors: ['#4d9221', '#c51b7d']
+            colors: ['#0eb308', '#78706d']
           }),
           makeCheckboxExploration({
             name: 'Accessible curb ramps',
@@ -503,7 +503,7 @@ define(function(require, exports, module) {
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
             values: ['yes', 'no'],
             valueNames: ['Yes', 'No'],
-            colors: ['#4d9221', '#c51b7d']
+            colors: ['#0eb308', '#78706d']
           }),
           makeCheckboxExploration({
             name: 'Other pedestrian amenities',
@@ -511,7 +511,7 @@ define(function(require, exports, module) {
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
             values: ['yes', 'no'],
             valueNames: ['Yes', 'No'],
-            colors: ['#4d9221', '#c51b7d']
+            colors: ['#0eb308', '#78706d']
           }),
           makeCheckboxExploration({
             name: 'Traffic signals',
@@ -519,7 +519,7 @@ define(function(require, exports, module) {
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
             values: ['yes', 'no'],
             valueNames: ['Yes', 'No'],
-            colors: ['#4d9221', '#c51b7d']
+            colors: ['#0eb308', '#78706d']
           }),
           makeCheckboxExploration({
             name: 'Pedestrian signals',
@@ -527,7 +527,7 @@ define(function(require, exports, module) {
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
             values: ['yes', 'no'],
             valueNames: ['Yes', 'No'],
-            colors: ['#4d9221', '#c51b7d']
+            colors: ['#0eb308', '#78706d']
           }),
           makeBasicExploration({
             name: 'Stop signs',
@@ -537,7 +537,7 @@ define(function(require, exports, module) {
             question: 'How-many-stop-signs',
             values: ['All-way', '2-way', 'Other'],
             valueNames: ['All-way stop sign', 'Two-way stop sign', 'Other stop sign'],
-            colors: ['#1a9850', '#7570b3', '#386cb0'],
+            colors: ['#0eb308', '#7570b3', '#386cb0'],
             showNoResponse: true
           }),
           makeCheckboxExploration({
@@ -546,7 +546,7 @@ define(function(require, exports, module) {
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
             values: ['yes', 'no'],
             valueNames: ['Yes', 'No'],
-            colors: ['#4d9221', '#c51b7d']
+            colors: ['#0eb308', '#78706d']
           }),
           makeCheckboxExploration({
             name: 'Nice landscaping',
@@ -554,7 +554,7 @@ define(function(require, exports, module) {
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
             values: ['yes', 'no'],
             valueNames: ['Yes', 'No'],
-            colors: ['#4d9221', '#c51b7d']
+            colors: ['#0eb308', '#78706d']
           }),
           makeCheckboxExploration({
             name: 'Benches',
@@ -562,7 +562,7 @@ define(function(require, exports, module) {
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
             values: ['yes', 'no'],
             valueNames: ['Yes', 'No'],
-            colors: ['#4d9221', '#c51b7d']
+            colors: ['#0eb308', '#78706d']
           }),
           makeCheckboxExploration({
             name: 'Public art',
@@ -570,7 +570,7 @@ define(function(require, exports, module) {
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
             values: ['yes', 'no'],
             valueNames: ['Yes', 'No'],
-            colors: ['#4d9221', '#c51b7d']
+            colors: ['#0eb308', '#78706d']
           }),
           makeCheckboxExploration({
             name: 'Other pedestrian amenities',
@@ -578,7 +578,7 @@ define(function(require, exports, module) {
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
             values: ['yes', 'no'],
             valueNames: ['Yes', 'No'],
-            colors: ['#4d9221', '#c51b7d']
+            colors: ['#0eb308', '#78706d']
           }),
           makeCheckboxExploration({
             name: 'Drivers disobeying stop signs/traffic signals',
@@ -586,7 +586,7 @@ define(function(require, exports, module) {
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
             values: ['yes', 'no'],
             valueNames: ['Yes', 'No'],
-            colors: ['#c51b7d', '#4d9221']
+            colors: ['#e64212', '#78706d']
           }),
           makeCheckboxExploration({
             name: 'Drivers disobeying speed limit',
@@ -594,7 +594,7 @@ define(function(require, exports, module) {
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
             values: ['yes', 'no'],
             valueNames: ['Yes', 'No'],
-            colors: ['#c51b7d', '#4d9221']
+            colors: ['#e64212', '#78706d']
           }),
           makeCheckboxExploration({
             name: 'Drivers not yielding to pedestrians',
@@ -602,7 +602,7 @@ define(function(require, exports, module) {
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
             values: ['yes', 'no'],
             valueNames: ['Yes', 'No'],
-            colors: ['#c51b7d', '#4d9221']
+            colors: ['#e64212', '#78706d']
           }), {
           name: 'Photos',
           layer: {
@@ -651,7 +651,7 @@ define(function(require, exports, module) {
             question: 'How-would-you-rate-the-pedestrian-environment-overall-1-5-5-highest',
             values: ['5', '4', '3', '2', '1'],
             valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
-            colors: ['#4dac26', '#b8e186', '#fde0ef', '#f1b6da', '#d01c8b'],
+            colors: ['#05A17D', '#8BB272', '#ead02b', '#ef8e3a', '#e94027'],
             pointSize: 15
           }), {
             name: 'Pedestrian activity',
@@ -663,11 +663,11 @@ define(function(require, exports, module) {
                 'entries.responses.How-many-pedestrians-did-you-count-on-this-street-section': 1,
                 'entries.responses.How-long-did-you-observe-this-street-segment': 1
               },
-              styles: '@high: #88419d;@medium: #8c96c6;@low: #b3cde3;@vlow: #edf8fb;\n' +
+              styles: '@high: #4d004b;@medium: #8c6bb1;@low: #8c96c6;@vlow: #9ebcda;\n' +
               'Map { background-color: rgba(0,0,0,0); }\n' +
               '#localdata{\n' +
-              'marker-line-width: 1; marker-width: 16; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
-              '[zoom > 14] { marker-line-width: 4; marker-width: 15; }\n' +
+              'marker-line-width: 1; marker-width: 10; marker-fill-opacity: 0.9; marker-line-opacity: 1;\n' +
+              '[zoom >= 16] { marker-line-width: 2; marker-width: 15; }\n' +
               '}\n' +
               '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section">=15]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
               '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=45]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
@@ -696,7 +696,7 @@ define(function(require, exports, module) {
             },
             values: [{
               text: 'High',
-              color: '#88419d',
+              color: '#4d004b',
               layer: {
                 query: {
                   'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
@@ -705,19 +705,41 @@ define(function(require, exports, module) {
                   'entries.responses.How-many-pedestrians-did-you-count-on-this-street-section': 1,
                   'entries.responses.How-long-did-you-observe-this-street-segment': 1
                 },
-                styles: '@high: #88419d;\nMap { background-color: rgba(0,0,0,0); }\n' +
+                styles: '@high: #4d004b;\nMap { background-color: rgba(0,0,0,0); }\n' +
                 '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section">=15]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=45]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=75]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=105]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=135]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
                 '{marker-type: ellipse; marker-line-color: @high; marker-fill: @high;' +
-                'marker-line-width: 1; marker-width: 16; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
-                '[zoom > 14] { marker-line-width: 4; marker-width: 15; }\n' +
+                'marker-line-width: 1; marker-width: 10; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
+                '[zoom >= 16] { marker-line-width: 2; marker-width: 15; }\n' +
                 '}\n'
               }
             }, {
               text: 'Medium',
+              color: '#8c6bb1',
+              layer: {
+                query: {
+                  'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
+                },
+                select: {
+                  'entries.responses.How-many-pedestrians-did-you-count-on-this-street-section': 1,
+                  'entries.responses.How-long-did-you-observe-this-street-segment': 1
+                },
+                styles: '@medium: #8c6bb1;\nMap { background-color: rgba(0,0,0,0); }\n' +
+                '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section">=10]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<15]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
+                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=30]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<45]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
+                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=50]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<75]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
+                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=70]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<105]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
+                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=90]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<135]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
+                '{marker-type: ellipse; marker-line-color: @medium; marker-fill: @medium;' +
+                'marker-line-width: 1; marker-width: 10; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
+                '[zoom >= 16] { marker-line-width: 2; marker-width: 15; }\n' +
+                '}\n'
+              }
+            }, {
+              text: 'Low',
               color: '#8c96c6',
               layer: {
                 query: {
@@ -727,42 +749,20 @@ define(function(require, exports, module) {
                   'entries.responses.How-many-pedestrians-did-you-count-on-this-street-section': 1,
                   'entries.responses.How-long-did-you-observe-this-street-segment': 1
                 },
-                styles: '@medium: #8c96c6;\nMap { background-color: rgba(0,0,0,0); }\n' +
-                '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section">=10]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<15]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
-                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=30]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<45]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
-                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=50]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<75]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
-                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=70]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<105]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
-                '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=90]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<135]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
-                '{marker-type: ellipse; marker-line-color: @medium; marker-fill: @medium;' +
-                'marker-line-width: 1; marker-width: 16; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
-                '[zoom > 14] { marker-line-width: 4; marker-width: 15; }\n' +
-                '}\n'
-              }
-            }, {
-              text: 'Low',
-              color: '#b3cde3',
-              layer: {
-                query: {
-                  'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
-                },
-                select: {
-                  'entries.responses.How-many-pedestrians-did-you-count-on-this-street-section': 1,
-                  'entries.responses.How-long-did-you-observe-this-street-segment': 1
-                },
-                styles: '@low: #b3cde3;\nMap { background-color: rgba(0,0,0,0); }\n' +
+                styles: '@low: #8c96c6;\nMap { background-color: rgba(0,0,0,0); }\n' +
                 '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section">=8]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<10]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=23]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<30]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=38]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<50]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=53]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<70]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section">=68]["responses.How-many-pedestrians-did-you-count-on-this-street-section"<90]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
                 '{marker-type: ellipse; marker-line-color: @low; marker-fill: @low;' +
-                'marker-line-width: 1; marker-width: 16; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
-                '[zoom > 14] { marker-line-width: 4; marker-width: 15; }\n' +
+                'marker-line-width: 1; marker-width: 10; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
+                '[zoom >= 16] { marker-line-width: 2; marker-width: 15; }\n' +
                 '}\n'
               }
             }, {
               text: 'Very Low',
-              color: '#edf8fb',
+              color: '#9ebcda',
               layer: {
                 query: {
                   'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
@@ -771,15 +771,15 @@ define(function(require, exports, module) {
                   'entries.responses.How-many-pedestrians-did-you-count-on-this-street-section': 1,
                   'entries.responses.How-long-did-you-observe-this-street-segment': 1
                 },
-                styles: '@vlow: #edf8fb;\nMap { background-color: rgba(0,0,0,0); }\n' +
+                styles: '@vlow: #9ebcda;\nMap { background-color: rgba(0,0,0,0); }\n' +
                 '#localdata["responses.How-many-pedestrians-did-you-count-on-this-street-section"<8]["responses.How-long-did-you-observe-this-street-segment"="Less-than-15-minutes"],' +
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<23]["responses.How-long-did-you-observe-this-street-segment"="15-30-minutes"],' +
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<38]["responses.How-long-did-you-observe-this-street-segment"="30-45-minutes"],' +
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<53]["responses.How-long-did-you-observe-this-street-segment"="45-60-minutes"],' +
                 '["responses.How-many-pedestrians-did-you-count-on-this-street-section"<68]["responses.How-long-did-you-observe-this-street-segment"="more-than-60-minutes"]' +
                 '{marker-type: ellipse; marker-line-color: @vlow; marker-fill: @vlow;' +
-                'marker-line-width: 1; marker-width: 16; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
-                '[zoom > 14] { marker-line-width: 4; marker-width: 15; }\n' +
+                'marker-line-width: 1; marker-width: 10; marker-fill-opacity: 0.6; marker-line-opacity: 1;\n' +
+                '[zoom >= 16] { marker-line-width: 2; marker-width: 15; }\n' +
                 '}\n'
               }
             }]
@@ -789,7 +789,7 @@ define(function(require, exports, module) {
             question: 'How-long-did-you-observe-this-street-segment',
             values: ['Less-than-15-minutes', '15-30-minutes', '30-45-minutes', '45-60-minutes', 'more-than-60-minutes'],
             valueNames: ['Less than 15 minutes', '15-30 minutes', '30-45 minutes', '45-60 minutes', 'More than 60 minutes'],
-            colors: ['#edf8fb', '#b3cde3', '#8c96c6', '#8856a7', '#810f7c'],
+            colors: ['#9ebcda', '#8c96c6', '#8c6bb1', '#88419d', '#6e016b'],
             pointSize: 15
           }),
           makeBasicExploration({

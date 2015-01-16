@@ -3,10 +3,16 @@ Map { background-color: rgba(0,0,0,0); }
   [GEOMETRY = LineString] {
     line-width: 2;
     [zoom >= 15] {
-      line-width: 4;
+      line-width: 5;
+    }
+    [zoom >= 16] {
+      line-width: 7;
+    }
+    [zoom >= 18] {
+      line-width: 9;
     }
     line-color: <%= color %>;
-    line-opacity: 0.85;
+    line-opacity: 1;
   }
   [GEOMETRY = Polygon],[GEOMETRY = MultiPolygon] {
     [zoom >= 14] {
