@@ -1,16 +1,22 @@
 Map {
 background-color: rgba(0,0,0,0);
 }
- 
+
 <% if (showNoResponse) { %>
 #localdata {
   [GEOMETRY = LineString],[GEOMETRY = MultiLineString] {
     line-width: 2;
     [zoom >= 15] {
-      line-width: 4;
+      line-width: 5;
+    }
+    [zoom >= 16] {
+      line-width: 7;
+    }
+    [zoom >= 18] {
+      line-width: 9;
     }
     line-color: #b7aba5;
-    line-opacity: 0.85;
+    line-opacity: 1;
   }
   [GEOMETRY = Polygon],[GEOMETRY = MultiPolygon] {
     [zoom >= 14] {
@@ -36,17 +42,23 @@ background-color: rgba(0,0,0,0);
   }
 }
 <% } %>
- 
+
 <% for (var i = 0; i < pairs.length; i++) { %>
 <% var pair = pairs[i]; %>
 #localdata['<%= pair.key %>'='<%= pair.value %>'] {
   [GEOMETRY = LineString],[GEOMETRY = MultiLineString] {
     line-width: 2;
     [zoom >= 15] {
-      line-width: 4;
+      line-width: 5;
+    }
+    [zoom >= 16] {
+      line-width: 7;
+    }
+    [zoom >= 18] {
+      line-width: 9;
     }
     line-color: <%= pair.color %>;
-    line-opacity: 0.85;
+    line-opacity: 1;
   }
   [GEOMETRY = Polygon],[GEOMETRY = MultiPolygon] {
     [zoom >= 14] {
