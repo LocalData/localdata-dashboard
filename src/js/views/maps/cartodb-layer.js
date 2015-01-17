@@ -108,7 +108,7 @@ define(function (require, exports, module) {
         });
 
         if (this.state === 'active') {
-          self.mapView.addGridLayer(this.gridLayer);
+          self.mapView.addGridLayer(this.gridLayer, true);
         }
 
         this.gridLayer.on('click', self.handleGridClick, self);
@@ -157,7 +157,7 @@ define(function (require, exports, module) {
         this.mapView.addTileLayer(this.tileLayer);
 
         if(this.gridLayer) {
-          this.mapView.addGridLayer(this.gridLayer);
+          this.mapView.addGridLayer(this.gridLayer, true);
         }
 
         this.$el.removeClass('legend-inactive');

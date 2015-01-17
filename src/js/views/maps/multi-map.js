@@ -75,12 +75,12 @@ define(function(require, exports, module) {
       this.map.removeLayer(layer);
     },
 
-    addGridLayer: function (layer) {
+    addGridLayer: function (layer, alwaysAddGrid) {
       // Make sure the grid layer is on top.
-      if (this.map.getZoom() >= MIN_GRID_ZOOM) {
-
+      if (alwaysAddGrid) {
         this.map.addLayer(layer);
-        // layer.on('click', this.selectObject);
+      } else if (this.map.getZoom() >= MIN_GRID_ZOOM) {
+        this.map.addLayer(layer);
       }
     },
 
