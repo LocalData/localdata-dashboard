@@ -25,6 +25,8 @@ define(function (require) {
   var SettingsView = require('views/projects/datalayers/survey/settings-survey');
   var StatsView = require('views/projects/datalayers/survey/stats-survey');
   var ExportView = require('views/export');
+  var LegendView = require('views/surveys/legend');
+
 
   // Templates
   var template = require('text!templates/projects/layerControl.html');
@@ -312,8 +314,7 @@ define(function (require) {
       });
 
       this.listenTo(this.settings, 'filterSet', this.changeFilter);
-      this.listenTo(this.settings, 'legendSet', this.changeLegend);
-      this.listenTo(this.settings, 'legendRemoved', this.removeLegend);
+      this.listenTo(this.settings, 'updated', this.changeLegend);
 
       var $el = this.settings.render();
       this.$settings = $el;
@@ -350,21 +351,19 @@ define(function (require) {
     },
 
     changeFilter: function(filter) {
-      console.log("Got filter", filter);
+      // Assume this activates the layer
+      this.state = 'active';
+
       this.getTileJSON(filter);
-
-      // Set up the legend
-      // this.$el.find('.legend').html($legend);
     },
 
-    removeLegend: function() {
-      this.$el.find('.legend').empty();
-      this.$el.addClass('legend-inactive');
-    },
-
-    changeLegend: function($legend) {
-      this.$el.removeClass('legend-inactive');
-      this.$el.find('.legend').empty().append($legend);
+    changeLegend: function(options) {
+      this.legendView.setFilters(options.filters);
+      this.legendView.setCategory(options.category);
+      if (options.category) {
+        this.$el.removeClass('legend-inactive');
+      }
+      this.legendView.render();
     },
 
     getForms: function() {
@@ -396,10 +395,24 @@ define(function (require) {
         this.$el.addClass('legend-inactive');
       }
 
+      this.legendView = new LegendView({
+        el: this.$('.legend'),
+        filters: {},
+        category: null
+      });
+      this.legendView.render();
+
       this.trigger('rendered', this.$el);
 
       this.setupStats();
       this.setupSettings();
+
+      // TODO: Remove these inter-View event bindings when we turn the filter
+      // state into a Model.
+      this.legendView.on('answerSelected', this.settings.selectAnswer, this.settings);
+      this.legendView.on('questionSelected', this.settings.selectQuestion, this.settings);
+      this.legendView.on('filterReset', this.settings.reset, this.settings);
+
       return this.$el;
     }
   });

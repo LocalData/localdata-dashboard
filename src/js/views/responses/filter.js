@@ -15,9 +15,6 @@ define(function(require, exports, module) {
   // Models
   var Stats = require('models/stats');
 
-  // Views
-  var LegendView = require('views/surveys/legend');
-
   // Templates
   var template = require('text!templates/filters/filters.html');
   var questionFiltersTemplate = require('text!templates/filters/question-filters.html');
@@ -261,25 +258,15 @@ define(function(require, exports, module) {
 
     // Display the selected question on the sidbar.
     updateSidebar: function() {
-      if (!this.filters.question) {
-        $('.selected-filters').html('');
-        return;
+      var question;
+      if (this.filters.question) {
+        question = this.questions[this.filters.question];
       }
 
-      var question =  this.questions[this.filters.question];
-
-      var legendView = new LegendView({
-        filters: this.filters,
-        category: question
+      this.trigger('updated', {
+        category: question,
+        filters: this.filters
       });
-
-      this.$legend = legendView.render();
-
-      this.listenTo(legendView, 'filterReset', this.reset);
-      this.listenTo(legendView, 'questionSelected', this.selectQuestion);
-      this.listenTo(legendView, 'answerSelected', this.selectAnswer);
-
-      $('.selected-filters').html(this.$legend);
     },
 
     markQuestionSelected: function() {

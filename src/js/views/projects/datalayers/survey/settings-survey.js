@@ -11,9 +11,6 @@ define(function (require) {
   // LocalData
   var settings = require('settings');
 
-  // Views
-  var LegendView = require('views/surveys/legend');
-
   // Templates
   var template = require('text!templates/projects/surveys/settings-survey.html');
   var loadingTemplate = require('text!templates/filters/loading.html');
@@ -49,6 +46,7 @@ define(function (require) {
       this.forms = options.forms;
       this.stats = options.stats;
       this.exploration = options.exploration;
+      this.filters = {};
     },
 
     close: function() {
@@ -57,37 +55,26 @@ define(function (require) {
 
     render: function() {
       var context = {
-        categories: this.exploration
+        categories: this.exploration,
+        filters: this.filters
       };
+      console.log("Rendering filter with context", context);
       this.$el.html(this.template(context));
       return this.$el;
     },
 
-    generateLegend: function () {
-      console.log("Filter set", this.filters);
+    updateLegend: function () {
+      console.log("Filter set, updating legend", this.filters);
       var category;
       if (this.filters.question) {
         category = _.find(this.exploration, { name: this.filters.question });
       }
 
-      if (!category) {
-        this.$legend = null;
-        this.trigger('legendRemoved');
-      } else {
-
-        var legendView = new LegendView({
-          filters: this.filters,
-          category: category
-        });
-
-        this.$legend = legendView.render();
-
-        this.listenTo(legendView, 'filterReset', this.reset);
-        this.listenTo(legendView, 'questionSelected', this.selectQuestion);
-        this.listenTo(legendView, 'answerSelected', this.selectAnswer);
-
-        this.trigger('legendSet', this.$legend);
-      }
+      this.trigger('updated', {
+        category: category,
+        filters: this.filters
+      });
+      return;
     },
 
     showOptions: function(event) {
@@ -103,6 +90,8 @@ define(function (require) {
         event.preventDefault();
       }
 
+      console.log("Resetting in survey settings");
+
       // Reset to the original filters, or none
       if (this.originalFilter) {
         this.filters = this.originalFilter;
@@ -117,7 +106,7 @@ define(function (require) {
       $('.filters .answer').removeClass('active');
       $('.filters .answer').removeClass('inactive');
 
-      this.generateLegend();
+      this.updateLegend();
       this.close();
     },
 
@@ -151,7 +140,8 @@ define(function (require) {
 
       this.trigger('filterSet', this.filters);
 
-      this.generateLegend();
+      this.updateLegend();
+      this.render();
 
       this.close();
     },
@@ -161,32 +151,28 @@ define(function (require) {
      */
     selectAnswer: function(event) {
       var $answer = $(event.target);
-      this.filters.answer = $answer.attr('data-answer');
-
-      // Make sure we have the right question selected
-      this.filters.question = $answer.attr('data-question');
-      var $question = $('div[data-question="' + this.filters.question + '"]');
-
-      if(!this.filters.answer) {
+      var answer = $answer.attr('data-answer');
+      var question = $answer.attr('data-question');
+      if(!answer) {
         $answer = $answer.parent();
-        this.filters.answer = $answer.attr('data-answer');
-      }
+        answer = $answer.attr('data-answer');
+        question = $answer.attr('data-question');
 
-      // We're manipulating the answer styling in both the legend and the
-      // survey-layer settings box, so we need to find both answer elements.
-      // TODO: This is a hack. We should probably factor the legend out into
-      // its own view and let it manage its own styling. The legend and
-      // settings views can both listen to the appropriate events. The current
-      // technique is bound to interfere with other layers that have
-      // coincidentally-named questions/answers.
-      $answer = $('span[data-question="' + this.filters.question + '"][data-answer="' + this.filters.answer + '"]');
+        // Handle an edge case with a phantom click
+        if (!answer) {
+          return;
+        }
+      }
+      this.filters.answer = answer;
+
+      var $question = this.$el.find('.question[data-question="' + question + '"]');
+      $question.find('.answer').addClass('inactive');
+      $answer.removeClass('inactive');
 
       this.trigger('filterSet', this.filters);
 
-      $question.find('.answer').addClass('inactive');
-      $question.find('.answer').removeClass('active');
-      $answer.addClass('active');
-      $answer.removeClass('inactive');
+      // Generate the legend
+      this.updateLegend();
     },
 
     /**
