@@ -101,10 +101,10 @@ define(function (require) {
 
       this.trigger('filterSet', this.filters);
 
-      $('.filters .clear').slideUp(DURATION);
-      $('.filters .options .answers').slideUp(DURATION);
-      $('.filters .answer').removeClass('active');
-      $('.filters .answer').removeClass('inactive');
+      this.$el.find('.filters .clear').slideUp(DURATION);
+      this.$el.find('.filters .options .answers').slideUp(DURATION);
+      this.$el.find('.filters .answer').removeClass('active');
+      this.$el.find('.filters .answer').removeClass('inactive');
 
       this.updateLegend();
       this.close();
@@ -132,9 +132,9 @@ define(function (require) {
       // TODO: The following slides operate on two different matches. One
       // seems to be hidden with a display:none, the other is a descendant of
       // this.$el, so we can scope the search.
-      $('.filters .options .answers').slideUp(DURATION);
+      this.$el.find('.filters .options .answers').slideUp(DURATION);
       $question.find('.answers').slideDown(DURATION);
-      $('.filters .clear').slideDown(DURATION);
+      this.$el.find('.filters .clear').slideDown(DURATION);
       $question.find('.toggle').slideUp(DURATION);
       $question.find('.answer').removeClass('inactive');
 
@@ -167,7 +167,7 @@ define(function (require) {
 
       var $question = this.$el.find('.question[data-question="' + question + '"]');
       $question.find('.answer').addClass('inactive');
-      $answer.removeClass('inactive');
+      $answer = this.$el.find('.answer[data-answer="' + answer + '"]').removeClass('inactive');
 
       this.trigger('filterSet', this.filters);
 
