@@ -22,6 +22,7 @@ define(function(require, exports, module) {
   var FilterView = require('views/responses/filter');
   var MapView = require('views/map');
   var CollectorStatsView = require('views/surveys/stats-collector');
+  var LegendView = require('views/surveys/legend');
 
   // Templates
   var mapListTemplate = require('text!templates/responses/map-list.html');
@@ -123,6 +124,19 @@ define(function(require, exports, module) {
         forms: this.forms,
         map: this.mapView
       }).render();
+      this.listenTo(this.filterView, 'updated', this.changeLegend);
+
+      this.legendView = new LegendView({
+        el: this.$('.selected-filters'),
+        filters: {},
+        category: null
+      }).render();
+
+      // TODO: Remove these inter-View event bindings when we turn the filter
+      // state into a Model.
+      this.legendView.on('answerSelected', this.filterView.selectAnswer, this.filterView);
+      this.legendView.on('questionSelected', this.filterView.selectQuestion, this.filterView);
+      this.legendView.on('filterReset', this.filterView.reset, this.filterView);
 
       // Listen for a change in map view size
       this.$el.on('transitionend', function(event) {
@@ -136,6 +150,15 @@ define(function(require, exports, module) {
         // Overview
         this.hideFilters();
       }
+    },
+
+    changeLegend: function (options) {
+      this.legendView.setFilters(options.filters);
+      this.legendView.setCategory(options.category);
+      if (options.category) {
+        this.$el.removeClass('legend-inactive');
+      }
+      this.legendView.render();
     },
 
     /**
@@ -387,6 +410,20 @@ define(function(require, exports, module) {
         forms: this.forms,
         map: this.mapView
       }).render();
+      this.listenTo(this.filterView, 'updated', this.changeLegend);
+
+      this.legendView = new LegendView({
+        el: this.$('.selected-filters'),
+        filters: {},
+        category: null
+      }).render();
+
+      // TODO: Remove these inter-View event bindings when we turn the filter
+      // state into a Model.
+      this.legendView.on('answerSelected', this.filterView.selectAnswer, this.filterView);
+      this.legendView.on('questionSelected', this.filterView.selectQuestion, this.filterView);
+      this.legendView.on('filterReset', this.filterView.reset, this.filterView);
+
 
       // Set up the response count view.
       this.countView = new ResponseCountView({
@@ -396,6 +433,15 @@ define(function(require, exports, module) {
 
       $('.factoid').addClass('small-factoid');
       this.$el.addClass('bigb');
+    },
+
+    changeLegend: function (options) {
+      this.legendView.setFilters(options.filters);
+      this.legendView.setCategory(options.category);
+      if (options.category) {
+        this.$el.removeClass('legend-inactive');
+      }
+      this.legendView.render();
     },
 
     search: function(event) {

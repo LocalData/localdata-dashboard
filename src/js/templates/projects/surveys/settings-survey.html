@@ -30,9 +30,11 @@
           </span>
           <span class="toggle"><i class="fa fa-angle-down"></i></span>
 
-          <div class="answers">
+          <div class="answers <% if(filters.question === category.name) { %> active <% } %>">
             <% _.each(category.values, function (value) {%>
-              <span class="answer" data-answer="<%- value.name %>" data-question="<%- category.name %>">
+              <span class="answer"
+                    data-answer="<%- value.name %>"
+                    data-question="<%- category.name %>">
                 <span class="circle" style="background-color: <%- value.color %>; border-color: <%- value.color %>;"></span>
                 <%- value.text %>
               </span>

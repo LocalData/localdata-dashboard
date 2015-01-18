@@ -45,6 +45,10 @@
       -o-transition: all 0.3s ease;
       -ms-transition: all 0.3s ease;
     }
+
+    .answers.active {
+      display: block;
+    }
   }
 
   h3 {
