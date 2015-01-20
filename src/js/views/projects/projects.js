@@ -164,18 +164,31 @@ define(function(require, exports, module) {
         styles: simpleStyles({color: '#a743c3'}),
         exploration: [
           makeBasicExploration({
+            name: 'Project Status',
+            question: 'What-stage-of-project-are-you-registering',
+            values: [
+              'An-idea-for-a-lot',
+              'A-project-that-has-been-implemented-'
+            ],
+            valueNames: [
+              'Idea',
+              'Implemented'
+            ],
+            colors: ['#d0274e', '#cddc29']
+          }),
+          makeBasicExploration({
             name: 'Project Type',
             question: 'Type-of-project',
             values: [
-              'Parkparklet',
+              'Park--Parklet',
               'Playspace',
-              'Rain-gardenbioswale',
-              'Flower-garden',
-              'Food-garden',
-              'Gateway-with-signage',
+              'Rain-Garden--Stormwater-Project',
+              'Flower-Garden',
+              'Food-Garden',
+              'Gateway-with-Signage',
               'Public-Art',
-              'TrailPathway',
-              'Greenwaywooded-lot'
+              'Trail--Pathway',
+              'Greenway--Wooded-Lot'
             ],
             valueNames: [
               'Park/parklet',
