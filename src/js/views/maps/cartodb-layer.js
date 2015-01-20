@@ -63,7 +63,7 @@ define(function (require, exports, module) {
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render');
+      _.bindAll(this, 'render', 'getCartoData', 'handleGridHover');
 
       this.mapView = options.mapView;
       this.dataQuery = options.layer.dataQuery;
@@ -112,6 +112,10 @@ define(function (require, exports, module) {
         }
 
         this.gridLayer.on('click', self.handleGridClick, self);
+
+        if (this.layerOptions.useMouseover) {
+          this.gridLayer.on('mouseover', self.handleGridHover, self);
+        }
 
       }.bind(this)).catch(function (error) {
         console.log('Failed to fetch cartodb map config', error);
@@ -164,6 +168,28 @@ define(function (require, exports, module) {
       }
     },
 
+    getCartoData: function(cartodb_id, done) {
+      Promise.resolve($.ajax({
+        url: 'https://localdata.cartodb.com/api/v2/sql',
+        type: 'GET',
+        dataType: 'jsonp',
+        data: {
+          q: _.template(this.dataQuery, { cartodb_id: cartodb_id })
+        }
+      })).then(done).catch(function (error) {
+        console.log('Error getting data from cartodb', error);
+      });
+    },
+
+    handleGridHover: function(event) {
+      this.getCartoData(event.data.cartodb_id, function(data) {
+        if (data.rows && data.rows.length > 0) {
+          var name = data.rows[0][this.layerOptions.humanReadableField];
+          console.log("Got hover name", name);
+        }
+      }.bind(this));
+    },
+
     handleGridClick: function (event) {
       if (!event.data) {
         return;
@@ -171,14 +197,7 @@ define(function (require, exports, module) {
 
       var self = this;
 
-      Promise.resolve($.ajax({
-        url: 'https://localdata.cartodb.com/api/v2/sql',
-        type: 'GET',
-        dataType: 'jsonp',
-        data: {
-          q: _.template(this.dataQuery, { cartodb_id: event.data.cartodb_id })
-        }
-      })).then(function (data) {
+      this.getCartoData(event.data.cartodb_id, function (data) {
         if (data.rows && data.rows.length > 0) {
           self.trigger('itemSelected', {
             view: new ItemView({
@@ -188,8 +207,6 @@ define(function (require, exports, module) {
             latlng: event.latlng
           });
         }
-      }).catch(function (error) {
-        console.log('Error getting data from cartodb', error);
       });
     }
   });
