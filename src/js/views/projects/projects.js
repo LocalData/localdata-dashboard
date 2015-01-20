@@ -322,6 +322,7 @@ define(function(require, exports, module) {
       center: [-104.9831330, 39.7589070],
       zoom: 16,
       commentsId: 'walkscope',
+      welcomeMessage: true, // Show a welcome popup using the description text.
       surveys: [{
         layerName: 'Sidewalk Quality Reports',
         layerId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
