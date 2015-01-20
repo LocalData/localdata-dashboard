@@ -116,7 +116,8 @@ define(function(require, exports, module) {
       var context = {
         name: this.project.name,
         description: this.project.description,
-        baselayers: this.project.foreignInteractive
+        baselayers: this.project.foreignInteractive,
+        welcomeMessage: this.project.welcomeMessage || false
       };
       this.$el.html(this.template(context));
 
