@@ -196,7 +196,7 @@ define(function (require) {
 
       if(this.mapView && this.state === 'active') {
         this.mapView.addTileLayer(this.tileLayer);
-        this.mapView.addGridLayer(this.gridLayer);
+        this.mapView.addGridLayer(this.gridLayer, true);
       }
     },
 
@@ -211,7 +211,7 @@ define(function (require) {
       } else if (this.state === 'inactive') {
         this.state = 'active';
         this.mapView.addTileLayer(this.tileLayer);
-        this.mapView.addGridLayer(this.gridLayer);
+        this.mapView.addGridLayer(this.gridLayer, true);
         // this.removeLegend();
         this.$el.removeClass('legend-inactive');
       }
