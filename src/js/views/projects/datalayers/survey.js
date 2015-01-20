@@ -158,10 +158,11 @@ define(function (require) {
       // tile server through the API.
       $.ajax({
         url: '/tiles/surveys/' + this.survey.get('id') + '/tile.json',
-        type: 'GET',
+        type: 'POST',
         dataType: 'json',
         cache: false,
-        data: { layerDefinition: JSON.stringify(data) }
+        contentType: 'application/json',
+        data: JSON.stringify(data)
       }).done(this.addTileLayer)
       .fail(function(jqXHR, textStatus, errorThrown) {
         console.log("Error fetching tilejson", jqXHR, textStatus, errorThrown);
