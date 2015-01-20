@@ -162,6 +162,9 @@ define(function(require, exports, module) {
         countPath: 'survey.responseCount',
         query: {},
         select: {},
+        filters: {
+          question: 'Project Type'
+        },
         styles: simpleStyles({color: '#a743c3'}),
         exploration: [
           makeBasicExploration({
