@@ -147,7 +147,7 @@ define(function(require, exports, module) {
       location: 'Pittsburgh, PA',
       center: [-79.995886, 40.440625],
       zoom: 13,
-      commentsId: 'ptxdev', // XXX
+      commentsId: 'lots2lovepgh',
       suppressStreetview: true,
       baselayer: '//a.tiles.mapbox.com/v3/matth.kmf6l3h1/{z}/{x}/{y}.png',
       // baselayer: 'http://c.tile.stamen.com/toner-lite/{z}/{x}/{y}.png', // toner-light
