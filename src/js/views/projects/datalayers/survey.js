@@ -86,6 +86,7 @@ define(function (require) {
       this.color = options.survey.color;
       this.exploration = options.survey.exploration;
       this.state = options.survey.state || 'active';
+      this.filters = options.survey.filters;
 
       this.mapView = options.mapView;
 
@@ -306,12 +307,18 @@ define(function (require) {
     },
 
     setupSettings: function() {
-      this.settings = new SettingsView({
+      var options = {
         survey: this.survey,
         forms: this.forms,
         stats: this.stats,
         exploration: this.exploration
-      });
+      };
+
+      if (this.filters) {
+        options.filters = this.filters;
+      }
+
+      this.settings = new SettingsView(options);
 
       this.listenTo(this.settings, 'filterSet', this.changeFilter);
       this.listenTo(this.settings, 'updated', this.changeLegend);

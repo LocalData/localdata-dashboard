@@ -146,10 +146,11 @@ define(function(require, exports, module) {
       description: '<p></p>',
       location: 'Pittsburgh, PA',
       center: [-79.995886, 40.440625],
-      zoom: 12,
+      zoom: 13,
       commentsId: 'ptxdev', // XXX
       suppressStreetview: true,
       baselayer: '//a.tiles.mapbox.com/v3/matth.kmf6l3h1/{z}/{x}/{y}.png',
+      // baselayer: 'http://c.tile.stamen.com/toner-lite/{z}/{x}/{y}.png', // toner-light
       surveys: [{
         layerName: 'Lots to Love Projects',
         layerId: 'fb6dbc30-7bd9-11e4-abaf-a39ffd5c50e6',
@@ -161,6 +162,9 @@ define(function(require, exports, module) {
         countPath: 'survey.responseCount',
         query: {},
         select: {},
+        filters: {
+          question: 'Project Type'
+        },
         styles: simpleStyles({color: '#cddc29'}),
         exploration: [
           makeBasicExploration({
@@ -243,7 +247,7 @@ define(function(require, exports, module) {
         {
           type: 'cartodb',
           layerName: 'Municipalities',
-          color: '#ffad00',
+          color: '#ff7a00',
           dataQuery: 'select * from pittsburgh_municipalities as _cartodbjs_alias',
           humanReadableField: 'municipalities',
           // fieldNames: {
@@ -258,7 +262,7 @@ define(function(require, exports, module) {
               type:'cartodb',
               options:{
                 sql: 'select * from pittsburgh_municipalities',
-                cartocss: "/** simple visualization */#pittsburgh_municipalities{  polygon-fill: #FF6600;  polygon-opacity: 0;  line-color: #ffad00;  line-width: 2.5;  line-opacity: 1;}#pittsburgh_municipalities::labels {  text-name: [label];  text-face-name: 'Open Sans Regular';  text-size: 12;  text-label-position-tolerance: 0;  text-fill: #45403e;  text-halo-fill: #FFF;  text-halo-radius: 1.5;  text-dy: -10;  text-allow-overlap: true;  text-placement: point;  text-placement-type: dummy; [label='Pittsburgh'] { text-size: 0; }}",
+                cartocss: "/** simple visualization */#pittsburgh_municipalities{  polygon-fill: #FF6600;  polygon-opacity: 0;  line-color: #ff7a00;  line-width: 2.5;  line-opacity: 1;}#pittsburgh_municipalities::labels {  text-name: [label];  text-face-name: 'Open Sans Regular';  text-size: 12;  text-label-position-tolerance: 0;  text-fill: #45403e;  text-halo-fill: #FFF;  text-halo-radius: 1.5;  text-dy: -10;  text-allow-overlap: true;  text-placement: point;  text-placement-type: dummy; [label='Pittsburgh'] { text-size: 0; }}",
                 cartocss_version: '2.1.1'
                 // interactivity: ['cartodb_id']
               }
@@ -301,7 +305,7 @@ define(function(require, exports, module) {
           type: 'cartodb',
           state: 'inactive',
           layerName: 'Pittsburgh Council Districts',
-          color: '#ffad00',
+          color: '#ffcf00',
           dataQuery: 'select * from pittsburgh_council_districts_2012 as _cartodbjs_alias',
           humanReadableField: 'council',
           // fieldNames: {
@@ -316,7 +320,7 @@ define(function(require, exports, module) {
               type:'cartodb',
               options:{
                 sql: 'select * from pittsburgh_council_districts_2012',
-                cartocss: "/** simple visualization */  #pittsburgh_council_districts_2012{   polygon-fill: #FF6600;   polygon-opacity: 0;   line-color: #ffad00;   line-width: 2.5;   line-opacity: 1; }  #pittsburgh_council_districts_2012::labels {   text-name: [council];   text-face-name: 'Open Sans Regular';   text-size: 16;   text-label-position-tolerance: 0;   text-fill: #45403e;   text-halo-fill: #FFF;   text-halo-radius: 2.5;   text-dy: -15;   text-allow-overlap: true;   text-placement: point;   text-placement-type: dummy; }",
+                cartocss: "/** simple visualization */  #pittsburgh_council_districts_2012{   polygon-fill: #FF6600;   polygon-opacity: 0;   line-color: #ffcf00;   line-width: 2.5;   line-opacity: 1; }  #pittsburgh_council_districts_2012::labels {   text-name: [council];   text-face-name: 'Open Sans Regular';   text-size: 16;   text-label-position-tolerance: 0;   text-fill: #45403e;   text-halo-fill: #FFF;   text-halo-radius: 2.5;   text-dy: -15;   text-allow-overlap: true;   text-placement: point;   text-placement-type: dummy; }",
                 cartocss_version: '2.1.1'
                 // interactivity: ['cartodb_id']
               }
