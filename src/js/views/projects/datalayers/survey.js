@@ -125,7 +125,7 @@ define(function (require) {
         }, options.survey.countPath));
 
         self.render();
-        self.getTileJSON();
+        self.getTileJSON(self.filters);
       });
 
       this.survey.fetch();
