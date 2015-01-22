@@ -7,8 +7,6 @@
 
     var c3_chart_fn, c3_chart_internal_fn;
 
-    console.log("INIT C3", window);
-
     function Chart(config) {
         var $$ = this.internal = new ChartInternal(this);
         $$.loadConfig(config);

@@ -113,6 +113,13 @@
   #map-tools {
     position: absolute;
     padding: 12px;
+
+    .tooltips {
+      div {
+        padding-top: 10px;
+        font-family: $bold;
+      }
+    }
   }
 
   #responses-list {

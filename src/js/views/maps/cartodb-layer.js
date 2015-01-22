@@ -13,6 +13,7 @@ define(function (require, exports, module) {
   var settings = require('settings');
 
   var infoTemplate = require('text!templates/cartodb-info.html');
+  var tooltipTemplate = require('text!templates/cartodb-tooltip.html');
   var template = require('text!templates/projects/layerControl.html');
 
 
@@ -54,6 +55,7 @@ define(function (require, exports, module) {
   // renders some summary data and reacts to models.
   module.exports = Backbone.View.extend({
     template: _.template(template),
+    tooltipTemplate: _.template(tooltipTemplate),
 
     state: 'active',
     className: 'layer',
@@ -115,6 +117,7 @@ define(function (require, exports, module) {
 
         if (this.layerOptions.useMouseover) {
           this.gridLayer.on('mouseover', self.handleGridHover, self);
+          this.gridLayer.on('mouseout', self.handleGridMouseout, self);
         }
 
       }.bind(this)).catch(function (error) {
@@ -155,6 +158,8 @@ define(function (require, exports, module) {
           this.mapView.removeGridLayer(this.gridLayer);
         }
 
+        this.hideTooltip();
+
         this.$el.addClass('legend-inactive');
       } else if (this.state === 'inactive') {
         this.state = 'active';
@@ -181,11 +186,30 @@ define(function (require, exports, module) {
       });
     },
 
+    hideTooltip: function() {
+      if (!this.$tooltip) { return; }
+      this.$tooltip.remove();
+      delete this.$tooltip;
+    },
+
+    showTooltip: function(name) {
+      if (this.$tooltip) {
+        this.$tooltip.html(name);
+      } else {
+        this.$tooltip = $(this.tooltipTemplate({ name: name}));
+        this.$tooltip.appendTo($('#map-tools .tooltips'));
+      }
+    },
+
+    handleGridMouseout: function() {
+      this.hideTooltip();
+    },
+
     handleGridHover: function(event) {
       this.getCartoData(event.data.cartodb_id, function(data) {
         if (data.rows && data.rows.length > 0) {
           var name = data.rows[0][this.layerOptions.humanReadableField];
-          console.log("Got hover name", name);
+          this.showTooltip(name);
         }
       }.bind(this));
     },

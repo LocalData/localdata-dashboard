@@ -248,7 +248,7 @@ define(function(require, exports, module) {
           type: 'cartodb',
           layerName: 'Municipalities',
           color: '#ff7a00',
-          dataQuery: 'select * from pittsburgh_municipalities as _cartodbjs_alias',
+          dataQuery: 'select * from pittsburgh_municipalities as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>',
           humanReadableField: 'label',
           useMouseover: true, // requires humanReadableField
           // fieldNames: {
@@ -263,7 +263,7 @@ define(function(require, exports, module) {
               type:'cartodb',
               options:{
                 sql: 'select * from pittsburgh_municipalities',
-                cartocss: "/** simple visualization */#pittsburgh_municipalities{  polygon-fill: #FF6600;  polygon-opacity: 0;  line-color: #ff7a00;  line-width: 2.5;  line-opacity: 1;}#pittsburgh_municipalities::labels {  text-name: [label];  text-face-name: 'Open Sans Regular';  text-size: 12;  text-label-position-tolerance: 0;  text-fill: #45403e;  text-halo-fill: #FFF;  text-halo-radius: 1.5;  text-dy: -10;  text-allow-overlap: true;  text-placement: point;  text-placement-type: dummy; [label='Pittsburgh'] { text-size: 0; }}",
+                cartocss: "/** simple visualization */#pittsburgh_municipalities{  polygon-fill: #FF6600;  polygon-opacity: 0;  line-color: #ff7a00;  line-width: 2.5;  line-opacity: 1;}",
                 cartocss_version: '2.1.1',
                 interactivity: ['cartodb_id']
               }
@@ -278,7 +278,7 @@ define(function(require, exports, module) {
           layerName: 'Pittsburgh Neighborhoods',
           state: 'inactive',
           color: '#ffad00',
-          dataQuery: 'select * from pittsburgh_neighborhoods as _cartodbjs_alias',
+          dataQuery: 'select * from pittsburgh_neighborhoods as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>',
           humanReadableField: 'neighborhood',
           useMouseover: true, // requires humanReadableField
           // fieldNames: {
@@ -288,12 +288,11 @@ define(function(require, exports, module) {
           config: {
             version: '1.0.1',
             stat_tag: '', // 'c8c949c0-7ce7-11e4-a232-0e853d047bba',
-            disableGrid: true,
             layers:[{
               type:'cartodb',
               options:{
                 sql: 'select * from pittsburgh_neighborhoods',
-                cartocss: "/** simple visualization */  #pittsburgh_neighborhoods{   polygon-fill: #FF6600;   polygon-opacity: 0;   line-color: #ffad00;   line-width: 2.5;   line-opacity: 1; }  #pittsburgh_neighborhoods::labels {   text-name: [neighborhood];   text-face-name: 'Open Sans Regular';   text-size: 18;   text-label-position-tolerance: 0;   text-fill: #45403e;   text-halo-fill: #FFF;   text-halo-radius: 1.5;   text-dy: -10;   text-allow-overlap: true;   text-placement: point;   text-placement-type: dummy; } ",
+                cartocss: "/** simple visualization */  #pittsburgh_neighborhoods{   polygon-fill: #FF6600;   polygon-opacity: 0;   line-color: #ffad00;   line-width: 2.5;   line-opacity: 1; }  ",
                 cartocss_version: '2.1.1',
                 interactivity: ['cartodb_id']
               }
@@ -308,8 +307,9 @@ define(function(require, exports, module) {
           state: 'inactive',
           layerName: 'Pittsburgh Council Districts',
           color: '#ffcf00',
-          dataQuery: 'select * from pittsburgh_council_districts_2012 as _cartodbjs_alias',
+          dataQuery: 'select * from pittsburgh_council_districts_2012 as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>',
           humanReadableField: 'council',
+          useMouseover: true, // requires humanReadableField
           // fieldNames: {
           //   usedesc: 'Use',
           //   propertyow: 'Property Owner'
@@ -317,14 +317,13 @@ define(function(require, exports, module) {
           config: {
             version: '1.0.1',
             stat_tag: '', // 'c8c949c0-7ce7-11e4-a232-0e853d047bba',
-            disableGrid: true,
             layers:[{
               type:'cartodb',
               options:{
                 sql: 'select * from pittsburgh_council_districts_2012',
-                cartocss: "/** simple visualization */  #pittsburgh_council_districts_2012{   polygon-fill: #FF6600;   polygon-opacity: 0;   line-color: #ffcf00;   line-width: 2.5;   line-opacity: 1; }  #pittsburgh_council_districts_2012::labels {   text-name: [council];   text-face-name: 'Open Sans Regular';   text-size: 16;   text-label-position-tolerance: 0;   text-fill: #45403e;   text-halo-fill: #FFF;   text-halo-radius: 2.5;   text-dy: -15;   text-allow-overlap: true;   text-placement: point;   text-placement-type: dummy; }",
-                cartocss_version: '2.1.1'
-                // interactivity: ['cartodb_id']
+                cartocss: "/** simple visualization */  #pittsburgh_council_districts_2012{   polygon-fill: #FF6600;   polygon-opacity: 0;   line-color: #ffcf00;   line-width: 2.5;   line-opacity: 1; } ",
+                cartocss_version: '2.1.1',
+                interactivity: ['cartodb_id']
               }
             }]
           },
