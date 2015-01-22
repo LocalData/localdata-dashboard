@@ -46,7 +46,7 @@ define(function (require) {
       this.forms = options.forms;
       this.stats = options.stats;
       this.exploration = options.exploration;
-      this.filters = {};
+      this.filters = options.filters || {};
     },
 
     close: function() {
@@ -58,7 +58,11 @@ define(function (require) {
         categories: this.exploration,
         filters: this.filters
       };
-      console.log("Rendering filter with context", context);
+
+      if (this.filters) {
+        this.updateLegend();
+      }
+
       this.$el.html(this.template(context));
       return this.$el;
     },
@@ -140,7 +144,6 @@ define(function (require) {
 
       this.trigger('filterSet', this.filters);
 
-      this.updateLegend();
       this.render();
 
       this.close();

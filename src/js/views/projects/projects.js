@@ -147,14 +147,14 @@ define(function(require, exports, module) {
       location: 'Pittsburgh, PA',
       center: [-79.995886, 40.440625],
       zoom: 13,
-      commentsId: 'ptxdev', // XXX
+      commentsId: 'lots2lovepgh',
       suppressStreetview: true,
       baselayer: '//a.tiles.mapbox.com/v3/matth.kmf6l3h1/{z}/{x}/{y}.png',
       // baselayer: 'http://c.tile.stamen.com/toner-lite/{z}/{x}/{y}.png', // toner-light
       surveys: [{
         layerName: 'Lots to Love Projects',
         layerId: 'fb6dbc30-7bd9-11e4-abaf-a39ffd5c50e6',
-        color: '#a743c3',
+        color: '#cddc29',
         options: {
           comments: true,
           anonymous: true
@@ -162,21 +162,37 @@ define(function(require, exports, module) {
         countPath: 'survey.responseCount',
         query: {},
         select: {},
-        styles: simpleStyles({color: '#a743c3'}),
+        filters: {
+          question: 'Project Type'
+        },
+        styles: simpleStyles({color: '#cddc29'}),
         exploration: [
           makeBasicExploration({
-            name: 'Project Type',
-            question: 'Type-of-project',
+            name: 'Project Status',
+            question: 'What-stage-of-project-are-you-registering',
             values: [
-              'Parkparklet',
+              'An-idea-for-a-lot',
+              'A-project-that-has-been-implemented-'
+            ],
+            valueNames: [
+              'Idea',
+              'Implemented'
+            ],
+            colors: ['#d0274e', '#cddc29']
+          }),
+          makeBasicExploration({
+            name: 'Project Type',
+            question: 'Type-of-Project',
+            values: [
+              'Park--Parklet',
               'Playspace',
-              'Rain-gardenbioswale',
-              'Flower-garden',
-              'Food-garden',
-              'Gateway-with-signage',
+              'Rain-Garden--Stormwater-Project',
+              'Flower-Garden',
+              'Food-Garden',
+              'Gateway-with-Signage',
               'Public-Art',
-              'TrailPathway',
-              'Greenwaywooded-lot'
+              'Trail--Pathway',
+              'Greenway--Wooded-Lot'
             ],
             valueNames: [
               'Park/parklet',
@@ -218,7 +234,7 @@ define(function(require, exports, module) {
               type:'cartodb',
               options:{
                 sql: 'select * from allegheny_assessed_parcels',
-                cartocss: '/** category visualization */ #allegheny_assessed_parcels { polygon-opacity: 0; line-color: #FFF; line-width: 1; line-opacity: 0.7; [zoom<15]{ line-width: 0;}}\n #allegheny_assessed_parcels[usecode!=100] { polygon-fill: #dddddd; }\n #allegheny_assessed_parcels[usecode=100] { polygon-fill: #101010; polygon-opacity: 0.6; }\n #allegheny_assessed_parcels { polygon-fill: #DDDDDD; }',
+                cartocss: '#allegheny_assessed_parcels {    polygon-opacity: 0;    line-color: #FFF;    line-width: 1;    line-opacity: 0.7;    [zoom<15]{ line-width: 0;} }   #allegheny_assessed_parcels[usecode=100] {    polygon-fill: #101010;    polygon-opacity: 0.6;  }  #allegheny_assessed_parcels[usecode=100][publicowne="C"], #allegheny_assessed_parcels[usecode=100][publicowne="E"], #allegheny_assessed_parcels[usecode=100][publicowne="H"], #allegheny_assessed_parcels[usecode=100][publicowne="R"], #allegheny_assessed_parcels[usecode=100][publicowne="S"], #allegheny_assessed_parcels[usecode=100][publicowne="U"], #allegheny_assessed_parcels[usecode=100][publicowne="A"] {     polygon-fill: #777777;   } ',
                 cartocss_version: '2.1.1',
                 interactivity: ['cartodb_id']
               }
@@ -325,6 +341,7 @@ define(function(require, exports, module) {
       center: [-104.9831330, 39.7589070],
       zoom: 16,
       commentsId: 'walkscope',
+      welcomeMessage: true, // Show a welcome popup using the description text.
       surveys: [{
         layerName: 'Sidewalk Quality Reports',
         layerId: 'ec7984d0-2719-11e4-b45c-5d65d83b39b6',
@@ -332,6 +349,9 @@ define(function(require, exports, module) {
         options: {
           comments: true,
           anonymous: true
+        },
+        filters: {
+          question: 'Overall Pedestrian Environment Rating'
         },
         countPath: 'stats.What-would-you-like-to-record.Sidewalk-Quality',
         query: {

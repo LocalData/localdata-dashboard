@@ -86,6 +86,7 @@ define(function (require) {
       this.color = options.survey.color;
       this.exploration = options.survey.exploration;
       this.state = options.survey.state || 'active';
+      this.filters = options.survey.filters;
 
       this.mapView = options.mapView;
 
@@ -124,7 +125,7 @@ define(function (require) {
         }, options.survey.countPath));
 
         self.render();
-        self.getTileJSON();
+        self.getTileJSON(self.filters);
       });
 
       this.survey.fetch();
@@ -157,10 +158,11 @@ define(function (require) {
       // tile server through the API.
       $.ajax({
         url: '/tiles/surveys/' + this.survey.get('id') + '/tile.json',
-        type: 'GET',
+        type: 'POST',
         dataType: 'json',
         cache: false,
-        data: { layerDefinition: JSON.stringify(data) }
+        contentType: 'application/json',
+        data: JSON.stringify(data)
       }).done(this.addTileLayer)
       .fail(function(jqXHR, textStatus, errorThrown) {
         console.log("Error fetching tilejson", jqXHR, textStatus, errorThrown);
@@ -195,7 +197,7 @@ define(function (require) {
 
       if(this.mapView && this.state === 'active') {
         this.mapView.addTileLayer(this.tileLayer);
-        this.mapView.addGridLayer(this.gridLayer);
+        this.mapView.addGridLayer(this.gridLayer, true);
       }
     },
 
@@ -210,7 +212,7 @@ define(function (require) {
       } else if (this.state === 'inactive') {
         this.state = 'active';
         this.mapView.addTileLayer(this.tileLayer);
-        this.mapView.addGridLayer(this.gridLayer);
+        this.mapView.addGridLayer(this.gridLayer, true);
         // this.removeLegend();
         this.$el.removeClass('legend-inactive');
       }
@@ -306,12 +308,18 @@ define(function (require) {
     },
 
     setupSettings: function() {
-      this.settings = new SettingsView({
+      var options = {
         survey: this.survey,
         forms: this.forms,
         stats: this.stats,
         exploration: this.exploration
-      });
+      };
+
+      if (this.filters) {
+        options.filters = this.filters;
+      }
+
+      this.settings = new SettingsView(options);
 
       this.listenTo(this.settings, 'filterSet', this.changeFilter);
       this.listenTo(this.settings, 'updated', this.changeLegend);
