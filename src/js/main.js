@@ -61,7 +61,7 @@ require.config({
 
 });
 
-require(['jquery', 'lib/lodash', 'loglevel', 'backbone', 'app', 'lib/bootstrap'],
+require(['jquery', 'lib/lodash', 'loglevel', 'backbone', 'app', 'lib/bootstrap', 'lib/jquery.cookie'],
         function ($, _, logLevel, Backbone, app) {
   'use strict';
 
