@@ -182,7 +182,7 @@ define(function(require, exports, module) {
           }),
           makeBasicExploration({
             name: 'Project Type',
-            question: 'Type-of-project',
+            question: 'Type-of-Project',
             values: [
               'Park--Parklet',
               'Playspace',
