@@ -348,6 +348,9 @@ define(function(require, exports, module) {
           comments: true,
           anonymous: true
         },
+        filters: {
+          question: 'Overall Pedestrian Environment Rating'
+        },
         countPath: 'stats.What-would-you-like-to-record.Sidewalk-Quality',
         query: {
           'entries.responses.What-would-you-like-to-record': 'Sidewalk-Quality'
