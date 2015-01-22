@@ -113,11 +113,16 @@ define(function(require, exports, module) {
     },
 
     render: function () {
+      var welcomeMessage = this.project.welcomeMessage || false;
+      if ($.cookie('hideWelcomeMessage') === 'yes') {
+        welcomeMessage = false;
+      }
+
       var context = {
         name: this.project.name,
         description: this.project.description,
         baselayers: this.project.foreignInteractive,
-        welcomeMessage: this.project.welcomeMessage || false
+        welcomeMessage: welcomeMessage
       };
       this.$el.html(this.template(context));
 
@@ -307,6 +312,7 @@ define(function(require, exports, module) {
     },
 
     closePopup: function() {
+      $.cookie('hideWelcomeMessage', 'yes');
       $('.popup').hide();
       $('.popup-cover').hide();
     }
