@@ -67,6 +67,10 @@
 
 
   .layer.legend-inactive {
+    .static-legend {
+      display: none;
+    }
+
     .selected {
       display: none;
     }
