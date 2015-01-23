@@ -126,7 +126,7 @@ define(function(require, exports, module) {
       this.baseLayer = L.tileLayer(this.baselayer || settings.baseLayer);
       this.satelliteLayer = L.tileLayer(settings.satelliteLayer);
       this.printLayer = L.tileLayer(settings.printLayer);
-      this.map.addLayer(this.baseLayer);
+      this.map.addLayer(this.baseLayer, { attribution: 'LocalData' });
       var baseMaps = {
         "Streets": this.baseLayer,
         "Satellite": this.satelliteLayer,
