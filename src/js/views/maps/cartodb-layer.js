@@ -88,7 +88,8 @@ define(function (require, exports, module) {
         var url = 'https://' + data.cdn_url.https +
             '/localdata/api/v1/map/' + data.layergroupid +
             '/{z}/{x}/{y}.png';
-        this.tileLayer = L.tileLayer(url);
+        var attribution = this.layerOptions.attribution || '';
+        this.tileLayer = L.tileLayer(url, { attribution: attribution });
 
         if (this.state === 'active') {
           self.mapView.addTileLayer(this.tileLayer);
