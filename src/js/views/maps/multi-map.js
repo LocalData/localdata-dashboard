@@ -118,6 +118,9 @@ define(function(require, exports, module) {
         zoomControl: false
       });
 
+      // Remove the default "Leaflet |" attribution
+      this.map.attributionControl.setPrefix('');
+
       this.map.on('click', this.clickHandler, this);
 
       this.map.addControl(L.control.zoom({ position: 'topright' }));

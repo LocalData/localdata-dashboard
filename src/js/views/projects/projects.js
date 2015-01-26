@@ -217,7 +217,7 @@ define(function(require, exports, module) {
         {
           type: 'cartodb',
           layerName: 'Vacant Properties',
-          attribution: '',
+          attribution: 'Pennsylvania Spatial Data Access',
           color: '#505050',
           dataQuery: "select mapblolot, usedesc, mundesc, property_2, propertyow, (case delinquent when true then 'Yes' else 'No' end) as d,  ST_AsGeoJSON(ST_Centroid(the_geom)) AS centroid from (select * from allegheny_assessed_parcels) as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>",
           humanReadableField: 'property_2',
@@ -248,7 +248,7 @@ define(function(require, exports, module) {
         {
           type: 'cartodb',
           layerName: 'Municipalities',
-          attribution: '',
+          attribution: 'Pennsylvania Spatial Data Access',
           color: '#ff7a00',
           dataQuery: 'select * from pittsburgh_municipalities as _cartodbjs_alias',
           humanReadableField: 'municipalities',
@@ -277,7 +277,7 @@ define(function(require, exports, module) {
         {
           type: 'cartodb',
           layerName: 'Pittsburgh Neighborhoods',
-          attribution: '',
+          attribution: 'Pennsylvania Spatial Data Access',
           state: 'inactive',
           color: '#ffad00',
           dataQuery: 'select * from pittsburgh_neighborhoods as _cartodbjs_alias',

@@ -88,7 +88,7 @@ define(function (require, exports, module) {
         var url = 'https://' + data.cdn_url.https +
             '/localdata/api/v1/map/' + data.layergroupid +
             '/{z}/{x}/{y}.png';
-        var attribution = this.layerOptions.attribution || '';
+        var attribution = this.layerOptions.attribution || 'hello world';
         this.tileLayer = L.tileLayer(url, { attribution: attribution });
 
         if (this.state === 'active') {
