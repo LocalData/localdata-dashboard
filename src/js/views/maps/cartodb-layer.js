@@ -138,6 +138,10 @@ define(function (require, exports, module) {
         }
       };
 
+      if (this.layerOptions.staticLegend) {
+        context.meta.staticLegend = this.layerOptions.staticLegend;
+      }
+
       if (this.state === 'inactive') {
         this.$el.addClass('legend-inactive');
       }
