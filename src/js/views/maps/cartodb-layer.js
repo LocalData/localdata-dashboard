@@ -114,9 +114,11 @@ define(function (require, exports, module) {
           self.mapView.addGridLayer(this.gridLayer, true);
         }
 
-        this.gridLayer.on('click', self.handleGridClick, self);
+        if (this.layerOptions.handleClick) {
+          this.gridLayer.on('click', self.handleGridClick, self);
+        }
 
-        if (this.layerOptions.useMouseover) {
+        if (this.layerOptions.handleMouseover) {
           this.gridLayer.on('mouseover', self.handleGridHover, self);
           this.gridLayer.on('mouseout', self.handleGridMouseout, self);
         }
@@ -221,12 +223,14 @@ define(function (require, exports, module) {
 
     handleGridClick: function (event) {
       if (!event.data) {
+        console.log("No data --returning");
         return;
       }
 
       var self = this;
 
       this.getCartoData(event.data.cartodb_id, function (data) {
+        console.log("Got data from carto", data);
         if (data.rows && data.rows.length > 0) {
           self.trigger('itemSelected', {
             view: new ItemView({
