@@ -221,6 +221,7 @@ define(function(require, exports, module) {
           color: '#505050',
           dataQuery: "select mapblolot, usedesc, mundesc, property_2, propertyow, (case delinquent when true then 'Yes' else 'No' end) as d,  ST_AsGeoJSON(ST_Centroid(the_geom)) AS centroid from (select * from allegheny_assessed_parcels) as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>",
           humanReadableField: 'property_2',
+          handleClick: true,
           staticLegend: '<div><i class="fa fa-square" style="color:#777777"></i> Publicly owned</div> <div><i class="fa fa-square" style="color:#101010"></i> Privately owned</div>',
           fieldNames: {
             mapblolot: 'Parcel ID',
@@ -253,7 +254,7 @@ define(function(require, exports, module) {
           color: '#ff7a00',
           dataQuery: 'select * from pittsburgh_municipalities as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>',
           humanReadableField: 'label',
-          useMouseover: true, // requires humanReadableField
+          handleMouseover: true, // requires humanReadableField
           // fieldNames: {
           //   usedesc: 'Use',
           //   propertyow: 'Property Owner'
@@ -284,7 +285,7 @@ define(function(require, exports, module) {
           color: '#ffad00',
           dataQuery: 'select * from pittsburgh_neighborhoods as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>',
           humanReadableField: 'neighborhood',
-          useMouseover: true, // requires humanReadableField
+          handleMouseover: true, // requires humanReadableField
           // fieldNames: {
           //   usedesc: 'Use',
           //   propertyow: 'Property Owner'
@@ -313,7 +314,7 @@ define(function(require, exports, module) {
           color: '#ffcf00',
           dataQuery: 'select * from pittsburgh_council_districts_2012 as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>',
           humanReadableField: 'council',
-          useMouseover: true, // requires humanReadableField
+          handleMouseover: true, // requires humanReadableField
           // fieldNames: {
           //   usedesc: 'Use',
           //   propertyow: 'Property Owner'
