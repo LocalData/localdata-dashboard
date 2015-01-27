@@ -163,7 +163,7 @@ define(function(require, exports, module) {
         query: {},
         select: {},
         filters: {
-          question: 'Project Type'
+          question: 'Project Status'
         },
         styles: simpleStyles({color: '#cddc29'}),
         exploration: [
