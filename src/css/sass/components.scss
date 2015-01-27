@@ -101,12 +101,21 @@
 
 /* Map ---------------------------------------------------------------------- */
 #map,
-.map {
-  height: 500px;
-}
+.map,
 #map-view-container {
   height: 500px;
 }
+
+.embed {
+  #map {
+    height: 100vh;
+  }
+
+  #map-view-container {
+    height: 100vh;
+  }
+}
+
 
 .control-pane {
   position: absolute;
