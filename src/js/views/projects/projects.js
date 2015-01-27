@@ -438,12 +438,45 @@ define(function(require, exports, module) {
             valueNames: ['Yes', 'No'],
             colors: ['#e64212', '#78706d']
           }),
-          makeBasicExploration({
-            name: 'Unsafe due to traffic speed/volume',
-            question: 'Do-you-feel-unsafe-because-of-a-high-volume-or-high-speed-traffic',
-            values: ['Yes', 'No'],
-            valueNames: ['Unsafe', 'No significant issue'],
-            colors: ['#e64212', '#78706d']
+          makeCheckboxExploration({
+            name: 'Shade trees',
+            question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Shade-trees',
+            predicate: ['What-would-you-like-to-record', 'Sidewalk-Quality'],
+            values: ['yes', 'no'],
+            valueNames: ['Yes', 'No/No Data'],
+            colors: ['#0eb308', '#78706d']
+          }),
+          makeCheckboxExploration({
+            name: 'Nice landscaping',
+            question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Nice-landscaping',
+            predicate: ['What-would-you-like-to-record', 'Sidewalk-Quality'],
+            values: ['yes', 'no'],
+            valueNames: ['Yes', 'No/No Data'],
+            colors: ['#0eb308', '#78706d']
+          }),
+          makeCheckboxExploration({
+            name: 'Benches',
+            question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Benches',
+            predicate: ['What-would-you-like-to-record', 'Sidewalk-Quality'],
+            values: ['yes', 'no'],
+            valueNames: ['Yes', 'No/No Data'],
+            colors: ['#0eb308', '#78706d']
+          }),
+          makeCheckboxExploration({
+            name: 'Public art',
+            question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Public-art',
+            predicate: ['What-would-you-like-to-record', 'Sidewalk-Quality'],
+            values: ['yes', 'no'],
+            valueNames: ['Yes', 'No/No Data'],
+            colors: ['#0eb308', '#78706d']
+          }),
+          makeCheckboxExploration({
+            name: 'Other pedestrian amenities',
+            question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Other',
+            predicate: ['What-would-you-like-to-record', 'Sidewalk-Quality'],
+            values: ['yes', 'no'],
+            valueNames: ['Yes', 'No/No Data'],
+            colors: ['#0eb308', '#78706d']
           }), {
             name: 'Photos',
             layer: {
@@ -529,7 +562,7 @@ define(function(require, exports, module) {
             question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Accessible-curb-ramps-for-wheelchairs',
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
             values: ['yes', 'no'],
-            valueNames: ['Yes', 'No'],
+            valueNames: ['Yes', 'No/No Data'],
             colors: ['#0eb308', '#78706d']
           }),
           makeCheckboxExploration({
@@ -537,7 +570,7 @@ define(function(require, exports, module) {
             question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Other',
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
             values: ['yes', 'no'],
-            valueNames: ['Yes', 'No'],
+            valueNames: ['Yes', 'No/No Data'],
             colors: ['#0eb308', '#78706d']
           }),
           makeCheckboxExploration({
@@ -572,7 +605,7 @@ define(function(require, exports, module) {
             question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Shade-trees',
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
             values: ['yes', 'no'],
-            valueNames: ['Yes', 'No'],
+            valueNames: ['Yes', 'No/No Data'],
             colors: ['#0eb308', '#78706d']
           }),
           makeCheckboxExploration({
@@ -580,7 +613,7 @@ define(function(require, exports, module) {
             question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Nice-landscaping',
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
             values: ['yes', 'no'],
-            valueNames: ['Yes', 'No'],
+            valueNames: ['Yes', 'No/No Data'],
             colors: ['#0eb308', '#78706d']
           }),
           makeCheckboxExploration({
@@ -588,7 +621,7 @@ define(function(require, exports, module) {
             question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Benches',
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
             values: ['yes', 'no'],
-            valueNames: ['Yes', 'No'],
+            valueNames: ['Yes', 'No/No Data'],
             colors: ['#0eb308', '#78706d']
           }),
           makeCheckboxExploration({
@@ -596,7 +629,7 @@ define(function(require, exports, module) {
             question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Public-art',
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
             values: ['yes', 'no'],
-            valueNames: ['Yes', 'No'],
+            valueNames: ['Yes', 'No/No Data'],
             colors: ['#0eb308', '#78706d']
           }),
           makeCheckboxExploration({
@@ -604,7 +637,7 @@ define(function(require, exports, module) {
             question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Other',
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
             values: ['yes', 'no'],
-            valueNames: ['Yes', 'No'],
+            valueNames: ['Yes', 'No/No Data'],
             colors: ['#0eb308', '#78706d']
           }),
           makeCheckboxExploration({
