@@ -163,7 +163,7 @@ define(function(require, exports, module) {
         query: {},
         select: {},
         filters: {
-          question: 'Project Type'
+          question: 'Project Status'
         },
         styles: simpleStyles({color: '#cddc29'}),
         exploration: [
@@ -172,7 +172,7 @@ define(function(require, exports, module) {
             question: 'What-stage-of-project-are-you-registering',
             values: [
               'An-idea-for-a-lot',
-              'A-project-that-has-been-implemented-'
+              'This-project-has-been-implemented-'
             ],
             valueNames: [
               'Idea',
