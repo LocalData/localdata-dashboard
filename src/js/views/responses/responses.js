@@ -466,12 +466,13 @@ define(function(require, exports, module) {
         return;
       }
 
-      var rc = new Responses.Collection({
+      var rc = new Responses.Collection([], {
         surveyId: this.survey.get('id'),
         objectId: event.data.object_id
       });
 
       var surveyOptions = this.survey.get('surveyOptions') || {};
+
       // FIXME: respect the actual configured options
       surveyOptions.comments = true;
       var selectedItemListView = new ResponseListView({
