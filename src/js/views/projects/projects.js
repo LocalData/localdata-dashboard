@@ -138,7 +138,84 @@ define(function(require, exports, module) {
     return data;
   }
 
+  // https://app.localdata.com/api/surveys/8a340df0-87af-11e2-9485-c3fff44e7c8e/forms
   var projects = {
+    gary: {
+      name: 'Gary Parcel Survey',
+      description: '',
+      baselayer: '//a.tiles.mapbox.com/v3/matth.kmf6l3h1/{z}/{x}/{y}.png',
+      location: 'Gary, IN',
+      center: [-87.346427, 41.59337],
+      zoom: 13,
+      surveys: [{
+        layerName: 'Parcels surveyed',
+        layerId: '8a340df0-87af-11e2-9485-c3fff44e7c8e',
+        color: '#45403e',
+        options: {
+          anonymous: true
+        },
+        countPath: 'survey.responseCount',
+        query: {},
+        select: {},
+        filters: {
+          question: 'Property condition'
+        },
+        styles: simpleStyles({color: '#45403e'}),
+        exploration: [
+          makeBasicExploration({
+            name: 'Vacancy',
+            question: 'Is-the-structure-vacantabandoned',
+            values: [
+              'Yes',
+              'No'
+            ],
+            valueNames: [
+              'Vacant',
+              'Occupied'
+            ],
+            colors: ['#45403e', '#a743c3']
+          }),
+          makeBasicExploration({
+            name: 'Property condition',
+            question: 'What-grade-would-you-give-the-structure--Reference-Gary-Building-Rubric-sheet',
+            values: [
+              'A',
+              'B',
+              'C',
+              'D',
+              'F'
+            ],
+            valueNames: [
+              'Excellent',
+              "Lookin' Good",
+              'Fair',
+              'Needs Love',
+              'Danger!'
+            ],
+            colors: ['#0571b0', '#92c5de', '#f7f7f7', '#f4a582', '#ca0020']
+          }),
+          makeBasicExploration({
+            name: 'Building type',
+            question: 'What-type-of-building-is-it-Mark-all-that-apply',
+            values: [
+              'Residential',
+              'Commercial',
+              'Publicgovernment',
+              'Single_family',
+              'Multi_family'
+            ],
+            valueNames: [
+              'Residential',
+              "Commercial",
+              'Public/government',
+              'Single-family',
+              'Multi-family'
+            ],
+            colors: ['#a6cee3', '#1f78b4', '#45403e', '#33a02c', '#b2df8a']
+          })
+        ]
+      }]
+    },
 
     // GTECH ---------------------------------------------------------------------
     gtech: {
