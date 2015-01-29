@@ -31,10 +31,9 @@ define(function(require, exports, module) {
       // Pull from survey options?
       // Load the right layers for each survey.
       this.slug = options.slug;
-      if (this.slug === 'walkscope') {
-        this.project = projects.walkscope;
-      } else {
-        this.project = projects.gtech;
+      this.project = projects[this.slug];
+      if (!this.project) {
+        this.project = projects.gtech; // defaut fallback
       }
 
       this.mode = options.mode;
