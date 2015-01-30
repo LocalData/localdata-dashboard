@@ -444,6 +444,12 @@ define(function(require, exports, module) {
           makeBasicExploration({
             name: 'Overall Pedestrian Environment Rating',
             question: 'How-would-you-rate-the-pedestrian-environment-overall-1-5-5highest',
+            // This question is repeated among sidewalk/intersection/pedestrian
+            // observations with the same ID, so we need to avoid mapping data
+            // from the wrong virtual layer.
+            query: {
+              'entries.responses.What-would-you-like-to-record': 'Sidewalk-Quality'
+            },
             values: ['5', '4', '3', '2', '1'],
             valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
             colors: ['#05A17D', '#8BB272', '#ead02b', '#ef8e3a', '#e94027']
@@ -599,7 +605,13 @@ define(function(require, exports, module) {
         exploration: [
           makeBasicExploration({
             name: 'Overall Pedestrian Environment Rating',
-            question: 'How-would-you-rate-the-pedestrian-environment-1-5-5highest',
+            question: 'How-would-you-rate-the-pedestrian-environment-overall-1-5-5highest',
+            // This question is repeated among sidewalk/intersection/pedestrian
+            // observations with the same ID, so we need to avoid mapping data
+            // from the wrong virtual layer.
+            query: {
+              'entries.responses.What-would-you-like-to-record': 'Intersection-Quality'
+            },
             values: ['5', '4', '3', '2', '1'],
             valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
             colors: ['#05A17D', '#8BB272', '#ead02b', '#ef8e3a', '#e94027']
@@ -785,7 +797,13 @@ define(function(require, exports, module) {
         exploration: [
           makeBasicExploration({
             name: 'Overall Pedestrian Environment Rating',
-            question: 'How-would-you-rate-the-pedestrian-environment-overall-1-5-5-highest',
+            question: 'How-would-you-rate-the-pedestrian-environment-overall-1-5-5highest',
+            // This question is repeated among sidewalk/intersection/pedestrian
+            // observations with the same ID, so we need to avoid mapping data
+            // from the wrong virtual layer.
+            query: {
+              'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
+            },
             values: ['5', '4', '3', '2', '1'],
             valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
             colors: ['#05A17D', '#8BB272', '#ead02b', '#ef8e3a', '#e94027'],
