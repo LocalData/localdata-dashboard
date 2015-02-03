@@ -230,7 +230,6 @@ define(function (require, exports, module) {
       var self = this;
 
       this.getCartoData(event.data.cartodb_id, function (data) {
-        console.log("Got data from carto", data);
         if (data.rows && data.rows.length > 0) {
           self.trigger('itemSelected', {
             view: new ItemView({
