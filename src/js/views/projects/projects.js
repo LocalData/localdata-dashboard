@@ -225,6 +225,7 @@ define(function(require, exports, module) {
       center: [-79.995886, 40.440625],
       zoom: 13,
       commentsId: 'lots2lovepgh',
+      scrollWheelZoom: false,
       suppressStreetview: true,
       baselayer: '//a.tiles.mapbox.com/v3/matth.kmf6l3h1/{z}/{x}/{y}.png',
       // baselayer: 'http://c.tile.stamen.com/toner-lite/{z}/{x}/{y}.png', // toner-light
@@ -263,28 +264,30 @@ define(function(require, exports, module) {
             name: 'Project Type',
             question: 'Type-of-Project',
             values: [
-              'Park--Parklet',
-              'Playspace',
-              'Rain-Garden--Stormwater-Project',
               'Flower-Garden',
-              'Food-Garden',
-              'Gateway-with-Signage',
-              'Public-Art',
               'Trail--Pathway',
-              'Greenway--Wooded-Lot'
+              'Park--Parklet',
+              'Rain-Garden--Stormwater-Project',
+              'Food-Garden',
+              'Playspace',
+              'Public-Art',
+              'Green--Screen--Infill',
+              'Greenway--Wooded-Lot',
+              'Bike-Infrastructure'
             ],
             valueNames: [
-              'Park/parklet',
+              'Flower Garden',
+              'Trail | Pathway',
+              'Park | Parklet',
+              'Rain Garden | Stormwater Project',
+              'Food Garden',
               'Playspace',
-              'Rain garden/bioswale',
-              'Flower garden',
-              'Food garden',
-              'Gateway with signage',
               'Public Art',
-              'Trail/Pathway',
-              'Greenway/wooded lot'
+              'Green + Screen | Infill',
+              'Greenway | Wooded Lot',
+              'Bike Infrastructure'
             ],
-            colors: ['#8dd3c7', '#ffffb3', '#bebada', '#fb8072', '#8dd5ea', '#fdb462', '#b3de69', '#be76b1', '#d9d9d9']
+            colors: ['#8dd3c7', '#ffffb3', '#bebada', '#fb8072', '#8dd5ea', '#fdb462', '#b3de69', '#be76b1', '#d9d9d9', '#9cf3e3']
           })
         ]
       }],

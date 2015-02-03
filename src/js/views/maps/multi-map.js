@@ -119,7 +119,6 @@ define(function(require, exports, module) {
       };
 
       if(_.has(this.config, 'scrollWheelZoom')) {
-        console.log('SWZ', this.config);
         options.scrollWheelZoom = this.config.scrollWheelZoom;
       }
       this.map = new L.map(this.$('#map')[0], options);
