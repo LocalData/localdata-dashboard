@@ -135,6 +135,10 @@ define(function(require, exports, module) {
           }
         };
 
+        if (this.project.scrollWheelZoom === false) {
+          mapOptions.config.scrollWheelZoom = false;
+        }
+
         // Support a custom baselayer
         if (this.project.baselayer) {
           mapOptions.baselayer = this.project.baselayer;

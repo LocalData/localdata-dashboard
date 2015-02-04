@@ -112,11 +112,16 @@ define(function(require, exports, module) {
 
     render: function() {
       // Initialize the map
-      this.map = new L.map(this.$('#map')[0], {
+      var options = {
         zoom: this.config.zoom,
         center: [_.last(this.config.center), _.first(this.config.center)],
         zoomControl: false
-      });
+      };
+
+      if(_.has(this.config, 'scrollWheelZoom')) {
+        options.scrollWheelZoom = this.config.scrollWheelZoom;
+      }
+      this.map = new L.map(this.$('#map')[0], options);
 
       // Remove the default "Leaflet |" attribution
       this.map.attributionControl.setPrefix('');
