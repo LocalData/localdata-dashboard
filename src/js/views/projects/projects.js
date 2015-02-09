@@ -67,6 +67,7 @@ define(function(require, exports, module) {
           pointSize: options.pointSize
         };
         ret.layer.query['entries.responses.' + options.question] = val;
+        ret.layer.query = _.defaults(ret.layer.query, options.query);
         return ret;
       })
     };
