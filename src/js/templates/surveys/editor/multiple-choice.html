@@ -5,9 +5,19 @@
     <a class="btn remove"><i class="fa fa-trash-o"></i></a>
   </div>
 
+  <% if (question.type!=='checkbox') { %>
+  <div class="question-options">
+    <label>
+      <input type="checkbox" val="required" class="required" <% if(question.required==='required') { %>checked=checked <%} %>>
+      Require an answer
+    </label>
+  </div>
+  <% } %>
+
   <div class="answers"></div>
 
   <div class="question-tools-container">
+
     <a class="btn add-answer">+ Add answer</a>
   </div>
 
