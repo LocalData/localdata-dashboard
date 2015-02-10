@@ -305,7 +305,7 @@ define(function(require, exports, module) {
           dataQuery: "select mapblolot, usedesc, mundesc, property_2, propertyow, (case delinquent when true then 'Yes' else 'No' end) as d,  ST_AsGeoJSON(ST_Centroid(the_geom)) AS centroid from (select * from allegheny_assessed_parcels) as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>",
           humanReadableField: 'property_2',
           handleClick: true,
-          staticLegend: '<div><i class="fa fa-square" style="color:#101010"></i> Publicly owned</div> <div><i class="fa fa-square" style="color:#777777"></i> Privately owned</div>',
+          staticLegend: '<div><i class="fa fa-square" style="color:#12b259"></i> Sidelot</div> <div><i class="fa fa-square" style="color:#101010"></i> Publicly owned</div> <div><i class="fa fa-square" style="color:#777777"></i> Privately owned</div>',
           fieldNames: {
             mapblolot: 'Parcel ID',
             mundesc: 'Municipality',
@@ -320,7 +320,7 @@ define(function(require, exports, module) {
               type:'cartodb',
               options:{
                 sql: 'select * from allegheny_assessed_parcels',
-                cartocss: '#allegheny_assessed_parcels {    polygon-opacity: 0;    line-color: #FFF;    line-width: 1;    line-opacity: 0.7;    [zoom<15]{ line-width: 0;} }   #allegheny_assessed_parcels[usecode=100] {    polygon-fill: #777;    polygon-opacity: 0.6;  }  #allegheny_assessed_parcels[usecode=100][publicowne="C"], #allegheny_assessed_parcels[usecode=100][publicowne="E"], #allegheny_assessed_parcels[usecode=100][publicowne="H"], #allegheny_assessed_parcels[usecode=100][publicowne="R"], #allegheny_assessed_parcels[usecode=100][publicowne="S"], #allegheny_assessed_parcels[usecode=100][publicowne="U"], #allegheny_assessed_parcels[usecode=100][publicowne="A"] {     polygon-fill: #101010;   } ',
+                cartocss: '#allegheny_assessed_parcels {    polygon-opacity: 0;    line-color: #FFF;    line-width: 1;    line-opacity: 0.7;    [zoom<15]{ line-width: 0;} }   #allegheny_assessed_parcels[usecode=100] {    polygon-fill: #777;    polygon-opacity: 0.6;  }  #allegheny_assessed_parcels[usecode=100][publicowne="C"], #allegheny_assessed_parcels[usecode=100][publicowne="E"], #allegheny_assessed_parcels[usecode=100][publicowne="H"], #allegheny_assessed_parcels[usecode=100][publicowne="R"], #allegheny_assessed_parcels[usecode=100][publicowne="S"], #allegheny_assessed_parcels[usecode=100][publicowne="U"], #allegheny_assessed_parcels[usecode=100][publicowne="A"], #allegheny_assessed_parcels[usecode=100][publicowne="M"] {     polygon-fill: #101010;   } #allegheny_assessed_parcels[usecode=100][sidelot=true], #allegheny_assessed_parcels[sidelot=true]  { polygon-fill: #12B259; } ',
                 cartocss_version: '2.1.1',
                 interactivity: ['cartodb_id']
               }
