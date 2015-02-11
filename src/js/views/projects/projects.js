@@ -305,7 +305,7 @@ define(function(require, exports, module) {
           dataQuery: "select mapblolot, usedesc, mundesc, property_2, propertyow, (case delinquent when true then 'Yes' else 'No' end) as d,  ST_AsGeoJSON(ST_Centroid(the_geom)) AS centroid from (select * from allegheny_assessed_parcels) as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>",
           humanReadableField: 'property_2',
           handleClick: true,
-          staticLegend: '<div><i class="fa fa-square" style="color:#12b259"></i> Sidelot</div> <div><i class="fa fa-square" style="color:#101010"></i> Publicly owned</div> <div><i class="fa fa-square" style="color:#777777"></i> Privately owned</div>',
+          staticLegend: '<div><i class="fa fa-square" style="color:#12b259"></i> Side Yards</div> <div><i class="fa fa-square" style="color:#101010"></i> Publicly owned</div> <div><i class="fa fa-square" style="color:#777777"></i> Privately owned</div>',
           fieldNames: {
             mapblolot: 'Parcel ID',
             mundesc: 'Municipality',
