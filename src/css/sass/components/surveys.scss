@@ -125,26 +125,19 @@
     color: $body-color;
   }
 
-  button.action-save-edit,
-  button.action-cancel-edit {
-    display: none;
+  .response {
+    .response-image {
+      width: 100%;
+    }
   }
+}
 
-  .edit {
-    display: none;
-  }
+.responses-list,
+#review-view-container {
   .streetview {
     width: 100%;
     height: auto;
     margin-bottom: 1em;
-  }
-
-  .time, .collector {
-    color: $body-accent;
-  }
-
-  .collector {
-    padding-right: 2em;
   }
 
   .response {
@@ -189,9 +182,25 @@
         }
       }
     }
+
+    button.action-save-edit,
+    button.action-cancel-edit {
+      display: none;
+    }
+
+    .edit {
+      display: none;
+    }
+
+    .time, .collector {
+      color: $body-accent;
+    }
+
+    .collector {
+      padding-right: 2em;
+    }
   }
 }
-
 .embed .responses-list {
   height: 94vh;
   padding: 3vh;
@@ -199,21 +208,22 @@
 
 /* Response review ------------------------- */
 
-#review-view-container .responses-list {
-  position: relative;
-  width: 100%;
-  top: 0;
-  margin-left: 0;
-  margin-bottom: 30px;
-  overflow: auto;
-
+#review-view-container  {
   .collector,
   .time {
     color: $body-color;
+    font-size:1.5em;
   }
 
   .close {
     display: none;
+  }
+
+  .response {
+    width: 50%;
+    clear: both;
+    overflow: auto;
+    display: inline-block;
   }
 
   .response-image,
@@ -222,7 +232,7 @@
   }
 
   .response-image {
-    max-width: 500px ! important;
+    max-height: 250px;
     display: inline-block;
     margin-top: 1em;
     clear: both;
