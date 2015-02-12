@@ -47,6 +47,7 @@ define(function (require) {
     render: function() {
       var first = this.collection.at(0);
       var name;
+      var subName;
 
       if (!first) {
         return this;
@@ -58,8 +59,17 @@ define(function (require) {
         name = first.get('parcel_id');
       }
 
+      if (this.surveyOptions.titleField) {
+        subName = name;
+        name = first.get('responses')[this.surveyOptions.titleField];
+        if (subName.toLowerCase() === 'unknown location') {
+          subName = undefined;
+        }
+      }
+
       this.$el.html(this.template({
-        name: name
+        name: name,
+        subName: subName
       }));
 
       this.collection.each(function(response) {
