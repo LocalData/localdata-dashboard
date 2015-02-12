@@ -38,11 +38,11 @@ function($, _, Backbone, settings, api, MapDrawView, UsersView, template) {
     },
 
     error: function(model, xhr, options) {
-      $(".error").fadeIn().css("display","inline-block").delay(2000).fadeOut();
+      $("#survey-settings-form .error").fadeIn().css("display","inline-block").delay(2000).fadeOut();
     },
 
     success: function() {
-      $(".saved").fadeIn().css("display","inline-block").delay(2000).fadeOut();
+      $("#survey-settings-form .saved").fadeIn().css("display","inline-block").delay(2000).fadeOut();
     },
 
     save: function(event) {
