@@ -107,6 +107,10 @@
   display: none;
   overflow: scroll;
 
+  .streetview {
+    width: 100%;
+  }
+
   button .action-delete,
   .action-show-confirm button {
     position: absolute;
@@ -135,7 +139,6 @@
 .responses-list,
 #review-view-container {
   .streetview {
-    width: 100%;
     height: auto;
     margin-bottom: 1em;
   }
@@ -220,15 +223,17 @@
   }
 
   .response {
-    width: 50%;
-    clear: both;
     overflow: auto;
-    display: inline-block;
+    width: 50%;
   }
 
   .response-image,
   .streetview {
     float: right;
+  }
+
+  .streetview {
+    width: 48%;
   }
 
   .response-image {
