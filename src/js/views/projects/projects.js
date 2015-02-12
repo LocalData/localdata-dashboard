@@ -148,9 +148,10 @@ define(function(require, exports, module) {
       location: 'Gary, IN',
       center: [-87.346427, 41.59337],
       zoom: 13,
+      scrollWheelZoom: false,
       surveys: [{
         layerName: 'Parcels surveyed',
-        layerId: '8a340df0-87af-11e2-9485-c3fff44e7c8e',
+        layerId: '2012edd0-b17c-11e4-b2e2-af76412575df',
         color: '#45403e',
         options: {
           anonymous: true
@@ -164,27 +165,40 @@ define(function(require, exports, module) {
         styles: simpleStyles({color: '#45403e'}),
         exploration: [
           makeBasicExploration({
-            name: 'Vacancy',
-            question: 'Is-the-structure-vacantabandoned',
+            name: 'Lots with structures',
+            question: 'structure',
             values: [
-              'Yes',
-              'No'
+              'yes',
+              'no'
+            ],
+            valueNames: [
+              'Structure',
+              'No structure'
+            ],
+            colors: ['#0571b0', '#f4a582']
+          }),
+          makeBasicExploration({
+            name: 'Vacancy',
+            question: 'vacant-abandoned',
+            values: [
+              'vacant-abandoned-structure',
+              'occupied-structure'
             ],
             valueNames: [
               'Vacant',
               'Occupied'
             ],
-            colors: ['#45403e', '#a743c3']
+            colors: ['#f4a582', '#0571b0']
           }),
           makeBasicExploration({
             name: 'Property condition',
-            question: 'What-grade-would-you-give-the-structure--Reference-Gary-Building-Rubric-sheet',
+            question: 'structure-grade',
             values: [
-              'A',
-              'B',
-              'C',
-              'D',
-              'F'
+              'excellent',
+              'good',
+              'fair',
+              'poor',
+              'dangerous'
             ],
             valueNames: [
               'Excellent',
@@ -196,23 +210,76 @@ define(function(require, exports, module) {
             colors: ['#0571b0', '#92c5de', '#f7f7f7', '#f4a582', '#ca0020']
           }),
           makeBasicExploration({
-            name: 'Building type',
-            question: 'What-type-of-building-is-it-Mark-all-that-apply',
+            name: 'Structural condition',
+            question: 'structural-damage',
             values: [
-              'Residential',
-              'Commercial',
-              'Publicgovernment',
-              'Single_family',
-              'Multi_family'
+              'none',
+              'some-damage',
+              'significant-damage'
             ],
             valueNames: [
-              'Residential',
-              "Commercial",
-              'Public/government',
-              'Single-family',
-              'Multi-family'
+              'No damage',
+              "Some damage",
+              'Significant damage'
             ],
-            colors: ['#a6cee3', '#1f78b4', '#45403e', '#33a02c', '#b2df8a']
+            colors: ['#0571b0', '#f4a582', '#ca0020']
+          }),
+          makeBasicExploration({
+            name: 'Encolosed buildings',
+            question: 'enclosed-secure',
+            values: [
+              'yes',
+              'no'
+            ],
+            valueNames: [
+              'Building Enclosed/Secure',
+              "Building Not Enclosed/Secure"
+            ],
+            colors: ['#0571b0', '#ca0020']
+          }),
+          makeBasicExploration({
+            name: 'Parking lot',
+            question: 'enclosed-secure',
+            values: [
+              'yes'
+            ],
+            valueNames: [
+              'Parking lots'
+            ],
+            colors: ['#0571b0']
+          }),
+          makeBasicExploration({
+            name: 'Residential use structures',
+            question: 'residential',
+            values: [
+              'yes'
+            ],
+            valueNames: [
+              'Residential'
+            ],
+            colors: ['#0571b0']
+          }),
+          makeBasicExploration({
+            name: 'Commercial use structures',
+            question: 'commercial',
+            values: [
+              'yes'
+            ],
+            valueNames: [
+              "Commercial"
+            ],
+            colors: ['#0571b0']
+          }),
+          makeBasicExploration({
+            name: 'Public use structures',
+            question: 'public-gov',
+            values: [
+              'yes'
+            ],
+            valueNames: [
+              'Public/government'
+            ],
+            colors: ['#0571b0']
           })
         ]
       }]
