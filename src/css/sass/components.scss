@@ -123,7 +123,10 @@
   top: 0px;
   padding: 20px 20px 10px 20px;
   background: white;
-  width: 340px;
+  max-width: 340px;
+  border-style: solid;
+  border-width: 0 5px 5px 0;
+  border-color: $thinpink;
 
   button {
     display: block;
