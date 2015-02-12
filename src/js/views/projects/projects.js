@@ -236,7 +236,8 @@ define(function(require, exports, module) {
         color: '#cddc29',
         options: {
           comments: true,
-          anonymous: true
+          anonymous: true,
+          titleField: 'Project-Name'
         },
         countPath: 'survey.responseCount',
         query: {},
