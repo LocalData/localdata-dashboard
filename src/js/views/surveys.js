@@ -22,7 +22,7 @@ define(function(require, exports, module) {
 
   // Views
   var ExportView = require('views/export');
-  var SettingsView = require('views/settings');
+  var SettingsView = require('views/surveys/settings');
   var ResponseViews = require('views/responses/responses');
   var ReviewView = require('views/responses/review');
   var FormViews = require('views/forms');
