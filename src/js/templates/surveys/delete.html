@@ -1,0 +1,16 @@
+<h3>Delete survey</h3>
+
+<button class="start-delete flex small danger">Start deletion process</button>
+
+<form action="" id="delete-survey-form">
+  <p>When you delete a survey, we temporarily store a copy of your
+  results in case you need to recover your data. </p>
+
+  <p>Type the name of the survey ("<%= survey.name %>") to confirm:</p>
+  <input type="text" name="delete-confirm-name" class="delete-confirm-name large" placeholder="Confirm survey name">
+
+  <button class="confirm-delete flex small danger">Confirm delete</button>
+  <button class="cancel-delete flex small">Cancel</button>
+  <div class="error failed">We couldn't remove the survey.</div>
+  <div class="error no-match">The text doesn't match the survey name.</div>
+</form>
