@@ -166,7 +166,8 @@ define(function (require) {
       return function(event) {
         console.log('Updating question');
         _kmq.push(['record', 'Question edited']);
-        var text = $(event.target).val(); //$(this).val();
+        var text = _.trim($(event.target).val());
+
         var name = this.slugify(text);
 
         question.text = text;
@@ -299,7 +300,7 @@ define(function (require) {
     editAnswer: function(question, index) {
       return function(event){
         _kmq.push(['record', 'Answer edited']);
-        var text = $(event.target).val();
+        var text = _.trim($(event.target).val());
         question.answers[index].text = text;
         question.answers[index].value = this.slugify(text);
 
