@@ -181,12 +181,12 @@ define(function(require, exports, module) {
             name: 'Vacancy',
             question: 'vacant-abandoned',
             values: [
-              'vacant-abandoned-structure',
-              'occupied-structure'
+              'occupied-structure',
+              'vacant-abandoned-structure'
             ],
             valueNames: [
-              'Vacant',
-              'Occupied'
+              'Occupied',
+              'Vacant'
             ],
             colors: ['#f4a582', '#0571b0']
           }),
@@ -202,10 +202,10 @@ define(function(require, exports, module) {
             ],
             valueNames: [
               'Excellent',
-              "Lookin' Good",
+              "Good",
               'Fair',
-              'Needs Love',
-              'Danger!'
+              'Poor',
+              'Dangerous'
             ],
             colors: ['#0571b0', '#92c5de', '#f7f7f7', '#f4a582', '#ca0020']
           }),
