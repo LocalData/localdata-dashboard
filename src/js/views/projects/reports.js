@@ -46,6 +46,7 @@ define(function(require, exports, module) {
     },
 
     appendStats: function($el) {
+      this.$el.find('.stats-container .spinner').hide();
       this.$el.find('.stats-container').append($el);
     },
 
