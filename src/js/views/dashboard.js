@@ -41,7 +41,7 @@ function($, _, Backbone, settings, IndexRouter, Surveys, SurveyViews) {
 
       var self = this;
       var context = {};
-      this.$el.html(_.template($('#dashboard').html(), context));
+      this.$el.html(_.template($('#dashboard').html())(context));
 
       if(this.surveys.length === 0) {
         $('.first-run').slideDown();

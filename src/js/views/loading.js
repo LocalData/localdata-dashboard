@@ -8,7 +8,7 @@ define([
 ],
 
 function($, _, Backbone) {
-  'use strict'; 
+  'use strict';
 
   var LoadingView = Backbone.View.extend({
 	  initialize: function() {
@@ -18,7 +18,7 @@ function($, _, Backbone) {
 	  },
 
 	  render: function() {
-	    this.$el.html(_.template($('#loading-view').html(), {}));  
+	    this.$el.html(_.template($('#loading-view').html()));
 	  }
 	});
 

@@ -147,7 +147,7 @@ function($, _, Backbone, settings, api) {
         popup: this.popup
       };
 
-      this.$el.html(_.template($('#preview-view').html(), context));
+      this.$el.html(_.template($('#preview-view').html())(context));
 
       this.renderPreview();
     }

@@ -62,7 +62,7 @@ function($, _, Backbone, events, _kmq, router, settings, api,
       var context = {
         user: this.user.toJSON()
       };
-      this.$el.html(_.template($('#userbar-view').html(), context));
+      this.$el.html(_.template($('#userbar-view').html())(context));
       this.$el.fadeIn(400).css("display", "inline-block");
 
       console.log("User render got", error, this.user);

@@ -16,16 +16,16 @@ define([
 
   // Views
   'views/surveys'
-  
+
 ],
 
 function($, _, Backbone, settings, api, Users, Surveys, SurveyViews) {
-  'use strict'; 
+  'use strict';
 
   var HomeView = Backbone.View.extend({
-  
+
     el: $("#container"),
-    
+
     initialize: function(options) {
       _.bindAll(this, 'render', 'update', 'checkUserView');
     },
@@ -38,16 +38,16 @@ function($, _, Backbone, settings, api, Users, Surveys, SurveyViews) {
       // TODO
       // console.log(this.userModel.isLoggedIn());
     },
-  
+
     render: function() {
       console.log("Rendering HomeView");
-      
+
 
       var self = this;
       var context = {};
-      this.$el.html(_.template($('#home').html(), context));
+      this.$el.html(_.template($('#home').html())(context));
     }
-    
+
   });
 
   return HomeView;
