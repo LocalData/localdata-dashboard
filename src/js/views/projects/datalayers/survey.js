@@ -52,7 +52,8 @@ define(function (require) {
     events: {
       'click .close': 'close',
       'click .toggle-layer': 'toggleLayer',
-      'click .show-settings .title': 'showSettings'
+      'click .show-settings .title': 'showSettings',
+      'click button.show-settings': 'showSettings'
     },
 
     initialize: function(options) {
@@ -83,6 +84,7 @@ define(function (require) {
         select: options.survey.select,
         styles: options.survey.styles
       };
+      this.options = options.survey.options;
       this.color = options.survey.color;
       this.zIndex = options.survey.zIndex;
       this.exploration = options.survey.exploration;
@@ -396,6 +398,8 @@ define(function (require) {
       if (this.color) {
         context.meta.color = this.color;
       }
+
+      _.extend(context.meta, this.options);
 
       context.meta.count = util.numberWithCommas(this.survey.get('queryCount')) || '';
 
