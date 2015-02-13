@@ -165,32 +165,6 @@ define(function(require, exports, module) {
         styles: simpleStyles({color: '#45403e'}),
         exploration: [
           makeBasicExploration({
-            name: 'Lots with structures',
-            question: 'structure',
-            values: [
-              'yes',
-              'no'
-            ],
-            valueNames: [
-              'Structure',
-              'No structure'
-            ],
-            colors: ['#0571b0', '#f4a582']
-          }),
-          makeBasicExploration({
-            name: 'Vacancy',
-            question: 'vacant-abandoned',
-            values: [
-              'occupied-structure',
-              'vacant-abandoned-structure'
-            ],
-            valueNames: [
-              'Occupied',
-              'Vacant'
-            ],
-            colors: ['#f4a582', '#0571b0']
-          }),
-          makeBasicExploration({
             name: 'Property condition',
             question: 'structure-grade',
             values: [
@@ -207,7 +181,33 @@ define(function(require, exports, module) {
               'Poor',
               'Dangerous'
             ],
-            colors: ['#0571b0', '#92c5de', '#f7f7f7', '#f4a582', '#ca0020']
+            colors: ['#0571b0', '#92c5de', '#d3d3d3', '#f46d31', '#ca0020']
+          }),
+          makeBasicExploration({
+            name: 'Lots with structures',
+            question: 'structure',
+            values: [
+              'yes',
+              'no'
+            ],
+            valueNames: [
+              'Structure',
+              'No structure'
+            ],
+            colors: ['#0571b0', '#f46d31']
+          }),
+          makeBasicExploration({
+            name: 'Occupancy',
+            question: 'vacant-abandoned',
+            values: [
+              'occupied-structure',
+              'vacant-abandoned-structure'
+            ],
+            valueNames: [
+              'Occupied',
+              'Vacant'
+            ],
+            colors: ['#0571b0', '#f46d31']
           }),
           makeBasicExploration({
             name: 'Structural condition',
@@ -222,21 +222,21 @@ define(function(require, exports, module) {
               "Some damage",
               'Significant damage'
             ],
-            colors: ['#0571b0', '#f4a582', '#ca0020']
+            colors: ['#0571b0', '#f46d31', '#ca0020']
           }),
-          makeBasicExploration({
-            name: 'Encolosed buildings',
-            question: 'enclosed-secure',
-            values: [
-              'yes',
-              'no'
-            ],
-            valueNames: [
-              'Building Enclosed/Secure',
-              "Building Not Enclosed/Secure"
-            ],
-            colors: ['#0571b0', '#ca0020']
-          }),
+          // makeBasicExploration({
+          //   name: 'Enclosed buildings',
+          //   question: 'enclosed-secure',
+          //   values: [
+          //     'yes',
+          //     'no'
+          //   ],
+          //   valueNames: [
+          //     'Building Enclosed/Secure',
+          //     "Building Not Enclosed/Secure"
+          //   ],
+          //   colors: ['#0571b0', '#ca0020']
+          // }),
           makeBasicExploration({
             name: 'Parking lot',
             question: 'enclosed-secure',
