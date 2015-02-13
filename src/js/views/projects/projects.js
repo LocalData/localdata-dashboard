@@ -320,7 +320,7 @@ define(function(require, exports, module) {
             values: [
               'An-idea-for-a-lot',
               'A-project-that-is-in-progress-',
-              'This-project-has-been-implemented-'
+              'A-project-that-has-been-implemented-'
             ],
             valueNames: [
               'Idea',
