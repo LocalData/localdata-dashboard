@@ -154,7 +154,9 @@ define(function(require, exports, module) {
         layerId: '2012edd0-b17c-11e4-b2e2-af76412575df',
         color: '#45403e',
         options: {
-          anonymous: true
+          anonymous: true,
+          hideCollectorNames: true,
+          exploreButton: true
         },
         countPath: 'survey.responseCount',
         query: {},
@@ -182,6 +184,8 @@ define(function(require, exports, module) {
               'Dangerous'
             ],
             colors: ['#0571b0', '#92c5de', '#d3d3d3', '#f46d31', '#ca0020']
+            // purples:
+            // colors: ['#05b04c', '#a5e76b', '#d3d3d3', '#d791da', '#85048a']
           }),
           makeBasicExploration({
             name: 'Lots with structures',
@@ -194,7 +198,7 @@ define(function(require, exports, module) {
               'Structure',
               'No structure'
             ],
-            colors: ['#0571b0', '#f46d31']
+            colors: ['#0571b0', '#05b04c']
           }),
           makeBasicExploration({
             name: 'Occupancy',
