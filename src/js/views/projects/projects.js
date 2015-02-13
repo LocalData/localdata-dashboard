@@ -301,6 +301,7 @@ define(function(require, exports, module) {
         layerName: 'Lots to Love Projects',
         layerId: 'fb6dbc30-7bd9-11e4-abaf-a39ffd5c50e6',
         color: '#cddc29',
+        zIndex: 30,
         options: {
           comments: true,
           anonymous: true,
@@ -370,6 +371,7 @@ define(function(require, exports, module) {
           layerName: 'Vacant Properties',
           attribution: 'Pennsylvania Spatial Data Access',
           color: '#505050',
+          zIndex: 25,
           dataQuery: "select mapblolot, usedesc, mundesc, property_2, propertyow, (case delinquent when true then 'Yes' else 'No' end) as d,  ST_AsGeoJSON(ST_Centroid(the_geom)) AS centroid from (select * from allegheny_assessed_parcels) as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>",
           humanReadableField: 'property_2',
           handleClick: true,
@@ -403,6 +405,7 @@ define(function(require, exports, module) {
           layerName: 'Municipalities',
           attribution: 'Pennsylvania Spatial Data Access',
           color: '#ff7a00',
+          zIndex: 20,
           dataQuery: 'select * from pittsburgh_municipalities as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>',
           humanReadableField: 'label',
           handleMouseover: true, // requires humanReadableField
@@ -434,6 +437,7 @@ define(function(require, exports, module) {
           attribution: 'Pennsylvania Spatial Data Access',
           state: 'inactive',
           color: '#ffad00',
+          zIndex: 15,
           dataQuery: 'select * from pittsburgh_neighborhoods as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>',
           humanReadableField: 'neighborhood',
           handleMouseover: true, // requires humanReadableField
@@ -463,6 +467,7 @@ define(function(require, exports, module) {
           state: 'inactive',
           layerName: 'Pittsburgh Council Districts',
           color: '#ffcf00',
+          zIndex: 10,
           dataQuery: 'select * from pittsburgh_council_districts_2012 as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>',
           humanReadableField: 'council',
           handleMouseover: true, // requires humanReadableField

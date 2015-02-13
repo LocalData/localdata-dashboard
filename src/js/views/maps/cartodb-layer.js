@@ -93,6 +93,10 @@ define(function (require, exports, module) {
         var attribution = this.layerOptions.attribution || '';
         this.tileLayer = L.tileLayer(url, { attribution: attribution });
 
+        if (this.layerOptions.zIndex) {
+          this.tileLayer.setZIndex(this.layerOptions.zIndex);
+        }
+
         if (this.state === 'active') {
           self.mapView.addTileLayer(this.tileLayer);
         }

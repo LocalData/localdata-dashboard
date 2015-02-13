@@ -84,6 +84,7 @@ define(function (require) {
         styles: options.survey.styles
       };
       this.color = options.survey.color;
+      this.zIndex = options.survey.zIndex;
       this.exploration = options.survey.exploration;
       this.state = options.survey.state || 'active';
       this.filters = options.survey.filters;
@@ -194,6 +195,10 @@ define(function (require) {
         resolution: 4
       });
       this.gridLayer.on('click', this.handleClick);
+
+      if (this.zIndex) {
+        this.tileLayer.setZIndex(this.zIndex);
+      }
 
       if(this.mapView && this.state === 'active') {
         this.mapView.addTileLayer(this.tileLayer);
