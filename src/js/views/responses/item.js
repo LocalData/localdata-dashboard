@@ -82,7 +82,7 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       var options = {
         r: this.model.toJSON(),
         labels: this.labels,
-        questionLabels: this.makeAnswerLabels(),
+        answerLabels: this.makeAnswerLabels(),
         form: this.forms.getFlattenedForm(),
         surveyOptions: this.surveyOptions
       };
