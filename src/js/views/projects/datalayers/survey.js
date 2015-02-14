@@ -234,6 +234,7 @@ define(function (require) {
         objectId: objectId
       });
 
+      console.log("Selecting item with explroation", this.exploration);
       var surveyOptions = this.survey.get('surveyOptions') || {};
       this.selectedItemListView = new ObjectView({
         id: 'responses-list',
@@ -241,7 +242,8 @@ define(function (require) {
         labels: this.forms.getQuestions(),
         forms: this.forms,
         surveyOptions: surveyOptions,
-        survey: this.survey
+        survey: this.survey,
+        exploration: this.exploration
       });
 
       this.trigger('itemSelected', {

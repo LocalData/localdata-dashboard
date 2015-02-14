@@ -147,7 +147,7 @@ define(function(require, exports, module) {
       baselayer: '//a.tiles.mapbox.com/v3/matth.kmf6l3h1/{z}/{x}/{y}.png',
       location: 'Gary, IN',
       center: [-87.346427, 41.59337],
-      zoom: 13,
+      zoom: 18,
       scrollWheelZoom: false,
       surveys: [{
         layerName: 'Parcels surveyed',

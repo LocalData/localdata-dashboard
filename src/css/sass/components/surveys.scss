@@ -148,6 +148,22 @@
     border-top: 4px solid $thinpink;
     margin-top: 10px;
 
+    .answer {
+      margin-bottom: 0.75em;
+      line-height: 1em;
+
+      .key,
+      .value {
+        display: block;
+      }
+
+      .value {
+        font-family: $bold;
+      }
+    }
+
+
+
     .response-tools {
 
       /* Potential toolbar styling

@@ -27,6 +27,22 @@
 
 
 <div class="answers">
+
+<% _.each(exploration, function(e) { %>
+  <% if (r.responses[e.question]) { %>
+    <div class="answer">
+      <div class="key"><%= e.name %></div>
+      <% _.each(e.values, function(v) { %>
+        <% if (v.name === r.responses[e.question]) { %>
+          <div class="value"><%= v.text %></div>
+        <% } %>
+      <% }); %>
+    </div>
+  <% } %>
+<% }); %>
+</div>
+
+<!--
 <% _.each(_.keys(r.responses).reverse(), function(key) { var resp = r.responses[key]; %>
   <div class="answer">
     <span class="key">
@@ -91,3 +107,4 @@
   <div class="error">Sorry, there was a problem deleting this record</div>
 </div>
 <% } %>
+-->
