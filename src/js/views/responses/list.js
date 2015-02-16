@@ -39,7 +39,6 @@ define(function (require) {
       this.surveyId = options.surveyId;
       this.objectId = options.objectId;
 
-      console.log("Using exploration in list", options);
       this.exploration = options.exploration;
     },
 

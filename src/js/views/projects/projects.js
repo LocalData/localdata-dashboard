@@ -147,7 +147,7 @@ define(function(require, exports, module) {
       baselayer: '//a.tiles.mapbox.com/v3/matth.kmf6l3h1/{z}/{x}/{y}.png',
       location: 'Gary, IN',
       center: [-87.346427, 41.59337],
-      zoom: 18,
+      zoom: 13,
       scrollWheelZoom: false,
       surveys: [{
         layerName: 'Parcels surveyed',
@@ -155,8 +155,9 @@ define(function(require, exports, module) {
         color: '#45403e',
         options: {
           anonymous: true,
+          exploreButton: true,
           hideCollectorNames: true,
-          exploreButton: true
+          explorationControlsItem: true
         },
         countPath: 'survey.responseCount',
         query: {},
@@ -166,6 +167,32 @@ define(function(require, exports, module) {
         },
         styles: simpleStyles({color: '#45403e'}),
         exploration: [
+          makeBasicExploration({
+            name: 'Is there a structure?',
+            question: 'structure',
+            values: [
+              'yes',
+              'no'
+            ],
+            valueNames: [
+              'Yes',
+              'No structure'
+            ],
+            colors: ['#0571b0', '#05b04c']
+          }),
+          makeBasicExploration({
+            name: 'Occupancy',
+            question: 'vacant-abandoned',
+            values: [
+              'occupied-structure',
+              'vacant-abandoned-structure'
+            ],
+            valueNames: [
+              'Occupied',
+              'Vacant'
+            ],
+            colors: ['#0571b0', '#f46d31']
+          }),
           makeBasicExploration({
             name: 'Property condition',
             question: 'structure-grade',
@@ -186,32 +213,6 @@ define(function(require, exports, module) {
             colors: ['#0571b0', '#92c5de', '#d3d3d3', '#f46d31', '#ca0020']
             // purples:
             // colors: ['#05b04c', '#a5e76b', '#d3d3d3', '#d791da', '#85048a']
-          }),
-          makeBasicExploration({
-            name: 'Lots with structures',
-            question: 'structure',
-            values: [
-              'yes',
-              'no'
-            ],
-            valueNames: [
-              'Structure',
-              'No structure'
-            ],
-            colors: ['#0571b0', '#05b04c']
-          }),
-          makeBasicExploration({
-            name: 'Occupancy',
-            question: 'vacant-abandoned',
-            values: [
-              'occupied-structure',
-              'vacant-abandoned-structure'
-            ],
-            valueNames: [
-              'Occupied',
-              'Vacant'
-            ],
-            colors: ['#0571b0', '#f46d31']
           }),
           makeBasicExploration({
             name: 'Structural condition',
@@ -243,14 +244,16 @@ define(function(require, exports, module) {
           // }),
           makeBasicExploration({
             name: 'Parking lot',
-            question: 'enclosed-secure',
+            question: 'parking-lot',
             values: [
-              'yes'
+              'yes',
+              'no'
             ],
             valueNames: [
-              'Parking lots'
+              'Yes',
+              'No'
             ],
-            colors: ['#0571b0']
+            colors: ['#0571b0', '#535353']
           }),
           makeBasicExploration({
             name: 'Residential use structures',
@@ -259,7 +262,7 @@ define(function(require, exports, module) {
               'yes'
             ],
             valueNames: [
-              'Residential'
+              'Yes'
             ],
             colors: ['#0571b0']
           }),
@@ -270,7 +273,7 @@ define(function(require, exports, module) {
               'yes'
             ],
             valueNames: [
-              "Commercial"
+              "Yes"
             ],
             colors: ['#0571b0']
           }),
@@ -281,7 +284,7 @@ define(function(require, exports, module) {
               'yes'
             ],
             valueNames: [
-              'Public/government'
+              'Yes'
             ],
             colors: ['#0571b0']
           })
