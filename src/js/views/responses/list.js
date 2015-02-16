@@ -38,6 +38,8 @@ define(function (require) {
       this.surveyOptions = options.surveyOptions;
       this.surveyId = options.surveyId;
       this.objectId = options.objectId;
+
+      this.exploration = options.exploration;
     },
 
     remove: function() {
@@ -75,7 +77,8 @@ define(function (require) {
           model: response,
           labels: this.labels,
           forms: this.forms,
-          surveyOptions: this.surveyOptions
+          surveyOptions: this.surveyOptions,
+          exploration: this.exploration
         });
         this.$el.append(item.render().el);
       }.bind(this));

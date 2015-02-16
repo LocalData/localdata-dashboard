@@ -27,37 +27,52 @@
 
 
 <div class="answers">
-<% _.each(_.keys(r.responses).reverse(), function(key) { var resp = r.responses[key]; %>
-  <div class="answer">
-    <span class="key">
-      <% if(labels[key]) { %>
-        <%- labels[key] %>
-      <% } else { %>
-        <%- key %>
+  <% if (exploration && surveyOptions.explorationControlsItem) { %>
+    <% _.each(exploration, function(e) { %>
+      <% if (r.responses[e.question]) { %>
+        <div class="answer">
+          <div class="key"><%= e.name %></div>
+          <% _.each(e.values, function(v) { %>
+            <% if (v.name === r.responses[e.question]) { %>
+              <div class="value"><%= v.text %></div>
+            <% } %>
+          <% }); %>
+        </div>
       <% } %>
-    </span>
-    <span class="value"><strong>
-      <% if (_.has(answerLabels, key) && _.has(answerLabels[key], resp)) { %>
-        <%- answerLabels[key][resp] %>
-      <% } else { %>
-        <%- resp %>
-      <% } %>
-    </strong></span>
+    <% }); %>
+  <% } else { %>
+    <% _.each(_.keys(r.responses).reverse(), function(key) { var resp = r.responses[key]; %>
+      <div class="answer">
+        <span class="key">
+          <% if(labels[key]) { %>
+            <%- labels[key] %>
+          <% } else { %>
+            <%- key %>
+          <% } %>
+        </span>
+        <span class="value"><strong>
+          <% if (_.has(answerLabels, key) && _.has(answerLabels[key], resp)) { %>
+            <%- answerLabels[key][resp] %>
+          <% } else { %>
+            <%- resp %>
+          <% } %>
+        </strong></span>
 
-    <select class="edit" data-question="<%- key %>">
-      <% if (form[key]) { %>
-        <% _.each(form[key].answers, function(answer) { %>
-          <option
-            value="<%- answer.value %>"
-            <% if (answer.value === resp) { %> selected="selected" <% } %>>
-            <%- answer.text %>
-          </option>
-        <% }); %>
-      <% } %>
-    </select>
+        <select class="edit" data-question="<%- key %>">
+          <% if (form[key]) { %>
+            <% _.each(form[key].answers, function(answer) { %>
+              <option
+                value="<%- answer.value %>"
+                <% if (answer.value === resp) { %> selected="selected" <% } %>>
+                <%- answer.text %>
+              </option>
+            <% }); %>
+          <% } %>
+        </select>
 
-  </div>
-<% }); %>
+      </div>
+    <% }); %>
+  <% } %>
 </div>
 
 <% if (surveyOptions.loggedIn) { %>

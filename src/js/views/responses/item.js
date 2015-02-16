@@ -50,6 +50,8 @@ function($, _, Backbone, events, settings, api, Responses, template) {
       this.listenTo(this.model, "destroy", this.remove);
 
       this.surveyOptions = options.surveyOptions || {};
+      console.log("Opening item with exploration", options);
+      this.exploration = options.exploration;
       this.labels = options.labels;
       this.forms = options.forms;
     },
@@ -69,6 +71,8 @@ function($, _, Backbone, events, settings, api, Responses, template) {
     render: function() {
       var $el = $(this.el);
 
+      console.log("Render using exploration", this.exploration);
+
       // If this is meant for anonymous consumption, then ignore the fact
       // that the user might be logged in through the primary dashboard.
       // TODO: If the entire interface is meant for anonymous consumption,
@@ -84,7 +88,8 @@ function($, _, Backbone, events, settings, api, Responses, template) {
         labels: this.labels,
         answerLabels: this.makeAnswerLabels(),
         form: this.forms.getFlattenedForm(),
-        surveyOptions: this.surveyOptions
+        surveyOptions: this.surveyOptions,
+        exploration: this.exploration
       };
 
       $el.html(this.template(options));
