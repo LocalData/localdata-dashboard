@@ -22,6 +22,7 @@ define(function(require, exports, module) {
   // Templates
   var embeddedSurveyTemplate = require('text!templates/responses/embed-multi.html');
   var layerTitleTemplate = require('text!templates/projects/surveys/layer-title.html');
+  var loadingTemplate = require('text!templates/projects/surveys/loading.html');
   var disqusTemplate = require('text!templates/disqus.html');
 
 
@@ -48,6 +49,7 @@ define(function(require, exports, module) {
 
     template: _.template(embeddedSurveyTemplate),
     layerTitleTemplate: _.template(layerTitleTemplate),
+    loadingTemplate: _.template(loadingTemplate),
     el: '#container',
 
     events: {
@@ -93,10 +95,6 @@ define(function(require, exports, module) {
         color: surveyConfig.color
       }));
 
-    },
-
-    append: function ($el) {
-      this.$el.find('.layers').append($el);
     },
 
     appendStatic: function ($el) {
@@ -191,7 +189,17 @@ define(function(require, exports, module) {
 
         this.activeLayers[survey.layerId] = surveyLayer;
 
-        this.listenTo(surveyLayer, 'rendered', this.append);
+        // Create a placeholder to fill with the layer later
+        var $surveyEl = $(this.loadingTemplate());
+        this.$el.find('.layers').append($surveyEl);
+
+        // Once we load the layer, replace the placeholder with the real content
+        this.listenTo(surveyLayer, 'rendered', function($el) {
+          $surveyEl.html($el);
+        }.bind($surveyEl));
+
+
+        // Listen to related metadata that needs to go elsewhere.
         this.listenTo(surveyLayer, 'renderedSettings', this.appendSettings);
         this.listenTo(surveyLayer, 'count', function (count) {
           this.renderCount(survey, count || 0);
