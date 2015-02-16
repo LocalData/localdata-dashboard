@@ -190,7 +190,7 @@ define(function (require, exports, module) {
         type: 'GET',
         dataType: 'jsonp',
         data: {
-          q: _.template(this.dataQuery, { cartodb_id: cartodb_id })
+          q: _.template(this.dataQuery)({ cartodb_id: cartodb_id })
         }
       })).then(done).catch(function (error) {
         console.log('Error getting data from cartodb', error);
