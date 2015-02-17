@@ -208,6 +208,8 @@ define(function(require, exports, module) {
         ]);
       }.bind(this));
 
+      rc.on('sync', this.mapView.selectObject);
+
       rc.on('destroy', function() {
         this.mapView.update();
       }.bind(this));

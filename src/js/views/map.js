@@ -8,7 +8,6 @@ define([
   'backbone',
   'lib/leaflet/leaflet.tilejson',
   'moment',
-  'lib/kissmetrics',
 
   // LocalData
   'settings',
@@ -18,7 +17,7 @@ define([
   'text!templates/responses/map.html'
 ],
 
-function($, _, Backbone, L, moment, _kmq, settings, api, template) {
+function($, _, Backbone, L, moment, settings, api, template) {
   'use strict';
 
   var MIN_GRID_ZOOM = 14; // furthest out we'll have interactive grids.
@@ -127,7 +126,6 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
         this.map.addLayer(this.gridLayer);
       }
 
-      this.gridLayer.on('click', this.selectObject);
       if (this.clickHandler) {
         this.gridLayer.on('click', this.clickHandler);
       }
@@ -209,7 +207,6 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
         this.baseLayer.bringToBack();
         this.map.on('baselayerchange', function(event) {
           event.layer.bringToBack();
-          _kmq.push(['record', "Baselayer changed to " + event.name]);
         });
 
 
@@ -329,17 +326,15 @@ function($, _, Backbone, L, moment, _kmq, settings, api, template) {
      * Highlight a selected object
      * @param  {Object} event
      */
-    selectObject: function(event) {
-      _kmq.push(['record', "Map object selected"]);
-      console.log("Selected object", event);
-      if (!event.data) {
+    selectObject: function(collection) {
+      if (collection.length === 0) {
         return;
       }
 
       this.deselectObject();
 
       // Add a layer with a visual selection
-      this.selectedLayer = new L.GeoJSON(event.data.geometry, {
+      this.selectedLayer = new L.GeoJSON(collection.toJSON()[0].geo_info.geometry, {
         pointToLayer: this.defaultPointToLayer,
         style: settings.selectedStyle
       });
