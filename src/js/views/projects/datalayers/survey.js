@@ -251,7 +251,7 @@ define(function (require) {
         }
 
         this.mapView.selectObject(collection.toJSON()[0].geo_info.geometry);
-      });
+      }.bind(this));
 
 
       this.trigger('itemSelected', {
