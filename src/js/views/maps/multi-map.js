@@ -163,11 +163,11 @@ define(function(require, exports, module) {
      * Highlight a selected object
      * @param  {Object} event
      */
-    selectObject: function (collection) {
+    selectObject: function (feature) {
       this.deselectObject();
 
       // Add a layer with a visual selection
-      this.selectedLayer = new L.GeoJSON(collection.toJSON()[0].geo_info.geometry, {
+      this.selectedLayer = new L.GeoJSON(feature, {
         pointToLayer: this.defaultPointToLayer,
         style: settings.selectedStyle
       });

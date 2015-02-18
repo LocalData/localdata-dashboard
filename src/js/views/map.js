@@ -326,15 +326,11 @@ function($, _, Backbone, L, moment, settings, api, template) {
      * Highlight a selected object
      * @param  {Object} event
      */
-    selectObject: function(collection) {
-      if (collection.length === 0) {
-        return;
-      }
-
+    selectObject: function(feature) {
       this.deselectObject();
 
       // Add a layer with a visual selection
-      this.selectedLayer = new L.GeoJSON(collection.toJSON()[0].geo_info.geometry, {
+      this.selectedLayer = new L.GeoJSON(feature, {
         pointToLayer: this.defaultPointToLayer,
         style: settings.selectedStyle
       });

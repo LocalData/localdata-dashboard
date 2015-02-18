@@ -245,6 +245,15 @@ define(function (require) {
         exploration: this.exploration
       });
 
+      rc.on('sync', function(collection) {
+        if (collection.length === 0) {
+          return;
+        }
+
+        this.mapView.selectObject(collection.toJSON()[0].geo_info.geometry);
+      });
+
+
       this.trigger('itemSelected', {
         view: this.selectedItemListView,
         latlng: latlng

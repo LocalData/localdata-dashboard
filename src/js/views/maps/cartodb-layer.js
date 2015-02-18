@@ -234,6 +234,9 @@ define(function (require, exports, module) {
 
       this.getCartoData(event.data.cartodb_id, function (data) {
         if (data.rows && data.rows.length > 0) {
+          var feature = JSON.parse(data.rows[0].geom);
+          self.mapView.selectObject(feature);
+
           self.trigger('itemSelected', {
             view: new ItemView({
               data: data.rows[0],

@@ -208,7 +208,13 @@ define(function(require, exports, module) {
         ]);
       }.bind(this));
 
-      rc.on('sync', this.mapView.selectObject);
+      rc.on('sync', function(collection) {
+        if (collection.length === 0) {
+          return;
+        }
+
+        this.mapView.selectObject(collection.toJSON()[0].geo_info.geometry);
+      }.bind(this));
 
       rc.on('destroy', function() {
         this.mapView.update();
