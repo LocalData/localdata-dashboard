@@ -234,7 +234,6 @@ define(function (require) {
         objectId: objectId
       });
 
-      console.log("Selecting item with explroation", this.exploration);
       var surveyOptions = this.survey.get('surveyOptions') || {};
       this.selectedItemListView = new ObjectView({
         id: 'responses-list',
@@ -245,6 +244,15 @@ define(function (require) {
         survey: this.survey,
         exploration: this.exploration
       });
+
+      rc.on('sync', function(collection) {
+        if (collection.length === 0) {
+          return;
+        }
+
+        this.mapView.selectObject(collection.toJSON()[0].geo_info.geometry);
+      });
+
 
       this.trigger('itemSelected', {
         view: this.selectedItemListView,
