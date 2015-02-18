@@ -227,7 +227,6 @@ define(function (require, exports, module) {
 
     handleGridClick: function (event) {
       if (!event.data) {
-        console.log("No data --returning");
         return;
       }
 

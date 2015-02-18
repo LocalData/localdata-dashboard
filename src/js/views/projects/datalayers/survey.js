@@ -245,8 +245,6 @@ define(function (require) {
         exploration: this.exploration
       });
 
-      rc.on('sync', this.mapView.selectObject);
-
       this.trigger('itemSelected', {
         view: this.selectedItemListView,
         latlng: latlng
