@@ -215,19 +215,22 @@ define(function(require, exports, module) {
             // colors: ['#05b04c', '#a5e76b', '#d3d3d3', '#d791da', '#85048a']
           }),
           makeBasicExploration({
-            name: 'Structural condition',
+            name: 'Fire damage on blighted buildings',
             question: 'structural-damage',
             values: [
               'none',
               'some-damage',
-              'significant-damage'
+              'significant-damage',
+              'no response'
             ],
             valueNames: [
               'No damage',
-              "Some damage",
-              'Significant damage'
+              "Some fire damage",
+              'Significant fire damage',
+              'Not applicable'
             ],
-            colors: ['#0571b0', '#f46d31', '#ca0020']
+            colors: ['#0571b0', '#f46d31', '#ca0020', '#d3d3d3'],
+            showNoResponse: true
           }),
           // makeBasicExploration({
           //   name: 'Enclosed buildings',
@@ -242,19 +245,19 @@ define(function(require, exports, module) {
           //   ],
           //   colors: ['#0571b0', '#ca0020']
           // }),
-          makeBasicExploration({
-            name: 'Parking lot',
-            question: 'parking-lot',
-            values: [
-              'yes',
-              'no'
-            ],
-            valueNames: [
-              'Yes',
-              'No'
-            ],
-            colors: ['#0571b0', '#535353']
-          }),
+          // makeBasicExploration({
+          //   name: 'Parking lot',
+          //   question: 'parking-lot',
+          //   values: [
+          //     'yes',
+          //     'no'
+          //   ],
+          //   valueNames: [
+          //     'Yes',
+          //     'No'
+          //   ],
+          //   colors: ['#0571b0', '#535353']
+          // }),
           makeBasicExploration({
             name: 'Residential use structures',
             question: 'residential',
