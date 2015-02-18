@@ -245,14 +245,13 @@ define(function (require) {
         exploration: this.exploration
       });
 
-      rc.on('sync', function(collection) {
+      this.listenToOnce(rc, 'sync', function(collection) {
         if (collection.length === 0) {
           return;
         }
 
         this.mapView.selectObject(collection.toJSON()[0].geo_info.geometry);
       }.bind(this));
-
 
       this.trigger('itemSelected', {
         view: this.selectedItemListView,

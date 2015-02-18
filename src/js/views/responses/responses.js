@@ -208,7 +208,7 @@ define(function(require, exports, module) {
         ]);
       }.bind(this));
 
-      rc.on('sync', function(collection) {
+      this.listenToOnce(rc, 'sync', function(collection) {
         if (collection.length === 0) {
           return;
         }
