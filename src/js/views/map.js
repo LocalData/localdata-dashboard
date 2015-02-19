@@ -20,8 +20,6 @@ define([
 function($, _, Backbone, L, moment, settings, api, template) {
   'use strict';
 
-  var MIN_GRID_ZOOM = 14; // furthest out we'll have interactive grids.
-
   function flip(a) {
     return [a[1], a[0]];
   }
@@ -87,11 +85,11 @@ function($, _, Backbone, L, moment, settings, api, template) {
       var zoom = this.map.getZoom();
       var hasGridLayer = this.map.hasLayer(this.gridLayer);
 
-      if (zoom < MIN_GRID_ZOOM && hasGridLayer) {
+      if (zoom < settings.MIN_GRID_ZOOM && hasGridLayer) {
         this.map.removeLayer(this.gridLayer);
       }
 
-      if (zoom >= MIN_GRID_ZOOM && !hasGridLayer) {
+      if (zoom >= settings.MIN_GRID_ZOOM && !hasGridLayer) {
         this.map.addLayer(this.gridLayer);
       }
     },
@@ -122,7 +120,7 @@ function($, _, Backbone, L, moment, settings, api, template) {
       });
 
       // Make sure the grid layer is on top.
-      if (this.map.getZoom() >= MIN_GRID_ZOOM) {
+      if (this.map.getZoom() >= settings.MIN_GRID_ZOOM) {
         this.map.addLayer(this.gridLayer);
       }
 

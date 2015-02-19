@@ -90,8 +90,10 @@ define(function (require) {
       this.exploration = options.survey.exploration;
       this.state = options.survey.state || 'active';
       this.filters = options.survey.filters;
+      this.getTileJSON(this.filters);
 
       this.mapView = options.mapView;
+      this.listenTo(this.mapView, 'zoomend', this.controlUTFZoom);
 
       this.survey = new Surveys.Model({ id: this.surveyId });
       this.stats = new Stats.Model({ id: this.surveyId });
@@ -116,6 +118,7 @@ define(function (require) {
             surveyOptions: _.defaults(options.surveyOptions, surveyOptions)
           });
         }
+
         self.trigger('count', util.dotPath({
           stats: self.stats.toJSON(),
           survey: self.survey.toJSON()
@@ -127,7 +130,7 @@ define(function (require) {
         }, options.survey.countPath));
 
         self.render();
-        self.getTileJSON(self.filters);
+
       });
 
       this.survey.fetch();
@@ -159,7 +162,7 @@ define(function (require) {
       // TODO: Switch this to a POST once we support proxying the post to the
       // tile server through the API.
       $.ajax({
-        url: '/tiles/surveys/' + this.survey.get('id') + '/tile.json',
+        url: '/tiles/surveys/' + this.surveyId + '/tile.json',
         type: 'POST',
         dataType: 'json',
         cache: false,
@@ -203,6 +206,12 @@ define(function (require) {
 
       if(this.mapView && this.state === 'active') {
         this.mapView.addTileLayer(this.tileLayer);
+        this.addGridLayer(this.gridLayer);
+      }
+    },
+
+    addGridLayer: function(layer) {
+      if(this.mapView.getZoom() >= settings.MIN_GRID_ZOOM) {
         this.mapView.addGridLayer(this.gridLayer, true);
       }
     },
@@ -218,9 +227,25 @@ define(function (require) {
       } else if (this.state === 'inactive') {
         this.state = 'active';
         this.mapView.addTileLayer(this.tileLayer);
-        this.mapView.addGridLayer(this.gridLayer, true);
+        this.addGridLayer(this.gridLayer);
         // this.removeLegend();
         this.$el.removeClass('legend-inactive');
+      }
+    },
+
+    /**
+     * Hide or show the UTF Grid based on zoom level.
+     */
+    controlUTFZoom: function() {
+      var zoom = this.mapView.getZoom();
+      var hasGridLayer = this.mapView.hasLayer(this.gridLayer);
+
+      if (zoom < settings.MIN_GRID_ZOOM && hasGridLayer) {
+        this.mapView.removeGridLayer(this.gridLayer);
+      }
+
+      if (zoom >= settings.MIN_GRID_ZOOM && !hasGridLayer) {
+        this.mapView.addGridLayer(this.gridLayer);
       }
     },
 
