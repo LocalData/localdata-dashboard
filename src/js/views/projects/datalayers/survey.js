@@ -95,7 +95,6 @@ define(function (require) {
 
       this.survey = new Surveys.Model({ id: this.surveyId });
       this.stats = new Stats.Model({ id: this.surveyId });
-      this.stats.fetch({reset: true});
       this.forms = new Forms.Collection({ surveyId: this.surveyId });
       this.forms.fetch({ reset: true });
 
