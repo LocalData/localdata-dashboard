@@ -25,7 +25,7 @@ function($, _, Backbone, settings) {
 
       this.attributes = {}; // otherwise fetch doesn't seem to remove old vals
       this.params = options.params || {};
-      this.fetch();
+      this.fetch({ reset: true });
     },
 
     parse: function(response) {
