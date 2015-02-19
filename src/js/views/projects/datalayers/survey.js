@@ -90,6 +90,7 @@ define(function (require) {
       this.exploration = options.survey.exploration;
       this.state = options.survey.state || 'active';
       this.filters = options.survey.filters;
+      this.getTileJSON(this.filters);
 
       this.mapView = options.mapView;
 
@@ -117,6 +118,7 @@ define(function (require) {
             surveyOptions: _.defaults(options.surveyOptions, surveyOptions)
           });
         }
+
         self.trigger('count', util.dotPath({
           stats: self.stats.toJSON(),
           survey: self.survey.toJSON()
@@ -128,7 +130,7 @@ define(function (require) {
         }, options.survey.countPath));
 
         self.render();
-        self.getTileJSON(self.filters);
+
       });
 
       this.survey.fetch();
@@ -160,7 +162,7 @@ define(function (require) {
       // TODO: Switch this to a POST once we support proxying the post to the
       // tile server through the API.
       $.ajax({
-        url: '/tiles/surveys/' + this.survey.get('id') + '/tile.json',
+        url: '/tiles/surveys/' + this.surveyId + '/tile.json',
         type: 'POST',
         dataType: 'json',
         cache: false,
