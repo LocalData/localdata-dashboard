@@ -23,6 +23,8 @@ function(L) {
   settings.satelliteLayer = '//a.tiles.mapbox.com/v3/matth.map-yyr7jb6r/{z}/{x}/{y}.png';
   settings.printLayer = 'http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png';
 
+  settings.MIN_GRID_ZOOM = 14; // furthest out we'll have interactive grids.
+
   // Colors for option maps
   settings.colorRange = [
     "#b7aba5", // First color used for blank entries

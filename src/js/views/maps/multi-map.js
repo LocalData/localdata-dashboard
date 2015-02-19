@@ -30,7 +30,6 @@ define(function(require, exports, module) {
       L.Icon.Default.imagePath = '/js/lib/leaflet/images';
       _.bindAll(this,
         'render',
-        'controlUTFZoom',
         'fitBounds',
         'selectObject',
         'deselectObject',
@@ -47,24 +46,6 @@ define(function(require, exports, module) {
       };
 
       this.config = options.config;
-    },
-
-
-    /**
-     * Hide or show the UTF Grid based on zoom level.
-     */
-    controlUTFZoom: function() {
-      var zoom = this.map.getZoom();
-      var hasGridLayer = this.map.hasLayer(this.gridLayer);
-
-      if (zoom < MIN_GRID_ZOOM && hasGridLayer) {
-        this.map.removeLayer(this.gridLayer);
-      }
-
-      // FIXME: We need to manage multiple grid layers
-      if (zoom >= MIN_GRID_ZOOM && !hasGridLayer && this.gridLayer) {
-        this.map.addLayer(this.gridLayer);
-      }
     },
 
     addTileLayer: function (layer) {
@@ -84,6 +65,10 @@ define(function(require, exports, module) {
       }
     },
 
+    getZoom: function() {
+      return this.map.getZoom();
+    },
+
     removeGridLayer: function (layer) {
       this.map.removeLayer(layer);
     },
@@ -92,11 +77,9 @@ define(function(require, exports, module) {
       $('.map-loading').show();
     },
 
-
     done: function() {
       $('.map-loading').hide();
     },
-
 
     fitBounds: function (latLngBounds) {
       if (latLngBounds[0][0] === latLngBounds[1][0] ||
@@ -127,6 +110,7 @@ define(function(require, exports, module) {
       this.map.attributionControl.setPrefix('');
 
       this.map.on('click', this.clickHandler, this);
+      this.map.on('zoomend', this.zoomHandler, this);
 
       this.map.addControl(L.control.zoom({ position: 'topright' }));
 
@@ -141,9 +125,6 @@ define(function(require, exports, module) {
         "Print": this.printLayer
       };
 
-      // Make sure we don't show the UTF grid too far out.
-      this.map.on('zoomend', this.controlUTFZoom);
-
       // Add the layer control
       // Make sure the layer stays in the background
       L.control.layers(baseMaps).addTo(this.map);
@@ -157,6 +138,14 @@ define(function(require, exports, module) {
 
     clickHandler: function (event) {
       this.trigger('click', event);
+    },
+
+    zoomHandler: function(event) {
+      this.trigger('zoomend', event);
+    },
+
+    hasLayer: function(layer) {
+      return this.map.hasLayer(layer);
     },
 
     /**

@@ -93,6 +93,7 @@ define(function (require) {
       this.getTileJSON(this.filters);
 
       this.mapView = options.mapView;
+      this.listenTo(this.mapView, 'zoomend', this.controlUTFZoom);
 
       this.survey = new Surveys.Model({ id: this.surveyId });
       this.stats = new Stats.Model({ id: this.surveyId });
@@ -206,6 +207,12 @@ define(function (require) {
 
       if(this.mapView && this.state === 'active') {
         this.mapView.addTileLayer(this.tileLayer);
+        this.addGridLayer(this.gridLayer);
+      }
+    },
+
+    addGridLayer: function(layer) {
+      if(this.mapView.getZoom() >= settings.MIN_GRID_ZOOM) {
         this.mapView.addGridLayer(this.gridLayer, true);
       }
     },
@@ -221,9 +228,25 @@ define(function (require) {
       } else if (this.state === 'inactive') {
         this.state = 'active';
         this.mapView.addTileLayer(this.tileLayer);
-        this.mapView.addGridLayer(this.gridLayer, true);
+        this.addGridLayer(this.gridLayer);
         // this.removeLegend();
         this.$el.removeClass('legend-inactive');
+      }
+    },
+
+    /**
+     * Hide or show the UTF Grid based on zoom level.
+     */
+    controlUTFZoom: function() {
+      var zoom = this.mapView.getZoom();
+      var hasGridLayer = this.mapView.hasLayer(this.gridLayer);
+
+      if (zoom < settings.MIN_GRID_ZOOM && hasGridLayer) {
+        this.mapView.removeGridLayer(this.gridLayer);
+      }
+
+      if (zoom >= settings.MIN_GRID_ZOOM && !hasGridLayer) {
+        this.mapView.addGridLayer(this.gridLayer);
       }
     },
 
