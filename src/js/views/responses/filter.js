@@ -11,6 +11,7 @@ define(function(require, exports, module) {
 
   // App
   var settings = require('settings');
+  var util = require('util');
 
   // Models
   var Stats = require('models/stats');
@@ -300,6 +301,8 @@ define(function(require, exports, module) {
 
     selectQuestion: function(event) {
       var $question = $(event.target);
+      util.track('survey.filters.question.select');
+
       var question = $question.attr('data-question');
       if(!question) {
         $question = $question.parent();
@@ -325,6 +328,7 @@ define(function(require, exports, module) {
      */
     selectAnswer: function(event) {
       var $answer = $(event.target);
+      util.track('survey.filters.answer.select');
       this.filters.answer = $answer.attr('data-answer');
 
       this.markAnswerSelected($answer);

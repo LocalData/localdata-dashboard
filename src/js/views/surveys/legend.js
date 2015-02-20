@@ -7,6 +7,8 @@ define(function (require) {
   var _ = require('lib/lodash');
   var Backbone = require('backbone');
 
+  var util = require('util');
+
   // Templates
   var template = require('text!templates/projects/surveys/legend.html');
 

@@ -9,7 +9,6 @@ define([
   'lib/leaflet.draw/leaflet.draw',
   'moment',
   'lib/tinypubsub',
-  'lib/kissmetrics',
 
   // LocalData
   'settings',
@@ -25,7 +24,7 @@ define([
 
 // https://github.com/LocalData/localdata-dashboard/compare/map-draw?expand=1
 
-function($, _, Backbone, L, moment, events, _kmq, settings, api,
+function($, _, Backbone, L, moment, events, settings, api,
   Zones, MapDrawTemplate, MapZonesTemplate) {
   'use strict';
 

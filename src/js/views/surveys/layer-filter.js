@@ -10,6 +10,7 @@ define(function (require) {
 
   // LocalData
   var settings = require('settings');
+  var util = require('util');
 
   // Templates
   var template = require('text!templates/surveys/layerFilter.html');
@@ -48,6 +49,7 @@ define(function (require) {
 
     close: function() {
       console.log("Closing settings");
+      util.track('survey.filters.close');
       this.$el.hide();
     },
 
@@ -136,6 +138,7 @@ define(function (require) {
 
     showOptions: function(event) {
       event.preventDefault();
+      util.track('survey.filters.show');
       $('.filters .options').show();
     },
 
@@ -156,6 +159,8 @@ define(function (require) {
     },
 
     selectQuestion: function(event) {
+      util.track('survey.filters.question.select');
+
       // Clear out any filters
       if(this.filters.answer) {
         this.reset();
@@ -185,6 +190,8 @@ define(function (require) {
      * Show only responses with a specific answer
      */
     selectAnswer: function(event) {
+      util.track('survey.filters.answer.select');
+
       var $answer = $(event.target);
       this.filters.answer = $answer.attr('data-answer');
 

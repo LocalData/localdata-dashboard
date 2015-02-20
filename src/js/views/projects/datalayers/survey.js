@@ -370,8 +370,8 @@ define(function (require) {
     },
 
     showSettings: function (event) {
-      console.log("Showing settings", this.$settings);
       this.$settings.show();
+      util.track('project.survey.showSettings');
     },
 
     setupStats: function() {
@@ -401,8 +401,8 @@ define(function (require) {
     changeFilter: function(filter) {
       // Assume this activates the layer
       this.state = 'active';
-
       this.getTileJSON(filter);
+      util.track('project.survey.changeFilter');
     },
 
     changeLegend: function(options) {

@@ -8,9 +8,10 @@ define(function (require) {
   var $ = require('jquery');
   var _ = require('lib/lodash');
   var Backbone = require('backbone');
-  var _kmq = require('lib/kissmetrics');
 
+  var util = require('util');
   var api = require('api');
+
   var template = require('text!templates/surveys/form-editor.html');
   var addTopQuestionTemplate = require('text!templates/surveys/editor/add-top-question.html');
   var photoQuestionTemplate = require('text!templates/surveys/editor/photo-question.html');
@@ -18,6 +19,7 @@ define(function (require) {
   var counterQuestionTemplate = require('text!templates/surveys/editor/counter-question.html');
   var multipleChoiceTemplate = require('text!templates/surveys/editor/multiple-choice.html');
   var answerTemplate = require('text!templates/surveys/editor/answer.html');
+
   var Form = require('models/forms');
 
 
@@ -78,7 +80,7 @@ define(function (require) {
     save: function(event) {
       event.preventDefault();
       console.log('Saving form');
-      _kmq.push(['record', 'Survey questions saved']);
+      util.track('survey.form.save');
 
       api.createForm(this.forms.getMostRecentForm().toJSON(), function(){
         console.log('Form successfully saved');
@@ -164,12 +166,10 @@ define(function (require) {
 
     editQuestionFactory: function(question) {
       return function(event) {
-        console.log('Updating question');
-        _kmq.push(['record', 'Question edited']);
+        util.track('survey.form.question.edit');
+
         var text = _.trim($(event.target).val());
-
         var name = this.slugify(text);
-
         question.text = text;
         question.name = name;
 
@@ -219,8 +219,7 @@ define(function (require) {
 
     deleteQuestion: function($question, parent, questionIndex) {
       return function(event) {
-        console.log("removing question");
-        _kmq.push(['record', 'Question deleted']);
+        util.track('survey.form.question.delete');
 
         // Remove it from the DOM.
         $question.remove();
@@ -238,7 +237,7 @@ define(function (require) {
         var type = $(event.currentTarget).attr('data-type');
 
         console.log("Adding a new question");
-        _kmq.push(['record', 'Question added']);
+        util.track('survey.form.question.add');
 
         var newQuestion = this.makeBlankQuestion();
         this.setQuestionType(newQuestion, type);
@@ -251,7 +250,7 @@ define(function (require) {
     createPhotoQuestion: function(parent, questionIndex) {
       return function(event) {
         console.log("Adding a new photo question");
-        _kmq.push(['record', 'Question added']);
+        util.track('survey.form.question.add');
 
         var newQuestion = this.makeBlankQuestion();
         newQuestion.type = 'file';
@@ -264,7 +263,8 @@ define(function (require) {
 
     createAnswer: function(question) {
       return function(event) {
-        _kmq.push(['record', 'Answer added']);
+        util.track('survey.form.answer.add');
+
         question.answers.push({
           'text': '',
           'value': ''
@@ -281,7 +281,7 @@ define(function (require) {
         var type = $(event.currentTarget).attr('data-type');
 
         console.log("Adding sub-question", type);
-        _kmq.push(['record', 'Sub-question added']);
+        util.track('survey.form.subquestion.add');
 
         var newQuestion = this.makeBlankQuestion();
         this.setQuestionType(newQuestion, type);
@@ -299,7 +299,7 @@ define(function (require) {
 
     editAnswer: function(question, index) {
       return function(event){
-        _kmq.push(['record', 'Answer edited']);
+        util.track('survey.form.answer.edit');
         var text = _.trim($(event.target).val());
         question.answers[index].text = text;
         question.answers[index].value = this.slugify(text);
@@ -316,7 +316,6 @@ define(function (require) {
     deleteAnswer: function(question, index, $answer) {
       return function(event) {
         console.log("removing answer");
-        _kmq.push(['record', 'Answer deleted']);
 
         // Remove it from the json
         question.answers.splice(index, 1);

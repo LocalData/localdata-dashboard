@@ -6,6 +6,7 @@ define([
   'lib/lodash',
   'backbone',
   'settings',
+  'util',
   'api',
 
   // Templates
@@ -13,7 +14,7 @@ define([
   'text!templates/export-embed.html'
 ],
 
-function($, _, Backbone, settings, api, exportTemplate, embedTemplate) {
+function($, _, Backbone, settings, util, api, exportTemplate, embedTemplate) {
   'use strict';
 
   var exportTimeout = 2 * 60 * 1000; // 2 minutes
@@ -123,24 +124,28 @@ function($, _, Backbone, settings, api, exportTemplate, embedTemplate) {
     getCSV: function getCSV() {
       var url = settings.api.baseurl + '/surveys/' + this.survey.get('id') + '/responses.csv';
       this.pingExport('csv', url);
+      util.track('survey.export.csv');
     },
 
     // Ask the API to generate a CSV export.
     getCSVLatest: function getCSVLatest() {
       var url = settings.api.baseurl + '/surveys/' + this.survey.get('id') + '/responses.csv';
       this.pingExport('csvLatest', url);
+      util.track('survey.export.csv.latest');
     },
 
     // Ask the API to generate a KML export.
     getKML: function getKML() {
       var url = settings.api.baseurl + '/surveys/' + this.survey.get('id') + '/responses.kml';
       this.pingExport('kml', url);
+      util.track('survey.export.kml');
     },
 
     // Ask the API to generate a shapefile export.
     getShapefile: function getShapefile() {
       var url = settings.api.baseurl + '/surveys/' + this.survey.get('id') + '/responses.zip';
       this.pingExport('shapefile', url);
+      util.track('survey.export.shapefile');
     }
   });
 

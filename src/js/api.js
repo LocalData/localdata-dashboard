@@ -5,6 +5,7 @@ define(function (require) {
   'use strict';
 
   var settings = require('settings');
+  var util = require('util');
   var _ = require('lib/lodash');
   var $ = require('jquery');
   var L = require('lib/leaflet/leaflet');
@@ -286,6 +287,10 @@ define(function (require) {
     // TODO: Can we get the locale from the geolocation feature?
     // If the user-entered address does not include a city, append the survey location.
     var addressWithLocale = address;
+
+    util.track('api.geocode', {
+      address: address
+    });
 
     // If there is a comma in the address, assume the user added the city.
     if (address.indexOf(',') === -1) {

@@ -6,10 +6,11 @@ define([
   'lib/lodash',
   'backbone',
   'settings',
+  'util',
   'api'
 ],
 
-function($, _, Backbone, settings, api) {
+function($, _, Backbone, settings, util, api) {
   'use strict';
 
   var IndexRouter = Backbone.Router.extend({
@@ -47,13 +48,12 @@ function($, _, Backbone, settings, api) {
 
     initialize: function(options) {
       this.controller = options.controller;
-
       this.route(/^login\/(.*)$/, "login", this.login);
-
     },
 
     home: function() {
       console.log("Index");
+      util.track('navigate.home');
       this.controller.goto_home();
     },
 
@@ -71,16 +71,19 @@ function($, _, Backbone, settings, api) {
     },
 
     new_survey: function() {
+      util.track('navigate.survey.new');
       api.getCurrentUser(function(user) {
         this.controller.goto_new();
       }.bind(this));
     },
 
     survey: function(slug) {
+      util.track('navigate.survey');
       api.setSurveyIdFromSlug(slug, this.controller.goto_survey);
     },
 
     dive: function(slug) {
+      util.track('navigate.survey.dive');
       api.setSurveyIdFromSlug(slug, this.controller.goto_filters);
     },
 
@@ -91,22 +94,27 @@ function($, _, Backbone, settings, api) {
     },
 
     settings: function(slug) {
+      util.track('navigate.survey.settings');
       api.setSurveyIdFromSlug(slug, this.controller.goto_settings);
     },
 
     form: function(slug) {
+      util.track('navigate.survey.form');
       api.setSurveyIdFromSlug(slug, this.controller.goto_form);
     },
 
     survey_export: function(slug) {
+      util.track('navigate.survey.export');
       api.setSurveyIdFromSlug(slug, this.controller.goto_export);
     },
 
     design: function(slug) {
+      util.track('navigate.survey.design');
       api.setSurveyIdFromSlug(slug, this.controller.goto_design);
     },
 
     review: function(slug) {
+      util.track('navigate.survey.review');
       api.setSurveyIdFromSlug(slug, this.controller.goto_review);
     },
 

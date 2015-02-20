@@ -13,13 +13,10 @@ define([
 
   // Views
   'views/root',
-  'views/loading',
-
-  // Models
-  'models/users'
+  'views/loading'
 ],
 
-function($, _, Backbone, events, settings, api, RootView, LoadingView, Users) {
+function($, _, Backbone, events, settings, api, RootView, LoadingView) {
   'use strict';
 
   // Patch Backbone to support saving namespaced models

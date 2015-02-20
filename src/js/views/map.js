@@ -11,13 +11,14 @@ define([
 
   // LocalData
   'settings',
+  'util',
   'api',
 
   // Templates
   'text!templates/responses/map.html'
 ],
 
-function($, _, Backbone, L, moment, settings, api, template) {
+function($, _, Backbone, L, moment, settings, util, api, template) {
   'use strict';
 
   function flip(a) {
@@ -92,6 +93,10 @@ function($, _, Backbone, L, moment, settings, api, template) {
       if (zoom >= settings.MIN_GRID_ZOOM && !hasGridLayer) {
         this.map.addLayer(this.gridLayer);
       }
+
+      util.track('survey.map.zoom', {
+        zoom: zoom
+      });
     },
 
 
