@@ -9,6 +9,8 @@ define(function(require, exports, module) {
   var _ = require('lib/lodash');
   var Backbone = require('backbone');
 
+  var util = require('util');
+
   // Views
   var DeleteView = require('views/surveys/delete');
   var MapDrawView = require('views/maps/draw');
@@ -44,6 +46,7 @@ define(function(require, exports, module) {
 
     save: function(event) {
       event.preventDefault();
+      util.track('survey.settings.save');
 
       // Get the fields from the form
       var form = $(event.target).parent().serializeArray();

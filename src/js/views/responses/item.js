@@ -9,6 +9,7 @@ define([
 
   // LocalData
   'settings',
+  'util',
   'api',
 
   // Models
@@ -18,7 +19,7 @@ define([
   'text!templates/responses/item.html'
 ],
 
-function($, _, Backbone, events, settings, api, Responses, template) {
+function($, _, Backbone, events, settings, util, api, Responses, template) {
   'use strict';
 
   var ResponseView = Backbone.View.extend({
@@ -122,12 +123,16 @@ function($, _, Backbone, events, settings, api, Responses, template) {
         success: success,
         error: error
       });
+
+      util.track('survey.response.delete');
     },
 
 
     // Editing
     edit: function(event) {
       event.preventDefault();
+      util.track('survey.response.edit');
+
       this.$('.value').hide();
       this.$('.action-show-edit').hide();
 
@@ -145,6 +150,7 @@ function($, _, Backbone, events, settings, api, Responses, template) {
 
     cancelEdit: function(event) {
       event.preventDefault();
+      util.track('survey.response.edit.cancel');
 
       // Show the values and edit button
       this.$('.value').show();
@@ -161,6 +167,7 @@ function($, _, Backbone, events, settings, api, Responses, template) {
 
     save: function(event) {
       event.preventDefault();
+      util.track('survey.response.edit.save');
 
       this.model.save({
         responses: this.responseEdits
@@ -179,6 +186,8 @@ function($, _, Backbone, events, settings, api, Responses, template) {
     // Flagging
     flag: function(event) {
       event.preventDefault();
+      util.track('survey.response.flag');
+
       this.model.save({
         responses: {
           reviewed: 'flagged'
@@ -196,6 +205,8 @@ function($, _, Backbone, events, settings, api, Responses, template) {
 
     accept: function(event) {
       event.preventDefault();
+      util.track('survey.response.accept');
+
       this.model.save({
         responses: {
           reviewed: 'accepted'

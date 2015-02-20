@@ -12,6 +12,7 @@ define(function(require, exports, module) {
   var moment = require('moment');
 
   var api = require('api');
+  var util = require('util');
 
   // Models
   var Responses = require('models/responses');
@@ -243,6 +244,10 @@ define(function(require, exports, module) {
       }
 
       this.selectItem(objectId);
+
+      util.track('survey.map.click', {
+        objectId: objectId
+      });
     },
 
     update: function() {
@@ -323,7 +328,6 @@ define(function(require, exports, module) {
      * Get new responses
      */
     getNew: function(event) {
-      console.log("Getting new responses");
       event.preventDefault();
       var $checking = $('.checking');
       $checking.fadeIn(250);
@@ -332,6 +336,8 @@ define(function(require, exports, module) {
       this.survey.fetch().always(function () {
         $checking.fadeOut(500);
       });
+
+      util.track('survey.getNew');
     },
 
     /**
@@ -501,6 +507,10 @@ define(function(require, exports, module) {
       rc.on('destroy', function () {
         this.mapView.update();
       }.bind(this));
+
+      util.track('survey.map.click', {
+        objectId: event.data.object_id
+      });
     },
 
     toggleFilters: function () {

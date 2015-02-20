@@ -6,11 +6,11 @@ define([
   'lib/lodash',
   'backbone',
   'lib/tinypubsub',
-  'lib/kissmetrics',
 
   // LocalData
   'routers/index',
   'settings',
+  'util',
   'api',
 
   // Models
@@ -24,7 +24,7 @@ define([
 
 ],
 
-function($, _, Backbone, events, _kmq, router, settings, api,
+function($, _, Backbone, events, router, settings, util, api,
   UserModels,
   loginTemplate,
   registerTemplate,
@@ -67,15 +67,23 @@ function($, _, Backbone, events, _kmq, router, settings, api,
 
       console.log("User render got", error, this.user);
 
-      if(!this.user.isLoggedIn()) {
-        this.$el.find('.login').fadeIn();
-        this.$el.find('.logout').fadeOut();
-        $('.mysurveys').hide();
-
-      }else {
+      if(this.user.isLoggedIn()) {
         this.$el.find('.login').fadeOut();
         this.$el.find('.logout').fadeIn();
         $('.mysurveys').fadeIn();
+
+        console.log("Intercom", this.user);
+        window.Intercom('boot', {
+          app_id: "mwtwgaca",
+          name: this.user.get('name'),
+          email: this.user.get('email'),
+          created_at: this.user.getCreated()
+        });
+        window.Intercom('update');
+      }else {
+        this.$el.find('.login').fadeIn();
+        this.$el.find('.logout').fadeOut();
+        $('.mysurveys').hide();
       }
       return this;
     }
@@ -130,7 +138,6 @@ function($, _, Backbone, events, _kmq, router, settings, api,
     createUser: function(event) {
       event.preventDefault();
 
-      _kmq.push(['record', 'Creating user account']);
       var user = $(event.target).parent().serializeArray();
       $('#register .error').fadeOut();
 
@@ -174,7 +181,6 @@ function($, _, Backbone, events, _kmq, router, settings, api,
 
     logInCallback: function(error, user) {
       if(error) {
-        _kmq.push(['record', error]);
         $('#login .error').html(error).fadeIn();
         return;
       }
@@ -185,7 +191,6 @@ function($, _, Backbone, events, _kmq, router, settings, api,
 
     logIn: function(event) {
       event.preventDefault();
-      _kmq.push(['record', 'User logging in']);
       $('#login .error').fadeOut();
 
       var user = $(event.target).parent().serializeArray();
@@ -227,7 +232,6 @@ function($, _, Backbone, events, _kmq, router, settings, api,
 
     changeDone: function (error, user) {
       if (error) {
-        _kmq.push(['record', 'Password reset error: ' + error]);
         this.$('.error').html(error.message).fadeIn();
         return;
       }
@@ -238,7 +242,7 @@ function($, _, Backbone, events, _kmq, router, settings, api,
 
     changePassword: function(event) {
       event.preventDefault();
-      _kmq.push(['record', 'User reset password']);
+      util.track('user.password.reset');
       this.$('.error').fadeOut();
 
       var pw = this.$('input[name=password]').val();

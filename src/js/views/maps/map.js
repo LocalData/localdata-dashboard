@@ -9,13 +9,12 @@ define([
   'lib/leaflet/leaflet.tilejson',
   'moment',
   'lib/tinypubsub',
-  'lib/kissmetrics',
 
   // LocalData
   'settings'
 ],
 
-function($, _, Backbone, L, moment, events, _kmq, settings) {
+function($, _, Backbone, L, moment, events, settings) {
   'use strict';
 
   /**

@@ -22,6 +22,10 @@ function($, _, Backbone, settings) {
 
     isLoggedIn: function() {
       return (this.attributes.name !== undefined);
+    },
+
+    getCreated: function() {
+      return parseInt(this.attributes._id.substring(0, 8), 16);
     }
   });
 

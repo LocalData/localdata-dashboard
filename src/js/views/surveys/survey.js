@@ -44,7 +44,6 @@ define(function (require) {
     selectedFiltersTemplate: _.template(selectedFiltersTemplate),
 
     events: {
-      'click .close': 'close',
       'click .show-settings': 'showSettings'
     },
 
@@ -170,7 +169,7 @@ define(function (require) {
         labels: this.forms.getQuestions(),
         forms: this.forms,
         surveyOptions: surveyOptions,
-        survey: this.survey,
+        survey: this.survey
       });
 
       selectedItemListView.on('remove', function () {
@@ -211,6 +210,7 @@ define(function (require) {
 
     showSettings: function() {
       this.$el.find('.settings').show();
+      util.track('survey.settings.show');
     },
 
     changeFilter: function(filter) {

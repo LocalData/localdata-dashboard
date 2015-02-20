@@ -13,4 +13,9 @@ define(function (require, exports) {
       return memo[index];
     }, obj);
   };
+
+  exports.track = function(event, data) {
+    Intercom('trackEvent', event, data);
+  };
+
 });
