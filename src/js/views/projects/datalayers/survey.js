@@ -90,10 +90,17 @@ define(function (require) {
       this.exploration = options.survey.exploration;
       this.state = options.survey.state || 'active';
       this.filters = options.survey.filters;
-      this.getTileJSON(this.filters);
 
       this.mapView = options.mapView;
-      this.listenTo(this.mapView, 'zoomend', this.controlUTFZoom);
+
+      // The survey datalayer provides map and general layer data functionality
+      // (stats), but sometimes we're not actually connecting it to a map.
+      // TODO: separate the map-specific pieces from the general stats pieces,
+      // so we don't try to control map stuff if there's no map?
+      if (this.mapView) {
+        this.getTileJSON(this.filters);
+        this.listenTo(this.mapView, 'zoomend', this.controlUTFZoom);
+      }
 
       this.survey = new Surveys.Model({ id: this.surveyId });
       this.stats = new Stats.Model({ id: this.surveyId });
