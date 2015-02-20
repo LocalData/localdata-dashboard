@@ -9,6 +9,7 @@ require.config({
     text: 'lib/text',
     jquery: 'lib/jquery-1.7.1',
     backbone: 'lib/backbone',
+    intercom: 'lib/intercom',
     moment: 'lib/moment.min'
   },
 
@@ -50,7 +51,7 @@ require.config({
 
 });
 
-require(['jquery', 'lib/lodash', 'loglevel', 'backbone', 'app', 'lib/bootstrap', 'lib/jquery.cookie'],
+require(['jquery', 'lib/lodash', 'loglevel', 'backbone', 'app', 'lib/bootstrap', 'lib/jquery.cookie', 'lib/intercom'],
         function ($, _, logLevel, Backbone, app) {
   'use strict';
 
