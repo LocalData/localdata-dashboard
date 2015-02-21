@@ -29,6 +29,120 @@ function($, _, Backbone, settings) {
       return settings.api.baseurl + '/surveys/' + this.surveyId + '/forms';
     },
 
+    // Return a v2-structured form:
+    // Form is an array of questions
+    // Question has a slug, id, type, text, possibly a group, possibly array of answers, and possibly a condition.
+    // Answer has a slug, id, and text.
+    // IDs are unique and are format-wise valid as slugs. Slugs are not necessarily unique.
+    // Condition has a type and type-specific fields.
+    getFormV2: function getFormV2() {
+      var list = [];
+
+      var ids = {};
+      function uniqueId(slug) {
+        var id = slug;
+        var dupe = ids[id];
+        var i = 0;
+        while (dupe) {
+          i += 1;
+          id = slug + '-' + i;
+          dupe = ids[id];
+        }
+        ids[id] = true;
+        return id;
+      }
+
+      function transformAnswer(old) {
+        return {
+          value: old.value,
+          id: uniqueId(old.value),
+          text: old.text
+        };
+      }
+
+      function transformQuestion(old, condition) {
+        var type = old.type;
+        if (!type) {
+          type = 'radio';
+        }
+        var question = {};
+
+        if (condition) {
+          question.condition = condition;
+        }
+
+        if (type !== 'checkbox') {
+          question.type = type;
+          question.slug = old.name;
+          question.id = uniqueId(question.slug);
+          question.text = old.text;
+
+          list.push(question);
+          if (old.answers) {
+            // For each answer, create a v2 answer object.
+            question.answers = _.map(old.answers, transformAnswer);
+
+            // Process each answer's sub-questions with transformQuestion.
+            _.each(old.answers, function (answer, i) {
+              if (answer.questions) {
+                _.forEach(answer.questions, _.curry(transformQuestion)(_, {
+                  type: 'answer-selection',
+                  question: question.id,
+                  answer: question.answers[i].id
+                }));
+              }
+            });
+          }
+        } else {
+          // Checkbox questions were previously organized as one question with
+          // multiple answers. For storing the responses, we would merge the
+          // question and answer slug into a synthetic question slug, and the
+          // answer would be "Yes".
+          // For v2, we treat each checkbox as an independent question from the
+          // beginning, and we make them part of a single group.
+
+          // Group
+          list.push({
+            type: 'group',
+            slug: old.name,
+            id: uniqueId(old.name),
+            text: old.text
+          });
+
+          var subs = [];
+          // Individual checkboxes.
+          _.forEach(old.answers, function (item) {
+            var id = uniqueId(item.name);
+            list.push({
+              type: 'checkbox',
+              slug: item.name,
+              id: id,
+              text: item.text
+            });
+            subs.push({
+              questions: item.questions,
+              id: id,
+              answer: 'yes'
+            });
+          });
+
+          // Sub-questions
+          _.forEach(subs, function (item) {
+            if (item.questions) {
+              _.forEach(item.questions, _.curry(transformQuestion)(_, {
+                type: 'answer-selection',
+                question: item.id,
+                answer: item.answer
+              }));
+            }
+          });
+        }
+      }
+
+      _.forEach(this.get('questions'), transformQuestion);
+      return { questions: list };
+    },
+
     // Flatten the most recent form into a mapping of question names to
     // immediate question info (text and possible answers)
     // { 'are-you-cool': {text: 'Are you cool?', answers: [{value: 'yes', text: 'Yes'}, {value: 'no', text: 'No'}]}}
@@ -193,10 +307,11 @@ function($, _, Backbone, settings) {
     // immediate question info.
     // { 'are-you-cool': {text: 'Are you cool?', answers: [{value: 'yes', text: 'Yes'}, {value: 'no', text: 'No'}]}}
     getFlattenedForm: function getFlattenedForm() {
-      if (!this.getMostRecentForm()) {
+      var form = this.getMostRecentForm();
+      if (!form) {
         return undefined;
       }
-      return this.getMostRecentForm().getFlattenedForm();
+      return form.getFlattenedForm();
     },
 
     getQuestions: function() {
@@ -219,7 +334,3 @@ function($, _, Backbone, settings) {
   return Forms;
 
 }); // End Forms module
-
-
-
-

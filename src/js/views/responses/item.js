@@ -81,11 +81,50 @@ function($, _, Backbone, events, settings, util, api, Responses, template) {
         this.surveyOptions.loggedIn = settings.user && settings.user.isLoggedIn();
       }
 
+      var responses = this.model.get('responses');
+      var form = this.forms.getMostRecentForm().getFormV2();
+      var fields = [];
+      var processed = {};
+      // Go through the questions in the latest form and map the question-answer slug pairs to text pairs.
+      _.forEach(form.questions, function (question) {
+        var valueSlug = responses[question.slug];
+        var value;
+        var key;
+        // If there was a match, then we can use the text for this question.
+        // Questions might be duplicated in a form becase of conditional
+        // structures. Don't display a question/answer pair twice.
+        if (valueSlug && !processed[question.slug]) {
+          key = question.text;
+          // If the value slug matches an answer, then we can also use the text for that answer.
+          value = _.pluck(_.where(question.answers, { value: valueSlug}), 'text')[0];
+          if (!value) {
+            value = valueSlug;
+          }
+          fields.push({
+            question: key,
+            questionSlug: question.slug,
+            answer: value,
+            answerSlug: valueSlug,
+            answerOptions: question.answers
+          });
+          processed[question.slug] = true;
+        }
+      });
+      // Go through the full set of question-answer slug pairs in this entry and
+      // add any that didn't map to the form.
+      _.forEach(_.keys(responses).reverse(), function (key) {
+        if (!processed[key]) {
+          fields.push({
+            question: key,
+            questionSlug: key,
+            answer: responses[key]
+          });
+        }
+      });
+
       var options = {
         r: this.model.toJSON(),
-        labels: this.labels,
-        answerLabels: this.makeAnswerLabels(),
-        form: this.forms.getFlattenedForm(),
+        fields: fields,
         surveyOptions: this.surveyOptions,
         exploration: this.exploration
       };

@@ -41,37 +41,28 @@
       <% } %>
     <% }); %>
   <% } else { %>
-    <% _.each(_.keys(r.responses).reverse(), function(key) { var resp = r.responses[key]; %>
+    <% _.forEach(fields, function (field) { %>
       <div class="answer">
         <span class="key">
-          <% if(labels[key]) { %>
-            <%- labels[key] %>
-          <% } else { %>
-            <%- key %>
-          <% } %>
+          <%- field.question %>
         </span>
-        <span class="value"><strong>
-          <% if (_.has(answerLabels, key) && _.has(answerLabels[key], resp)) { %>
-            <%- answerLabels[key][resp] %>
-          <% } else { %>
-            <%- resp %>
-          <% } %>
-        </strong></span>
+        <span class="value">
+          <%- field.answer %>
+        </span>
 
-        <select class="edit" data-question="<%- key %>">
-          <% if (form[key]) { %>
-            <% _.each(form[key].answers, function(answer) { %>
+        <select class="edit" data-question="<%- field.questionSlug %>">
+          <% if (field.answerOptions) { %>
+            <% _.forEach(field.answerOptions, function (option) { %>
               <option
-                value="<%- answer.value %>"
-                <% if (answer.value === resp) { %> selected="selected" <% } %>>
-                <%- answer.text %>
+                value="<%- option.slug %>"
+                <% if (field.answerSlug === option.slug) { %> selected="selected" <% } %>>
+                <%- option.text %>
               </option>
             <% }); %>
           <% } %>
         </select>
-
       </div>
-    <% }); %>
+    <% }) %>
   <% } %>
 </div>
 
