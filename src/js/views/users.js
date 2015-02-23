@@ -65,14 +65,11 @@ function($, _, Backbone, events, router, settings, util, api,
       this.$el.html(_.template($('#userbar-view').html())(context));
       this.$el.fadeIn(400).css("display", "inline-block");
 
-      console.log("User render got", error, this.user);
-
       if(this.user.isLoggedIn()) {
         this.$el.find('.login').fadeOut();
         this.$el.find('.logout').fadeIn();
         $('.mysurveys').fadeIn();
 
-        console.log("Intercom", this.user);
         window.Intercom('boot', {
           app_id: "mwtwgaca",
           name: this.user.get('name'),

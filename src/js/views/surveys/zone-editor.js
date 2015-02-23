@@ -1,41 +1,34 @@
 /*jslint nomen: true */
 /*globals define: true */
 
-define([
-  // Libraries
-  'jquery',
-  'lib/lodash',
-  'backbone',
-  'lib/leaflet.draw/leaflet.draw',
-  'moment',
-  'lib/tinypubsub',
+define(function(require, exports, module) {
+  'use strict';
 
-  // LocalData
-  'settings',
-  'api',
+  var $ = require('jquery');
+  var _ = require('lib/lodash');
+  var L = require('lib/leaflet.draw/leaflet.draw');
+  var Backbone = require('backbone');
+
+  var settings = require('settings');
+  var util = require('util');
 
   // Models
-  'models/zones',
+  var Zones = require('models/zones');
 
   // Templates
-  'text!templates/surveys/settings-map.html',
-  'text!templates/surveys/settings-map-zones.html'
-],
+  var MapDrawTemplate = require('text!templates/surveys/zone-editor.html');
+  var MapZonesTemplate = require('text!templates/surveys/zone-editor-zone.html');
 
-// https://github.com/LocalData/localdata-dashboard/compare/map-draw?expand=1
-
-function($, _, Backbone, L, moment, events, settings, api,
-  Zones, MapDrawTemplate, MapZonesTemplate) {
-  'use strict';
+  var WEIGHT = 4;
 
   function flip(a) {
     return [a[1], a[0]];
   }
 
-  var MapDrawView = Backbone.View.extend({
+  var ZoneEditorView = Backbone.View.extend({
     map: null,
 
-    el: "#map-draw-view-container",
+    el: '#zone-editor-container',
 
     template: _.template(MapDrawTemplate),
     zonesTemplate: _.template(MapZonesTemplate),
@@ -43,7 +36,8 @@ function($, _, Backbone, L, moment, events, settings, api,
     events: {
       'click .draw': 'drawZone',
       'click .remove': 'removeZone',
-      'click .done': 'doneDrawingZone'
+      'click .done': 'doneDrawingZone',
+      'click .save': 'save'
     },
 
     initialize: function(options) {
@@ -51,8 +45,11 @@ function($, _, Backbone, L, moment, events, settings, api,
         'render',
         'fitBounds',
         'addZone',
+        'removeZone',
         'renderZones',
-        'getZones'
+        'getZones',
+        'success',
+        'error'
       );
 
       this.survey = options.survey;
@@ -72,11 +69,15 @@ function($, _, Backbone, L, moment, events, settings, api,
         return;
       }
 
-      this.$el.html(this.template());
+      this.zones.reset(this.survey.get('zones'));
+
+      this.$el.html(this.template({
+        zones: this.zones.toJSON()
+      }));
 
       // Initialize the map
       this.map = new L.map('map-draw', {
-        maxZoom: 19
+        maxZoom: 18
       });
 
       // Set up the base map
@@ -84,24 +85,34 @@ function($, _, Backbone, L, moment, events, settings, api,
       this.map.addLayer(this.baseLayer);
 
       // Center on the survey
-      // TODO: use geocoded center
+      // TODO: use geocoded center for empty surveys
       this.fitBounds();
 
       // Initialize the FeatureGroup to store editable layers
       this.drawnItems = new L.FeatureGroup();
-      this.map.addLayer(this.drawnItems);
+      this.drawnItems.addTo(this.map);
+
+      // Add existing zones
+      this.renderZones();
 
       // Initialize the draw control and pass it the FeatureGroup of editable layers
       var drawControl = new L.Control.Draw({
         draw: {
           polyline: false,
-          rectangle: false,
           circle: false,
           marker:false,
+          rectangle: {
+            shapeOptions: {
+              color: '#ef6d4a',
+              fillColor: '#ef6d4a',
+              weight: WEIGHT
+            }
+          },
           polygon: {
             shapeOptions: {
-                color: '#ef6d4a',
-                fillColor: '#ef6d4a'
+              color: '#ef6d4a',
+              fillColor: '#ef6d4a',
+              weight: WEIGHT
             }
           }
         },
@@ -112,10 +123,26 @@ function($, _, Backbone, L, moment, events, settings, api,
       this.map.addControl(drawControl);
 
       this.map.on('draw:created', this.addZone);
+    },
 
-      // Add existing zones
-      this.zones.reset(this.survey.get('zones'));
-      this.renderZones();
+    error: function(model, xhr, options) {
+      this.$el.find('.error').fadeIn().css('display','inline-block').delay(2000).fadeOut();
+    },
+
+    success: function() {
+      console.log("Saved", this.$el.find('.saved'));
+      this.$el.find('.saved').fadeIn().css('display','inline-block').delay(2000).fadeOut();
+    },
+
+    save: function(event) {
+      event.preventDefault();
+      util.track('survey.settings.zones.save');
+
+      this.survey.attributes.zones = this.getZones();
+      this.survey.save({}, {
+        success: this.success,
+        error: this.error
+      });
     },
 
     fitBounds: function() {
@@ -136,8 +163,10 @@ function($, _, Backbone, L, moment, events, settings, api,
     style: function(feature) {
       return {
         color: feature.properties.color,
+        fillColor: feature.properties.color,
         opacity: 1,
-        fillColor: feature.properties.color
+        weight: WEIGHT,
+        lineJoin: 'miter'
       };
     },
 
@@ -152,8 +181,9 @@ function($, _, Backbone, L, moment, events, settings, api,
       var color = settings.zoneColors[zoneNumber];
       layer.setStyle({
         color: color,
+        fillColor: color,
         opacity: 1,
-        fillColor: color
+        weight: WEIGHT
       });
 
       // Create a new zone model
@@ -162,6 +192,7 @@ function($, _, Backbone, L, moment, events, settings, api,
         name: 'Zone ' + (this.zones.length + 1),
         color: color
       };
+
       // Add the zone layer to the layerGroup
       this.drawnItems.addLayer(layer);
 
@@ -177,20 +208,24 @@ function($, _, Backbone, L, moment, events, settings, api,
     },
 
     /**
-     * Render survey zones on the map
+     * Render existing survey zones on the map
      */
     renderZones: function() {
-      var zones, layer;
+      var zones;
 
       // If the survey already has zones, render them
       if(this.survey.get('zones')) {
         zones = this.survey.get('zones');
+
         // Add each zone to the map
         _.each(zones.features, function(zone) {
-          layer = L.geoJson(zone, {
-            style: this.style
+          var layer = L.geoJson(zone, {
+            style: this.style,
+            onEachFeature: function (feature, layer) {
+              this.drawnItems.addLayer(layer);
+            }.bind(this)
           });
-          this.drawnItems.addLayer(layer);
+
           zone.layer = layer;
         }.bind(this));
 
@@ -210,12 +245,14 @@ function($, _, Backbone, L, moment, events, settings, api,
     },
 
     removeZone: function(event) {
-      var index = $(event.target).attr('data-index');
+      var index = $(event.currentTarget).attr('data-index');
       var model = this.zones.at(index);
 
+      // Remove the zone from the map, the collection, and the form
+      // TODO: should be handled by events on the zones collection.
       this.drawnItems.removeLayer(model.get('layer'));
       this.zones.remove(model);
-      $(event.target).parent().remove();
+      $(event.currentTarget).parent().remove();
     },
 
     /**
@@ -229,13 +266,13 @@ function($, _, Backbone, L, moment, events, settings, api,
       }.bind(this));
 
       return {
-        type: "FeatureCollection",
+        type: 'FeatureCollection',
         features: this.zones.toJSON()
       };
     }
 
   });
 
-  return MapDrawView;
+  return ZoneEditorView;
 
 });

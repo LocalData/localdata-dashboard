@@ -23,6 +23,7 @@ define(function(require, exports, module) {
   // Views
   var ExportView = require('views/export');
   var SettingsView = require('views/surveys/settings');
+  var ZoneEditorView = require('views/surveys/zone-editor');
   var ResponseViews = require('views/responses/responses');
   var ReviewView = require('views/responses/review');
   var FormViews = require('views/forms');
@@ -205,15 +206,13 @@ define(function(require, exports, module) {
         'showResponses',
         'showForm',
         'showSettings',
+        'showZones',
         'showFilters'
       );
 
       // Set up the page and show the given survey
       this.surveyId = options.id;
       this.survey = new SurveyModels.Model({id: this.surveyId});
-
-      // Get the relevant responses
-      // this.responses = new ResponseModels.Collection([], {surveyId: this.surveyId});
 
       // Get the forms
       this.forms = new FormModels.Collection({surveyId: this.surveyId});
@@ -295,10 +294,14 @@ define(function(require, exports, module) {
         survey: this.survey,
         forms: this.forms
       });
+      this.zoneEditorView = new ZoneEditorView({
+        survey: this.survey
+      });
 
       this.exportView.render();
       this.formView.render();
       this.settingsView.render();
+      this.zoneEditorView.render();
 
       if(this.activeTab !== undefined) {
         this.show(this.activeTab[0], this.activeTab[1]);
@@ -350,6 +353,10 @@ define(function(require, exports, module) {
 
     showSettings: function() {
         this.show('#settings-view-container', '#tab-survey-settings');
+    },
+
+    showZones: function() {
+        this.show('#zone-editor-container', '#tab-survey-zones');
     },
 
     showFilters: function (options) {

@@ -1,0 +1,13 @@
+<div id="survey-zone-form">
+  <% _.each(zones, function(zone, index) {  %>
+    <div>
+        <input type="text" value="<%= zone.properties.name %>" class="large question-input" style="border-color:<%= zone.properties.color %>;" />
+        <a class="btn remove" data-index="<%= index %>"><i class="fa fa-trash-o"></i></a>
+    </div>
+  <% }); %>
+
+  <button class="save flex">Save changes</button>
+  <div class="saved">Changes saved</div>
+  <div class="error">We couldn't save your changes.</div>
+</div>
+

@@ -122,9 +122,11 @@
     float: none;
     position: absolute;
     right: 0px;
-    top: 15px;
+    top: 5px;
     background: #fff;
     width: 3em;
+    height: 2.5em;
+    padding: 0;
     cursor: pointer;
     color: $body-color;
   }
@@ -276,19 +278,4 @@
     min-height: 80px;
     text-transform: capitalize;
   }
-}
-
-
-/* Settings page ------------------------------- */
-.survey-settings {
-  padding-bottom: 15px;
-}
-
-#delete-view-container {
-  border-top: 6px solid #fff;
-  margin-top: 1em;
-}
-
-#delete-survey-form {
-  display: none;
 }

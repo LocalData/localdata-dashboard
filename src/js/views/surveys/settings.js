@@ -13,7 +13,6 @@ define(function(require, exports, module) {
 
   // Views
   var DeleteView = require('views/surveys/delete');
-  var MapDrawView = require('views/maps/draw');
   var UsersView = require('views/surveys/users');
 
   // Templates
@@ -72,9 +71,6 @@ define(function(require, exports, module) {
 
       this.$el.html(this.template(context));
 
-      this.mapDrawView = new MapDrawView({
-        survey: this.survey
-      });
       this.sharingView = new UsersView({
         survey: this.survey
       });
