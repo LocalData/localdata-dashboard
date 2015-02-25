@@ -32,6 +32,7 @@ function($, _, Backbone, settings, util, api) {
       "(!)surveys/:slug/form/edit": "form_edit",
       "(!)surveys/:slug/form": "form",
 
+      "(!)surveys/:slug/settings/zones": "zones",
       "(!)surveys/:slug/settings": "settings",
 
       '(!)embed/surveys/:slug': 'embed',
@@ -96,6 +97,11 @@ function($, _, Backbone, settings, util, api) {
     settings: function(slug) {
       util.track('navigate.survey.settings');
       api.setSurveyIdFromSlug(slug, this.controller.goto_settings);
+    },
+
+    zones: function(slug) {
+      util.track('navigate.survey.zones');
+      api.setSurveyIdFromSlug(slug, this.controller.goto_zones);
     },
 
     form: function(slug) {

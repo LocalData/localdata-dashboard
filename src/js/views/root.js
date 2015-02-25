@@ -174,6 +174,9 @@ define(function(require, exports, module) {
         case "settings":
           this.currentContentView.showSettings();
           break;
+        case "zones":
+          this.currentContentView.showZones();
+          break;
         case "filters":
           this.currentContentView.showFilters(options);
           break;
@@ -192,6 +195,11 @@ define(function(require, exports, module) {
     goto_settings: function() {
       this._router.navigate("surveys/" + settings.slug + "/settings");
       this.goto_survey("settings");
+    },
+
+    goto_zones: function() {
+      this._router.navigate("surveys/" + settings.slug + "/settings/zones");
+      this.goto_survey("zones");
     },
 
     goto_form: function() {
