@@ -165,7 +165,10 @@ function($, _, Backbone, events, settings, util, api, Responses, template) {
 
       this.model.destroy({
         success: success,
-        error: error
+        error: error,
+        // Wait for the response before issuing the destroy event, otherwise we
+        // have a race condition.
+        wait: true,
       });
 
       util.track('survey.response.delete');
