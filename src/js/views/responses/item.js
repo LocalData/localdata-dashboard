@@ -81,7 +81,7 @@ function($, _, Backbone, events, settings, util, api, Responses, template) {
         this.surveyOptions.loggedIn = settings.user && settings.user.isLoggedIn();
       }
 
-      var responses = this.model.get('responses');
+      var responses = this.model.get('responses') || {};
       var form = this.forms.getMostRecentForm().getFormV2();
       var fields = [];
       var processed = {};
@@ -122,8 +122,13 @@ function($, _, Backbone, events, settings, util, api, Responses, template) {
         }
       });
 
+      var r = this.model.toJSON();
+      if (!r.responses) {
+        r.responses = {};
+      }
+
       var options = {
-        r: this.model.toJSON(),
+        r: r,
         fields: fields,
         surveyOptions: this.surveyOptions,
         exploration: this.exploration
