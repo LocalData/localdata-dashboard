@@ -105,7 +105,6 @@ define(function (require) {
       this.survey = new Surveys.Model({ id: this.surveyId });
       this.stats = new Stats.Model({ id: this.surveyId });
       this.forms = new Forms.Collection({ surveyId: this.surveyId });
-      this.forms.fetch({ reset: true });
 
       var self = this;
       async.parallel([
@@ -139,8 +138,6 @@ define(function (require) {
         self.render();
 
       });
-
-      this.survey.fetch();
     },
 
     update: function() {
