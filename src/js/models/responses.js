@@ -57,7 +57,11 @@ function($, _, Backbone, moment, settings, api) {
         this.limit = options.limit;
         this.filters = options.filters;
         this.sort = options.sort || 'none';
-        this.fetch();
+        this.fetch({
+          // Optionally issue a reset event instead of potentially multiple add
+          // events.
+          reset: !!options.reset
+        });
       }
     },
 
