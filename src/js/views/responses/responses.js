@@ -16,6 +16,7 @@ define(function(require, exports, module) {
 
   // Models
   var Responses = require('models/responses');
+  var Stats = require('models/stats');
 
   // Views
   var ResponseCountView = require('views/surveys/count');
@@ -76,6 +77,10 @@ define(function(require, exports, module) {
 
       this.survey = options.survey;
 
+      this.stats = options.stats || (new Stats.Model({
+        id: this.survey.get('id')
+      }));
+
       if (options.mode) {
         this.mode = options.mode;
       }
@@ -104,7 +109,8 @@ define(function(require, exports, module) {
 
       // Show collector stats
       this.collectorStatsView = new CollectorStatsView({
-        survey: this.survey
+        survey: this.survey,
+        stats: this.stats
       });
 
       // Set up the map view, now that the root exists.
@@ -123,6 +129,7 @@ define(function(require, exports, module) {
         el: $('#filter-view-container'),
         survey: this.survey,
         forms: this.forms,
+        stats: this.stats,
         map: this.mapView
       }).render();
       this.listenTo(this.filterView, 'updated', this.changeLegend);
