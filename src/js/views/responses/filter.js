@@ -52,9 +52,9 @@ define(function(require, exports, module) {
       this.forms = options.forms;
       this.map = options.map;
 
-      this.stats = new Stats.Model({
+      this.stats = options.stats || (new Stats.Model({
         id: this.survey.get('id')
-      });
+      }));
       this.stats.on('change', this.render);
       this.$el.html(this.template());
 

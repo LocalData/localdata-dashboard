@@ -56,7 +56,12 @@ function($, _, Backbone, moment, settings, api) {
         this.objectId = options.objectId;
         this.limit = options.limit;
         this.filters = options.filters;
-        this.fetch();
+        this.sort = options.sort || 'none';
+        this.fetch({
+          // Optionally issue a reset event instead of potentially multiple add
+          // events.
+          reset: !!options.reset
+        });
       }
     },
 
@@ -71,6 +76,8 @@ function($, _, Backbone, moment, settings, api) {
       } else {
         url = url + 'count=20&startIndex=0';
       }
+
+      url = url + '&sort=' + this.sort;
 
       if (this.filters) {
         _.each(this.filters, function(value, key){

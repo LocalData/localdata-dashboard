@@ -28,11 +28,6 @@ define(function(require, exports, module) {
     },
 
     initialize: function(options) {
-      _.bindAll(this,
-        'render',
-        'getNew'
-      );
-
       this.survey = options.survey;
       this.forms = options.forms;
 
@@ -42,13 +37,12 @@ define(function(require, exports, module) {
         limit: 1,
         filters: {
           reviewed: 'undefined'
-        }
+        },
+        reset: true
       });
-      this.collection.on('reset', this.render);
-      this.collection.on('remove', this.getNew);
-      this.collection.on('change:responses', this.getNew);
-
-      this.getNew();
+      this.listenTo(this.collection, 'reset', this.render);
+      this.listenTo(this.collection, 'remove', this.handleRemove);
+      this.listenTo(this.collection, 'change:responses', this.handleChange);
     },
 
     render: function() {
@@ -67,12 +61,21 @@ define(function(require, exports, module) {
       responseView.render();
     },
 
-    getNew: function() {
-      // Remove any existing entries
-      this.collection.reset();
+    handleChange: function onChange(response, attributes) {
+      // If an entry has been flagged or accepted, then we remove it.
+      if (response.get('responses').reviewed !== undefined) {
+        this.collection.remove(response);
+      }
+      this.render();
+    },
 
-      this.collection.fetch({ reset: true });
-    }
+    handleRemove: function onRemove(response, collection) {
+      // If all of the entries have been flagged, accepted, or deleted, then we
+      // fetch the next set.
+      if (collection.length === 0) {
+        this.collection.fetch({ reset: true});
+      }
+    },
   });
 
   return ReviewView;

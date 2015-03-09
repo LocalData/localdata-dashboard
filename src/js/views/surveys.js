@@ -17,7 +17,6 @@ define(function(require, exports, module) {
 
   // Models
   var SurveyModels = require('models/surveys');
-  var ResponseModels = require('models/responses');
   var FormModels = require('models/forms');
 
   // Views
@@ -27,15 +26,11 @@ define(function(require, exports, module) {
   var ResponseViews = require('views/responses/responses');
   var ReviewView = require('views/responses/review');
   var FormViews = require('views/forms');
-  var MapView = require('views/maps/map');
 
   // Templates
   var newSurveyTemplate = require('text!templates/surveys/new.html');
   var surveyTemplate = require('text!templates/surveys/item.html');
   var surveyListItemTemplate = require('text!templates/surveys/list-item.html');
-
-  // Misc
-  var exampleform = require('misc/exampleform');
 
 
   var SurveyViews = {};
@@ -217,6 +212,8 @@ define(function(require, exports, module) {
       // Get the forms
       this.forms = new FormModels.Collection({surveyId: this.surveyId});
 
+      this.rendered = false;
+
       // Don't render the page until we have the survey and the forms, both of
       // which are necessary for the content within a SurveyView.
       var self = this;
@@ -272,12 +269,6 @@ define(function(require, exports, module) {
         if (this.selectedObject) {
           this.mapAndListView.selectItem(this.selectedObject);
         }
-
-        // Review view
-        this.reviewView = new ReviewView({
-          survey: this.survey,
-          forms: this.forms
-        });
       } else {
         // Once the form has been created, we should rerender, so we can display all of the other components.
         this.listenToOnce(this.forms, 'add', function () {
@@ -318,6 +309,11 @@ define(function(require, exports, module) {
       if (!surveyFullyCreated) {
         location.href = '/#surveys/' + settings.slug + '/form';
       }
+
+      this.rendered = true;
+      // TODO: instead of using an event to hack partial promise
+      // functionality, we should use an actual bluebird promise.
+      this.trigger('rendered');
     },
 
     show: function(id, tab) {
@@ -348,7 +344,20 @@ define(function(require, exports, module) {
     },
 
     showReview: function() {
-      this.show('#review-view-container', '#tab-survey-live');
+      // Make sure the survey view has been rendered, so we can make assumptions
+      // about the presence of models, collections, and DOM elements that the
+      // survey view provides for subordinate views. The routing components
+      // could call this method essentially right after creating the survey
+      // view, so we don't know at that point if it has been rendered or not.
+      if (this.rendered) {
+        this.reviewView = new ReviewView({
+          survey: this.survey,
+          forms: this.forms
+        });
+        this.show('#review-view-container', '#tab-survey-live');
+      } else {
+        this.listenToOnce(this, 'rendered', this.showReview);
+      }
     },
 
     showSettings: function() {
