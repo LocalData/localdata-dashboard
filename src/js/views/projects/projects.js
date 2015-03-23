@@ -539,7 +539,7 @@ define(function(require, exports, module) {
             query: {
               'entries.responses.What-would-you-like-to-record': 'Sidewalk-Quality'
             },
-            values: ['5', '4', '3', '2', '1'],
+            values: ['5-highest', '4', '3', '2', '1-lowest'],
             valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
             colors: ['#05A17D', '#8BB272', '#ead02b', '#ef8e3a', '#e94027']
           }),
@@ -701,7 +701,7 @@ define(function(require, exports, module) {
             query: {
               'entries.responses.What-would-you-like-to-record': 'Intersection-Quality'
             },
-            values: ['5', '4', '3', '2', '1'],
+            values: ['5-highest', '4', '3', '2', '1-lowest'],
             valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
             colors: ['#05A17D', '#8BB272', '#ead02b', '#ef8e3a', '#e94027']
           }),
@@ -893,7 +893,7 @@ define(function(require, exports, module) {
             query: {
               'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
             },
-            values: ['5', '4', '3', '2', '1'],
+            values: ['5-highest', '4', '3', '2', '1-lowest'],
             valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
             colors: ['#05A17D', '#8BB272', '#ead02b', '#ef8e3a', '#e94027'],
             pointSize: 15
