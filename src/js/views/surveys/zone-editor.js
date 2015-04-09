@@ -45,6 +45,8 @@ define(function(require, exports, module) {
         'render',
         'fitBounds',
         'addZone',
+        'findZoneByName',
+        'editZone',
         'removeZone',
         'renderZones',
         'getZones',
@@ -123,6 +125,7 @@ define(function(require, exports, module) {
       this.map.addControl(drawControl);
 
       this.map.on('draw:created', this.addZone);
+      this.map.on('draw:edited', this.editZone);
     },
 
     error: function(model, xhr, options) {
@@ -168,6 +171,28 @@ define(function(require, exports, module) {
         weight: WEIGHT,
         lineJoin: 'miter'
       };
+    },
+
+    findZoneByName: function(name) {
+      console.log("zones", this.zones);
+      var result;
+      this.zones.each(function(zone) {
+        if (zone.get('properties').name === name) {
+          result = zone;
+        }
+      });
+      return result;
+    },
+
+    editZone: function (e) {
+      var layers = e.layers;
+      layers.eachLayer(function (layer) {
+        var zone = this.findZoneByName(layer.feature.properties.name);
+        // TODO
+        // This layer still has the old polygon's geometry.
+        // console.log("New geometry", layer.feature.geometry, layer);
+        zone.set('geometry', layer.feature.geometry);
+      }.bind(this));
     },
 
     addZone: function(event) {
@@ -216,20 +241,31 @@ define(function(require, exports, module) {
       // If the survey already has zones, render them
       if(this.survey.get('zones')) {
         zones = this.survey.get('zones');
+        var zonesWithLayers = [];
 
-        // Add each zone to the map
-        _.each(zones.features, function(zone) {
+        // Create a layer for each zone
+        _.each(zones.features, function(zone, i) {
           var layer = L.geoJson(zone, {
             style: this.style,
             onEachFeature: function (feature, layer) {
+              // leaflet draw workaround
+              // https://github.com/Leaflet/Leaflet.draw/issues/159#issuecomment-47757508
               this.drawnItems.addLayer(layer);
+
+              // We can't just add the layer to the feature, because that causes
+              // a self-referential json issue when we save the survey object.
+              zonesWithLayers.push({
+                layer: layer,
+                geometry: zones.features[i].geometry,
+                type: zones.features[i].type,
+                properties: zones.features[i].properties
+              });
             }.bind(this)
           });
 
-          zone.layer = layer;
         }.bind(this));
 
-        this.zones.reset(zones.features);
+        this.zones.reset(zonesWithLayers);
 
         // Fit the map to the zone bounds
         var bounds = this.drawnItems.getBounds();

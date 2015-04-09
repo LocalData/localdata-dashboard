@@ -1,7 +1,7 @@
 <div class="out contrast survey-zone-editor">
   <div class="a">
     <h3>Survey zones</h3>
-    <% if(zones[0].features.length === 0) { %>
+    <% if(!zones[0] || zones[0].features.length === 0) { %>
     <p>Draw a zone on the map to get started.</p>
     <% } %>
     <div id="map-zones"></div>

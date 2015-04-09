@@ -57,7 +57,6 @@ define(function(require, exports, module) {
       }, {});
 
       this.survey.set(fields);
-      this.survey.attributes.zones = this.mapDrawView.getZones();
       this.survey.save({}, {
         success: this.success,
         error: this.error
