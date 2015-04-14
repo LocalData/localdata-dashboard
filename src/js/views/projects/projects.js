@@ -342,7 +342,7 @@ define(function(require, exports, module) {
           }),
           makeBasicExploration({
             name: 'Project Type',
-            question: 'Type-of-Project',
+            question: 'Project-Type',
             values: [
               'Flower-Garden',
               'Trail--Pathway',
