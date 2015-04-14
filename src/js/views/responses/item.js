@@ -85,11 +85,14 @@ function($, _, Backbone, events, settings, util, api, Responses, template) {
       var form = this.forms.getMostRecentForm().getFormV2();
       var fields = [];
       var processed = {};
-      // Go through the questions in the latest form and map the question-answer slug pairs to text pairs.
+
+      // Go through the questions in the latest form and map the question-answer
+      // slug pairs to text pairs.
       _.forEach(form.questions, function (question) {
         var valueSlug = responses[question.slug];
         var value;
         var key;
+
         // If there was a match, then we can use the text for this question.
         // Questions might be duplicated in a form becase of conditional
         // structures. Don't display a question/answer pair twice.
@@ -100,16 +103,38 @@ function($, _, Backbone, events, settings, util, api, Responses, template) {
           if (!value) {
             value = valueSlug;
           }
+
+          // Set up the answers with a slug, if they don't already have one
+          var answers = [];
+          _.each(question.answers, function(answer) {
+            if (!_.has(answer, 'slug')) {
+              answer.slug = answer.value;
+            }
+            answers.push(answer);
+          });
+
           fields.push({
             question: key,
             questionSlug: question.slug,
+            type: question.type,
             answer: value,
             answerSlug: valueSlug,
-            answerOptions: question.answers
+            answerOptions: answers
           });
+
           processed[question.slug] = true;
+        } else if (question.type === 'text') {
+          value = _.pluck(_.where(question.answers, { value: valueSlug}), 'text')[0];
+
+          fields.push({
+            question: question.text,
+            questionSlug: question.slug,
+            type: question.type,
+            answer: value
+          });
         }
       });
+
       // Go through the full set of question-answer slug pairs in this entry and
       // add any that didn't map to the form.
       _.forEach(_.keys(responses).reverse(), function (key) {
@@ -168,7 +193,7 @@ function($, _, Backbone, events, settings, util, api, Responses, template) {
         error: error,
         // Wait for the response before issuing the destroy event, otherwise we
         // have a race condition.
-        wait: true,
+        wait: true
       });
 
       util.track('survey.response.delete');
