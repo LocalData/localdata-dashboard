@@ -10,12 +10,10 @@
 <% }); %>
 
 
-<% if (raw.publicowne) { %>
+
+<% if (raw.fairmarket === 0) { %>
   <!-- gtech-specific addon -->
-  <% var cases = ['C', 'E', 'H', 'R', 'S', 'U', 'A', 'M']; %>
-  <% if ((cases.indexOf(raw.publicowne)) && raw.fairmarket === 0) { %>
-    <p style="margin-top:1em"><strong>Interested in working on this lot? <a href="http://www.lotstolove.org/your-lot/get-permission/access/">Click here for more information</a>.</strong></p>
-  <% } %>
+  <p style="margin-top:1em"><strong>Interested in working on this lot? <a href="http://www.lotstolove.org/your-lot/get-permission/access/">Click here for more information</a>.</strong></p>
 <% } %>
 
 </div>
