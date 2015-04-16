@@ -34,7 +34,8 @@ define(function (require, exports, module) {
       var context = {
         name: this.data[this.layerOptions.humanReadableField],
         centroid: JSON.parse(this.data.centroid),
-        googleKey: settings.GoogleKey
+        googleKey: settings.GoogleKey,
+        raw: this.data
       };
 
       var names = this.layerOptions.fieldNames;
