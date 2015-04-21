@@ -1,6 +1,6 @@
 Map { background-color: rgba(0,0,0,0); }
 #localdata['<%= key %>'='yes'] {
-  [GEOMETRY = LineString] {
+  [GEOMETRY = LineString],[GEOMETRY = MultiLineString] {
     line-width: 2;
     [zoom >= 15] {
       line-width: 5;
@@ -39,7 +39,7 @@ Map { background-color: rgba(0,0,0,0); }
 }
 
 #localdata['<%= key %>'!='yes'] {
-  [GEOMETRY = LineString] {
+  [GEOMETRY = LineString],[GEOMETRY = MultiLineString] {
     line-width: 2;
     [zoom >= 15] {
       line-width: 5;
