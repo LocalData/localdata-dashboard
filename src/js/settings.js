@@ -28,11 +28,13 @@ function(L) {
   // Colors for option maps
   settings.colorRange = [
     "#b7aba5", // First color used for blank entries
-    "#a743c3",
-    "#f15a24",
-    "#58aeff",
-    "#00ad00",
-    "#ffad00"
+    "#a743c3", // purple
+    "#f15a24", // red
+    "#58aeff", // blue
+    "#00ad00", // green
+    "#ffad00", // orange-yellow
+    "#6e6663", // dark gray
+    "#0049ad"  // dark blue
   ];
 
   settings.zoneColors = [
