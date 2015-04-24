@@ -140,6 +140,26 @@
   }
 }
 
+#map .localdata-control {
+  box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+  background: #fff;
+  border-radius: 5px;
+  font-family: $font;
+
+  a,
+  a:active,
+  a:hover,
+  a:visited {
+    height: 26px;
+    width: 26px;
+    line-height: 26px;
+    overflow: hidden;
+    color: black;
+    text-align: center;
+    display: block;
+  }
+}
+
 #map-tools {
   background: #fff;
   right: 70px;

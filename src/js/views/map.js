@@ -56,7 +56,8 @@ function($, _, Backbone, L, moment, settings, util, api, template) {
         'fitBounds',
         'selectObject',
         'deselectObject',
-        'addTileLayer'
+        'addTileLayer',
+        'pdf'
       );
 
       this.survey = options.survey;
@@ -179,6 +180,23 @@ function($, _, Backbone, L, moment, settings, util, api, template) {
     },
 
 
+    // Use Lascaux to create a PDF of the focused map area at the current zoom.
+    pdf: function(event) {
+      event.preventDefault();
+      var options = {
+        overlay_tiles: this.tileLayer._url,
+        base_tiles: settings.printLayer,
+        zoom: this.map.getZoom(),
+        dimensions: '8.5,11',
+        center: this.map.getCenter().lng + ',' + this.map.getCenter().lat,
+        output_format: 'pdf'
+      };
+
+      var url = settings.api.lascaux + '?' + $.param(options);
+      window.open(url);
+    },
+
+
     render: function() {
       if (this.map === null) {
         // Initialize the map
@@ -189,6 +207,25 @@ function($, _, Backbone, L, moment, settings, util, api, template) {
         });
 
         this.map.addControl(L.control.zoom({ position: 'topright' }));
+
+
+        // Add a control to print the map
+        var PrintControl = L.Control.extend({
+            options: {
+                position: 'topright'
+            },
+
+            onAdd: function (map) {
+                var container = L.DomUtil.create('div', 'localdata-control');
+
+                $(container).html('<a>PDF</a>');
+                $(container).on('click', this.pdf);
+
+                return container;
+            }.bind({ pdf: this.pdf })
+        });
+        this.map.addControl(new PrintControl());
+
 
         // Set up the base maps
         this.baseLayer = L.tileLayer(settings.baseLayer);
