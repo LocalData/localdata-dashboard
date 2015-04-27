@@ -187,7 +187,7 @@ function($, _, Backbone, L, moment, settings, util, api, template) {
         overlay_tiles: this.tileLayer._url,
         base_tiles: settings.printLayer,
         zoom: this.map.getZoom(),
-        dimensions: '8.5,11',
+        dimensions: '8.5,11', // default unit is inches; tiles are 150dpi
         center: this.map.getCenter().lng + ',' + this.map.getCenter().lat,
         output_format: 'pdf'
       };
