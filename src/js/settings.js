@@ -12,7 +12,8 @@ function(L) {
 
   settings.api = {
     baseurl: '/api', // http://localhost:3000/api',
-    geo: '/api'
+    geo: '/api',
+    lascaux: 'http://lascaux.datamade.us/api'
   };
 
   settings.BingKey = 'Arc0Uekwc6xUCJJgDA6Kv__AL_rvEh4Hcpj4nkyUmGTIx-SxMd52PPmsqKbvI_ce';
