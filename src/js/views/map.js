@@ -186,7 +186,7 @@ function($, _, Backbone, L, moment, settings, util, api, template) {
 
       // Workaround: Lascaux doesn't handle protocol-relative URLs correctly
       var tileURL = this.tileLayer._url;
-      if (tileURL[0] === '/') {
+      if (_.startsWith(tileURL, '//')) {
         tileURL = 'https:' + tileURL;
       }
 
