@@ -183,6 +183,13 @@ function($, _, Backbone, L, moment, settings, util, api, template) {
     // Use Lascaux to create a PDF of the focused map area at the current zoom.
     pdf: function(event) {
       event.preventDefault();
+
+      // Workaround: Lascaux doesn't handle protocol-relative URLs correctly
+      var tileURL = this.tileLayer._url;
+      if (tileURL[0] === '/') {
+        tileURL = 'https:' + tileURL;
+      }
+
       var options = {
         overlay_tiles: this.tileLayer._url,
         base_tiles: settings.printLayer,
