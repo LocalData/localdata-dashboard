@@ -50,17 +50,22 @@
           <%- field.answer %>
         </span>
 
-        <select class="edit" data-question="<%- field.questionSlug %>">
-          <% if (field.answerOptions) { %>
-            <% _.forEach(field.answerOptions, function (option) { %>
-              <option
-                value="<%- option.slug %>"
-                <% if (field.answerSlug === option.slug) { %> selected="selected" <% } %>>
-                <%- option.text %>
-              </option>
-            <% }); %>
-          <% } %>
-        </select>
+        <% if (field.type === 'text') { %>
+          <textarea class="edit" data-question="<%- field.questionSlug %>"><%- field.answer %></textarea>
+        <% } else { %>
+          <select class="edit" data-question="<%- field.questionSlug %>">
+            <% if (field.answerOptions) { %>
+              <% _.forEach(field.answerOptions, function (option) { %>
+                <option
+                  value="<%- option.slug %>"
+                  <% if (field.answerSlug === option.slug) { %> selected="selected" <% } %>>
+                  <%- option.text %>
+                </option>
+              <% }); %>
+            <% } %>
+          </select>
+        <% } %>
+
       </div>
     <% }) %>
   <% } %>
