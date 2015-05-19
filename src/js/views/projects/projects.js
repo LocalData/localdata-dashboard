@@ -304,7 +304,7 @@ define(function(require, exports, module) {
       zoom: 14,
       commentsId: 'lots2lovepgh',
       scrollWheelZoom: false,
-      suppressStreetview: true,
+      suppressStreetview: false,
       baselayer: '//a.tiles.mapbox.com/v3/matth.kmf6l3h1/{z}/{x}/{y}.png',
       // baselayer: 'http://c.tile.stamen.com/toner-lite/{z}/{x}/{y}.png', // toner-light
       surveys: [{
