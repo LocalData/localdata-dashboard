@@ -63,6 +63,10 @@ function($, _, Backbone, settings, util, api) {
       this.controller.goto_login(redirectTo);
     },
 
+    register: function(redirectTo) {
+      this.controller.goto_register(redirectTo);
+    },
+
     change_password: function (resetInfo) {
       this.controller.goto_change_password(resetInfo);
     },
