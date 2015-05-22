@@ -47,6 +47,7 @@ define(function(require, exports, module) {
   AllViews.ReviewView = ReviewView;
 
   AllViews.LoginView = UserViews.LoginView;
+  AllViews.RegisterView = UserViews.RegisterView;
   AllViews.ChangePasswordView = UserViews.ChangePasswordView;
   AllViews.ResetPasswordView = UserViews.ResetPasswordView;
   AllViews.UserBarView = UserViews.UserBarView;
@@ -134,8 +135,15 @@ define(function(require, exports, module) {
     goto_login: function(redirectTo) {
       this.renderDashboard();
       this.currentContentView = this.getOrCreateView("LoginView", "LoginView", {
-        'redirectTo': redirectTo,
-        'user': this.user
+        redirectTo: redirectTo,
+        user: settings.user
+      });
+    },
+
+    goto_register: function(redirectTo) {
+      this.renderDashboard();
+      this.currentContentView = this.getOrCreateView("RegisterView", "RegisterView", {
+        user: settings.user
       });
     },
 
