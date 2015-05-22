@@ -143,7 +143,6 @@ define(function(require, exports, module) {
     goto_register: function(redirectTo) {
       this.renderDashboard();
       this.currentContentView = this.getOrCreateView("RegisterView", "RegisterView", {
-        redirectTo: redirectTo,
         user: settings.user
       });
     },
