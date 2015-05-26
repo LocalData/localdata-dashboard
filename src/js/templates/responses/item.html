@@ -43,12 +43,14 @@
   <% } else { %>
     <% _.forEach(fields, function (field) { %>
       <div class="answer">
-        <span class="key">
-          <%- field.question %>
-        </span>
-        <span class="value">
-          <%- field.answer %>
-        </span>
+        <% if (field.answer !== undefined) { %>
+          <span class="key">
+            <%- field.question %>
+          </span>
+          <span class="value">
+            <%- field.answer %>
+          </span>
+        <% } %>
 
         <% if (field.type === 'text') { %>
           <textarea class="edit" data-question="<%- field.questionSlug %>"><%- field.answer %></textarea>
