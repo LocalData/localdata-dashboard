@@ -126,6 +126,11 @@ function($, _, Backbone, events, settings, util, api, Responses, template) {
         } else if (question.type === 'text') {
           value = _.pluck(_.where(question.answers, { value: valueSlug}), 'text')[0];
 
+          // Don't display text questions that haven't been answered.
+          if (value === undefined) {
+            return;
+          }
+
           fields.push({
             question: question.text,
             questionSlug: question.slug,
