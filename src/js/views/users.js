@@ -102,7 +102,6 @@ function($, _, Backbone, events, router, settings, util, api,
     },
 
     initialize: function(options) {
-      console.log("Initialize login view");
       _.bindAll(this, 'render', 'update', 'createUser', 'createUserCallback');
 
       this.user = options.user;
