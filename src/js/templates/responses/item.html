@@ -47,9 +47,15 @@
           <span class="key">
             <%- field.question %>
           </span>
-          <span class="value">
-            <%- field.answer %>
-          </span>
+          <% if (field.type === 'text') { %>
+            <span class="value">
+              <%= autolinker.link(_.escape(field.answer)) %>
+            </span>
+          <% } else { %>
+            <span class="value">
+              <%- field.answer %>
+            </span>
+          <% } %>
         <% } %>
 
         <% if (field.type === 'text') { %>
