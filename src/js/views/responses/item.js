@@ -1,31 +1,28 @@
 /*jslint nomen: true */
 /*globals define: true */
 
-define([
-  'jquery',
-  'lib/lodash',
-  'backbone',
-  'lib/tinypubsub',
-
-  // LocalData
-  'settings',
-  'util',
-  'api',
-
-  // Models
-  'models/responses',
-
-  // Templates
-  'text!templates/responses/item.html'
-],
-
-function($, _, Backbone, events, settings, util, api, Responses, template) {
+define(function (require) {
   'use strict';
+  var $ = require('jquery');
+  var _ = require('lib/lodash');
+  var Autolinker = require('lib/autolinker');
+  var Backbone = require('backbone');
+  
+  // LocalData
+  var settings = require('settings');
+  var util = require('util');
+  
+  // Templates
+  var template = require('text!templates/responses/item.html');
 
   var ResponseView = Backbone.View.extend({
     className: 'response',
 
-    template: _.template(template),
+    template: _.template(template, {
+      imports: {
+        autolinker: new Autolinker()
+      }
+    }),
 
     responseEdits: {}, // changes to make to the responses object.
 
