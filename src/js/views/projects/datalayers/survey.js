@@ -259,7 +259,8 @@ define(function (require) {
       // map, and so the object in question hasn't been highlighted on the map.
       var rc = new Responses.Collection([], {
         surveyId: this.survey.get('id'),
-        objectId: objectId
+        objectId: objectId,
+        sort: 'desc'
       });
 
       var surveyOptions = this.survey.get('surveyOptions') || {};

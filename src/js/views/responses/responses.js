@@ -195,7 +195,8 @@ define(function(require, exports, module) {
       // map, and so the object in question hasn't been highlighted on the map.
       var rc = new Responses.Collection([], {
         surveyId: this.survey.get('id'),
-        objectId: objectId
+        objectId: objectId,
+        sort: 'desc'
       });
 
       var surveyOptions = this.survey.get('surveyOptions') || {};
@@ -489,7 +490,8 @@ define(function(require, exports, module) {
 
       var rc = new Responses.Collection([], {
         surveyId: this.survey.get('id'),
-        objectId: event.data.object_id
+        objectId: event.data.object_id,
+        sort: 'desc'
       });
 
       var surveyOptions = this.survey.get('surveyOptions') || {};
