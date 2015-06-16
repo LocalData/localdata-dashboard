@@ -51,12 +51,26 @@ function($, _, Backbone, moment, settings, api) {
     unfilteredModels: null,
 
     initialize: function(models, options) {
+      // TODO: It seems like this is not very useful without certain options. If
+      // we never expect options to be undefined, then we should probably throw
+      // an error or something in that situation, rather than just silently
+      // doing nothing.
       if (options !== undefined) {
         this.surveyId = options.surveyId;
         this.objectId = options.objectId;
         this.limit = options.limit;
         this.filters = options.filters;
-        this.sort = options.sort || 'none';
+        this.sortOrder = options.sort || 'none';
+        
+        // Define comparators to maintain the specified sort order.
+        if (this.sortOrder === 'asc') {
+          this.comparator = 'created';
+        } else if (this.sortOrder === 'desc') {
+          this.comparator = function sortBy(model) {
+            return 0 - Date.parse(model.get('created'));
+          };
+        }
+
         this.fetch({
           // Optionally issue a reset event instead of potentially multiple add
           // events.
@@ -68,7 +82,7 @@ function($, _, Backbone, moment, settings, api) {
     url: function() {
       var url = settings.api.baseurl + '/surveys/' + this.surveyId + '/responses?';
       if (this.objectId) {
-        return url + 'objectId=' + this.objectId;
+        return url + 'objectId=' + this.objectId + '&sort=' + this.sortOrder;
       }
 
       if (this.limit) {
@@ -77,7 +91,7 @@ function($, _, Backbone, moment, settings, api) {
         url = url + 'count=20&startIndex=0';
       }
 
-      url = url + '&sort=' + this.sort;
+      url = url + '&sort=' + this.sortOrder;
 
       if (this.filters) {
         _.each(this.filters, function(value, key){
