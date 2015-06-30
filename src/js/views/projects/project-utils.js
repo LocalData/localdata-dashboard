@@ -115,8 +115,6 @@ define(function(require, exports, module) {
     // valueNames: ['Yes', 'No'],
     // colors: ['#c51b7d', '#4d9221']
 
-    console.log("Checkbox options", options);
-
     var query = {};
     query['entries.responses.' + options.predicate[0]] = options.predicate[1];
 
