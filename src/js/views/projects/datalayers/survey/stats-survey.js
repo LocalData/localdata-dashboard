@@ -158,7 +158,7 @@ define(function (require) {
       }
 
       // Skip photo / text questions for now
-      if(question.values.length === 1) {
+      if(!question.values || question.values.length === 1) {
         return;
       }
 
