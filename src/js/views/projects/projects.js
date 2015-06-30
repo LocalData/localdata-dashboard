@@ -5,142 +5,14 @@ define(function(require, exports, module) {
   'use strict';
 
   var _ = require('lib/lodash');
-  var exploreStylesTemplate = require('text!templates/projects/surveys/explore-styles.mss');
-  var simpleStylesTemplate = require('text!templates/projects/surveys/simple-styles.mss');
-  var checkboxStylesTemplate = require('text!templates/projects/surveys/checkbox-styles.mss');
 
-  var exploreStyles = (function (template) {
-    return function (options) {
-      return template(_.defaults(options, { pointSize: 18 }));
-    };
-  }(_.template(exploreStylesTemplate)));
+  var util = require('./project-utils');
+  var parkswatch = require('./project-parkswatch');
 
-  var simpleStyles = (function (template) {
-    return function (options) {
-      return template(_.defaults(options, { pointSize: 18 }));
-    };
-  }(_.template(simpleStylesTemplate)));
-
-  var checkboxStyles = (function (template) {
-    return function (options) {
-      return template(_.defaults(options, { pointSize: 18 }));
-    };
-  }(_.template(checkboxStylesTemplate)));
-
-  function makeBasicExploration(options) {
-    // name: 'Unsafe due to traffic speed/volume',
-    // question: 'Do-you-feel-unsafe-because-of-a-high-volume-or-high-speed-traffic',
-    // values: ['Yes', 'No'],
-    // valueNames: ['Unsafe', 'No significant issue'],
-    // colors: ['#d73027', '#1a9850']
-
-    var data = {
-      name: options.name,
-      question: options.question,
-
-      layer: {
-        query: options.query,
-        select: { 'entries.responses': 1 },
-        styles: exploreStyles({
-          showNoResponse: !!options.showNoResponse,
-          pairs: _.map(options.values, function (val, i) {
-            var ret = {
-              key: 'responses.' + options.question,
-              value: options.values[i],
-              color: options.colors[i]
-            };
-            return ret;
-          }),
-          pointSize: options.pointSize
-        })
-      },
-      values:  _.map(options.values, function (val, i) {
-        var ret = {
-          text: options.valueNames[i],
-          name: options.values[i],
-          color: options.colors[i],
-          layer: {
-            query: {},
-            select: {},
-            styles: simpleStyles({ color: options.colors[i], pointSize: options.pointSize })
-          },
-          pointSize: options.pointSize
-        };
-        ret.layer.query['entries.responses.' + options.question] = val;
-        ret.layer.query = _.defaults(ret.layer.query, options.query);
-        return ret;
-      })
-    };
-    return data;
-  }
-
-  function makeCheckboxExploration(options) {
-    // name: 'Sidewalk obstructions ',
-    // question: 'Are-there-any-problems-with-the-sidewalk--Select-all-that-apply-Obstructions-in-the-sidewalk',
-    // query: {
-    //   'entries.responses.What-would-you-like-to-record': 'Sidewalk-Quality'
-    // },
-    // values: ['yes', 'no'],
-    // valueNames: ['Yes', 'No'],
-    // colors: ['#c51b7d', '#4d9221']
-
-    var query = {};
-    query['entries.responses.' + options.predicate[0]] = options.predicate[1];
-
-    var queryYes = {};
-    queryYes['entries.responses.' + options.question] = 'yes';
-    queryYes = _.defaults(queryYes, query);
-
-    var queryNo = {};
-    queryNo['entries.responses.' + options.question] = {
-      $ne: 'yes'
-    };
-    queryNo = _.defaults(queryNo, query);
-
-    var data = {
-      type: 'checkbox',
-      countPath: 'stats.' + options.predicate.join('.'),
-      name: options.name,
-      question: options.question,
-
-      layer: {
-        query: query,
-        select: { 'entries.responses': 1 },
-        styles: checkboxStyles({
-          key: 'responses.' + options.question,
-          colorYes: options.colors[0],
-          colorNo: options.colors[1],
-          pointSize: options.pointSize
-        })
-      },
-      values: [ {
-        text: options.valueNames[0],
-        name: 'yes',
-        color: options.colors[0],
-        layer: {
-          query: queryYes,
-          select: {},
-          styles: simpleStyles({ color: options.colors[0], pointSize: options.pointSize })
-        },
-        pointSize: options.pointSize
-      }, {
-        text: options.valueNames[1],
-        name: 'no',
-        color: options.colors[1],
-        layer: {
-          query: queryNo,
-          select: {},
-          styles: simpleStyles({ color: options.colors[1], pointSize: options.pointSize })
-        },
-        pointSize: options.pointSize
-      } ]
-    };
-
-    return data;
-  }
-
-  // https://app.localdata.com/api/surveys/8a340df0-87af-11e2-9485-c3fff44e7c8e/forms
   var projects = {
+    parkswatch: parkswatch,
+
+    // https://app.localdata.com/api/surveys/8a340df0-87af-11e2-9485-c3fff44e7c8e/forms
     gary: {
       name: 'Gary Parcel Survey',
       description: '',
@@ -165,9 +37,9 @@ define(function(require, exports, module) {
         filters: {
           question: 'Property condition'
         },
-        styles: simpleStyles({color: '#45403e'}),
+        styles: util.simpleStyles({color: '#45403e'}),
         exploration: [
-          makeBasicExploration({
+          util.makeBasicExploration({
             name: 'Is there a structure?',
             question: 'structure',
             values: [
@@ -180,7 +52,7 @@ define(function(require, exports, module) {
             ],
             colors: ['#0571b0', '#05b04c']
           }),
-          makeBasicExploration({
+          util.makeBasicExploration({
             name: 'Occupancy',
             question: 'vacant-abandoned',
             values: [
@@ -193,7 +65,7 @@ define(function(require, exports, module) {
             ],
             colors: ['#0571b0', '#f46d31']
           }),
-          makeBasicExploration({
+          util.makeBasicExploration({
             name: 'Property condition',
             question: 'structure-grade',
             values: [
@@ -214,7 +86,7 @@ define(function(require, exports, module) {
             // purples:
             // colors: ['#05b04c', '#a5e76b', '#d3d3d3', '#d791da', '#85048a']
           }),
-          makeBasicExploration({
+          util.makeBasicExploration({
             name: 'Fire damage on blighted buildings',
             question: 'structural-damage',
             values: [
@@ -232,7 +104,7 @@ define(function(require, exports, module) {
             colors: ['#0571b0', '#f46d31', '#ca0020', '#d3d3d3'],
             showNoResponse: true
           }),
-          // makeBasicExploration({
+          // util.makeBasicExploration({
           //   name: 'Enclosed buildings',
           //   question: 'enclosed-secure',
           //   values: [
@@ -245,7 +117,7 @@ define(function(require, exports, module) {
           //   ],
           //   colors: ['#0571b0', '#ca0020']
           // }),
-          // makeBasicExploration({
+          // util.makeBasicExploration({
           //   name: 'Parking lot',
           //   question: 'parking-lot',
           //   values: [
@@ -258,7 +130,7 @@ define(function(require, exports, module) {
           //   ],
           //   colors: ['#0571b0', '#535353']
           // }),
-          makeBasicExploration({
+          util.makeBasicExploration({
             name: 'Residential use structures',
             question: 'residential',
             values: [
@@ -269,7 +141,7 @@ define(function(require, exports, module) {
             ],
             colors: ['#0571b0']
           }),
-          makeBasicExploration({
+          util.makeBasicExploration({
             name: 'Commercial use structures',
             question: 'commercial',
             values: [
@@ -280,7 +152,7 @@ define(function(require, exports, module) {
             ],
             colors: ['#0571b0']
           }),
-          makeBasicExploration({
+          util.makeBasicExploration({
             name: 'Public use structures',
             question: 'public-gov',
             values: [
@@ -323,9 +195,9 @@ define(function(require, exports, module) {
         filters: {
           question: 'Project Status'
         },
-        styles: simpleStyles({color: '#cddc29'}),
+        styles: util.simpleStyles({color: '#cddc29'}),
         exploration: [
-          makeBasicExploration({
+          util.makeBasicExploration({
             name: 'Project Status',
             question: 'What-stage-of-project-are-you-registering',
             values: [
@@ -340,7 +212,7 @@ define(function(require, exports, module) {
             ],
             colors: ['#F0532D', '#00C1f3', '#12B259']
           }),
-          makeBasicExploration({
+          util.makeBasicExploration({
             name: 'Project Type',
             question: 'Project-Type',
             values: [
@@ -528,9 +400,9 @@ define(function(require, exports, module) {
           'entries.responses.What-would-you-like-to-record': 'Sidewalk-Quality'
         },
         select: {},
-        styles: simpleStyles({color: '#66c2a5'}),
+        styles: util.simpleStyles({color: '#66c2a5'}),
         exploration: [
-          makeBasicExploration({
+          util.makeBasicExploration({
             name: 'Overall Pedestrian Environment Rating',
             question: 'How-would-you-rate-the-pedestrian-environment-overall-1-5-5highest',
             // This question is repeated among sidewalk/intersection/pedestrian
@@ -543,7 +415,7 @@ define(function(require, exports, module) {
             valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
             colors: ['#05A17D', '#8BB272', '#ead02b', '#ef8e3a', '#e94027']
           }),
-          makeBasicExploration({
+          util.makeBasicExploration({
             name: 'Sidewalk Type',
             question: 'What-type-of-sidewalk',
             values: ['No-sidewalk',
@@ -562,7 +434,7 @@ define(function(require, exports, module) {
                          'Other'],
             colors: ['#e94027', '#ec6d39', '#CF9F15', '#ABB070', '#9ec74c', '#04b485', '#b7aba5']
           }),
-          makeCheckboxExploration({
+          util.makeCheckboxExploration({
             name: 'Sidewalk obstructions',
             question: 'Are-there-any-problems-with-the-sidewalk--Select-all-that-apply-Obstructions-in-the-sidewalk',
             predicate: ['What-would-you-like-to-record', 'Sidewalk-Quality'],
@@ -570,7 +442,7 @@ define(function(require, exports, module) {
             valueNames: ['Yes', 'No'],
             colors: ['#e64212', '#78706d']
           }),
-          makeCheckboxExploration({
+          util.makeCheckboxExploration({
             name: 'Significantly cracked or uneven sidewalks',
             question: 'Are-there-any-problems-with-the-sidewalk--Select-all-that-apply-The-sidewalk-is-significantly-cracked-or-uneven',
             predicate: ['What-would-you-like-to-record', 'Sidewalk-Quality'],
@@ -578,7 +450,7 @@ define(function(require, exports, module) {
             valueNames: ['Significantly cracked/uneven', 'No significant issue'],
             colors: ['#e64212', '#78706d']
           }),
-          makeCheckboxExploration({
+          util.makeCheckboxExploration({
             name: 'Other sidewalk issues',
             question: 'Are-there-any-problems-with-the-sidewalk--Select-all-that-apply-Other',
             predicate: ['What-would-you-like-to-record', 'Sidewalk-Quality'],
@@ -586,7 +458,7 @@ define(function(require, exports, module) {
             valueNames: ['Yes', 'No'],
             colors: ['#e64212', '#78706d']
           }),
-          makeCheckboxExploration({
+          util.makeCheckboxExploration({
             name: 'Unsafe due to poor visibility/lighting',
             question: 'Do-you-feel-unsafe-for-any-reason--Select-all-that-apply-Poor-visibility-or-lighting',
             predicate: ['What-would-you-like-to-record', 'Sidewalk-Quality'],
@@ -594,7 +466,7 @@ define(function(require, exports, module) {
             valueNames: ['Yes', 'No'],
             colors: ['#e64212', '#78706d']
           }),
-          makeCheckboxExploration({
+          util.makeCheckboxExploration({
             name: 'Unsafe due to traffic speed/volume',
             question: 'Do-you-feel-unsafe-for-any-reason--Select-all-that-apply-High-volume-or-speed-of-traffic',
             predicate: ['What-would-you-like-to-record', 'Sidewalk-Quality'],
@@ -602,7 +474,7 @@ define(function(require, exports, module) {
             valueNames: ['Yes', 'No'],
             colors: ['#e64212', '#78706d']
           }),
-          makeCheckboxExploration({
+          util.makeCheckboxExploration({
             name: 'Other safety concerns',
             question: 'Do-you-feel-unsafe-for-any-reason--Select-all-that-apply-Other',
             predicate: ['What-would-you-like-to-record', 'Sidewalk-Quality'],
@@ -610,7 +482,7 @@ define(function(require, exports, module) {
             valueNames: ['Yes', 'No'],
             colors: ['#e64212', '#78706d']
           }),
-          makeCheckboxExploration({
+          util.makeCheckboxExploration({
             name: 'Shade trees',
             question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Shade-trees',
             predicate: ['What-would-you-like-to-record', 'Sidewalk-Quality'],
@@ -618,7 +490,7 @@ define(function(require, exports, module) {
             valueNames: ['Yes', 'No/No Data'],
             colors: ['#0eb308', '#78706d']
           }),
-          makeCheckboxExploration({
+          util.makeCheckboxExploration({
             name: 'Nice landscaping',
             question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Nice-landscaping',
             predicate: ['What-would-you-like-to-record', 'Sidewalk-Quality'],
@@ -626,7 +498,7 @@ define(function(require, exports, module) {
             valueNames: ['Yes', 'No/No Data'],
             colors: ['#0eb308', '#78706d']
           }),
-          makeCheckboxExploration({
+          util.makeCheckboxExploration({
             name: 'Benches',
             question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Benches',
             predicate: ['What-would-you-like-to-record', 'Sidewalk-Quality'],
@@ -634,7 +506,7 @@ define(function(require, exports, module) {
             valueNames: ['Yes', 'No/No Data'],
             colors: ['#0eb308', '#78706d']
           }),
-          makeCheckboxExploration({
+          util.makeCheckboxExploration({
             name: 'Public art',
             question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Public-art',
             predicate: ['What-would-you-like-to-record', 'Sidewalk-Quality'],
@@ -642,7 +514,7 @@ define(function(require, exports, module) {
             valueNames: ['Yes', 'No/No Data'],
             colors: ['#0eb308', '#78706d']
           }),
-          makeCheckboxExploration({
+          util.makeCheckboxExploration({
             name: 'Other pedestrian amenities',
             question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Other',
             predicate: ['What-would-you-like-to-record', 'Sidewalk-Quality'],
@@ -659,7 +531,7 @@ define(function(require, exports, module) {
                 }
               },
               select: {},
-              styles: simpleStyles({ color: '#810f7c' })
+              styles: util.simpleStyles({ color: '#810f7c' })
           },
           values: [{
             text: 'Photo',
@@ -672,7 +544,7 @@ define(function(require, exports, module) {
                 }
               },
               select: {},
-              styles: simpleStyles({color: '#810f7c'})
+              styles: util.simpleStyles({color: '#810f7c'})
             }
           }]
         }]
@@ -690,9 +562,9 @@ define(function(require, exports, module) {
           'entries.responses.What-would-you-like-to-record': 'Intersection-Quality'
         },
         select: {},
-        styles: simpleStyles({color: '#fc8d62'}),
+        styles: util.simpleStyles({color: '#fc8d62'}),
         exploration: [
-          makeBasicExploration({
+          util.makeBasicExploration({
             name: 'Overall Pedestrian Environment Rating',
             question: 'How-would-you-rate-the-pedestrian-environment-overall-1-5-5highest',
             // This question is repeated among sidewalk/intersection/pedestrian
@@ -705,21 +577,21 @@ define(function(require, exports, module) {
             valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
             colors: ['#05A17D', '#8BB272', '#ead02b', '#ef8e3a', '#e94027']
           }),
-          makeBasicExploration({
+          util.makeBasicExploration({
             name: 'Lanes to cross',
             question: 'How-many-lanes-are-there-to-cross',
             values: ['1', '2', '3', '4', '5', '6', '7-or-more'],
             valueNames: ['1', '2', '3', '4', '5', '6', '7 or more'],
             colors: ['#04b485', '#9ec74c', '#ABB070', '#e5de0d', '#CF9F15', '#ec6d39', '#e94027']
           }),
-          makeBasicExploration({
+          util.makeBasicExploration({
             name: 'Painted crosswalks',
             question: 'Are-there-painted-crosswalks',
             values: ['Yes-for-all-crossing-directions', 'Yes-for-some-crossing-directions', 'No'],
             valueNames: ['All crossing directions', 'Some crossing directions', 'No crosswalks'],
             colors: ['#04b485', '#e5de0d', '#e94027']
           }),
-          makeCheckboxExploration({
+          util.makeCheckboxExploration({
             name: 'Median islands',
             question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Median-islands',
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
@@ -727,7 +599,7 @@ define(function(require, exports, module) {
             valueNames: ['Yes', 'No'],
             colors: ['#0eb308', '#78706d']
           }),
-          makeCheckboxExploration({
+          util.makeCheckboxExploration({
             name: 'Bulb-outs',
             question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Bulb-outs',
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
@@ -735,7 +607,7 @@ define(function(require, exports, module) {
             valueNames: ['Yes', 'No'],
             colors: ['#0eb308', '#78706d']
           }),
-          makeCheckboxExploration({
+          util.makeCheckboxExploration({
             name: 'Accessible curb ramps',
             question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Accessible-curb-ramps-for-wheelchairs',
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
@@ -743,7 +615,7 @@ define(function(require, exports, module) {
             valueNames: ['Yes', 'No/No Data'],
             colors: ['#0eb308', '#78706d']
           }),
-          makeCheckboxExploration({
+          util.makeCheckboxExploration({
             name: 'Other pedestrian amenities',
             question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Other',
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
@@ -751,7 +623,7 @@ define(function(require, exports, module) {
             valueNames: ['Yes', 'No/No Data'],
             colors: ['#0eb308', '#78706d']
           }),
-          makeCheckboxExploration({
+          util.makeCheckboxExploration({
             name: 'Traffic signals',
             question: 'Are-there-traffic-controls-Select-all-that-apply-Traffic-signal',
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
@@ -759,7 +631,7 @@ define(function(require, exports, module) {
             valueNames: ['Yes', 'No'],
             colors: ['#0eb308', '#78706d']
           }),
-          makeCheckboxExploration({
+          util.makeCheckboxExploration({
             name: 'Pedestrian signals',
             question: 'Are-there-traffic-controls-Select-all-that-apply-Pedestrian-signal',
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
@@ -767,7 +639,7 @@ define(function(require, exports, module) {
             valueNames: ['Yes', 'No'],
             colors: ['#0eb308', '#78706d']
           }),
-          makeBasicExploration({
+          util.makeBasicExploration({
             name: 'Stop signs',
             query: {
               'entries.responses.What-would-you-like-to-record': 'Intersection-Quality'
@@ -778,7 +650,7 @@ define(function(require, exports, module) {
             colors: ['#0eb308', '#7570b3', '#386cb0'],
             showNoResponse: true
           }),
-          makeCheckboxExploration({
+          util.makeCheckboxExploration({
             name: 'Shade trees',
             question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Shade-trees',
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
@@ -786,7 +658,7 @@ define(function(require, exports, module) {
             valueNames: ['Yes', 'No/No Data'],
             colors: ['#0eb308', '#78706d']
           }),
-          makeCheckboxExploration({
+          util.makeCheckboxExploration({
             name: 'Nice landscaping',
             question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Nice-landscaping',
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
@@ -794,7 +666,7 @@ define(function(require, exports, module) {
             valueNames: ['Yes', 'No/No Data'],
             colors: ['#0eb308', '#78706d']
           }),
-          makeCheckboxExploration({
+          util.makeCheckboxExploration({
             name: 'Benches',
             question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Benches',
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
@@ -802,7 +674,7 @@ define(function(require, exports, module) {
             valueNames: ['Yes', 'No/No Data'],
             colors: ['#0eb308', '#78706d']
           }),
-          makeCheckboxExploration({
+          util.makeCheckboxExploration({
             name: 'Public art',
             question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Public-art',
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
@@ -810,7 +682,7 @@ define(function(require, exports, module) {
             valueNames: ['Yes', 'No/No Data'],
             colors: ['#0eb308', '#78706d']
           }),
-          makeCheckboxExploration({
+          util.makeCheckboxExploration({
             name: 'Other pedestrian amenities',
             question: 'Are-there-pedestrian-amenities-Select-all-that-apply-Other',
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
@@ -818,7 +690,7 @@ define(function(require, exports, module) {
             valueNames: ['Yes', 'No/No Data'],
             colors: ['#0eb308', '#78706d']
           }),
-          makeCheckboxExploration({
+          util.makeCheckboxExploration({
             name: 'Drivers disobeying stop signs/traffic signals',
             question: 'Are-there-problems-with-driver-behavior-Select-all-that-apply-Not-obeying-stop-signs-or-traffic-signals',
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
@@ -826,7 +698,7 @@ define(function(require, exports, module) {
             valueNames: ['Yes', 'No'],
             colors: ['#e64212', '#78706d']
           }),
-          makeCheckboxExploration({
+          util.makeCheckboxExploration({
             name: 'Drivers disobeying speed limit',
             question: 'Are-there-problems-with-driver-behavior-Select-all-that-apply-Not-obeying-the-speed-limit',
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
@@ -834,7 +706,7 @@ define(function(require, exports, module) {
             valueNames: ['Yes', 'No'],
             colors: ['#e64212', '#78706d']
           }),
-          makeCheckboxExploration({
+          util.makeCheckboxExploration({
             name: 'Drivers not yielding to pedestrians',
             question: 'Are-there-problems-with-driver-behavior-Select-all-that-apply-Not-yielding-to-pedestrians',
             predicate: ['What-would-you-like-to-record', 'Intersection-Quality'],
@@ -851,7 +723,7 @@ define(function(require, exports, module) {
               }
             },
             select: {},
-            styles: simpleStyles({ color: '#810f7c' })
+            styles: util.simpleStyles({ color: '#810f7c' })
           },
           values: [{
             text: 'Photo',
@@ -864,7 +736,7 @@ define(function(require, exports, module) {
                 }
               },
               select: {},
-              styles: simpleStyles({color: '#810f7c'})
+              styles: util.simpleStyles({color: '#810f7c'})
             }
           }]
         }]
@@ -882,9 +754,9 @@ define(function(require, exports, module) {
           'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
         },
         select: {},
-        styles: simpleStyles({color: '#8da0cb', pointSize: 15}),
+        styles: util.simpleStyles({color: '#8da0cb', pointSize: 15}),
         exploration: [
-          makeBasicExploration({
+          util.makeBasicExploration({
             name: 'Overall Pedestrian Environment Rating',
             question: 'How-would-you-rate-the-pedestrian-environment-overall-1-5-5highest',
             // This question is repeated among sidewalk/intersection/pedestrian
@@ -1032,7 +904,7 @@ define(function(require, exports, module) {
               }
             }]
           },
-          makeBasicExploration({
+          util.makeBasicExploration({
             name: 'Observation duration',
             question: 'How-long-did-you-observe-this-street-segment',
             values: ['Less-than-15-minutes', '15-30-minutes', '30-45-minutes', '45-60-minutes', 'more-than-60-minutes'],
@@ -1040,7 +912,7 @@ define(function(require, exports, module) {
             colors: ['#9ebcda', '#8c96c6', '#8c6bb1', '#88419d', '#6e016b'],
             pointSize: 15
           }),
-          makeBasicExploration({
+          util.makeBasicExploration({
             name: 'Temperature during observation',
             question: 'What-is-the-temperature-like',
             values: ['Warm-80-or-more', 'Mild-40-79', 'Cold-39-or-less'],
@@ -1057,7 +929,7 @@ define(function(require, exports, module) {
               }
             },
             select: {},
-            styles: simpleStyles({ color: '#810f7c', pointSize: 15 })
+            styles: util.simpleStyles({ color: '#810f7c', pointSize: 15 })
           },
           values: [{
             text: 'Photo',
@@ -1070,7 +942,7 @@ define(function(require, exports, module) {
                 }
               },
               select: {},
-              styles: simpleStyles({color: '#810f7c', pointSize: 15})
+              styles: util.simpleStyles({color: '#810f7c', pointSize: 15})
             }
           }]
         }]

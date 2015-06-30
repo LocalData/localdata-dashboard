@@ -32,11 +32,16 @@
       <% if (r.responses[e.question]) { %>
         <div class="answer">
           <div class="key"><%= e.name %></div>
-          <% _.each(e.values, function(v) { %>
-            <% if (v.name === r.responses[e.question]) { %>
-              <div class="value"><%= v.text %></div>
-            <% } %>
-          <% }); %>
+          <% if (e.values) { %>
+            <% _.each(e.values, function(v) { %>
+              <% if (v.name === r.responses[e.question]) { %>
+                <div class="value"><%= v.text %></div>
+              <% } %>
+            <% }); %>
+          <% } else { %>
+            <!-- text fields -->
+            <div class="value"><%= r.responses[e.question] %></div>
+          <% } %>
         </div>
       <% } %>
     <% }); %>
