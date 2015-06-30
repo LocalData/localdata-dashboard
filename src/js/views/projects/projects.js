@@ -10,6 +10,8 @@ define(function(require, exports, module) {
   var parkswatch = require('./project-parkswatch');
 
   var projects = {
+    parkswatch: parkswatch,
+
     // https://app.localdata.com/api/surveys/8a340df0-87af-11e2-9485-c3fff44e7c8e/forms
     gary: {
       name: 'Gary Parcel Survey',
