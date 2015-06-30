@@ -13,13 +13,13 @@ define(function(require, exports, module) {
     description: '',
     baselayer: '//a.tiles.mapbox.com/v3/matth.kmf6l3h1/{z}/{x}/{y}.png',
     location: 'Detroit, MI',
-    center: [-83.067198, 42.362125],
-    zoom: 14,
+    center: [-83.07518,42.375696],
+    zoom: 12,
     scrollWheelZoom: false,
     surveys: [{
       layerName: 'Parks surveyed',
       layerId: '9ec5a050-08b6-11e5-9ef2-9bc394c573ea',
-      color: '#45403e',
+      color: '#00ad00',
       options: {
         anonymous: true,
         exploreButton: true,
@@ -32,7 +32,7 @@ define(function(require, exports, module) {
       // filters: {
       //   question: 'Property condition'
       // },
-      styles: util.simpleStyles({color: '#45403e'}),
+      styles: util.simpleStyles({color: '#00ad00'}),
       exploration: [
         util.makeTextExploration({
           name: 'Park or Greenway Name',

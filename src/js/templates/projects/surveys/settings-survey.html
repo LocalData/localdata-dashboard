@@ -24,6 +24,7 @@
 
       <div class="options">
       <% _.each(categories, function (category) {%>
+        <% if(! _.has(category, 'values')) { return; } %>
         <div class="question" data-question="<%- category.name %>">
           <span class="question-title">
             <%- category.name %>
