@@ -31,15 +31,16 @@
     <% _.each(exploration, function(e) { %>
       <% if (r.responses[e.question]) { %>
         <div class="answer">
-          <div class="key"><%= e.name %></div>
           <% if (e.values) { %>
             <% _.each(e.values, function(v) { %>
               <% if (v.name === r.responses[e.question]) { %>
+                <div class="key"><%= e.name %></div>
                 <div class="value"><%= v.text %></div>
               <% } %>
             <% }); %>
           <% } else { %>
             <!-- text fields -->
+            <div class="key"><%= e.name %></div>
             <div class="value"><%= r.responses[e.question] %></div>
           <% } %>
         </div>
