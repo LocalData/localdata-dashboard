@@ -126,6 +126,7 @@ define(function(require, exports, module) {
         //   ],
         //   colors: ['#0571b0', '#535353']
         // }),
+
         util.makeBasicExploration({
           name: 'Residential use structures',
           question: 'residential',
@@ -137,6 +138,7 @@ define(function(require, exports, module) {
           ],
           colors: ['#0571b0']
         }),
+
         util.makeBasicExploration({
           name: 'Commercial use structures',
           question: 'commercial',
@@ -148,6 +150,7 @@ define(function(require, exports, module) {
           ],
           colors: ['#0571b0']
         }),
+
         util.makeBasicExploration({
           name: 'Public use structures',
           question: 'public-gov',
@@ -158,6 +161,39 @@ define(function(require, exports, module) {
             'Yes'
           ],
           colors: ['#0571b0']
+        }),
+
+        // Public building info
+        util.makeBasicExploration({
+          name: 'Public owner',
+          question: 'deeded-own',
+          values: [
+            'City of Gary',
+            'GUEA',
+            'Department of Redevelopment',
+            'Public Works',
+            'Parks Department'
+          ],
+          valueNames: [
+            'City of Gary',
+            'GUEA',
+            'Department of Redevelopment',
+            'Public Works',
+            'Parks Department'
+          ],
+          colors: ['#f46d31', '#d3d3d3', '#92c5de', '#ca0020', '#0571b0']
+        }),
+        util.makeTextExploration({
+          name: 'Assessed value',
+          question: 'assessed'
+        }),
+        util.makeTextExploration({
+          name: 'Lot square feet',
+          question: 'lot_sf'
+        }),
+        util.makeTextExploration({
+          name: 'Building square feet',
+          question: 'bldg_sf'
         })
       ]
     }]
