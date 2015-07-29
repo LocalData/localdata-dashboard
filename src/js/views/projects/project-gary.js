@@ -179,10 +179,11 @@ define(function(require, exports, module) {
             'City of Gary',
             'GUEA',
             'Department of Redevelopment',
-            'Public Works',
+            'Public Works Deparmtnet',
+            'Community Development Department',
             'Parks Department'
           ],
-          colors: ['#f46d31', '#d3d3d3', '#92c5de', '#ca0020', '#0571b0']
+          colors: ['#f46d31', '#45403e', '#92c5de', '#ca0020', '#0571b0', '#05b04c']
         }),
         util.makeTextExploration({
           name: 'Assessed value',
