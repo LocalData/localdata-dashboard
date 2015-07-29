@@ -171,7 +171,8 @@ define(function(require, exports, module) {
             'City of Gary',
             'GUEA',
             'Department of Redevelopment',
-            'Public Works',
+            'Public Works Department',
+            'Community Development Department',
             'Parks Department'
           ],
           valueNames: [
