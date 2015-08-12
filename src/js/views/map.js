@@ -216,7 +216,7 @@ function($, _, Backbone, L, moment, settings, util, api, template) {
         // Initialize the map
         this.map = new L.map('map', {
           zoom: 15,
-          center: [0, 0],
+          center: [37.77585785035733, -122.413628113516],
           zoomControl: false
         });
 
