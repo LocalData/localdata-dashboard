@@ -87,6 +87,14 @@ define(function(require, exports, module) {
         } else {
           map.fitBounds(bounds);
         }
+      } else {
+        // Geocode the survey location if there are no bounds.
+        this.model.getLocation(function(error, results) {
+          if (error) {
+            return;
+          }
+          map.setView(results.coords, settings.TYPICAL_CITYWIDE_ZOOM);
+        }.bind(map));
       }
 
       // Add our baselayer

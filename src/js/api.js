@@ -326,6 +326,16 @@ define(function (require) {
       success: function (data) {
         if (data.resourceSets.length > 0){
           var result = data.resourceSets[0].resources[0];
+
+          // Apparently we can get an empty result.
+          if (!result) {
+            callback({
+              type: 'GeocodingError',
+              message: 'No geocoding results found'
+            });
+            return;
+          }
+
           callback(null, {
             addressLine: result.address.addressLine,
             coords: result.point.coordinates
