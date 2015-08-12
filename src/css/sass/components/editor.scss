@@ -77,6 +77,10 @@
     position: relative;
   }
 
+  input.blank {
+    border-color: $red;
+  }
+
   .question .question,
   .answers {
     border-left: $editor-border solid #fff;
@@ -101,11 +105,11 @@
       padding-left: 45px;
     }
   }
-  
+
   .add-question-container {
     padding-bottom: 8px;
   }
-  
+
 
   .question-tools-container,
   .show-add-sub-question,

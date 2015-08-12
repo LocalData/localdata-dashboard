@@ -77,9 +77,32 @@ define(function (require) {
       this.renderForm();
     },
 
+    formIsValid: function() {
+      // Find questions without answers
+      var emptyQuestions = this.formQuestions.find('input:text[value=""]');
+      if (emptyQuestions.length === 0) {
+        return true;
+      }
+
+      emptyQuestions.addClass('blank');
+      emptyQuestions.keyup(function(event) {
+        $(event.target).removeClass('blank');
+      });
+      return false;
+    },
+
     save: function(event) {
       event.preventDefault();
       console.log('Saving form');
+      $('.formSaveError').html('').hide();
+
+      var valid = this.formIsValid();
+      if (!valid) {
+        $('.formSaveError').html('Please ensure all questions and answers have text.');
+        $('.formSaveError').fadeIn();
+        return;
+      }
+
       util.track('survey.form.save');
 
       api.createForm(this.forms.getMostRecentForm().toJSON(), function(){
@@ -254,6 +277,7 @@ define(function (require) {
 
         var newQuestion = this.makeBlankQuestion();
         newQuestion.type = 'file';
+
         delete newQuestion.answers;
         parent.splice(questionIndex + 1, 0, newQuestion);
 
