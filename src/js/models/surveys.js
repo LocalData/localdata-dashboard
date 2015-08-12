@@ -5,10 +5,11 @@ define([
   'jquery',
   'lib/lodash',
   'backbone',
-  'settings'
+  'settings',
+  'api'
 ],
 
-function($, _, Backbone, settings) {
+function($, _, Backbone, settings, api) {
   'use strict';
 
   var Surveys = {};
@@ -31,6 +32,19 @@ function($, _, Backbone, settings) {
 
     getCount: function() {
       return this.numberWithCommas(this.get('responseCount'));
+    },
+
+    getLocation: function(callback) {
+      // If there are no bounds, geocode the survey location and zoom there.
+      var location = this.get('location');
+      api.codeAddress('', location, function(error, results) {
+        if (error) {
+          console.log("Error geocoding survey location", error);
+          callback(error);
+        }
+
+        callback(error, results);
+      });
     },
 
     toJSON: function(options) {

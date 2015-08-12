@@ -158,7 +158,14 @@ function($, _, Backbone, L, moment, settings, util, api, template) {
             maxZoom: 18
           });
         }
+
+        return;
       }
+
+      // If there are no bounds, geocode the survey location and zoom there.
+      this.survey.getLocation(function(error, results) {
+        this.map.setView(results.coords, settings.TYPICAL_CITYWIDE_ZOOM);
+      }.bind(this));
     },
 
 
@@ -209,7 +216,7 @@ function($, _, Backbone, L, moment, settings, util, api, template) {
         // Initialize the map
         this.map = new L.map('map', {
           zoom: 15,
-          center: [37.77585785035733, -122.41362811351655],
+          center: [0, 0],
           zoomControl: false
         });
 

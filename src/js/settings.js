@@ -25,6 +25,7 @@ function(L) {
   settings.printLayer = 'http://{s}.tile.stamen.com/toner/{z}/{x}/{y}.png';
 
   settings.MIN_GRID_ZOOM = 14; // furthest out we'll have interactive grids.
+  settings.TYPICAL_CITYWIDE_ZOOM = 13;
 
   // Colors for option maps
   settings.colorRange = [
