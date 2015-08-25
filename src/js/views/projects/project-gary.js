@@ -169,12 +169,12 @@ define(function(require, exports, module) {
           question: 'deeded-own',
           values: [
             'City of Gary',
-            'Redevelopment Commission',
+            'City of Gary Redevelopment Commission',
             'Parks Department'
           ],
           valueNames: [
             'City of Gary',
-            'Redevelopment Commission',
+            'City of Gary Redevelopment Commission',
             'Parks Department'
           ],
           colors: ['#f46d31', '#45403e', '#92c5de', '#ca0020', '#0571b0', '#05b04c']
