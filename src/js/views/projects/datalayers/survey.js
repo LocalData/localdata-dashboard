@@ -53,7 +53,8 @@ define(function (require) {
       'click .close': 'close',
       'click .toggle-layer': 'toggleLayer',
       'click .show-settings .title': 'showSettings',
-      'click button.show-settings': 'showSettings'
+      'click button.show-settings': 'showSettings',
+      'click .quick-view': 'toggleQuickView'
     },
 
     initialize: function(options) {
@@ -88,6 +89,7 @@ define(function (require) {
       this.color = options.survey.color;
       this.zIndex = options.survey.zIndex;
       this.exploration = options.survey.exploration;
+      this.quickViews = options.survey.quickViews;
       this.state = options.survey.state || 'active';
       this.filters = options.survey.filters;
 
@@ -154,6 +156,7 @@ define(function (require) {
       } else if (filter.question && !filter.answer) {
         // TODO: Switch nomenclature to "category" and "value" instead of
         // "question" and "answer".
+        console.log("Searching in", this.exploration);
         data = _.find(this.exploration, { name: filter.question }).layer;
       } else {
         var filterDefs = _.find(this.exploration, {
@@ -235,6 +238,10 @@ define(function (require) {
         // this.removeLegend();
         this.$el.removeClass('legend-inactive');
       }
+    },
+
+    toggleQuickView: function(event) {
+      this.settings.selectQuestion(event);
     },
 
     /**
@@ -369,9 +376,8 @@ define(function (require) {
       this.listenTo(this.settings, 'filterSet', this.changeFilter);
       this.listenTo(this.settings, 'updated', this.changeLegend);
 
-      var $el = this.settings.render();
-      this.$settings = $el;
-      this.trigger('renderedSettings', $el);
+      this.$settings = this.settings.render();
+      this.trigger('renderedSettings', this.$settings);
     },
 
     showSettings: function (event) {
@@ -405,6 +411,7 @@ define(function (require) {
 
     changeFilter: function(filter) {
       // Assume this activates the layer
+      console.log("Changing filter to", filter);
       this.state = 'active';
       this.getTileJSON(filter);
       util.track('project.survey.changeFilter');
@@ -438,6 +445,11 @@ define(function (require) {
       }
 
       _.extend(context.meta, this.options);
+
+      console.log("QB?", this.quickViews);
+      if (this.options.quickViews) {
+        context.quickViews = this.quickViews;
+      }
 
       context.meta.count = util.numberWithCommas(this.survey.get('queryCount')) || '';
 

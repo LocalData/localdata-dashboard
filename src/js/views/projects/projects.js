@@ -9,10 +9,12 @@ define(function(require, exports, module) {
   var util = require('./project-utils');
   var parkswatch = require('./project-parkswatch');
   var gary = require('./project-gary');
+  var newark = require('./project-newark');
 
   var projects = {
-    parkswatch: parkswatch,
     gary: gary,
+    newark: newark,
+    parkswatch: parkswatch,
 
     // GTECH ---------------------------------------------------------------------
     gtech: {

@@ -28,9 +28,6 @@ define(function (require) {
 
       this.setFilters(options.filters);
       this.setCategory(options.category);
-
-      console.log("Init legend with options", options);
-
     },
 
     render: function() {
@@ -42,6 +39,7 @@ define(function (require) {
         category: this.category,
         filters: this.filters
       };
+      console.log("Rendering legend", context);
       this.$el.html(this.template(context));
       return this;
     },
