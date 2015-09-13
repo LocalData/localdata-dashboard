@@ -23,10 +23,8 @@ define(function(require, exports, module) {
   var newark = {
     name: 'South Ward Parcel Survey',
     description: '',
-
-    baselayer: '//a.tiles.mapbox.com/v3/matth.g93nnjc2/{z}/{x}/{y}.png',
-
-    // baselayer: '//a.tiles.mapbox.com/v3/matth.kmf6l3h1/{z}/{x}/{y}.png',
+    // baselayer: '//a.tiles.mapbox.com/v3/matth.g93nnjc2/{z}/{x}/{y}.png',
+    baselayer: '//a.tiles.mapbox.com/v3/matth.kmf6l3h1/{z}/{x}/{y}.png',
     location: 'Newark, NJ',
     center: [-74.209213, 40.717719],
     zoom: 15,

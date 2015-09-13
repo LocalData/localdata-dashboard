@@ -33,7 +33,6 @@ define(function(require, exports, module) {
     // values: ['Yes', 'No'],
     // valueNames: ['Unsafe', 'No significant issue'],
     // colors: ['#d73027', '#1a9850']
-
     var data = {
       name: options.name,
       question: options.question,
