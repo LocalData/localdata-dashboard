@@ -10,12 +10,12 @@ define(function(require, exports, module) {
 
   /*
   Original colors:
-    '#0571b0', - blue
+    '#3567a4', - blue
     '#8329cd', - purple
     '#f4c431', - yellow
     '#05b04c', - green
-    '#ca0020', - red
-    '#f46d31', - orange
+    '#d84e6c', - red
+    '#d79b3b', - orange
     '#d3d3d3'  - gray
   */
 
@@ -23,8 +23,8 @@ define(function(require, exports, module) {
   var newark = {
     name: 'South Ward Parcel Survey',
     description: '',
-    // baselayer: '//a.tiles.mapbox.com/v3/matth.g93nnjc2/{z}/{x}/{y}.png',
-    baselayer: '//a.tiles.mapbox.com/v3/matth.kmf6l3h1/{z}/{x}/{y}.png',
+    baselayer: '//a.tiles.mapbox.com/v3/matth.g93nnjc2/{z}/{x}/{y}.png', // light
+    // baselayer: '//a.tiles.mapbox.com/v3/matth.kmf6l3h1/{z}/{x}/{y}.png',
     location: 'Newark, NJ',
     center: [-74.209213, 40.717719],
     zoom: 15,
@@ -55,11 +55,11 @@ define(function(require, exports, module) {
             'No-empty-lot'
           ],
           valueNames: [
-            'Yes',
-            'No (empty lot)'
+            'Structure present',
+            'Empty lot'
           ],
           colors: ['#3782b7', '#f8b25b']
-          // colors: ['#0571b0', '#f46d31']
+          // colors: ['#3567a4', '#f46d31']
         }),
 
         util.makeBasicExploration({
@@ -77,7 +77,7 @@ define(function(require, exports, module) {
             'Possibly Vacant',
             'Unusure'
           ],
-          colors: ['#0571b0', '#92c5de', '#f46d31',  '#d3d3d3']
+          colors: ['#3567a4', '#92c5de', '#d79b3b',  '#d3d3d3']
         }),
 
         util.makeBasicExploration({
@@ -95,7 +95,7 @@ define(function(require, exports, module) {
             'Severe',
             'Unsure'
           ],
-          colors: ['#0571b0', '#92c5de', '#ca0020', '#d3d3d3']
+          colors: ['#3567a4', '#92c5de', '#d84e6c', '#d3d3d3']
           // purples:
           // colors: ['#05b04c', '#a5e76b', '#d3d3d3', '#d791da', '#85048a']
         }),
@@ -111,7 +111,7 @@ define(function(require, exports, module) {
             'Dumping observed',
             'No dumping observed'
           ],
-          colors: ['#ca0020', '#92c5de', '#d3d3d3']
+          colors: ['#d84e6c', '#92c5de', '#d3d3d3']
         }),
 
         util.makeBasicExploration({
@@ -127,12 +127,12 @@ define(function(require, exports, module) {
             'No trash observed',
             'Unsure'
           ],
-          colors: ['#b65066', '#3c97cc', '#d3d3d3']
-          // colors: ['#ca0020', '#92c5de', '#d3d3d3']
+          colors: ['#d84e6c', '#3c97cc', '#d3d3d3']
+          // colors: ['#d84e6c', '#92c5de', '#d3d3d3']
         }),
 
         util.makeBasicExploration({
-          name: 'Maintenance status',
+          name: 'Property maintenance status',
           question: 'Is-the-property-maintained',
           values: [
             'Yes',
@@ -144,7 +144,7 @@ define(function(require, exports, module) {
             'Unmaintained',
             'Unsure'
           ],
-          colors: ['#92c5de', '#ca0020', '#f46d31']
+          colors: ['#92c5de', '#d84e6c', '#d79b3b']
         }),
 
         util.makeBasicExploration({
@@ -162,7 +162,7 @@ define(function(require, exports, module) {
             'Unsure',
             'Not applicable'
           ],
-          colors: ['#0571b0', '#ca0020', '#f46d31', '#d3d3d3'],
+          colors: ['#3567a4', '#d84e6c', '#d79b3b', '#d3d3d3'],
           showNoResponse: true
         }),
 
@@ -188,12 +188,12 @@ define(function(require, exports, module) {
             'Unsure'
           ],
           colors:  [
-            '#0571b0',
-            '#8329cd',
-            '#f4c431',
-            '#05b04c',
-            '#ca0020',
-            '#f46d31',
+            '#3567a4',
+            '#9756cd',
+            '#f8b868',
+            '#92b670',
+            '#d84e6c',
+            '#d79b3b',
             '#d3d3d3'
           ]
         })
@@ -214,7 +214,7 @@ define(function(require, exports, module) {
             'City of Gary Redevelopment Commission',
             'Parks Department'
           ],
-          colors: ['#f46d31', '#0571b0', '#05b04c']
+          colors: ['#d79b3b', '#3567a4', '#05b04c']
         })
         util.makeTextExploration({
           name: 'Assessed value',
