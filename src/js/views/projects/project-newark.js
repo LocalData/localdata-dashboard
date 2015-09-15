@@ -180,7 +180,7 @@ define(function(require, exports, module) {
             'Unsure',
             'Not applicable'
           ],
-          colors: ['#3567a4', '#d84e6c', '#d79b3b', '#d3d3d3'],
+          colors: ['#92c5de', '#d84e6c', '#d79b3b', '#d3d3d3'],
           showNoResponse: true
         }),
 
