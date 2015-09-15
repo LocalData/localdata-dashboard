@@ -101,6 +101,24 @@ define(function(require, exports, module) {
         }),
 
         util.makeBasicExploration({
+          name: 'Structures needing boarding',
+          question: 'Is-the-structure-in-need-of-boarding',
+          values: [
+            'Yes-one-or-more-window-or-door-is-open',
+            'No-windows-and-doors-are-boarded',
+            'No-windows-and-doors-are-in-good-condition',
+            'Unsure'
+          ],
+          valueNames: [
+            'Yes - one or more window or door is open',
+            'No - structure is boarded',
+            'No - structure is in good condition',
+            'Unusure'
+          ],
+          colors: ['#d84e6c', '#d79b3b', '#92c5de',  '#d3d3d3']
+        }),
+
+        util.makeBasicExploration({
           name: 'Sites with dumping',
           question: 'Is-there-dumping-on-the-property',
           values: [
