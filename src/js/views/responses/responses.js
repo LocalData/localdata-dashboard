@@ -131,7 +131,7 @@ define(function(require, exports, module) {
         forms: this.forms,
         stats: this.stats,
         map: this.mapView
-      }).render();
+      })// .render();
       this.listenTo(this.filterView, 'updated', this.changeLegend);
 
       this.legendView = new LegendView({

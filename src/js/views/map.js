@@ -313,7 +313,7 @@ function($, _, Backbone, L, moment, settings, util, api, template) {
       $.ajax({
         url: url,
         dataType: 'json',
-        data: this.daterange,
+        data: this.mapOptions,
         cache: false
       }).done(this.addTileLayer)
       .fail(function(jqXHR, textStatus, errorThrown) {
@@ -337,8 +337,8 @@ function($, _, Backbone, L, moment, settings, util, api, template) {
       this.selectDataMap();
     },
 
-    setDate: function(options) {
-      this.daterange = options;
+    setOptions: function(options) {
+      this.mapOptions = options;
       this.map.invalidateSize();
       this.selectDataMap();
     },

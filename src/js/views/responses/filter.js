@@ -42,7 +42,8 @@ define(function(require, exports, module) {
       "click .clear": "reset",
       "click .close-settings": "close",
 
-      "change #datefilter": "selectDate"
+      "change #datefilter": "selectDate",
+      "change #collectorfilter": "selectCollector"
     },
 
     initialize: function(options) {
@@ -56,10 +57,6 @@ define(function(require, exports, module) {
         id: this.survey.get('id')
       }));
       this.stats.on('change', this.render);
-      this.$el.html(this.template());
-
-      $('.action-show-filters').click(function(event) {
-      });
     },
 
     close: function() {
@@ -67,19 +64,45 @@ define(function(require, exports, module) {
       this.$el.find('.filters').hide();
     },
 
+    getParams: function() {
+      var options = {};
+      if (this.filters.collector) {
+        options.collector = this.filters.collector;
+      }
+
+      if (this.filters.after) {
+        options.after = this.filters.after.getTime();
+      }
+
+      return options;
+    },
+
+    selectCollector: function(event) {
+      var collector = $(event.target).val();
+
+      if (collector === 'all') {
+        delete this.filters.collector;
+      } else {
+        this.filters.collector = collector;
+      }
+
+      var mapParams = this.getParams();
+      this.map.setOptions(mapParams);
+
+      // Reset the stats with the new parameters.
+      this.stats.initialize({
+        id: this.survey.get('id'),
+        params: mapParams
+      });
+
+      this.filters.collector = collector;
+      this.updateSidebar();
+    },
+
     selectDate: function(event) {
       var HOUR_IN_MS = 1000*60*60;
       var val = $(event.target).val();
       var after = new Date();
-
-      if (val === 'all') {
-        this.map.setDate({});
-        this.stats.initialize({
-          id: this.survey.get('id')
-        });
-
-        return;
-      }
 
       if (val === 'hour') {
         after = new Date(after.getTime() - HOUR_IN_MS);
@@ -94,26 +117,48 @@ define(function(require, exports, module) {
         after = new Date(after.getTime() - (HOUR_IN_MS * 24 * 7));
       }
 
+      if (val === 'all') {
+        delete this.filters.after;
+      } else {
+        this.filters.after = after;
+      }
+
       // Set the date on the map, so the correct tiles are fetched.
-      this.map.setDate({
-        after: after.getTime()
-      });
+      var mapParams = this.getParams();
+      this.map.setOptions(mapParams);
 
       // Reset the stats with the new parameters.
       this.stats.initialize({
         id: this.survey.get('id'),
-        params: {
-          after: after.getTime()
-        }
+        params: mapParams
       });
 
       // Update the sidebar
-      this.filters.after = after;
       this.updateSidebar();
     },
 
     render: function() {
-      console.log('Rendering the filters');
+      // We only render the full filter container once.
+      // Future updates are done only to the stats.
+      if (!this.skipFullRender) {
+        var collectorList = [];
+
+        // Get the list of collectors and counts together
+        _.each(this.stats.toJSON().Collectors, function(count, collector) {
+          collectorList.push({
+            count: count,
+            collector: collector
+          });
+        });
+
+        collectorList = _.sortBy(collectorList, 'collector');
+
+        this.$el.html(this.template({
+          collectors: collectorList
+        }));
+        this.skipFullRender = true;
+      }
+
 
       this.$el.find('.question-filters').html('');
 

@@ -25,6 +25,19 @@
       </h3>
     </div>
 
+    <div class="date-filters filter">
+      <h3>
+        Filter by collector
+        <select id="collectorfilter">
+          <option value="all">All responses</option>
+          <% _.each(collectors, function(c) { %>
+            <option value="<%= c.collector %>"><%= c.collector%> (<%= c.count %>)</option>
+          <% }); %>
+        </select>
+
+      </h3>
+    </div>
+
     <div class="question-filters filter"></div>
   </div>
 </div>
