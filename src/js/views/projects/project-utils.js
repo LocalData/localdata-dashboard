@@ -7,6 +7,7 @@ define(function(require, exports, module) {
   var _ = require('lib/lodash');
   var exploreStylesTemplate = require('text!templates/projects/surveys/explore-styles.mss');
   var simpleStylesTemplate = require('text!templates/projects/surveys/simple-styles.mss');
+  var complexStylesTemplate = require('text!templates/projects/surveys/explore-complex-styles.mss');
   var checkboxStylesTemplate = require('text!templates/projects/surveys/checkbox-styles.mss');
 
   var exploreStyles = (function (template) {
@@ -20,6 +21,12 @@ define(function(require, exports, module) {
       return template(_.defaults(options, { pointSize: 18 }));
     };
   }(_.template(simpleStylesTemplate)));
+
+  var complexStyles = (function (template) {
+    return function (options) {
+      return template(_.defaults(options, { pointSize: 18 }));
+    };
+  }(_.template(complexStylesTemplate)));
 
   var checkboxStyles = (function (template) {
     return function (options) {
@@ -65,13 +72,79 @@ define(function(require, exports, module) {
           },
           pointSize: options.pointSize
         };
-        ret.layer.query['entries.responses.' + options.question] = val;
+        ret.layer.query['entries.0.responses.' + options.question] = val;
         ret.layer.query = _.defaults(ret.layer.query, options.query);
         return ret;
       })
     };
+
     return data;
   }
+
+  /*
+  Make an exploration that combines multiple facets and multiple questions.
+  For example: Properties that are vacant and have fire damage.
+
+  options = {
+    name: 'Vacant properties by condition',
+    choices: [{
+      name: 'Good '
+      select: [{
+        key: 'vacancy-status',
+        value: 'vacant'
+      }, {
+        key: 'condition',
+        value: 'good'
+      }],
+      color: 'green'
+    }, {
+      name: 'Bad'
+      select: [{
+        key: 'vacancy-status',
+        value: 'vacant'
+      }, {
+        key: 'condition',
+        value: 'bad'
+      }],
+      color: 'red'
+    }]
+  }]
+  */
+  function makeComplexExploration(options) {
+    var data = {
+      name: options.name,
+      layer: {
+        query: options.query,
+        select: { 'entries.0.responses': 1 },
+        styles: complexStyles({
+          showNoResponse: !!options.showNoResponse,
+          choices: options.choices,
+          pointSize: options.pointSize
+        })
+      },
+      // TODO
+      // Not sure what this is used for?
+      values:  _.map(options.values, function (val, i) {
+        var ret = {
+          text: options.valueNames[i],
+          name: options.values[i],
+          color: options.colors[i],
+          // layer: {
+          //   query: {},
+          //   select: {},
+          //   styles: simpleStyles({ color: options.colors[i], pointSize: options.pointSize })
+          // },
+          pointSize: options.pointSize
+        };
+        ret.layer.query['entries.0.responses.' + options.question] = val;
+        ret.layer.query = _.defaults(ret.layer.query, options.query);
+        return ret;
+      })
+    };
+
+    return data;
+  }
+
 
   function makeTextExploration(options) {
     // name: 'Unsafe due to traffic speed/volume',
@@ -86,7 +159,7 @@ define(function(require, exports, module) {
 
       layer: {
         query: options.query,
-        select: { 'entries.responses': 1 },
+        select: { 'entries.0.responses': 1 },
         styles: exploreStyles({
           showNoResponse: !!options.showNoResponse,
           pairs: _.map(options.values, function (val, i) {
@@ -115,14 +188,14 @@ define(function(require, exports, module) {
     // colors: ['#c51b7d', '#4d9221']
 
     var query = {};
-    query['entries.responses.' + options.predicate[0]] = options.predicate[1];
+    query['entries.0.responses.' + options.predicate[0]] = options.predicate[1];
 
     var queryYes = {};
-    queryYes['entries.responses.' + options.question] = 'yes';
+    queryYes['entries.0.responses.' + options.question] = 'yes';
     queryYes = _.defaults(queryYes, query);
 
     var queryNo = {};
-    queryNo['entries.responses.' + options.question] = {
+    queryNo['entries.0.responses.' + options.question] = {
       $ne: 'yes'
     };
     queryNo = _.defaults(queryNo, query);
@@ -135,7 +208,7 @@ define(function(require, exports, module) {
 
       layer: {
         query: query,
-        select: { 'entries.responses': 1 },
+        select: { 'entries.0.responses': 1 },
         styles: checkboxStyles({
           key: 'responses.' + options.question,
           colorYes: options.colors[0],

@@ -3,6 +3,15 @@ background-color: rgba(0,0,0,0);
 }
 
 <% if (showNoResponse) { %>
+<% var color = '#b7aba5'; %>
+
+<% for (var i = 0; i < pairs.length; i++) { %>
+  <% var pair = pairs[i]; %>
+  <% if(pair.value === 'no response') { %>
+    <% color = pair.color; %>
+  <% } %>
+<% } %>
+
 #localdata {
   [GEOMETRY = LineString],[GEOMETRY = MultiLineString] {
     line-width: 2;
@@ -15,16 +24,16 @@ background-color: rgba(0,0,0,0);
     [zoom >= 18] {
       line-width: 9;
     }
-    line-color: #b7aba5;
+    line-color: <%= color %>;
     line-opacity: 1;
   }
   [GEOMETRY = Polygon],[GEOMETRY = MultiPolygon] {
     [zoom >= 14] {
-      line-color: #b7aba5;
+      line-color: <%= color %>;
       line-width:0.5;
       line-opacity:0.5;
     }
-    polygon-fill: #b7aba5;
+    polygon-fill: <%= color %>;
     polygon-opacity:0.85;
   }
   [GEOMETRY = Point] {
@@ -35,8 +44,8 @@ background-color: rgba(0,0,0,0);
       marker-width: <%= pointSize %>;
     }
     marker-type: ellipse;
-    marker-line-color: #b7aba5;
-    marker-fill: #b7aba5;
+    marker-line-color: <%= color %>;
+    marker-fill: <%= color %>;
     marker-fill-opacity: 0.9;
     marker-line-opacity: 1;
   }

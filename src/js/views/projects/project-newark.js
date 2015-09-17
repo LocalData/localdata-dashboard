@@ -47,19 +47,58 @@ define(function(require, exports, module) {
       },
       styles: util.simpleStyles({color: '#45403e'}),
       exploration: [
+      /*
+        util.makeComplexExploration({
+          name: 'Vacant properties by condition',
+          choices: [{
+            name: 'Good '
+            select: [{
+              key: 'vacancy-status',
+              value: 'vacant'
+            }, {
+              key: 'condition',
+              value: 'good'
+            }],
+            color: 'green'
+          }, {
+            name: 'Bad'
+            select: [{
+              key: 'vacancy-status',
+              value: 'vacant'
+            }, {
+              key: 'condition',
+              value: 'bad'
+            }],
+            color: 'red'
+          }]
+        })
+      */
+
         util.makeBasicExploration({
           name: 'Structures & lots',
-          question: 'Is-there-a-structure-on-the-parcel',
+          question: 'How-is-the-lot-being-used',
           values: [
-            'yes',
-            'No-empty-lot'
+            'no response',
+            'Vacant-lot-or-open-space',
+            'Park-or-garden',
+            'Formal-parking-lot-paved-or-graveled',
+            'Informal-parking-lot-unpaved',
+            'Utilities',
+            'Junkyard-or-scrapyard',
+            'Unsure'
           ],
           valueNames: [
-            'Structure present',
-            'Empty lot'
+            'Structure',
+            'Vacant or open space',
+            'Park or garden',
+            'Formal parking lot (paved or graveled)',
+            'Informal parking lot (unpaved)',
+            'Utilities',
+            'Junkyard or scrapyard',
+            'Unsure'
           ],
-          colors: ['#3782b7', '#f8b25b']
-          // colors: ['#3567a4', '#f46d31']
+          colors: ['#3567a4', '#c7e9a7', '#84b655', '#d79b3b', '#f8be76', '#9756cd', '#b65066', '#d3d3d3'],
+          showNoResponse: true
         }),
 
         util.makeBasicExploration({

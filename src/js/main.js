@@ -55,7 +55,7 @@ require(['jquery', 'lib/lodash', 'loglevel', 'backbone', 'app', 'lib/bootstrap',
         function ($, _, logLevel, Backbone, app) {
   'use strict';
 
-  logLevel('silent');
+  logLevel('verbose');
 
   $(document).ready(function () {
     app.initialize();
