@@ -47,6 +47,7 @@ define(function(require, exports, module) {
         styles: util.simpleStyles({color: '#cddc29'}),
         exploration: [
           util.makeBasicExploration({
+            sparse: true,
             name: 'Project Status',
             question: 'What-stage-of-project-are-you-registering',
             values: [
@@ -62,6 +63,7 @@ define(function(require, exports, module) {
             colors: ['#F0532D', '#00C1f3', '#12B259']
           }),
           util.makeBasicExploration({
+            sparse: true,
             name: 'Project Type',
             question: 'Project-Type',
             values: [

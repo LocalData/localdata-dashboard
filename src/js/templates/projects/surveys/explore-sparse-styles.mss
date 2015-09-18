@@ -28,7 +28,10 @@ background-color: rgba(0,0,0,0);
     line-opacity: 1;
   }
   [GEOMETRY = Polygon],[GEOMETRY = MultiPolygon] {
-    [zoom >= 14] {
+    line-color: <%= color %>;
+    line-width:4;
+    line-opacity:1;
+    [zoom >= 15] {
       line-color: <%= color %>;
       line-width:0.5;
       line-opacity:0.5;
@@ -74,7 +77,10 @@ background-color: rgba(0,0,0,0);
     line-opacity: 1;
   }
   [GEOMETRY = Polygon],[GEOMETRY = MultiPolygon] {
-    [zoom >= 14] {
+    line-color: <%= pair.color %>;
+    line-width:4;
+    line-opacity:1;
+    [zoom >= 15] {
       line-color: <%= pair.color %>;
       line-width:0.5;
       line-opacity:0.5;
