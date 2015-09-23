@@ -42,6 +42,7 @@ define(function (require) {
         category: this.category,
         filters: this.filters
       };
+      console.log("Rendering legend", context);
       this.$el.html(this.template(context));
       return this;
     },

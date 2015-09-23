@@ -43,36 +43,10 @@ define(function(require, exports, module) {
       query: {},
       select: {},
       filters: {
-        question: 'Property condition'
+        question: 'Condition of vacant properties' // 'Property condition'
       },
       styles: util.simpleStyles({color: '#45403e'}),
       exploration: [
-      /*
-        util.makeComplexExploration({
-          name: 'Vacant properties by condition',
-          choices: [{
-            name: 'Good '
-            select: [{
-              key: 'vacancy-status',
-              value: 'vacant'
-            }, {
-              key: 'condition',
-              value: 'good'
-            }],
-            color: 'green'
-          }, {
-            name: 'Bad'
-            select: [{
-              key: 'vacancy-status',
-              value: 'vacant'
-            }, {
-              key: 'condition',
-              value: 'bad'
-            }],
-            color: 'red'
-          }]
-        })
-      */
 
         util.makeBasicExploration({
           name: 'Structures & lots',
@@ -137,6 +111,76 @@ define(function(require, exports, module) {
           colors: ['#3567a4', '#92c5de', '#d84e6c', '#d3d3d3']
           // purples:
           // colors: ['#05b04c', '#a5e76b', '#d3d3d3', '#d791da', '#85048a']
+        }),
+
+        util.makeComplexExploration({
+          name: 'Condition of vacant properties',
+          choices: [{
+            name: 'Good',
+            select: [{
+              key: 'Does-the-structure-appear-vacant-or-occupied',
+              value: 'Possibly-Vacant'
+            }, {
+              key: 'What-is-the-overall-condition-of-the-structure',
+              value: 'Good-condition'
+            }],
+            color: '#3567a4'
+          }, {
+            name: 'Fair',
+            select: [{
+              key: 'Does-the-structure-appear-vacant-or-occupied',
+              value: 'Possibly-Vacant'
+            }, {
+              key: 'What-is-the-overall-condition-of-the-structure',
+              value: 'Fair-condition'
+            }],
+            color: '#f4c431'
+          }, {
+            name: 'Bad',
+            select: [{
+              key: 'Does-the-structure-appear-vacant-or-occupied',
+              value: 'Possibly-Vacant'
+            }, {
+              key: 'What-is-the-overall-condition-of-the-structure',
+              value: 'Severe-condition'
+            }],
+            color: '#d84e6c'
+          }]
+        }),
+
+        util.makeComplexExploration({
+          name: 'Maintenance of vacant properties',
+          choices: [{
+            name: 'Maintained',
+            select: [{
+              key: 'Does-the-structure-appear-vacant-or-occupied',
+              value: 'Possibly-Vacant'
+            }, {
+              key: 'Is-the-property-maintained',
+              value: 'Yes'
+            }],
+            color: '#3567a4'
+          }, {
+            name: 'Unmaintained',
+            select: [{
+              key: 'Does-the-structure-appear-vacant-or-occupied',
+              value: 'Possibly-Vacant'
+            }, {
+              key: 'Is-the-property-maintained',
+              value: 'No'
+            }],
+            color: '#d84e6c'
+          }, {
+            name: 'Unsure',
+            select: [{
+              key: 'Does-the-structure-appear-vacant-or-occupied',
+              value: 'Possibly-Vacant'
+            }, {
+              key: 'Is-the-property-maintained',
+              value: 'Unsure'
+            }],
+            color: '#d3d3d3'
+          }]
         }),
 
         util.makeBasicExploration({

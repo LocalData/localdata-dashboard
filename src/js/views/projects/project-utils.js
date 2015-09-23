@@ -8,6 +8,7 @@ define(function(require, exports, module) {
   var exploreStylesTemplate = require('text!templates/projects/surveys/explore-styles.mss');
   var simpleStylesTemplate = require('text!templates/projects/surveys/simple-styles.mss');
   var complexStylesTemplate = require('text!templates/projects/surveys/explore-complex-styles.mss');
+  var keyValueStylesTemplate = require('text!templates/projects/surveys/key-value-styles.mss');
   var checkboxStylesTemplate = require('text!templates/projects/surveys/checkbox-styles.mss');
 
   var exploreStyles = (function (template) {
@@ -27,6 +28,12 @@ define(function(require, exports, module) {
       return template(_.defaults(options, { pointSize: 18 }));
     };
   }(_.template(complexStylesTemplate)));
+
+  var keyValueStyles = (function (template) {
+    return function (options) {
+      return template(_.defaults(options, { pointSize: 18 }));
+    };
+  }(_.template(keyValueStylesTemplate)));
 
   var checkboxStyles = (function (template) {
     return function (options) {
@@ -61,19 +68,49 @@ define(function(require, exports, module) {
         })
       },
       values:  _.map(options.values, function (val, i) {
+
+        // These are the styles used when a particular
+        // sublayer is selected.
         var ret = {
           text: options.valueNames[i],
           name: options.values[i],
           color: options.colors[i],
           layer: {
             query: {},
-            select: {},
-            styles: simpleStyles({ color: options.colors[i], pointSize: options.pointSize })
+            select: { 'entries.responses': 1 },
+            styles: keyValueStyles({
+              color: options.colors[i],
+              pointSize: options.pointSize,
+              filter: {
+                key: 'responses.' + options.question,
+                value: options.values[i]
+              }
+            })
           },
           pointSize: options.pointSize
         };
-        ret.layer.query['entries.0.responses.' + options.question] = val;
+
+        ret.layer.query['entries.responses.' + options.question] = val;
         ret.layer.query = _.defaults(ret.layer.query, options.query);
+
+        // If this is a no response filter, we need to handle it differently
+        if (val === 'no response') {
+          // We don't want the full response array anymore:
+          ret.layer.select = {};
+
+          // Query for responses that don't have the key:
+          ret.layer.query['entries.responses.' + options.question] = {
+            '$exists': false
+          };
+
+          // We need to use simple styles, since this is the _absence_ of a
+          // key-value match:
+          ret.layer.styles = simpleStyles({
+            color: options.colors[i],
+            pointSize: options.pointSize
+          });
+        }
+
         return ret;
       })
     };
@@ -111,33 +148,43 @@ define(function(require, exports, module) {
   }]
   */
   function makeComplexExploration(options) {
+    console.log("Making complex ex with options", options);
     var data = {
       name: options.name,
       layer: {
         query: options.query,
-        select: { 'entries.0.responses': 1 },
+        select: { 'entries.responses': 1 },
         styles: complexStyles({
           showNoResponse: !!options.showNoResponse,
           choices: options.choices,
           pointSize: options.pointSize
         })
       },
+
       // TODO
-      // Not sure what this is used for?
-      values:  _.map(options.values, function (val, i) {
+      values:  _.map(options.choices, function (choice, i) {
+
+        // These are the styles used when a particular
+        // sublayer is selected.
         var ret = {
-          text: options.valueNames[i],
-          name: options.values[i],
-          color: options.colors[i],
-          // layer: {
-          //   query: {},
-          //   select: {},
-          //   styles: simpleStyles({ color: options.colors[i], pointSize: options.pointSize })
-          // },
+          text: choice.name,
+          name: choice.name,
+          color: choice.color,
+          layer: {
+            query: {},
+            select: { 'entries.responses': 1 },
+            styles: complexStyles({
+              showNoResponse: !!options.showNoResponse,
+              choices: [choice],
+              pointSize: options.pointSize
+            })
+          },
           pointSize: options.pointSize
         };
-        ret.layer.query['entries.0.responses.' + options.question] = val;
-        ret.layer.query = _.defaults(ret.layer.query, options.query);
+
+        // ret.layer.query['entries.responses.' + options.question] = val;
+        // ret.layer.query = _.defaults(ret.layer.query, options.query);
+
         return ret;
       })
     };
@@ -159,7 +206,7 @@ define(function(require, exports, module) {
 
       layer: {
         query: options.query,
-        select: { 'entries.0.responses': 1 },
+        select: { 'entries.responses': 1 },
         styles: exploreStyles({
           showNoResponse: !!options.showNoResponse,
           pairs: _.map(options.values, function (val, i) {
@@ -188,14 +235,14 @@ define(function(require, exports, module) {
     // colors: ['#c51b7d', '#4d9221']
 
     var query = {};
-    query['entries.0.responses.' + options.predicate[0]] = options.predicate[1];
+    query['entries.responses.' + options.predicate[0]] = options.predicate[1];
 
     var queryYes = {};
-    queryYes['entries.0.responses.' + options.question] = 'yes';
+    queryYes['entries.responses.' + options.question] = 'yes';
     queryYes = _.defaults(queryYes, query);
 
     var queryNo = {};
-    queryNo['entries.0.responses.' + options.question] = {
+    queryNo['entries.responses.' + options.question] = {
       $ne: 'yes'
     };
     queryNo = _.defaults(queryNo, query);
@@ -208,7 +255,7 @@ define(function(require, exports, module) {
 
       layer: {
         query: query,
-        select: { 'entries.0.responses': 1 },
+        select: { 'entries.responses': 1 },
         styles: checkboxStyles({
           key: 'responses.' + options.question,
           colorYes: options.colors[0],
@@ -247,6 +294,7 @@ define(function(require, exports, module) {
     simpleStyles: simpleStyles,
     checkboxStyles: checkboxStyles,
     makeBasicExploration: makeBasicExploration,
+    makeComplexExploration: makeComplexExploration,
     makeTextExploration: makeTextExploration,
     makeCheckboxExploration: makeCheckboxExploration
   };

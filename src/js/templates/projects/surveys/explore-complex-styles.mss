@@ -4,11 +4,9 @@ background-color: rgba(0,0,0,0);
 
 <% for (var i = 0; i < choices.length; i++) { %>
   <% var select = choices[i].select; %>
+  <% var color = choices[i].color; %>
 
-  <% for (var j = 0; j < select.length; j++) { %>
-    <% var pair = select[j]; %>
-    #localdata['<%= pair.key %>'='<%= pair.value %>'] {
-  <% } %>
+  #localdata<% for (var j = 0; j < select.length; j++) { %><% var pair = select[j]; %>['responses.<%= pair.key %>'='<%= pair.value %>']<% } %> {
 
     [GEOMETRY = LineString],[GEOMETRY = MultiLineString] {
       line-width: 2;
@@ -21,16 +19,16 @@ background-color: rgba(0,0,0,0);
       [zoom >= 18] {
         line-width: 9;
       }
-      line-color: <%= pair.color %>;
+      line-color: <%= color %>;
       line-opacity: 1;
     }
     [GEOMETRY = Polygon],[GEOMETRY = MultiPolygon] {
       [zoom >= 14] {
-        line-color: <%= pair.color %>;
+        line-color: <%= color %>;
         line-width:0.5;
         line-opacity:0.5;
       }
-      polygon-fill: <%= pair.color %>;
+      polygon-fill: <%= color %>;
       polygon-opacity:0.85;
     }
     [GEOMETRY = Point] {
@@ -41,14 +39,13 @@ background-color: rgba(0,0,0,0);
         marker-width: <%= pointSize %>;
       }
       marker-type: ellipse;
-      marker-line-color: <%= pair.color %>;
-      marker-fill: <%= pair.color %>;
+      marker-line-color: <%= color %>;
+      marker-fill: <%= color %>;
       marker-fill-opacity: 0.9;
       marker-line-opacity: 1;
     }
   }
 
-  <% for (var j = 0; j < select.length; j++) { %>
-    }
-  <% } %>
 <% } %>
+
+
