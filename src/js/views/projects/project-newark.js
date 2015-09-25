@@ -36,6 +36,7 @@ define(function(require, exports, module) {
       options: {
         anonymous: true,
         exploreButton: true,
+        quickViews: true,
         hideCollectorNames: true,
         explorationControlsItem: true
       },
@@ -43,11 +44,20 @@ define(function(require, exports, module) {
       query: {},
       select: {},
       filters: {
-        question: 'Condition of vacant properties' // 'Property condition'
+        question: 'Property condition'
       },
       styles: util.simpleStyles({color: '#45403e'}),
+      quickViews: [{
+        title: 'Condition of vacant properties',
+        question: 'Condition of vacant properties'
+      }, {
+        title: 'Maintenance of vacant properties',
+        question: 'Maintenance of vacant properties'
+      }, {
+        title: 'Commercial usage',
+        question: 'Commercial usage'
+      }],
       exploration: [
-
         util.makeBasicExploration({
           name: 'Structures & lots',
           question: 'How-is-the-lot-being-used',
@@ -297,40 +307,120 @@ define(function(require, exports, module) {
             '#d79b3b',
             '#d3d3d3'
           ]
+        }),
+
+        util.makeComplexExploration({
+          name: 'Commercial property use',
+          choices: [{
+            name: 'Supermarket',
+            select: [{
+              key: 'Which-of-the-following-best-describes-the-Commercial-structure-Supermarket',
+              value: 'yes'
+            }],
+            color: '#3567a4'
+          }, {
+            name: 'Small grocery store (corner store or convenience store)',
+            select: [{
+              key: 'Which-of-the-following-best-describes-the-Commercial-structure-Small-grocery-store-corner-store-or-convenience-store',
+              value: 'yes'
+            }],
+            color: '#4e91c5'
+          }, {
+            name: 'Specialty food store',
+            select: [{
+              key: 'Which-of-the-following-best-describes-the-Commercial-structure-Specialty-food-store',
+              value: 'yes'
+            }],
+            color: '#b5d7f1'
+          }, {
+            name: 'Liquor, wine, or beer store',
+            select: [{
+              key: 'Which-of-the-following-best-describes-the-Commercial-structure-Liquor-wine-or-beer-store',
+              value: 'yes'
+            }],
+            color: '#f8b868'
+          }, {
+            name: 'Fast-food restaurant',
+            select: [{
+              key: 'Which-of-the-following-best-describes-the-Commercial-structure-Fast-food-restaurant',
+              value: 'yes'
+            }],
+            color: '#c7e9a7'
+          }, {
+            name: 'Dine-in restaurant',
+            select: [{
+              key: 'Which-of-the-following-best-describes-the-Commercial-structure-Dine-in-restaurant',
+              value: 'yes'
+            }],
+            color: '#92b670'
+          }, {
+            name: 'Doctor’s or dentist’s office',
+            select: [{
+              key: 'Which-of-the-following-best-describes-the-Commercial-structure-Doctors-or-dentists-office',
+              value: 'yes'
+            }],
+            color: '#9756cd'
+          }, {
+            name: 'Automotive oriented business',
+            select: [{
+              key: 'Which-of-the-following-best-describes-the-Commercial-structure-Automotive-oriented-business',
+              value: 'yes'
+            }],
+            color: '#b65066'
+          }, {
+            name: 'Retail sales, general commercial, and office uses',
+            select: [{
+              key: 'Which-of-the-following-best-describes-the-Commercial-structure-Retail-sales-general-commercial-and-office-uses',
+              value: 'yes'
+            }],
+            color: '#d7890d'
+          }, {
+            name: 'Other commercial use / Unsure',
+            select: [{
+              key: 'Which-of-the-following-best-describes-the-Commercial-structure-Other-commercial-use--Unsure',
+              value: 'yes'
+            }],
+            color: '#d3d3d3'
+          }]
         })
 
-        /*
-
-        // Public building info
-        util.makeBasicExploration({
-          name: 'Public owner',
-          question: 'deeded-own',
-          values: [
-            'City of Gary',
-            'City of Gary Redevelopment Commission',
-            'Parks Department'
-          ],
-          valueNames: [
-            'City of Gary',
-            'City of Gary Redevelopment Commission',
-            'Parks Department'
-          ],
-          colors: ['#d79b3b', '#3567a4', '#05b04c']
-        })
-        util.makeTextExploration({
-          name: 'Assessed value',
-          question: 'assessed'
-        }),
-        util.makeTextExploration({
-          name: 'Lot square feet',
-          question: 'lot_sf'
-        }),
-        util.makeTextExploration({
-          name: 'Building square feet',
-          question: 'bldg_sf'
-        })*/
       ]
-    }]
+    }],
+
+    // Foreign layers
+    foreignInteractive: [
+      // Static council districts
+      {
+        type: 'cartodb',
+        layerName: 'Schools',
+        attribution: '',
+        color: '#ff7a00',
+        zIndex: 20,
+        dataQuery: 'select * from newark_schools as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>',
+        humanReadableField: 'name',
+        handleMouseover: true, // requires humanReadableField
+        // fieldNames: {
+        //   usedesc: 'Use',
+        //   propertyow: 'Property Owner'
+        // },
+        config: {
+          version: '1.0.1',
+          stat_tag: '', // 'c8c949c0-7ce7-11e4-a232-0e853d047bba',
+          // disableGrid: true,
+          layers:[{
+            type:'cartodb',
+            options:{
+              sql: 'select * from newark_schools',
+
+              cartocss: "/** simple visualization */#newark_schools{  marker-type: ellipse; marker-width: 10; marker-allow-overlap: true; marker-fill: #ff9823; marker-line-color: #fff; marker-fill-opacity: 1; marker-line-width: 2.5; marker-line-opacity: 1;}",
+              cartocss_version: '2.1.1',
+              interactivity: ['cartodb_id']
+            }
+          }]
+        },
+        layerId: 'newark-schools'
+      }
+    ]
   };
 
   return newark;

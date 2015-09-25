@@ -88,6 +88,7 @@ define(function (require) {
       this.color = options.survey.color;
       this.zIndex = options.survey.zIndex;
       this.exploration = options.survey.exploration;
+      this.quickViews = options.survey.quickViews;
       this.state = options.survey.state || 'active';
       this.filters = options.survey.filters;
 
@@ -438,6 +439,11 @@ define(function (require) {
       }
 
       _.extend(context.meta, this.options);
+
+      console.log("QB?", this.quickViews);
+      if (this.options.quickViews) {
+        context.quickViews = this.quickViews;
+      }
 
       context.meta.count = util.numberWithCommas(this.survey.get('queryCount')) || '';
 

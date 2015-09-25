@@ -92,7 +92,7 @@
     }
   }
 
-
+  .quick-views,
   .static-layers {
     h3 {
       font-size: $small-header-size;
@@ -103,8 +103,24 @@
     h4 {
       font-size: $body-size;
       letter-spacing: inherit;
+      cursor: pointer;
     }
+  }
 
+  .quick-views {
+      padding-top: 10px;
+      padding-bottom: 10px;
+      margin: 10px 0;
+      border-bottom: 3px solid $thinpink;
+      border-top: 3px solid $thinpink;
+
+      .quick-view {
+        margin: 0.75em 0 1em;
+      }
+  }
+
+
+  .static-layers {
     .layer {
       margin: 0.75em 0 1em;
 

@@ -19,7 +19,6 @@
 </button>
 <% } %>
 
-
 <% if (meta.staticLegend) { %>
 <div class="static-legend">
   <%= meta.staticLegend %>
@@ -34,3 +33,18 @@
 
 <div class="settings-container"></div>
 <div class="legend"></div>
+
+<!--
+<% if (meta.quickViews) { %>
+  <div class="quick-views">
+    <h3>Quick views</h3>
+    <% _.each(quickViews, function(button) { %>
+      <div class="quick-view">
+        <h4>
+          <%= button.title %>
+        </h4>
+      </div>
+    <% }); %>
+  </div>
+<% } %>
+-->
