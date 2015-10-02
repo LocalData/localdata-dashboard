@@ -34,17 +34,18 @@
 <div class="settings-container"></div>
 <div class="legend"></div>
 
-<!--
+
 <% if (meta.quickViews) { %>
   <div class="quick-views">
     <h3>Quick views</h3>
     <% _.each(quickViews, function(button) { %>
       <div class="quick-view">
         <h4>
+          <div class="icon" style="background: url(<%= button.icon %>) no-repeat center center"></div>
           <%= button.title %>
         </h4>
       </div>
     <% }); %>
   </div>
 <% } %>
--->
+

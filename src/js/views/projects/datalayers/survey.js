@@ -53,7 +53,8 @@ define(function (require) {
       'click .close': 'close',
       'click .toggle-layer': 'toggleLayer',
       'click .show-settings .title': 'showSettings',
-      'click button.show-settings': 'showSettings'
+      'click button.show-settings': 'showSettings',
+      'click .quick-view': 'toggleQuickView'
     },
 
     initialize: function(options) {
@@ -236,6 +237,16 @@ define(function (require) {
         // this.removeLegend();
         this.$el.removeClass('legend-inactive');
       }
+    },
+
+    toggleQuickView: function(event) {
+
+      // TODO for Newark
+      // trigger a filter change.
+      console.log("Quick view toggled");
+      this.changeFilter({
+
+      });
     },
 
     /**

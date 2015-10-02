@@ -44,18 +44,21 @@ define(function(require, exports, module) {
       query: {},
       select: {},
       filters: {
-        question: 'Property condition'
+        question: 'Occupancy'
       },
       styles: util.simpleStyles({color: '#45403e'}),
       quickViews: [{
         title: 'Condition of vacant properties',
-        question: 'Condition of vacant properties'
+        question: 'Condition of vacant properties',
+        icon: 'https://s3.amazonaws.com/localdata-static/img/icons/newark/condition.png'
       }, {
         title: 'Maintenance of vacant properties',
-        question: 'Maintenance of vacant properties'
+        question: 'Maintenance of vacant properties',
+        icon: 'https://s3.amazonaws.com/localdata-static/img/icons/newark/maintenance.png'
       }, {
         title: 'Commercial usage',
-        question: 'Commercial usage'
+        question: 'Commercial usage',
+        icon: 'https://s3.amazonaws.com/localdata-static/img/icons/newark/business.png'
       }],
       exploration: [
         util.makeBasicExploration({
@@ -394,7 +397,7 @@ define(function(require, exports, module) {
         type: 'cartodb',
         layerName: 'Schools',
         attribution: '',
-        color: '#ff7a00',
+        color: '#000',
         zIndex: 20,
         dataQuery: 'select * from newark_schools as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>',
         humanReadableField: 'name',
@@ -412,7 +415,7 @@ define(function(require, exports, module) {
             options:{
               sql: 'select * from newark_schools',
 
-              cartocss: "/** simple visualization */#newark_schools{  marker-type: ellipse; marker-width: 10; marker-allow-overlap: true; marker-fill: #ff9823; marker-line-color: #fff; marker-fill-opacity: 1; marker-line-width: 2.5; marker-line-opacity: 1;}",
+              cartocss: "/** simple visualization */#newark_schools{  marker-file: url(http://com.cartodb.users-assets.production.s3.amazonaws.com/maki-icons/college-18.svg); marker-type: ellipse; marker-width: 22; marker-allow-overlap: true; marker-fill: #000; marker-line-color: #fff; marker-fill-opacity: 1; marker-line-width: 2.5; marker-line-opacity: 1;}",
               cartocss_version: '2.1.1',
               interactivity: ['cartodb_id']
             }

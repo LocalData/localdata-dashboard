@@ -113,9 +113,20 @@
       margin: 10px 0;
       border-bottom: 3px solid $thinpink;
       border-top: 3px solid $thinpink;
+      overflow: auto;
 
       .quick-view {
         margin: 0.75em 0 1em;
+        width: 33%;
+        display: inline-block;
+        float: left;
+        text-align: center;
+
+        .icon {
+          height: 4em;
+          width: 100%;
+          background-size: 3.8em!important;
+        }
       }
   }
 
