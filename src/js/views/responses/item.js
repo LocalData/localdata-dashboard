@@ -7,11 +7,11 @@ define(function (require) {
   var _ = require('lib/lodash');
   var Autolinker = require('lib/autolinker');
   var Backbone = require('backbone');
-  
+
   // LocalData
   var settings = require('settings');
   var util = require('util');
-  
+
   // Templates
   var template = require('text!templates/responses/item.html');
 
@@ -20,7 +20,7 @@ define(function (require) {
 
     template: _.template(template, {
       imports: {
-        autolinker: new Autolinker()
+        autolinker: new Autolinker() // Create links from urls in text fields
       }
     }),
 
@@ -86,16 +86,18 @@ define(function (require) {
       // Go through the questions in the latest form and map the question-answer
       // slug pairs to text pairs.
       _.forEach(form.questions, function (question) {
+        console.log("Processing", question);
         var valueSlug = responses[question.slug];
         var value;
         var key;
 
-        // If there was a match, then we can use the text for this question.
-        // Questions might be duplicated in a form becase of conditional
-        // structures. Don't display a question/answer pair twice.
-        if (valueSlug && !processed[question.slug]) {
+        // Don't display a question/answer pair twice.
+        // Don't process group questions
+        if (!processed[question.slug] && question.type !== 'group') {
           key = question.text;
-          // If the value slug matches an answer, then we can also use the text for that answer.
+
+          // If the value slug matches an answer, then we can also use the text
+          // for that answer.
           value = _.pluck(_.where(question.answers, { value: valueSlug}), 'text')[0];
           if (!value) {
             value = valueSlug;
@@ -109,6 +111,17 @@ define(function (require) {
             }
             answers.push(answer);
           });
+
+          if(question.type === 'checkbox') {
+            answers.push({
+              slug: 'no',
+              text: 'No'
+            });
+            answers.push({
+              slug: 'yes',
+              text: 'Yes'
+            });
+          }
 
           fields.push({
             question: key,
@@ -155,7 +168,7 @@ define(function (require) {
         surveyOptions: this.surveyOptions,
         exploration: this.exploration
       };
-
+      console.log("Rendering with options", options);
       $el.html(this.template(options));
       return this;
     },
@@ -205,7 +218,8 @@ define(function (require) {
       this.$('.value').hide();
       this.$('.action-show-edit').hide();
 
-      this.$('.edit').show();
+      this.$('.editanswers').show();
+      this.$('.answers').hide();
       this.$('.action-save-edit').show();
       this.$('.action-cancel-edit').show();
     },
@@ -226,7 +240,8 @@ define(function (require) {
       this.$('.action-show-edit').show();
 
       // Hide the form and save / cancel buttons
-      this.$('.edit').hide();
+      this.$('.editanswers').hide();
+      this.$('.answers').show();
       this.$('.action-save-edit').hide();
       this.$('.action-cancel-edit').hide();
 
