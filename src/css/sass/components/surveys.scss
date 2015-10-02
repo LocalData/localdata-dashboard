@@ -145,6 +145,10 @@
     margin-bottom: 1em;
   }
 
+  .editanswers {
+    display: none;
+  }
+
   .response {
     padding: 10px 0;
     border-top: 4px solid $thinpink;
@@ -164,10 +168,7 @@
       }
     }
 
-
-
     .response-tools {
-
       /* Potential toolbar styling
       background: $thinpink;
       margin-left: -20px;
@@ -206,10 +207,6 @@
 
     button.action-save-edit,
     button.action-cancel-edit {
-      display: none;
-    }
-
-    .edit {
       display: none;
     }
 

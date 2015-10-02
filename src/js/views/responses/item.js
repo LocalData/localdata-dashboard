@@ -7,11 +7,11 @@ define(function (require) {
   var _ = require('lib/lodash');
   var Autolinker = require('lib/autolinker');
   var Backbone = require('backbone');
-  
+
   // LocalData
   var settings = require('settings');
   var util = require('util');
-  
+
   // Templates
   var template = require('text!templates/responses/item.html');
 
@@ -20,7 +20,7 @@ define(function (require) {
 
     template: _.template(template, {
       imports: {
-        autolinker: new Autolinker()
+        autolinker: new Autolinker() // Create links from urls in text fields
       }
     }),
 
@@ -90,12 +90,13 @@ define(function (require) {
         var value;
         var key;
 
-        // If there was a match, then we can use the text for this question.
-        // Questions might be duplicated in a form becase of conditional
-        // structures. Don't display a question/answer pair twice.
-        if (valueSlug && !processed[question.slug]) {
+        // Don't display a question/answer pair twice.
+        // Don't process group questions
+        if (!processed[question.slug] && question.type !== 'group') {
           key = question.text;
-          // If the value slug matches an answer, then we can also use the text for that answer.
+
+          // If the value slug matches an answer, then we can also use the text
+          // for that answer.
           value = _.pluck(_.where(question.answers, { value: valueSlug}), 'text')[0];
           if (!value) {
             value = valueSlug;
@@ -109,6 +110,13 @@ define(function (require) {
             }
             answers.push(answer);
           });
+
+          if(question.type === 'checkbox') {
+            answers.push({
+              slug: 'yes',
+              text: 'Yes'
+            });
+          }
 
           fields.push({
             question: key,
@@ -205,7 +213,8 @@ define(function (require) {
       this.$('.value').hide();
       this.$('.action-show-edit').hide();
 
-      this.$('.edit').show();
+      this.$('.editanswers').show();
+      this.$('.answers').hide();
       this.$('.action-save-edit').show();
       this.$('.action-cancel-edit').show();
     },
@@ -214,7 +223,15 @@ define(function (require) {
       var question = $(event.target).attr('data-question');
       var answer = $(event.target).val();
 
-      this.responseEdits[question] = answer;
+      var form = this.forms.getFlattenedForm();
+      var originalQuestionObject = form[question];
+
+      if (answer === 'no response' || answer === '') {
+        delete this.model.attributes.responses[question];
+        return;
+      }
+
+      this.model.attributes.responses[question] = answer;
     },
 
     cancelEdit: function(event) {
@@ -226,7 +243,8 @@ define(function (require) {
       this.$('.action-show-edit').show();
 
       // Hide the form and save / cancel buttons
-      this.$('.edit').hide();
+      this.$('.editanswers').hide();
+      this.$('.answers').show();
       this.$('.action-save-edit').hide();
       this.$('.action-cancel-edit').hide();
 
@@ -238,13 +256,10 @@ define(function (require) {
       event.preventDefault();
       util.track('survey.response.edit.save');
 
-      this.model.save({
-        responses: this.responseEdits
-      }, {
-        patch: true,
+      this.model.save(this.model.attributes, {
         wait: true, // wait until sync to update attributes
         success: function (event) {
-          // We need to fetch the model because patch resets the local
+          // We need to fetch the model because put resets the local
           // attributes.
           this.model.fetch({ reset: true });
         }.bind(this)
