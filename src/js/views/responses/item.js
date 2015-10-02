@@ -114,7 +114,7 @@ define(function (require) {
 
           if(question.type === 'checkbox') {
             answers.push({
-              slug: 'no',
+              slug: 'no response',
               text: 'No'
             });
             answers.push({
@@ -228,7 +228,17 @@ define(function (require) {
       var question = $(event.target).attr('data-question');
       var answer = $(event.target).val();
 
-      this.responseEdits[question] = answer;
+      var form = this.forms.getFlattenedForm();
+      var originalQuestionObject = form[question];
+      console.log(originalQuestionObject, form, question);
+
+      if (answer === 'no response') {
+        delete this.model.attributes.responses[question];
+        return;
+      }
+
+      this.model.attributes.responses[question] = answer;
+      console.log(this.model.attributes);
     },
 
     cancelEdit: function(event) {
@@ -254,9 +264,6 @@ define(function (require) {
       util.track('survey.response.edit.save');
 
       this.model.save({
-        responses: this.responseEdits
-      }, {
-        patch: true,
         wait: true, // wait until sync to update attributes
         success: function (event) {
           // We need to fetch the model because patch resets the local
