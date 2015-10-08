@@ -9,6 +9,7 @@ define(function (require) {
   var _ = require('lib/lodash');
   var $ = require('jquery');
   var L = require('lib/leaflet/leaflet');
+  var Promise = require('lib/bluebird');
 
   var api = {};
 
@@ -448,6 +449,14 @@ define(function (require) {
         callback(data);
       }
     });
+  };
+  
+  // Returns a promise for a Feature Collection
+  api.getFeature = function getFeature(source, object_id) {
+    return Promise.resolve($.ajax({
+      url: settings.api.baseurl + '/features/' + source + '/' + object_id,
+      type: 'GET'
+    }));
   };
 
   return api;

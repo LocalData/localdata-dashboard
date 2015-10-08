@@ -16,6 +16,7 @@ define(function(require, exports, module) {
   var MapView = require('views/maps/multi-map');
   var SurveyLayer = require('views/projects/datalayers/survey');
   var CartoDBLayer = require('views/maps/cartodb-layer');
+  var FeatureTilesLayer = require('views/maps/feature-tiles-layer');
   var InfoWindow = require('views/projects/info-window');
   var projects = require('views/projects/projects');
 
@@ -154,28 +155,34 @@ define(function(require, exports, module) {
 
       if (this.project.foreignInteractive) {
         this.foreignLayers = _.map(this.project.foreignInteractive, function (layer, i) {
+          var view;
           if (layer.type === 'cartodb') {
 
-            var view = new CartoDBLayer({
+            view = new CartoDBLayer({
               mapView: mapView,
               layer: layer
             });
-
-            // Render the nav
-            this.listenTo(view, 'rendered', this.appendStatic);
-            view.render();
-
-            // Hook item-selection up to the info window.
-            this.listenTo(view, 'itemSelected', function (data) {
-              this.addItemView({
-                view: data.view,
-                latlng: data.latlng,
-                order: this.project.surveys.length + i
-              });
+          } else if (layer.type === 'feature-tiles') {
+            view = new FeatureTilesLayer({
+              mapView: mapView,
+              layer: layer
             });
-
-            return view;
           }
+            
+          // Render the nav
+          this.listenTo(view, 'rendered', this.appendStatic);
+          view.render();
+
+          // Hook item-selection up to the info window.
+          this.listenTo(view, 'itemSelected', function (data) {
+            this.addItemView({
+              view: data.view,
+              latlng: data.latlng,
+              order: this.project.surveys.length + i
+            });
+          });
+
+          return view;
         }, this);
       }
 
