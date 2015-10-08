@@ -109,7 +109,11 @@ function($, _, Backbone, L, moment, settings, util, api, template) {
       if (this.tileLayer) {
         this.map.removeLayer(this.tileLayer);
       }
-      this.tileLayer = new L.TileJSON.createTileLayer(tilejson);
+
+      var tileConfig = util.templatizeURLs(tilejson.tiles);
+      this.tileLayer = L.tileLayer(tileConfig.template, {
+        subdomains: tileConfig.subs
+      });
 
       // Listen to see if we're loading the map
       this.tileLayer.on('loading', this.loading);
@@ -121,8 +125,10 @@ function($, _, Backbone, L, moment, settings, util, api, template) {
       if (this.gridLayer) {
         this.map.removeLayer(this.gridLayer);
       }
-      this.gridLayer = new L.UtfGrid(tilejson.grids[0], {
-        resolution: 4
+      var gridConfig = util.templatizeURLs(tilejson.grids);
+      this.gridLayer = new L.UtfGrid(gridConfig.template, {
+        resolution: 4,
+        subdomains: gridConfig.subs
       });
 
       // Make sure the grid layer is on top.
