@@ -93,16 +93,14 @@ define(function(require, exports, module) {
 
       // Foreign layers
       foreignInteractive: [
-
-        // Use and property info from Carto
+        // Use and property info from LocalData features db/tileserver
         {
-          type: 'cartodb',
+          type: 'feature-tiles',
           layerName: 'Vacant Properties',
           attribution: 'Pennsylvania Spatial Data Access',
+          state: 'active',
           color: '#505050',
           zIndex: 25,
-          dataQuery: "select mapblolot, usedesc, mundesc, property_2, propertyow, fairmarket, (case delinquent when true then 'Yes' else 'No' end) as d,  ST_AsGeoJSON(ST_Centroid(the_geom)) AS centroid, ST_AsGeoJSON(the_geom) as geom from (select * from allegheny_assessed_parcels) as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>",
-          humanReadableField: 'property_2',
           handleClick: true,
           staticLegend: '<div><i class="fa fa-square" style="color:#12b259"></i> Side Yards</div> <div><i class="fa fa-square" style="color:#101010"></i> Publicly owned</div> <div><i class="fa fa-square" style="color:#777777"></i> Privately owned</div>',
           fieldNames: {
@@ -110,114 +108,67 @@ define(function(require, exports, module) {
             mundesc: 'Municipality',
             usedesc: 'Use',
             propertyow: 'Property Owner',
-            d: 'Is the property delinquent?'
+            delinquent: 'Is the property delinquent?'
           },
-          config: {
-            version: '1.0.1',
-            stat_tag:'c8c949c0-7ce7-11e4-a232-0e853d047bba',
-            layers:[{
-              type:'cartodb',
-              options:{
-                sql: 'select * from allegheny_assessed_parcels',
-                cartocss: '#allegheny_assessed_parcels {    polygon-opacity: 0;    line-color: #FFF;    line-width: 1;    line-opacity: 0.7;    [zoom<15]{ line-width: 0;} }   #allegheny_assessed_parcels[fairmarket=0] {    polygon-fill: #777;    polygon-opacity: 0.6;  }  #allegheny_assessed_parcels[fairmarket=0][publicowne="C"], #allegheny_assessed_parcels[fairmarket=0][publicowne="E"], #allegheny_assessed_parcels[fairmarket=0][publicowne="H"], #allegheny_assessed_parcels[fairmarket=0][publicowne="R"], #allegheny_assessed_parcels[fairmarket=0][publicowne="S"], #allegheny_assessed_parcels[fairmarket=0][publicowne="U"], #allegheny_assessed_parcels[fairmarket=0][publicowne="A"], #allegheny_assessed_parcels[fairmarket=0][publicowne="M"] {     polygon-fill: #101010;   } #allegheny_assessed_parcels[fairmarket=0][sidelot=true], #allegheny_assessed_parcels[sidelot=true]  { polygon-fill: #12B259; } ',
-                cartocss_version: '2.1.1',
-                interactivity: ['cartodb_id']
-              }
-            }]
+          layer: {
+            query: { source: 'allegheny-assessed-parcels' },
+            select: { },
+            styles: '[GEOMETRY = Polygon], [GEOMETRY = MultiPolygon] {\n ["info.fairmarket" <= 0]{ polygon-fill: #777; polygon-opacity: 0.6;\n}\n ["info.fairmarket" <= 0]{\n ["info.publicowne" = "C"], ["info.publicowne" = "E"], ["info.publicowne" = "H"], ["info.publicowne" = "R"], ["info.publicowne" = "S"], ["info.publicowne" = "U"], ["info.publicowne" = "A"], ["info.publicowne" = "M"] {\n polygon-fill: #101010; polygon-opacity: 0.6;\n}\n}\n ["info.fairmarket" <= 0]["info.sidelot" >= 1],["info.sidelot" >= 1]{ polygon-fill: #12B259; polygon-opacity: 0.6; } polygon-opacity: 0;\n [zoom >= 15] {\n line-color: #FFF; line-width: 0.5; line-opacity: 0.7; }\n line-width: 0; line-opacity: 0; line-color: #FFF;\n }',
           },
-          layerId: 'b7860d2e2bc29ae2702f611e2044284a:1418115328687.24'
+          layerId: 'allegheny-assessed-parcels'
         },
 
-        // Static council districts
+        // Allegheny municipalities from LocalData features db/tileserver
         {
-          type: 'cartodb',
+          type: 'feature-tiles',
           layerName: 'Municipalities',
           attribution: 'Pennsylvania Spatial Data Access',
+          state: 'active',
           color: '#ff7a00',
           zIndex: 20,
-          dataQuery: 'select * from pittsburgh_municipalities as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>',
           humanReadableField: 'label',
           handleMouseover: true, // requires humanReadableField
-          // fieldNames: {
-          //   usedesc: 'Use',
-          //   propertyow: 'Property Owner'
-          // },
-          config: {
-            version: '1.0.1',
-            stat_tag: '', // 'c8c949c0-7ce7-11e4-a232-0e853d047bba',
-            // disableGrid: true,
-            layers:[{
-              type:'cartodb',
-              options:{
-                sql: 'select * from pittsburgh_municipalities',
-                cartocss: "/** simple visualization */#pittsburgh_municipalities{  polygon-fill: #FF6600;  polygon-opacity: 0;  line-color: #ff7a00;  line-width: 2.5;  line-opacity: 1;}",
-                cartocss_version: '2.1.1',
-                interactivity: ['cartodb_id']
-              }
-            }]
+          layer: {
+            query: { source: 'pitt-municipalities' },
+            select: { info: { label: 1 } },
+            styles: 'Map { background-color: rgba(0,0,0,0); }\n#localdata{ polygon-fill: #FF6600; polygon-opacity: 0; line-color: #ff7a00; line-width: 2.5; line-opacity: 1; }',
           },
-          layerId: 'pittsburgh-municipalities'
+          layerId: 'pittsburgh-neighborhoods'
         },
 
-        // Static neighborhood bounds
+        // Static neighborhood bounds from LocalData features db/tileserver
         {
-          type: 'cartodb',
+          type: 'feature-tiles',
           layerName: 'Pittsburgh Neighborhoods',
           attribution: 'Pennsylvania Spatial Data Access',
           state: 'inactive',
           color: '#ffad00',
           zIndex: 15,
-          dataQuery: 'select * from pittsburgh_neighborhoods as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>',
           humanReadableField: 'neighborhood',
           handleMouseover: true, // requires humanReadableField
-          // fieldNames: {
-          //   usedesc: 'Use',
-          //   propertyow: 'Property Owner'
-          // },
-          config: {
-            version: '1.0.1',
-            stat_tag: '', // 'c8c949c0-7ce7-11e4-a232-0e853d047bba',
-            layers:[{
-              type:'cartodb',
-              options:{
-                sql: 'select * from pittsburgh_neighborhoods',
-                cartocss: "/** simple visualization */  #pittsburgh_neighborhoods{   polygon-fill: #FF6600;   polygon-opacity: 0;   line-color: #ffad00;   line-width: 2.5;   line-opacity: 1; }  ",
-                cartocss_version: '2.1.1',
-                interactivity: ['cartodb_id']
-              }
-            }]
+          layer: {
+            query: { source: 'pitt-neighborhoods' },
+            select: { info: { neighborhood: 1 } },
+            styles: 'Map { background-color: rgba(0,0,0,0); }\n#localdata{ polygon-fill: #FF6600; polygon-opacity: 0; line-color: #ffad00; line-width: 2.5; line-opacity: 1; }',
           },
           layerId: 'pittsburgh-neighborhoods'
         },
 
-        // Static council districts
+        // Static council districts from LocalData features db/tileserver
         {
-          type: 'cartodb',
-          state: 'inactive',
+          type: 'feature-tiles',
           layerName: 'Pittsburgh Council Districts',
+          state: 'inactive',
           color: '#ffcf00',
           zIndex: 10,
-          dataQuery: 'select * from pittsburgh_council_districts_2012 as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>',
           humanReadableField: 'council',
           handleMouseover: true, // requires humanReadableField
-          // fieldNames: {
-          //   usedesc: 'Use',
-          //   propertyow: 'Property Owner'
-          // },
-          config: {
-            version: '1.0.1',
-            stat_tag: '', // 'c8c949c0-7ce7-11e4-a232-0e853d047bba',
-            layers:[{
-              type:'cartodb',
-              options:{
-                sql: 'select * from pittsburgh_council_districts_2012',
-                cartocss: "/** simple visualization */  #pittsburgh_council_districts_2012{   polygon-fill: #FF6600;   polygon-opacity: 0;   line-color: #ffcf00;   line-width: 2.5;   line-opacity: 1; } ",
-                cartocss_version: '2.1.1',
-                interactivity: ['cartodb_id']
-              }
-            }]
+          layer: {
+            query: { source: 'pitt-council' },
+            select: { info: { council: 1 } },
+            styles: 'Map { background-color: rgba(0,0,0,0); }\n#localdata{ polygon-fill: #FF6600; polygon-opacity: 0; line-color: #ffcf00; line-width: 2.5; line-opacity: 1; }',
           },
-          layerId: 'pittsburgh-council-districts'
+          layerId: 'pittsburgh-neighborhoods'
         }
       ]
     },
