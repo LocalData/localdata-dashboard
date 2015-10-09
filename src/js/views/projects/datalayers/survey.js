@@ -156,6 +156,7 @@ define(function (require) {
       } else if (filter.question && !filter.answer) {
         // TODO: Switch nomenclature to "category" and "value" instead of
         // "question" and "answer".
+        console.log("Searching in", this.exploration);
         data = _.find(this.exploration, { name: filter.question }).layer;
       } else {
         var filterDefs = _.find(this.exploration, {
@@ -240,13 +241,7 @@ define(function (require) {
     },
 
     toggleQuickView: function(event) {
-
-      // TODO for Newark
-      // trigger a filter change.
-      console.log("Quick view toggled");
-      this.changeFilter({
-
-      });
+      this.settings.selectQuestion(event);
     },
 
     /**
@@ -381,9 +376,8 @@ define(function (require) {
       this.listenTo(this.settings, 'filterSet', this.changeFilter);
       this.listenTo(this.settings, 'updated', this.changeLegend);
 
-      var $el = this.settings.render();
-      this.$settings = $el;
-      this.trigger('renderedSettings', $el);
+      this.$settings = this.settings.render();
+      this.trigger('renderedSettings', this.$settings);
     },
 
     showSettings: function (event) {
@@ -417,6 +411,7 @@ define(function (require) {
 
     changeFilter: function(filter) {
       // Assume this activates the layer
+      console.log("Changing filter to", filter);
       this.state = 'active';
       this.getTileJSON(filter);
       util.track('project.survey.changeFilter');

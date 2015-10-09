@@ -48,17 +48,17 @@ define(function(require, exports, module) {
       },
       styles: util.simpleStyles({color: '#45403e'}),
       quickViews: [{
-        title: 'Condition of vacant properties',
-        question: 'Condition of vacant properties',
+        title: 'Structures in need of boarding',
+        question: 'Structures in need of boarding',
+        icon: 'https://s3.amazonaws.com/localdata-static/img/icons/newark/boarding.png'
+      }, {
+        title: 'Dumping & accumulated trash',
+        question: 'Dumping and trash',
+        icon: 'https://s3.amazonaws.com/localdata-static/img/icons/newark/dumping.png'
+      }, {
+        title: 'Vacant properties',
+        question: 'Occupancy',
         icon: 'https://s3.amazonaws.com/localdata-static/img/icons/newark/condition.png'
-      }, {
-        title: 'Maintenance of vacant properties',
-        question: 'Maintenance of vacant properties',
-        icon: 'https://s3.amazonaws.com/localdata-static/img/icons/newark/maintenance.png'
-      }, {
-        title: 'Commercial usage',
-        question: 'Commercial usage',
-        icon: 'https://s3.amazonaws.com/localdata-static/img/icons/newark/business.png'
       }],
       exploration: [
         util.makeBasicExploration({
@@ -197,7 +197,7 @@ define(function(require, exports, module) {
         }),
 
         util.makeBasicExploration({
-          name: 'Structures needing boarding',
+          name: 'Structures in need of boarding',
           question: 'Is-the-structure-in-need-of-boarding',
           values: [
             'Yes-one-or-more-window-or-door-is-open',
@@ -243,6 +243,35 @@ define(function(require, exports, module) {
           ],
           colors: ['#d84e6c', '#3c97cc', '#d3d3d3']
           // colors: ['#d84e6c', '#92c5de', '#d3d3d3']
+        }),
+
+        util.makeComplexExploration({
+          name: 'Dumping and trash',
+          choices: [{
+            name: 'Dumping and trash',
+            select: [{
+              key: 'Is-there-dumping-on-the-property',
+              value: 'Yes'
+            }, {
+              key: 'Is-there-a-significant-accumulation-of-trash-or-tossables-on-the-property',
+              value: 'Yes'
+            }],
+            color: '#d84e6c'
+          }, {
+            name: 'Dumping only',
+            select: [{
+              key: 'Is-there-dumping-on-the-property',
+              value: 'Yes'
+            }],
+            color: '#ff9823'
+          }, {
+            name: 'Trash only',
+            select: [{
+              key: 'Is-there-a-significant-accumulation-of-trash-or-tossables-on-the-property',
+              value: 'Yes'
+            }],
+            color: '#9756cd'
+          }]
         }),
 
         util.makeBasicExploration({
@@ -392,8 +421,36 @@ define(function(require, exports, module) {
 
     // Foreign layers
     foreignInteractive: [
-      // Static council districts
       {
+        type: 'cartodb',
+        layerName: 'Sample walk to school',
+        attribution: '',
+        color: '#000',
+        zIndex: 20,
+        dataQuery: 'select * from newark_walk_to_school as _cartodbjs_alias where cartodb_id = <%= cartodb_id %>',
+        humanReadableField: 'name',
+        handleMouseover: true, // requires humanReadableField
+        // fieldNames: {
+        //   usedesc: 'Use',
+        //   propertyow: 'Property Owner'
+        // },
+        config: {
+          version: '1.0.1',
+          stat_tag: '', // 'c8c949c0-7ce7-11e4-a232-0e853d047bba',
+          // disableGrid: true,
+          layers:[{
+            type:'cartodb',
+            options:{
+              sql: 'select * from newark_walk_to_school',
+
+              cartocss: "/** simple visualization */ #newark_walk_to_school::glow {  line-color: #fff; line-width: 4.5; line-opacity: 0.5;} #newark_walk_to_school{  line-color: #000; line-width: 2.5; line-opacity: 1;} ",
+              cartocss_version: '2.1.1',
+              interactivity: ['cartodb_id']
+            }
+          }]
+        },
+        layerId: 'newark-walk-to-school'
+      }, {
         type: 'cartodb',
         layerName: 'Schools',
         attribution: '',

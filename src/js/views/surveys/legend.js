@@ -28,9 +28,6 @@ define(function (require) {
 
       this.setFilters(options.filters);
       this.setCategory(options.category);
-
-      console.log("Init legend with options", options);
-
     },
 
     render: function() {

@@ -40,7 +40,7 @@
     <h3>Quick views</h3>
     <% _.each(quickViews, function(button) { %>
       <div class="quick-view">
-        <h4>
+        <h4 data-question="<%= button.question %>">
           <div class="icon" style="background: url(<%= button.icon %>) no-repeat center center"></div>
           <%= button.title %>
         </h4>
