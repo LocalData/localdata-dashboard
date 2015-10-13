@@ -14,8 +14,8 @@ define(function (require, exports, module) {
   var util = require('util');
 
   // We reuse the cartodb layer templates
-  var infoTemplate = require('text!templates/cartodb-info.html');
-  var tooltipTemplate = require('text!templates/cartodb-tooltip.html');
+  var infoTemplate = require('text!templates/foreign-layer-info.html');
+  var tooltipTemplate = require('text!templates/foreign-layer-tooltip.html');
   var template = require('text!templates/projects/layerControl.html');
 
   // Render an infowindow for a selected map item

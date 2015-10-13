@@ -12,8 +12,8 @@ define(function (require, exports, module) {
 
   var settings = require('settings');
 
-  var infoTemplate = require('text!templates/cartodb-info.html');
-  var tooltipTemplate = require('text!templates/cartodb-tooltip.html');
+  var infoTemplate = require('text!templates/foreign-layer-info.html');
+  var tooltipTemplate = require('text!templates/foreign-layer-tooltip.html');
   var template = require('text!templates/projects/layerControl.html');
 
 
