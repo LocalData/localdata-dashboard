@@ -10,45 +10,10 @@ define(function (require, exports, module) {
   var L = require('lib/leaflet/leaflet.tilejson');
   var Promise = require('lib/bluebird');
 
-  var settings = require('settings');
-
-  var infoTemplate = require('text!templates/foreign-layer-info.html');
   var tooltipTemplate = require('text!templates/foreign-layer-tooltip.html');
   var template = require('text!templates/projects/layerControl.html');
 
-
-  // Render an infowindow for a selected cartodb map item
-  var ItemView = Backbone.View.extend({
-    template: _.template(infoTemplate),
-
-    events: {
-      'click .close': 'remove'
-    },
-
-    initialize: function (options) {
-      this.layerOptions = options.layerOptions;
-      this.data = options.data;
-    },
-
-    render: function () {
-      var context = {
-        name: this.data[this.layerOptions.humanReadableField],
-        centroid: JSON.parse(this.data.centroid),
-        googleKey: settings.GoogleKey,
-        raw: this.data
-      };
-
-      var names = this.layerOptions.fieldNames;
-      context.fields = _.map(_.keys(names), function (name) {
-        return {
-          name: names[name],
-          value: this.data[name]
-        };
-      }, this);
-      this.$el.html(this.template(context));
-      return this;
-    }
-  });
+  var ItemView = require('views/maps/item-view');
 
   // The View
   // We don't make much use of the Backbone.View facilities, but we may need

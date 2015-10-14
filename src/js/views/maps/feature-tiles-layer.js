@@ -14,40 +14,10 @@ define(function (require, exports, module) {
   var util = require('util');
 
   // We reuse the cartodb layer templates
-  var infoTemplate = require('text!templates/foreign-layer-info.html');
   var tooltipTemplate = require('text!templates/foreign-layer-tooltip.html');
   var template = require('text!templates/projects/layerControl.html');
 
-  // Render an infowindow for a selected map item
-  var ItemView = Backbone.View.extend({
-    template: _.template(infoTemplate),
-
-    events: {
-      'click .close': 'remove'
-    },
-
-    initialize: function (options) {
-      this.layerOptions = options.layerOptions;
-      this.data = options.data;
-    },
-
-    render: function () {
-      var context = {
-        name: this.data[this.layerOptions.humanReadableField],
-        raw: this.data
-      };
-
-      var names = this.layerOptions.fieldNames;
-      context.fields = _.map(_.keys(names), function (name) {
-        return {
-          name: names[name],
-          value: this.data[name]
-        };
-      }, this);
-      this.$el.html(this.template(context));
-      return this;
-    }
-  });
+  var ItemView = require('views/maps/item-view');
 
   // The View
   // We don't make much use of the Backbone.View facilities, but we may need
