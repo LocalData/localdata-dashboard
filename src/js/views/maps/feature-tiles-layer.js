@@ -10,6 +10,10 @@ define(function (require, exports, module) {
   var L = require('lib/leaflet/leaflet.tilejson');
   var Promise = require('lib/bluebird');
 
+  var api = require('api');
+  var util = require('util');
+
+  // We reuse the cartodb layer templates
   var tooltipTemplate = require('text!templates/foreign-layer-tooltip.html');
   var template = require('text!templates/projects/layerControl.html');
 
@@ -30,9 +34,7 @@ define(function (require, exports, module) {
       'click .toggle-layer': 'toggleLayer'
     },
 
-    initialize: function(options) {
-      _.bindAll(this, 'render', 'getCartoData', 'handleGridHover');
-
+    initialize: function (options) {
       this.mapView = options.mapView;
       this.dataQuery = options.layer.dataQuery;
       this.layerOptions = options.layer;
@@ -43,21 +45,18 @@ define(function (require, exports, module) {
 
       // Now we need to start loading the tiles
       Promise.resolve($.ajax({
-        url: 'https://localdata.cartodb.com/api/v1/map',
-        type: 'GET',
-        dataType: 'jsonp',
-        data: {
-          stat_tag: options.layer.stat_tag, // doesn't seem to be required
-          config: JSON.stringify(options.layer.config)
-        }
-      })).then(function (data) {
-
+        url: '/tiles/features/tile.json',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(this.layerOptions.layer)
+      })).bind(this).then(function (data) {
         // Add image tiles
-        var url = 'https://' + data.cdn_url.https +
-            '/localdata/api/v1/map/' + data.layergroupid +
-            '/{z}/{x}/{y}.png';
+        var tileConfig = util.templatizeURLs(data.tiles);
         var attribution = this.layerOptions.attribution || '';
-        this.tileLayer = L.tileLayer(url, { attribution: attribution });
+        this.tileLayer = L.tileLayer(tileConfig.template, {
+          attribution: attribution,
+          subdomains: tileConfig.subs
+        });
 
         if (this.layerOptions.zIndex) {
           this.tileLayer.setZIndex(this.layerOptions.zIndex);
@@ -68,16 +67,15 @@ define(function (require, exports, module) {
         }
 
         // We can skip adding the UTF grids on purely informational layers.
-        if(this.layerOptions.config.disableGrid) {
+        if (this.layerOptions.disableGrid) {
           return;
         }
 
         // Add grid
-        var gridUrl = 'https://' + data.cdn_url.https +
-            '/localdata/api/v1/map/' + data.layergroupid +
-            '/0/{z}/{x}/{y}.grid.json?callback={cb}';
-        this.gridLayer = new L.UtfGrid(gridUrl, {
-          resolution: 4
+        var gridConfig = util.templatizeURLs(data.grids);
+        this.gridLayer = new L.UtfGrid(gridConfig.template, {
+          resolution: 4,
+          subdomains: gridConfig.subs
         });
 
         if (this.state === 'active') {
@@ -94,7 +92,7 @@ define(function (require, exports, module) {
         }
 
       }.bind(this)).catch(function (error) {
-        console.log('Failed to fetch cartodb map config', error);
+        console.log('Failed to fetch features layer map config', error);
       });
 
     },
@@ -126,12 +124,12 @@ define(function (require, exports, module) {
     },
 
     toggleLayer: function () {
-      console.log("Toggling layer, start state", this.state);
+      console.log('Toggling layer, start state', this.state);
       if (this.state === 'active') {
         this.state = 'inactive';
         this.mapView.removeTileLayer(this.tileLayer);
 
-        if(this.gridLayer) {
+        if (this.gridLayer) {
           this.mapView.removeGridLayer(this.gridLayer);
         }
 
@@ -142,7 +140,7 @@ define(function (require, exports, module) {
         this.state = 'active';
         this.mapView.addTileLayer(this.tileLayer);
 
-        if(this.gridLayer) {
+        if (this.gridLayer) {
           this.mapView.addGridLayer(this.gridLayer, true);
         }
 
@@ -150,26 +148,15 @@ define(function (require, exports, module) {
       }
     },
 
-    getCartoData: function(cartodb_id, done) {
-      Promise.resolve($.ajax({
-        url: 'https://localdata.cartodb.com/api/v2/sql',
-        type: 'GET',
-        dataType: 'jsonp',
-        data: {
-          q: _.template(this.dataQuery)({ cartodb_id: cartodb_id })
-        }
-      })).then(done).catch(function (error) {
-        console.log('Error getting data from cartodb', error);
-      });
-    },
-
-    hideTooltip: function() {
-      if (!this.$tooltip) { return; }
+    hideTooltip: function () {
+      if (!this.$tooltip) {
+        return;
+      }
       this.$tooltip.remove();
       delete this.$tooltip;
     },
 
-    showTooltip: function(name) {
+    showTooltip: function (name) {
       if (this.$tooltip) {
         this.$tooltip.html(name);
       } else {
@@ -178,17 +165,13 @@ define(function (require, exports, module) {
       }
     },
 
-    handleGridMouseout: function() {
+    handleGridMouseout: function () {
       this.hideTooltip();
     },
 
-    handleGridHover: function(event) {
-      this.getCartoData(event.data.cartodb_id, function(data) {
-        if (data.rows && data.rows.length > 0) {
-          var name = data.rows[0][this.layerOptions.humanReadableField];
-          this.showTooltip(name);
-        }
-      }.bind(this));
+    handleGridHover: function (event) {
+      var name = event.data.info[this.layerOptions.humanReadableField];
+      this.showTooltip(name);
     },
 
     handleGridClick: function (event) {
@@ -198,20 +181,26 @@ define(function (require, exports, module) {
 
       var self = this;
 
-      this.getCartoData(event.data.cartodb_id, function (data) {
-        if (data.rows && data.rows.length > 0) {
-          var feature = JSON.parse(data.rows[0].geom);
-          self.mapView.selectObject(feature);
+      // We need to get the geometry, so we can draw the selected object on the
+      // map.
+      api.getFeature(this.layerOptions.layer.query.source, event.data.object_id)
+      .then(function (data) {
+        if (data.features && data.features.length > 0) {
+          var feature = data.features[0];
+          self.mapView.selectObject(feature.geometry);
 
           self.trigger('itemSelected', {
             view: new ItemView({
-              data: data.rows[0],
+              data: feature.properties.info,
               layerOptions: self.layerOptions
             }),
             latlng: event.latlng
           });
         }
+      }).catch(function (error) {
+        console.log('Error getting feature data from the API', error);
       });
     }
+
   });
 });
