@@ -162,12 +162,12 @@ define(function(require, exports, module) {
         }),
 
         util.makeComplexExploration({
-          name: 'Maintenance of vacant properties',
+          name: 'Maintenance of vacant lots',
           choices: [{
             name: 'Maintained',
             select: [{
-              key: 'Does-the-structure-appear-vacant-or-occupied',
-              value: 'Possibly-Vacant'
+              key: 'How-is-the-lot-being-used',
+              value: 'Vacant-lot-or-open-space'
             }, {
               key: 'Is-the-property-maintained',
               value: 'Yes'
@@ -176,8 +176,8 @@ define(function(require, exports, module) {
           }, {
             name: 'Unmaintained',
             select: [{
-              key: 'Does-the-structure-appear-vacant-or-occupied',
-              value: 'Possibly-Vacant'
+              key: 'How-is-the-lot-being-used',
+              value: 'Vacant-lot-or-open-space'
             }, {
               key: 'Is-the-property-maintained',
               value: 'No'
@@ -186,8 +186,8 @@ define(function(require, exports, module) {
           }, {
             name: 'Unsure',
             select: [{
-              key: 'Does-the-structure-appear-vacant-or-occupied',
-              value: 'Possibly-Vacant'
+              key: 'How-is-the-lot-being-used',
+              value: 'Vacant-lot-or-open-space'
             }, {
               key: 'Is-the-property-maintained',
               value: 'Unsure'
