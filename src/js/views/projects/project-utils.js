@@ -7,6 +7,8 @@ define(function(require, exports, module) {
   var _ = require('lib/lodash');
   var exploreStylesTemplate = require('text!templates/projects/surveys/explore-styles.mss');
   var simpleStylesTemplate = require('text!templates/projects/surveys/simple-styles.mss');
+  var complexStylesTemplate = require('text!templates/projects/surveys/explore-complex-styles.mss');
+  var keyValueStylesTemplate = require('text!templates/projects/surveys/key-value-styles.mss');
   var checkboxStylesTemplate = require('text!templates/projects/surveys/checkbox-styles.mss');
 
   var exploreStyles = (function (template) {
@@ -21,6 +23,18 @@ define(function(require, exports, module) {
     };
   }(_.template(simpleStylesTemplate)));
 
+  var complexStyles = (function (template) {
+    return function (options) {
+      return template(_.defaults(options, { pointSize: 18 }));
+    };
+  }(_.template(complexStylesTemplate)));
+
+  var keyValueStyles = (function (template) {
+    return function (options) {
+      return template(_.defaults(options, { pointSize: 18 }));
+    };
+  }(_.template(keyValueStylesTemplate)));
+
   var checkboxStyles = (function (template) {
     return function (options) {
       return template(_.defaults(options, { pointSize: 18 }));
@@ -33,7 +47,6 @@ define(function(require, exports, module) {
     // values: ['Yes', 'No'],
     // valueNames: ['Unsafe', 'No significant issue'],
     // colors: ['#d73027', '#1a9850']
-
     var data = {
       name: options.name,
       question: options.question,
@@ -55,24 +68,130 @@ define(function(require, exports, module) {
         })
       },
       values:  _.map(options.values, function (val, i) {
+
+        // These are the styles used when a particular
+        // sublayer is selected.
         var ret = {
           text: options.valueNames[i],
           name: options.values[i],
           color: options.colors[i],
           layer: {
             query: {},
-            select: {},
-            styles: simpleStyles({ color: options.colors[i], pointSize: options.pointSize })
+            select: { 'entries.responses': 1 },
+            styles: keyValueStyles({
+              color: options.colors[i],
+              pointSize: options.pointSize,
+              filter: {
+                key: 'responses.' + options.question,
+                value: options.values[i]
+              }
+            })
           },
           pointSize: options.pointSize
         };
+
         ret.layer.query['entries.responses.' + options.question] = val;
         ret.layer.query = _.defaults(ret.layer.query, options.query);
+
+        // If this is a no response filter, we need to handle it differently
+        if (val === 'no response') {
+          // We don't want the full response array anymore:
+          ret.layer.select = {};
+
+          // Query for responses that don't have the key:
+          ret.layer.query['entries.responses.' + options.question] = {
+            '$exists': false
+          };
+
+          // We need to use simple styles, since this is the _absence_ of a
+          // key-value match:
+          ret.layer.styles = simpleStyles({
+            color: options.colors[i],
+            pointSize: options.pointSize
+          });
+        }
+
         return ret;
       })
     };
+
     return data;
   }
+
+  /*
+  Make an exploration that combines multiple facets and multiple questions.
+  For example: Properties that are vacant and have fire damage.
+
+  options = {
+    name: 'Vacant properties by condition',
+    choices: [{
+      name: 'Good '
+      select: [{
+        key: 'vacancy-status',
+        value: 'vacant'
+      }, {
+        key: 'condition',
+        value: 'good'
+      }],
+      color: 'green'
+    }, {
+      name: 'Bad'
+      select: [{
+        key: 'vacancy-status',
+        value: 'vacant'
+      }, {
+        key: 'condition',
+        value: 'bad'
+      }],
+      color: 'red'
+    }]
+  }]
+  */
+  function makeComplexExploration(options) {
+    console.log("Making complex ex with options", options);
+    var data = {
+      name: options.name,
+      layer: {
+        query: options.query,
+        select: { 'entries.responses': 1 },
+        styles: complexStyles({
+          showNoResponse: !!options.showNoResponse,
+          choices: options.choices,
+          pointSize: options.pointSize
+        })
+      },
+
+      // TODO
+      values:  _.map(options.choices, function (choice, i) {
+
+        // These are the styles used when a particular
+        // sublayer is selected.
+        var ret = {
+          text: choice.name,
+          name: choice.name,
+          color: choice.color,
+          layer: {
+            query: {},
+            select: { 'entries.responses': 1 },
+            styles: complexStyles({
+              showNoResponse: !!options.showNoResponse,
+              choices: [choice],
+              pointSize: options.pointSize
+            })
+          },
+          pointSize: options.pointSize
+        };
+
+        // ret.layer.query['entries.responses.' + options.question] = val;
+        // ret.layer.query = _.defaults(ret.layer.query, options.query);
+
+        return ret;
+      })
+    };
+
+    return data;
+  }
+
 
   function makeTextExploration(options) {
     // name: 'Unsafe due to traffic speed/volume',
@@ -175,6 +294,7 @@ define(function(require, exports, module) {
     simpleStyles: simpleStyles,
     checkboxStyles: checkboxStyles,
     makeBasicExploration: makeBasicExploration,
+    makeComplexExploration: makeComplexExploration,
     makeTextExploration: makeTextExploration,
     makeCheckboxExploration: makeCheckboxExploration
   };
