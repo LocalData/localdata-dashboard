@@ -6,6 +6,7 @@ define(function(require, exports, module) {
 
   var _ = require('lib/lodash');
   var exploreStylesTemplate = require('text!templates/projects/surveys/explore-styles.mss');
+  var exploreSparseStylesTemplate = require('text!templates/projects/surveys/explore-sparse-styles.mss');
   var simpleStylesTemplate = require('text!templates/projects/surveys/simple-styles.mss');
   var complexStylesTemplate = require('text!templates/projects/surveys/explore-complex-styles.mss');
   var keyValueStylesTemplate = require('text!templates/projects/surveys/key-value-styles.mss');
@@ -16,6 +17,12 @@ define(function(require, exports, module) {
       return template(_.defaults(options, { pointSize: 18 }));
     };
   }(_.template(exploreStylesTemplate)));
+
+  var exploreSparseStyles = (function (template) {
+    return function (options) {
+      return template(_.defaults(options, { pointSize: 18 }));
+    };
+  }(_.template(exploreSparseStylesTemplate)));
 
   var simpleStyles = (function (template) {
     return function (options) {
@@ -47,6 +54,11 @@ define(function(require, exports, module) {
     // values: ['Yes', 'No'],
     // valueNames: ['Unsafe', 'No significant issue'],
     // colors: ['#d73027', '#1a9850']
+    var styles = exploreStyles;
+    if (options.sparse) {
+      styles = exploreSparseStyles;
+    }
+
     var data = {
       name: options.name,
       question: options.question,
@@ -54,7 +66,7 @@ define(function(require, exports, module) {
       layer: {
         query: options.query,
         select: { 'entries.responses': 1 },
-        styles: exploreStyles({
+        styles: styles({
           showNoResponse: !!options.showNoResponse,
           pairs: _.map(options.values, function (val, i) {
             var ret = {
@@ -291,6 +303,7 @@ define(function(require, exports, module) {
 
   return {
     exploreStyles: exploreStyles,
+    exploreSparseStyles: exploreSparseStyles,
     simpleStyles: simpleStyles,
     checkboxStyles: checkboxStyles,
     makeBasicExploration: makeBasicExploration,
