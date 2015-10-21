@@ -102,11 +102,11 @@ define(function(require, exports, module) {
           type: 'feature-tiles',
           layerName: 'Vacant Properties',
           attribution: 'Pennsylvania Spatial Data Access',
-          state: 'active',
+          state: 'inactive',
           color: '#505050',
           zIndex: 25,
           handleClick: true,
-          staticLegend: '<div><i class="fa fa-square" style="color:#12b259"></i> Side Yards</div> <div><i class="fa fa-square" style="color:#101010"></i> Publicly owned</div> <div><i class="fa fa-square" style="color:#777777"></i> Privately owned</div>',
+          staticLegend: '<div><i class="fa fa-square" style="color:#005e20;opacity:0.6;"></i> Side Yards</div> <div><i class="fa fa-square" style="color:#101010;opacity:0.6;"></i> Publicly owned</div> <div><i class="fa fa-square" style="color:#777777;opacity:0.6;"></i> Privately owned</div>',
           fieldNames: {
             mapblolot: 'Parcel ID',
             mundesc: 'Municipality',
@@ -117,7 +117,7 @@ define(function(require, exports, module) {
           layer: {
             query: { source: 'allegheny-assessed-parcels' },
             select: { },
-            styles: '[GEOMETRY = Polygon], [GEOMETRY = MultiPolygon] {\n ["info.fairmarket" <= 0]{ polygon-fill: #777; polygon-opacity: 0.6;\n}\n ["info.fairmarket" <= 0]{\n ["info.publicowne" = "C"], ["info.publicowne" = "E"], ["info.publicowne" = "H"], ["info.publicowne" = "R"], ["info.publicowne" = "S"], ["info.publicowne" = "U"], ["info.publicowne" = "A"], ["info.publicowne" = "M"] {\n polygon-fill: #101010; polygon-opacity: 0.6;\n}\n}\n ["info.fairmarket" <= 0]["info.sidelot" >= 1],["info.sidelot" >= 1]{ polygon-fill: #12B259; polygon-opacity: 0.6; } polygon-opacity: 0;\n [zoom >= 15] {\n line-color: #FFF; line-width: 0.5; line-opacity: 0.7; }\n line-width: 0; line-opacity: 0; line-color: #FFF;\n }',
+            styles: '[GEOMETRY = Polygon], [GEOMETRY = MultiPolygon] {\n ["info.fairmarket" <= 0]{ polygon-fill: #777; polygon-opacity: 0.6;\n}\n ["info.fairmarket" <= 0]{\n ["info.publicowne" = "C"], ["info.publicowne" = "E"], ["info.publicowne" = "H"], ["info.publicowne" = "R"], ["info.publicowne" = "S"], ["info.publicowne" = "U"], ["info.publicowne" = "A"], ["info.publicowne" = "M"] {\n polygon-fill: #101010; polygon-opacity: 0.6;\n}\n}\n ["info.fairmarket" <= 0]["info.sidelot" >= 1],["info.sidelot" >= 1]{ polygon-fill: #005e20; polygon-opacity: 0.6; } polygon-opacity: 0;\n [zoom >= 15] {\n line-color: #FFF; line-width: 0.5; line-opacity: 0.7; }\n line-width: 0; line-opacity: 0; line-color: #FFF;\n }',
           },
           layerId: 'allegheny-assessed-parcels'
         },
