@@ -117,5 +117,7 @@ function(L) {
     'fillColor': '#fcd96c'
   };
 
+  settings.cors = ('withCredentials' in new XMLHttpRequest());
+
   return settings;
 });

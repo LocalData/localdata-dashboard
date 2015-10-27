@@ -11,6 +11,7 @@ define(function (require, exports, module) {
   var Promise = require('lib/bluebird');
 
   var api = require('api');
+  var settings = require('settings');
   var util = require('util');
 
   // We reuse the cartodb layer templates
@@ -43,9 +44,14 @@ define(function (require, exports, module) {
 
       var self = this;
 
+      var url = '/tiles/features/tile.json';
+      if (settings.cors) {
+        url += '?jsonp=false';
+      }
+
       // Now we need to start loading the tiles
       Promise.resolve($.ajax({
-        url: '/tiles/features/tile.json',
+        url: url,
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(this.layerOptions.layer)
@@ -75,7 +81,8 @@ define(function (require, exports, module) {
         var gridConfig = util.templatizeURLs(data.grids);
         this.gridLayer = new L.UtfGrid(gridConfig.template, {
           resolution: 4,
-          subdomains: gridConfig.subs
+          subdomains: gridConfig.subs,
+          useJsonP: !settings.cors
         });
 
         if (this.state === 'active') {
