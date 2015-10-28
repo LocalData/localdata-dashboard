@@ -128,7 +128,8 @@ function($, _, Backbone, L, moment, settings, util, api, template) {
       var gridConfig = util.templatizeURLs(tilejson.grids);
       this.gridLayer = new L.UtfGrid(gridConfig.template, {
         resolution: 4,
-        subdomains: gridConfig.subs
+        subdomains: gridConfig.subs,
+        useJsonP: !settings.cors
       });
 
       // Make sure the grid layer is on top.
@@ -315,11 +316,15 @@ function($, _, Backbone, L, moment, settings, util, api, template) {
       }
       url = url + '/tile.json';
 
+      // If we have CORS support, indicate to the tileserver that we don't want
+      // a jsonp callback template in the grid URLs.
+      var data = _.defaults({ jsonp: !settings.cors }, this.mapOptions);
+
       // Get TileJSON
       $.ajax({
         url: url,
         dataType: 'json',
-        data: this.mapOptions,
+        data: data,
         cache: false
       }).done(this.addTileLayer)
       .fail(function(jqXHR, textStatus, errorThrown) {

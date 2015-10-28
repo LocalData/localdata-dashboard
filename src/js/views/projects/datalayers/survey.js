@@ -165,11 +165,14 @@ define(function (require) {
         data = _.find(filterDefs, { name: filter.answer }).layer;
       }
 
+      var url = '/tiles/surveys/' + this.surveyId + '/tile.json';
+      if (settings.cors) {
+        url += '?jsonp=false';
+      }
+
       // Get TileJSON
-      // TODO: Switch this to a POST once we support proxying the post to the
-      // tile server through the API.
       $.ajax({
-        url: '/tiles/surveys/' + this.surveyId + '/tile.json',
+        url: url,
         type: 'POST',
         dataType: 'json',
         cache: false,
@@ -203,7 +206,8 @@ define(function (require) {
         this.mapView.removeTileLayer(this.gridLayer);
       }
       this.gridLayer = new L.UtfGrid(tilejson.grids[0], {
-        resolution: 4
+        resolution: 4,
+        useJsonP: !settings.cors
       });
       this.gridLayer.on('click', this.handleClick);
 
