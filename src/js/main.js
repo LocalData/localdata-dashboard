@@ -10,7 +10,8 @@ require.config({
     jquery: 'lib/jquery-1.7.1',
     backbone: 'lib/backbone',
     intercom: 'lib/intercom',
-    moment: 'lib/moment.min'
+    moment: 'lib/moment.min',
+    pikaday: 'lib/pikaday.min'
   },
 
   shim: {
@@ -46,6 +47,10 @@ require.config({
     'lib/c3': {
       deps: ['d3'],
       exports: 'c3'
+    },
+
+    'pikaday': {
+      deps: ['moment']
     }
   }
 

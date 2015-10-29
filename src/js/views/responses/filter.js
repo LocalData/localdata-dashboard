@@ -8,6 +8,8 @@ define(function(require, exports, module) {
   var $ = require('jquery');
   var _ = require('lib/lodash');
   var Backbone = require('backbone');
+  var moment = require('moment');
+  var Pikaday = require('pikaday');
 
   // App
   var settings = require('settings');
@@ -42,12 +44,11 @@ define(function(require, exports, module) {
       "click .clear": "reset",
       "click .close-settings": "close",
 
-      "change #datefilter": "selectDate",
       "change #collectorfilter": "selectCollector"
     },
 
     initialize: function(options) {
-      _.bindAll(this, 'render', 'reset', 'updateSidebar');
+      _.bindAll(this, 'render', 'reset', 'updateSidebar', 'selectDate');
 
       this.survey = options.survey;
       this.forms = options.forms;
@@ -78,6 +79,8 @@ define(function(require, exports, module) {
     },
 
     selectCollector: function(event) {
+      util.track('survey.filters.collector.select');
+
       var collector = $(event.target).val();
 
       if (collector === 'all') {
@@ -99,29 +102,11 @@ define(function(require, exports, module) {
       this.updateSidebar();
     },
 
-    selectDate: function(event) {
-      var HOUR_IN_MS = 1000*60*60;
-      var val = $(event.target).val();
-      var after = new Date();
+    selectDate: function(date) {
+      util.track('survey.filters.after.select');
 
-      if (val === 'hour') {
-        after = new Date(after.getTime() - HOUR_IN_MS);
-      }
-
-      if (val === 'today') {
-        // The beginning of the day, not 24 hours ago.
-        after = new Date(after.setHours(0,0,0,0));
-      }
-
-      if (val === 'week') {
-        after = new Date(after.getTime() - (HOUR_IN_MS * 24 * 7));
-      }
-
-      if (val === 'all') {
-        delete this.filters.after;
-      } else {
-        this.filters.after = after;
-      }
+      date.setHours(0, 0, 0, 0);
+      this.filters.after = date;
 
       // Set the date on the map, so the correct tiles are fetched.
       var mapParams = this.getParams();
@@ -156,6 +141,18 @@ define(function(require, exports, module) {
         this.$el.html(this.template({
           collectors: collectorList
         }));
+
+        // Set up date pickers
+        var selectDate = this.selectDate;
+        var picker = new Pikaday({
+          field: document.getElementById('date-filter-start'),
+          format: 'D MMM YYYY',
+          onSelect: function() {
+            var date = this.getDate();
+            selectDate(date);
+          }
+        });
+
         this.skipFullRender = true;
       }
 
@@ -292,8 +289,13 @@ define(function(require, exports, module) {
         event.preventDefault();
       }
 
+      util.track('survey.filters.reset');
+
       this.filters = {};
-      this.map.clearFilter();
+      this.map.clearFilter(); // TODO --should only have to do one of these.
+
+      // Reset the date filter
+      $('#date-filter-start').val('');
 
       $('.question').removeClass('selected');
       $('.answer').removeClass('inactive');

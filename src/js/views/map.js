@@ -356,7 +356,7 @@ function($, _, Backbone, L, moment, settings, util, api, template) {
 
     clearFilter: function () {
       this.filter = null;
-      this.selectDataMap();
+      this.setOptions({});
     },
 
     /**
