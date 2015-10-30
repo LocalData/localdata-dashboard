@@ -117,7 +117,7 @@ define(function(require, exports, module) {
           layer: {
             query: { source: 'allegheny-assessed-parcels' },
             select: { },
-            styles: '[GEOMETRY = Polygon], [GEOMETRY = MultiPolygon] {\n ["info.fairmarket" <= 0]{ polygon-fill: #777; polygon-opacity: 0.6;\n}\n ["info.fairmarket" <= 0]{\n ["info.publicowne" = "C"], ["info.publicowne" = "E"], ["info.publicowne" = "H"], ["info.publicowne" = "R"], ["info.publicowne" = "S"], ["info.publicowne" = "U"], ["info.publicowne" = "A"], ["info.publicowne" = "M"] {\n polygon-fill: #101010; polygon-opacity: 0.6;\n}\n}\n ["info.fairmarket" <= 0]["info.sidelot" >= 1],["info.sidelot" >= 1]{ polygon-fill: #005e20; polygon-opacity: 0.6; } polygon-opacity: 0;\n [zoom >= 15] {\n line-color: #FFF; line-width: 0.5; line-opacity: 0.7; }\n line-width: 0; line-opacity: 0; line-color: #FFF;\n }',
+            styles: '["info.fairmarket" <= 0]{ polygon-fill: #777; polygon-opacity: 0.6; background-color: #777; }\n ["info.fairmarket" <= 0]{ ["info.publicowne" = "C"], ["info.publicowne" = "E"], ["info.publicowne" = "H"], ["info.publicowne" = "R"], ["info.publicowne" = "S"], ["info.publicowne" = "U"], ["info.publicowne" = "A"], ["info.publicowne" = "M"] { polygon-fill: #101010; polygon-opacity: 0.6; background-color: #101010; } } ["info.fairmarket" <= 0]["info.sidelot" >= 1], ["info.sidelot" >= 1]{ polygon-fill: #005e20; polygon-opacity: 0.6; background-color: #005e20; }\n [zoom >= 15] { line-color: #FFF; line-width: 0.5; line-opacity: 0.7; }\n polygon-opacity: 0; line-width: 0; line-opacity: 0;'
           },
           layerId: 'allegheny-assessed-parcels'
         },
