@@ -292,7 +292,7 @@ define(function(require, exports, module) {
       util.track('survey.filters.reset');
 
       this.filters = {};
-      this.map.clearFilter(); // TODO --should only have to do one of these.
+      this.map.clearFilter();
 
       // Reset the date filter
       $('#date-filter-start').val('');
