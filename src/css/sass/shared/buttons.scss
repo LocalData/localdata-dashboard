@@ -18,6 +18,10 @@ form input[type=submit] {
   cursor: pointer;
 }
 
+button.pika-button {
+  height: auto;
+}
+
 a.button,
 a:visited.button {
   color: #fff;
