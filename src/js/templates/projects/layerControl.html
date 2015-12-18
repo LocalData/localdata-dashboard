@@ -14,7 +14,11 @@
 
 <% if (meta.exploreButton) { %>
 <button class="flex mini show-settings">
-  Explore results
+  <% if (meta.exploreText) { %>
+    <%= meta.exploreText %>
+  <% } else { %>
+    Explore results
+  <% } %>
   <span class="control-arrow"><i class="fa fa-angle-right"></i></span>
 </button>
 <% } %>
