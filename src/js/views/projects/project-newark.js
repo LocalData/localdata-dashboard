@@ -36,6 +36,7 @@ define(function(require, exports, module) {
       options: {
         anonymous: true,
         exploreButton: true,
+        exploreText: "View all maps",
         quickViews: true,
         hideCollectorNames: true,
         explorationControlsItem: true
@@ -44,7 +45,7 @@ define(function(require, exports, module) {
       query: {},
       select: {},
       filters: {
-        question: 'Occupancy'
+        question: 'Structures & lots'
       },
       styles: util.simpleStyles({color: '#45403e'}),
       quickViews: [{
@@ -452,7 +453,7 @@ define(function(require, exports, module) {
         layerId: 'newark-walk-to-school'
       }, {
         type: 'cartodb',
-        layerName: 'Schools',
+        layerName: '<span style="display:inline-block; background: url(http://com.cartodb.users-assets.production.s3.amazonaws.com/maki-icons/college-18.svg) no-repeat left -4px; padding-left: 22px; background-size: 20px 20px;">Schools</span>',
         attribution: '',
         color: '#000',
         zIndex: 20,
