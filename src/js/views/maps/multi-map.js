@@ -185,6 +185,12 @@ define(function(require, exports, module) {
       this.map.setView(latlng, 18);
       var marker = L.marker(latlng).addTo(this.map);
       this.markers.location = marker;
+
+      // Simulate a click on the location
+      var latLngPoint = new L.LatLng(latlng[0], latlng[1]);
+      this.map.fireEvent('click', {
+        latlng: latLngPoint
+      });
     }
   });
 });
