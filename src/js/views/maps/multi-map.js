@@ -1,6 +1,9 @@
 /*jslint nomen: true */
 /*globals define: true */
 
+/*
+Used on project pages
+*/
 define(function(require, exports, module) {
   'use strict';
 
@@ -131,6 +134,10 @@ define(function(require, exports, module) {
       this.baseLayer.bringToBack();
       this.map.on('baselayerchange', function(event) {
         event.layer.bringToBack();
+
+        // The rendered parcel layer is sometimes not set with a z-index,
+        // so we need to manually set the baselayer back further
+        event.layer.setZIndex(-10);
       });
 
       return this;
