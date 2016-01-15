@@ -75,14 +75,17 @@ define(function(require, exports, module) {
       // TODO: factor out the embedded script-tag templates and turn the
       // following into .html instead of .prepend
       this.cleanup();
+
       // Keep track of the user.
       settings.user = new Users.Model();
       settings.user.fetch();
+
+      this.$el.prepend(dashboardTemplate());
+
+      // Add the usebar after the dashboard has loaded.
       this.userView = new AllViews.UserBarView({
         user: settings.user
       });
-
-      this.$el.prepend(dashboardTemplate());
     }),
 
     renderEmbed: function () {
