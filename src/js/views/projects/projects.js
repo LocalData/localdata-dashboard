@@ -100,7 +100,7 @@ define(function(require, exports, module) {
         // Use and property info from LocalData features db/tileserver
         {
           type: 'feature-tiles',
-          layerName: 'Vacant Properties',
+          layerName: 'Vacant Parcels',
           attribution: 'Pennsylvania Spatial Data Access',
           state: 'inactive',
           color: '#505050',
