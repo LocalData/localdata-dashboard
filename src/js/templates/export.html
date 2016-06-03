@@ -32,10 +32,13 @@
       <% } %>
 
       <div class="error">Error exporting data. Please try again later or contact LocalData for help.</div>
+    </div>
 
-      <!--
-      <a href="<%= baseurl %>/surveys/<%= surveyId %>/kml" class="box ok flex"><span class="btn-in"><span class="icon-globe"></span> Download KML (parcels)</span></a>
-      -->
+    <div class="embed-info">
+      <h3>Embed your dashboard</h3>
+      <p>Use this code to embed a copy of the public view on your website.
+      Viewers can explore the data, but won't be able to edit it.</p>
+      <pre><code>&ltiframe src="<%= baseurl %>/#embed/surveys/<%= slug %>" height="500" width="500"&gt;&lt;/iframe&gt;</code></pre>
     </div>
   </div>
 </div>

@@ -16,11 +16,7 @@ define(function (require) {
   // Return the current hostname.
   // TODO: Should be in util
   api.getBaseURL = function() {
-    if (window.location.protocol !== "https:") {
-      return "https://" + window.location.host;
-    }
-
-    return "http://" + window.location.host;
+    return "https://" + window.location.host;
   };
 
   // Check if the user is authenticated
@@ -450,7 +446,7 @@ define(function (require) {
       }
     });
   };
-  
+
   // Returns a promise for a Feature Collection
   api.getFeature = function getFeature(source, object_id) {
     return Promise.resolve($.ajax({

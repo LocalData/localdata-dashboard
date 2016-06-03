@@ -47,7 +47,8 @@ function($, _, Backbone, settings, util, api, exportTemplate, embedTemplate) {
       // Set the context & render the page
       var context = {
         surveyId: this.survey.get('id'),
-        baseurl: settings.api.baseurl,
+        slug: this.survey.get('slug'),
+        baseurl: api.getBaseURL(),
         loading: this.loading
       };
 
