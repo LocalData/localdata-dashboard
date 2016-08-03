@@ -160,6 +160,10 @@ define(function(require, exports, module) {
             maxZoom: 18
           });
         }
+      } else {
+        this.survey.getLocation(function(error, location) {
+          this.map.setView(location.coords, 13);
+        }.bind(this));
       }
     },
 
