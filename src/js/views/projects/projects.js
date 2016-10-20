@@ -553,7 +553,7 @@ define(function(require, exports, module) {
         color: '#8da0cb',
         countPath: 'stats.What-would-you-like-to-record.Number-of-Pedestrians-',
         query: {
-          'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
+          'entries.responses.What-would-you-like-to-record': ['Number-of-Pedestrians-', 'Number-of-Pedestrians']
         },
         select: {},
         styles: util.simpleStyles({color: '#8da0cb', pointSize: 15}),
@@ -565,7 +565,7 @@ define(function(require, exports, module) {
             // observations with the same ID, so we need to avoid mapping data
             // from the wrong virtual layer.
             query: {
-              'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
+              'entries.responses.What-would-you-like-to-record': ['Number-of-Pedestrians-', 'Number-of-Pedestrians']
             },
             values: ['5-highest', '4', '3', '2', '1-lowest'],
             valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
@@ -575,7 +575,7 @@ define(function(require, exports, module) {
             name: 'Pedestrian activity',
             layer: {
               query: {
-                'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
+                'entries.responses.What-would-you-like-to-record': ['Number-of-Pedestrians-', 'Number-of-Pedestrians']
               },
               select: {
                 'entries.responses.How-many-pedestrians-did-you-count-at-this-location': 1,
@@ -618,7 +618,7 @@ define(function(require, exports, module) {
               color: '#4d004b',
               layer: {
                 query: {
-                  'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
+                  'entries.responses.What-would-you-like-to-record': ['Number-of-Pedestrians-', 'Number-of-Pedestrians']
                 },
                 select: {
                   'entries.responses.How-many-pedestrians-did-you-count-at-this-location': 1,
@@ -641,7 +641,7 @@ define(function(require, exports, module) {
               color: '#8c6bb1',
               layer: {
                 query: {
-                  'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
+                  'entries.responses.What-would-you-like-to-record': ['Number-of-Pedestrians-', 'Number-of-Pedestrians']
                 },
                 select: {
                   'entries.responses.How-many-pedestrians-did-you-count-at-this-location': 1,
@@ -664,7 +664,7 @@ define(function(require, exports, module) {
               color: '#8c96c6',
               layer: {
                 query: {
-                  'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
+                  'entries.responses.What-would-you-like-to-record': ['Number-of-Pedestrians-', 'Number-of-Pedestrians']
                 },
                 select: {
                   'entries.responses.How-many-pedestrians-did-you-count-at-this-location': 1,
@@ -687,7 +687,7 @@ define(function(require, exports, module) {
               color: '#9ebcda',
               layer: {
                 query: {
-                  'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-'
+                  'entries.responses.What-would-you-like-to-record': ['Number-of-Pedestrians-', 'Number-of-Pedestrians']
                 },
                 select: {
                   'entries.responses.How-many-pedestrians-did-you-count-at-this-location': 1,
@@ -725,7 +725,7 @@ define(function(require, exports, module) {
           name: 'Photos',
           layer: {
             query: {
-              'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-',
+              'entries.responses.What-would-you-like-to-record': ['Number-of-Pedestrians-', 'Number-of-Pedestrians'],
               'entries.files.0': {
                 $type: 2
               }
@@ -738,7 +738,7 @@ define(function(require, exports, module) {
             color: '#810f7c',
             layer: {
               query: {
-                'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians-',
+                'entries.responses.What-would-you-like-to-record': ['Number-of-Pedestrians-', 'Number-of-Pedestrians'],
                 'entries.files.0': {
                   $type: 2
                 }
