@@ -124,7 +124,8 @@ define(function (require) {
             type: question.type,
             answer: value,
             answerSlug: valueSlug,
-            answerOptions: answers
+            answerOptions: answers,
+            parentName: question.parentName
           });
 
           processed[question.slug] = true;
