@@ -51,6 +51,9 @@
       <div class="answer">
         <% if (field.answer !== undefined) { %>
           <span class="key">
+            <% if (field.parentName !== undefined) { %>
+              <%- field.parentName %><br>
+            <% } %>
             <%- field.question %>
           </span>
           <% if (field.type === 'text') { %>

@@ -117,7 +117,8 @@ function($, _, Backbone, settings) {
               type: 'checkbox',
               slug: item.name,
               id: id,
-              text: item.text
+              text: item.text,
+              parentName: old.text
             });
             subs.push({
               questions: item.questions,
