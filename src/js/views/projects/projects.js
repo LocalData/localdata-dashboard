@@ -551,7 +551,7 @@ define(function(require, exports, module) {
           anonymous: true
         },
         color: '#8da0cb',
-        countPath: 'stats.What-would-you-like-to-record.Number-of-Pedestrians-',
+        countPath: 'stats.What-would-you-like-to-record.Number-of-Pedestrians',
         query: {
           'entries.responses.What-would-you-like-to-record': ['Number-of-Pedestrians-', 'Number-of-Pedestrians']
         },
