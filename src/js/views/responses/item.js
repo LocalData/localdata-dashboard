@@ -232,6 +232,10 @@ define(function (require) {
         return;
       }
 
+      if (this.model.attributes.responses === null) {
+        this.model.attributes.responses = {};
+      }
+
       this.model.attributes.responses[question] = answer;
     },
 
