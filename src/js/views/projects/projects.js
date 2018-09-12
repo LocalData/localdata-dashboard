@@ -553,7 +553,7 @@ define(function(require, exports, module) {
         color: '#8da0cb',
         countPath: 'stats.What-would-you-like-to-record.Number-of-Pedestrians',
         query: {
-          'entries.responses.What-would-you-like-to-record': ['Number-of-Pedestrians-', 'Number-of-Pedestrians']
+          'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians'
         },
         select: {},
         styles: util.simpleStyles({color: '#8da0cb', pointSize: 15}),
@@ -565,7 +565,7 @@ define(function(require, exports, module) {
             // observations with the same ID, so we need to avoid mapping data
             // from the wrong virtual layer.
             query: {
-              'entries.responses.What-would-you-like-to-record': ['Number-of-Pedestrians-', 'Number-of-Pedestrians']
+              'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians'
             },
             values: ['5-highest', '4', '3', '2', '1-lowest'],
             valueNames: ['5 (highest)', '4', '3', '2', '1 (Lowest)'],
@@ -575,7 +575,7 @@ define(function(require, exports, module) {
             name: 'Pedestrian activity',
             layer: {
               query: {
-                'entries.responses.What-would-you-like-to-record': ['Number-of-Pedestrians-', 'Number-of-Pedestrians']
+                'entries.responses.What-would-you-like-to-record': 'Number-of-Pedestrians'
               },
               select: {
                 'entries.responses.How-many-pedestrians-did-you-count-at-this-location': 1,
